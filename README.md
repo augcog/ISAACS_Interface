@@ -43,6 +43,7 @@ Upstream development happens on the Alpha branch. Once most bugs have been elimi
 ## Licensing
 This repository contains three types of files: program files, graphics files (visual content, such as quadrotor models), and SDK files. All program files, unless otherwise stated, are distributed under the GNU General Public License version 3. All graphics files are distributed under the Creative Commons Attribution-ShareAlike 4.0 International license. For SDK files, please refer to their respective licenses. A license notice is included in all files created by us. In case of doubt, please send us an email at: **TODO**.
 <br>
+<br>
 
 GNU General Public License version 3 Notice:
 <br>
