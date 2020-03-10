@@ -31,7 +31,7 @@ This repository is a continuation of the original ISAACS Interface, aimed at the
 <br>
 <br>
 
-**TODO: Installation, and Deployment + Video showing how to use the itnerface.**
+**TODO: Installation, and Deployment + Video showing how to use the interface.**
 <br>
 <br>
 
