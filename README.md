@@ -6,7 +6,10 @@
 <br>
 
 The Immersive Semi-Autonomous Aerial Command System (ISAACS) is an undergraduate research group within the Center for Augmented Cognition of the VHL Vive Center for Enhanced Reality at the University of California, Berkeley. Our research focuses on human-computer interaction, with an emphasis on teleoperation and telesensing with quadrotors.
-**TODO: Add links to Vive Center website.**
+
+VIVE Center  : https://vivecenter.berkeley.edu/research1/isaacs/
+Project Plan : https://docs.google.com/document/d/1GXEwlFQQZe45mb4lhIP9hsZI8URVYLvaSjQq0cltAyw/edit
+Project Docs : https://docs.google.com/document/d/1EitUdoNtU1bvZ9CUPSplAm-6ctrPwsNLsU_EhjWt7J8/edit
 <br>
 
 The ISAACS Virtual Reality Interface is part of our broader vision to help augment human perception, and integrates robot vision and radiation sensing with an intuitive User Interface that enables the command of a swarm of quadrotors. Currently, direct manipulation (using natural hand motion) of the mission-ready DJI Matrice 210 is supported, while sensor integration is still at an experimental stage.
