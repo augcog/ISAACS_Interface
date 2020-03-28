@@ -8,7 +8,9 @@
 The Immersive Semi-Autonomous Aerial Command System (ISAACS) is an undergraduate research group within the Center for Augmented Cognition of the VHL Vive Center for Enhanced Reality at the University of California, Berkeley. Our research focuses on human-computer interaction, with an emphasis on teleoperation and telesensing with quadrotors.
 
 VIVE Center  : https://vivecenter.berkeley.edu/research1/isaacs/
+<br>
 Project Plan : https://docs.google.com/document/d/1GXEwlFQQZe45mb4lhIP9hsZI8URVYLvaSjQq0cltAyw/edit
+<br>
 Project Docs : https://docs.google.com/document/d/1EitUdoNtU1bvZ9CUPSplAm-6ctrPwsNLsU_EhjWt7J8/edit
 <br>
 
