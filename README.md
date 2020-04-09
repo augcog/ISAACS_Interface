@@ -65,11 +65,11 @@ The system uses two computers, one attached to the UAV, which we call **Manifold
 Although the manifold comes with most things you need installed by default, you will have to setup a ROS Workspace and the Rosbridge Server. Refer to [this page](https://developer.dji.com/onboard-sdk/documentation/development-workflow/sample-setup.html) for more information on how to setup a ROS Workspace. <br>
 
 ### Common Problems when Setting up a Workspace
-**\`catkin make\` does not compile**
+**\`catkin make\` does not compile** <br>
 You might need to clone the [nmea_msgs](https://github.com/ros-drivers/nmea_msgs) package into the `src` folder, and then try again.
 <br>
 
-**I'm editing the sdk.launch file with \`rosed\`, but I cannot find the correct serial port**
+**I'm editing the sdk.launch file with \`rosed\`, but I cannot find the correct serial port** <br>
 This will in most cases be `/dev/ttyUSB0`. If this is incorrect, then an error will pop up in the next step. To find the correct serial port:
 
 - `$` `grep -iP PRODUCT= /sys/bus/usb-serial/devices/ttyUSB0/../uevent`
@@ -78,16 +78,15 @@ CAUTION: there is a space between PRODUCT= and /sys'. This is not a typo.
 Replace \<ID\> with the ID found from the previous step.
 <br>
 
-**I don't know what to set the Baudrate to**
+**I don't know what to set the Baudrate to** <br>
 The Baudrate should be set to 921600. If you are using the DJI Assistant 2 for Matrice to simulate a flight, then you also need to set the same Baudrate inside the DJI Assistant 2 for Matrice app, which can be found under the SDK tab.
 <br>
 
-**Connecting to the simulator and launching the SDK fails for an unknown reason**
+**Connecting to the simulator and launching the SDK fails for an unknown reason** <br>
 This can be due to many reasons, but generally it means tht you have to set a udev exception, and/or disable advanced sensing and connect the Manifold with the UAV with an additional USB 3.0 to USB 3.0 cable. CAUTION: disabling advanced sensing disables the Matrice 210's built-in object avoidance mechanism.
 
 - `$` `echo 'SUBSYSTEM=="usb", ATTRS{idVendor}=="2ca3", MODE="0666"' | sudo tee /etc/udev/rules.d/m210.rules`
-- Set `enable_adanced_sensing` to `false` in the file `.../Onboard-SDK-ROS/dji_sdk/src/modules/dji_sdk_node.cpp`
-<br>
+- Change `enable_adanced_sensing` to `false` in the file `DJI/catkin_ws/Onboard-SDK-ROS/dji_sdk/src/modules/dji_sdk_node.cpp`
 
 ### Installing the Rosbridge Server on the Manifold
 `$` `sudo apt-get install ros-kinetic-rosbridge-server`
@@ -100,7 +99,7 @@ Unity versions and installation instructions can be found on [this page](https:/
 
 <a name="installation"></a>
 ## 3. Installation and Deployment
-Make sure that you read and went through the Hardware Dependencies and Software Dependencies section, before proceeding with the system installation. This is critically important; the system will not work otherwise. <br>
+Make sure that you red and went through the Hardware Dependencies and Software Dependencies section, before proceeding with the system installation. This is critically important; the system will not work otherwise. <br>
 
 ### Installation (Simulation only)
 1. Clone the project on the VR-Ready Computer with the following command:
@@ -112,18 +111,17 @@ Make sure that you read and went through the Hardware Dependencies and Software 
 5. In a new terminal, start the DJI SDK:
 `$` `roslaunch dji_sdk sdk.launch`
 6. Test if the UAV can receive Manifold instructions by running the following command (this should spin the rotors, without actually flying the drone):
-`$` `rosservice call /dji_sdk/sdk_control_authority 1`
-`$` `rosservice call /dji_sdk/drone_arm_control 1`
+<br> `$` `rosservice call /dji_sdk/sdk_control_authority 1`
+<br> `$` `rosservice call /dji_sdk/drone_arm_control 1`
 7. If the rotor spin, great, we are almost there! Stop the rotors with the following command:
-`$` `rosservice call /dji_sdk/drone_arm_control 0`
+<br> `$` `rosservice call /dji_sdk/drone_arm_control 0`
 8. Check that the Manifold is correctly connected to the Ethernet cable. Connect the other end of the Ethernet cable to the VR-Ready computer.
 9. Run the Rosbridge Server. This will launch a WebSocket in port 9090. If you want to use a different port, see [this page](https://wiki.ros.org/rosbridge_suite/Tutorials/RunningRosbridge).
-`$` `roslaunch rosbridge_server rosbridge_websocket.launch`
+<br> `$` `roslaunch rosbridge_server rosbridge_websocket.launch`
 10. Connect the Oculus headset with the VR-Ready laptop. If you have not done so already, follow through the [Oculus Rift setup](https://www.oculus.com/setup/).
 11. Connect the Manifold to a computer with the DJI Assistant 2 for Matrice using a USB 3.0 to USB 3.0 cable, and launch the Flight Simulator.
 12. Launch our application via Unity. Find the script named `ROSDroneConnection.cs` _**TODO: Is this the correct script?**_ and replace the IP address of the server with the actual IP address of the Manifold. To find the IP address of the Manifold, use the following command:
-`$` `hostname -I`
-<br>
+<br> `$` `hostname -I`
 13. Save and close the script, and launch our application by clicking on the play (small triangle) button inside Unity. If all went well, you should see printed information that a client connected to the Rosbridge Server, inside the terminal from which the Rosbridge server was launched.
 14. Congratulations, you are ready to fly your UAV in VR!
 <br>
@@ -134,7 +132,7 @@ Finally, continue with steps 12-14.
 <br>
 
 ### Deployment
-Each time that you want to run our system, you will have to first disable the RTK signal, and then run the DJI SDK and Rosbridge Server. Each time that you change your internet connection, you will also have to change the IP address that the Unity client subscribes to. The routine is rather simple:
+Each time that you want to run our system, you will have to first disable the RTK signal, and then run the DJI SDK and Rosbridge Server. The routine is rather simple:
 1. Power-on the UAV, Manifold and VR-Ready Computer
 2. (Optionally) connect the UAV to the DJI Assistant 2 for Matrice, and launch the Flight Simulator
 3. Turn of the RTK signal through the 'DJI Go 4' app
@@ -143,6 +141,8 @@ Each time that you want to run our system, you will have to first disable the RT
 5. Launch the Rosbridge Server
 `$` `roslaunch rosbridge_server rosbridge_websocket.launch`
 6. Open our system in Unity and click the play button
+
+Moreove, each time your internet connection changes, you will have to change the IP address that the Unity client subscribes to. 
 <br>
 <br>
 
@@ -163,25 +163,25 @@ _**TODO and also add a picture that shows our architecture**_
 
 <a name="team"></a>
 ## 6. Meet the Team
-_**TODO: Add pictures**_
-**Spring 2020**
-Peru Dayani, Research Lead
-Nitzan Orr, Product Lead | [LinkedIn](https://www.linkedin.com/in/nitzanorr/)
-Apollo Thomopoulos, HCI Lead | [Website](https:apollo.vision)
-Varun Saran, Network and Stream Data Engineer
-Shreyas Krishnaswamy, Localization Engineer | [LinkedIn](https://www.linkedin.com/in/shreyas-krishnaswamy)
-Newman Hu, Virtual Reality Engineer | [Website](https://newmanhu.com/) | [LinkedIn](https://www.linkedin.com/in/newmanhu)
-Rithvik Chuppala, ROS and SDK Administrator | [LinkedIn]()
+_**TODO: Add pictures**_ <br>
+### Spring 2020
+Peru Dayani, Research Lead <br>
+Nitzan Orr, Product Lead | [LinkedIn](https://www.linkedin.com/in/nitzanorr/) <br>
+Apollo Thomopoulos, HCI Lead | [Website](https:apollo.vision) <br>
+Varun Saran, Network and Stream Data Engineer <br>
+Shreyas Krishnaswamy, Localization Engineer | [LinkedIn](https://www.linkedin.com/in/shreyas-krishnaswamy) <br>
+Newman Hu, Virtual Reality Engineer | [Website](https://newmanhu.com/) | [LinkedIn](https://www.linkedin.com/in/newmanhu) <br>
+Rithvik Chuppala, ROS and SDK Administrator <br>
 Arya Anand, Models and VFX Designer <br>
-**Alumni**
-Jesse Patterson | [Website](http://www.jessepaterson.com/)
-Jessica Lee | [LinkedIn](https://www.linkedin.com/in/jess-l/)
-Ji Han
-Paxtan Laker
-Rishi Upadhyay
-Brian Wu
-Eric Zhang
-Xin Chen
+### Alumni
+Jesse Patterson | [Website](http://www.jessepaterson.com/) <br>
+Jessica Lee | [LinkedIn](https://www.linkedin.com/in/jess-l/) <br>
+Ji Han <br>
+Paxtan Laker <br>
+Rishi Upadhyay <br>
+Brian Wu <br>
+Eric Zhang <br>
+Xin Chen <br>
 <br>
 <br>
 
@@ -194,4 +194,5 @@ We would like to thank [Dr. Allen Yang](https://people.eecs.berkeley.edu/~yang/)
 <a name="licensing"></a>
 ## 8. Licensing
 This repository contains four types of files: program files, media files (visual content, such as UAV models), Unity assets and SDK (DJI and MapBox) files. All program files, unless otherwise stated, are distributed under the GNU General Public License version 3. All media files are distributed under the Creative Commons Attribution-ShareAlike 4.0 International license. For Unity Assets and SDK files, please refer to their respective licenses. A license notice is included within all files created by us. <br>
+<br>
 In case of doubt on whether you can use an asset, or on how to correctly attribute its authors, please e-mail us at: **TODO**.
