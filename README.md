@@ -70,7 +70,7 @@ You might need to clone the [nmea_msgs](https://github.com/ros-drivers/nmea_msgs
 <br>
 
 **I'm editing the sdk.launch file with \`rosed\`, but I cannot find the correct serial port** <br>
-This will in most cases be `/dev/ttyUSB0`. If this is incorrect, then an error will pop up in the next step. To find the correct serial port:
+This will in most cases be `/dev/ttyUSB0`. If this is incorrect, then an error will pop up. To find the correct serial port:
 
 - `$` `grep -iP PRODUCT= /sys/bus/usb-serial/devices/ttyUSB0/../uevent`
 CAUTION: there is a space between PRODUCT= and /sys'. This is not a typo.
@@ -103,13 +103,13 @@ Make sure that you red and went through the Hardware Dependencies and Software D
 
 ### Installation (Simulation only)
 1. Clone the project on the VR-Ready Computer with the following command:
-`$` `git clone https://github.com/immersive-command-system/ImmersiveDroneInterface_2.git` <br>
+<br> `$` `git clone https://github.com/immersive-command-system/ImmersiveDroneInterface_2.git`
 2. Place the RTK Battery inside the RTK Controller, and turn it on.
-3. Disable RTK Signal (you may need to connect the controller to a phone or tablet with the 'DJI Go 4' app for this step) 
+3. Disable RTK Signal (you may need to connect the controller to a phone or tablet with the 'DJI Go 4' app for this step)
 4. Modify the Manifold's .bashrc to source ROS environment variables:
-`$` `echo 'cd $HOME/DJI/catkin_ws && source devel/setup.bash' >> $HOME/.bashrc`
+<br> `$` `echo 'cd $HOME/DJI/catkin_ws && source devel/setup.bash' >> $HOME/.bashrc`
 5. In a new terminal, start the DJI SDK:
-`$` `roslaunch dji_sdk sdk.launch`
+<br> `$` `roslaunch dji_sdk sdk.launch`
 6. Test if the UAV can receive Manifold instructions by running the following command (this should spin the rotors, without actually flying the drone):
 <br> `$` `rosservice call /dji_sdk/sdk_control_authority 1`
 <br> `$` `rosservice call /dji_sdk/drone_arm_control 1`
