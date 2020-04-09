@@ -137,9 +137,9 @@ Each time that you want to run our system, you will have to first disable the RT
 2. (Optionally) connect the UAV to the DJI Assistant 2 for Matrice, and launch the Flight Simulator
 3. Turn of the RTK signal through the 'DJI Go 4' app
 4. Launch the SDK
-`$` `roslaunch dji_sdk sdk.launch`
+<br> `$` `roslaunch dji_sdk sdk.launch`
 5. Launch the Rosbridge Server
-`$` `roslaunch rosbridge_server rosbridge_websocket.launch`
+<br> `$` `roslaunch rosbridge_server rosbridge_websocket.launch`
 6. Open our system in Unity and click the play button
 
 Moreove, each time your internet connection changes, you will have to change the IP address that the Unity client subscribes to. 
@@ -181,7 +181,7 @@ Paxtan Laker <br>
 Rishi Upadhyay <br>
 Brian Wu <br>
 Eric Zhang <br>
-Xin Chen <br>
+Xin Chen
 <br>
 <br>
 
