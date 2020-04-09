@@ -6,11 +6,11 @@
 <br>
 <br>
 
-ISAACS is an undergraduate research group within the [Center for Augmented Cognition](https://ptolemy.berkeley.edu/projects/augcog/) of the [VHL Vive Center for Enhanced Reality](https://vivecenter.berkeley.edu/research1/isaacs/) at the University of California, Berkeley. Our research is in human-UAV interaction, with a focus on teleoperation, telesensing, multi-agent interaction, and the intuitive visualization of localization data. We are also part of the student group [Extended Reality at Berkeley](https://xr.berkeley.edu/), and have recently began a collaboration with the [Lawrence Berkeley National Laboratory](https://www.lbl.gov/) to perform real-time mapping of the environment through radiation detection. This repository contains the system interface. If you are looking for the RadViz system, you want to visit [this page]().
+ISAACS is an undergraduate research group within the [Center for Augmented Cognition](https://ptolemy.berkeley.edu/projects/augcog/) of the [VHL Vive Center for Enhanced Reality](https://vivecenter.berkeley.edu/research1/isaacs/) at the University of California, Berkeley. Our research is in human-UAV interaction, with a focus on teleoperation, telesensing, multi-agent interaction, and the intuitive visualization of localization data. We are also part of the student group [Extended Reality at Berkeley](https://xr.berkeley.edu/), and have recently began a collaboration with the [Lawrence Berkeley National Laboratory](https://www.lbl.gov/) to perform 3D reconstruction of the environment via state-of-the-art methods in radiation detection. This repository contains the system interface. If you are looking for the RadViz system, you want to visit [this page](TODO).
 <br>
 
-Lead by a small team of passionate student, the project began in 2015 thanks to a [Microsoft Hololens Academic Research Grant](https://blogs.windows.com/devices/2015/11/11/meet-the-award-recipients-of-the-first-microsoft-hololens-academic-research-grants/). The prototype display, aimed at the Bitcraze Crazyflie 1.0 was a success, and eventually evolved into a system that allowed the manipulation of two such UAVs. A year later, the interface was ported over to the DJI Matrice 100, and is now available in its second working version, for the Matrice 210, and soon for the Matrice 600. Our decision to use the Matrice 210 and Matrice 600 quadrotors stems from their ability to support a greater range of sensors and mission-critical tasks, which the previously tested UAVs did not. 
-The current interface enables direct manipulation of the Matrice 210 using natural hand motion, and provides accurate localization and visualization of the UAV's position and environment (including nearby buildings), using GPS. Over the next few months, we will be integrating a Radiation, Depth Camera and LIDAR sensors to also support real-time mapping and 3D reconstruction of the UAV's environment.
+Led by a small team of passionate student, the project began in 2015 thanks to a [Microsoft Hololens Academic Research Grant](https://blogs.windows.com/devices/2015/11/11/meet-the-award-recipients-of-the-first-microsoft-hololens-academic-research-grants/). The prototype display, aimed at the Bitcraze Crazyflie 1.0 was a success, and eventually evolved into a system that allowed the manipulation of two such UAVs. A year later, the display was ported over to the DJI Matrice 100, and is now available in its second working version, for the Matrice 210, and soon for the Matrice 600. Our decision to use the Matrice 210 and Matrice 600 quadrotors stems from their ability to support a greater range of sensors and mission-critical tasks, which the previously tested UAVs did not.
+The current interface enables direct manipulation of the Matrice 210 using natural hand motion, and provides accurate localization and visualization of the UAV's position and environment (including nearby buildings), using GPS. Over the next few months, we will be integrating Radiation, Depth Camera and LIDAR sensors to support, among other things, 3D reconstruction and real-time mapping of the UAV's environment.
 <br>
 <br>
 
@@ -31,7 +31,7 @@ The current interface enables direct manipulation of the Matrice 210 using natur
 <br>
 
 <a name="hardware"></a>
-## 1. Hardware Dependencies
+## 1. Hardware Dependencies and Setup
 You will need the following to run the system in simulation:
 - DJI Matrice 210 Quadrotor
 - DJI Matrice 210 RTK
@@ -60,7 +60,7 @@ Once you have done the above, place two batteries in the UAV and plug-in the Man
 
 
 <a name="software"></a>
-## 2. Software Dependencies
+## 2. Software Dependencies and Setup
 The system uses two computers, one attached to the UAV, which we call **Manifold**, and one running the VR interface, which we call **VR-Ready Computer**. You may also use a third computer to run a flight simulation using the [DJI Assistant 2 for Matrice](https://www.dji.com/jp/downloads/softwares/assistant-dji-2-for-matrice), but this can be done on the VR-Ready Computer simultaneously as the frontend application is running. The Manifold backend depends on [ROS Kinetic](https://wiki.ros.org/kinetic), which requires Ubuntu 16.04 (Xenial), or another Debian-based GNU/Linux distribution. You will furthermore need the [ROS DJI SDK](https://wiki.ros.org/dji_sdk), and a [Rosbridge Server](https://wiki.ros.org/rosbridge_suite). The frontend interface depends on Unity 2018.4, and can be run on any platform, but has only been tested on Windows 10. <br>
 Although the manifold comes with most things you need installed by default, you will have to setup a ROS Workspace and the Rosbridge Server. Refer to [this page](https://developer.dji.com/onboard-sdk/documentation/development-workflow/sample-setup.html) for more information on how to setup a ROS Workspace. <br>
 
