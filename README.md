@@ -168,7 +168,7 @@ _**TODO: Add pictures**_ <br>
 Peru Dayani, Research Lead <br>
 Nitzan Orr, Product Lead | [LinkedIn](https://www.linkedin.com/in/nitzanorr/) <br>
 Apollo Thomopoulos, HCI Lead | [Website](https:apollo.vision) <br>
-Varun Saran, Network and Stream Data Engineer <br>
+Varun Saran, Network and Streaming Data Engineer <br>
 Shreyas Krishnaswamy, Localization Engineer | [LinkedIn](https://www.linkedin.com/in/shreyas-krishnaswamy) <br>
 Newman Hu, Virtual Reality Engineer | [Website](https://newmanhu.com/) | [LinkedIn](https://www.linkedin.com/in/newmanhu) <br>
 Rithvik Chuppala, ROS and SDK Administrator <br>
