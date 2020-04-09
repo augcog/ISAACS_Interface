@@ -1,69 +1,197 @@
-# ISAACS Virtual Reality Interface (Version 2.0) for the DJI Matrice 210
+# Immersive Semi-Autonomous Aerial Command System
+## Virtual Reality Interface for the DJI Matrice 210 (Version 2.0) 
 <br>
 
 **TODO: Logo**
 <br>
 <br>
 
-The Immersive Semi-Autonomous Aerial Command System (ISAACS) is an undergraduate research group within the Center for Augmented Cognition of the VHL Vive Center for Enhanced Reality at the University of California, Berkeley. Our research focuses on human-computer interaction, with an emphasis on teleoperation and telesensing with quadrotors.
-
-VIVE Center  : https://vivecenter.berkeley.edu/research1/isaacs/
-<br>
-Project Plan : https://docs.google.com/document/d/1GXEwlFQQZe45mb4lhIP9hsZI8URVYLvaSjQq0cltAyw/edit
-<br>
-Project Docs : https://docs.google.com/document/d/1EitUdoNtU1bvZ9CUPSplAm-6ctrPwsNLsU_EhjWt7J8/edit
+ISAACS is an undergraduate research group within the [Center for Augmented Cognition](https://ptolemy.berkeley.edu/projects/augcog/) of the [VHL Vive Center for Enhanced Reality](https://vivecenter.berkeley.edu/research1/isaacs/) at the University of California, Berkeley. Our research is in human-UAV interaction, with a focus on teleoperation, telesensing, multi-agent interaction, and the intuitive visualization of localization data. We are also part of the student group [Extended Reality at Berkeley](https://xr.berkeley.edu/), and have recently began a collaboration with the [Lawrence Berkeley National Laboratory](https://www.lbl.gov/) to perform real-time mapping of the environment through radiation detection. This repository contains the system interface. If you are looking for the RadViz system, you want to visit [this page]().
 <br>
 
-The ISAACS Virtual Reality Interface is part of our broader vision to help augment human perception, and integrates robot vision and radiation sensing with an intuitive User Interface that enables the command of a swarm of quadrotors. Currently, direct manipulation (using natural hand motion) of the mission-ready DJI Matrice 210 is supported, while sensor integration is still at an experimental stage.
-<br>
-
-This repository is a continuation of the original ISAACS Interface, aimed at the Bitcraze Crazyflie 2.0 quadrotors. We have decided to design for the Matrice 210, given its ability to support a greater range of sensors and mission-critical tasks.
+Lead by a small team of passionate student, the project began in 2015 thanks to a [Microsoft Hololens Academic Research Grant](https://blogs.windows.com/devices/2015/11/11/meet-the-award-recipients-of-the-first-microsoft-hololens-academic-research-grants/). The prototype display, aimed at the Bitcraze Crazyflie 1.0 was a success, and eventually evolved into a system that allowed the manipulation of two such UAVs. A year later, the interface was ported over to the DJI Matrice 100, and is now available in its second working version, for the Matrice 210, and soon for the Matrice 600. Our decision to use the Matrice 210 and Matrice 600 quadrotors stems from their ability to support a greater range of sensors and mission-critical tasks, which the previously tested UAVs did not. 
+The current interface enables direct manipulation of the Matrice 210 using natural hand motion, and provides accurate localization and visualization of the UAV's position and environment (including nearby buildings), using GPS. Over the next few months, we will be integrating a Radiation, Depth Camera and LIDAR sensors to also support real-time mapping and 3D reconstruction of the UAV's environment.
 <br>
 <br>
 
-**TODO: Picture**
-<br>
-<br>
-
-
-## Table of Contents
-**TODO: Add links to content titles.**
-* Installation and Deployment
-* Using the Interface
-* Branches
-* Roadmap
-* Licensing
+**TODO: Video and/or Picture**
 <br>
 <br>
 
-**TODO: Installation, and Deployment + Video showing how to use the interface.**
+## Table of Contents
+1. [ Hardware Dependencies and Setup ](#hardware)
+2. [ Software Dependencies and Setup ](#software)
+3. [ Installation and Deployment ](#installation)
+4. [ Usage ](#usage)
+5. [ Understanding the System ](#understanding)
+6. [ Meet the Team ](#team)
+7. [ Acknowledgments ](#acknowledgments)
+8. [ Licensing ](#licensing)
 <br>
 <br>
 
-## Branches
-Upstream development happens on the Alpha branch. Once most bugs have been eliminated, changes are pushed on the Beta branch for testing. The Master branch gets updated only when the interface is demo-ready.
+<a name="hardware"></a>
+## 1. Hardware Dependencies
+You will need the following to run the system in simulation:
+- DJI Matrice 210 Quadrotor
+- DJI Matrice 210 RTK
+- 2x Matrice 210 Quadrotor Batteries
+- 1x Matrice 210 RTK Battery
+- DJI Matrice Manifold 2 Onboard Computer
+- 1x USB 3.0 to TTL Cable
+- 1x USB 3.0 to USB 3.0 Cable
+- Oculus Rift Virtual Reality Headset
+- VR-Ready Computer (we suggest a GeForce GTX 970 Graphics Card or better)
+- An Ethernet Cable
+
+Additionally, to fly the UAV in real space, you will need:
+- DJI Matrice RTK GPS Station
+- 1x USB 3.0 Wi-Fi Card
+- 1x Matrice 210 Quadrotor Battery
+- A Wi-Fi Source
+
+<br> You will have to connect the Manifold USB 3.0 port to the Matrice 210 UART port, using the USB 3.0 to TTL Cable. Refer to [this page](https://developer.dji.com/onboard-sdk/documentation/development-workflow/hardware-setup.html) for more information. Unlike what is described in the DJI documentation, we found out than on our Matrice 210, the TX and RX pins where inverted, meaning that TX is the white pin, RX is the green pin, and GND is the black pin. You also want to make sure that the gray Power slider is slided all the way to the left. <br>
+
+You will moreover need to plug-in, into the Manifold, a USB 3.0 Wi-Fi card (if you plan on flying the UAV in real space), or an Ethernet cable (if you only plan on running the system in simulation). Also, to facilitate the next steps, you may want to connect the manifold to a keyboard and a screen, using an HDMI cable. If not, you can always SSH into it. <br>
+
+Once you have done the above, place two batteries in the UAV and plug-in the Manifold power cord. Then, double-press and hold the orthogonal white button in front of the Matrice 210 UAV, and finally press and hold the PWR button of the Manifold. If everything went well, the UAV will play a sound, and the Manifold computer will boot.
 <br>
 <br>
 
-## Licensing
-This repository contains three types of files: program files, graphics files (visual content, such as quadrotor models), and SDK files. All program files, unless otherwise stated, are distributed under the GNU General Public License version 3. All graphics files are distributed under the Creative Commons Attribution-ShareAlike 4.0 International license. For SDK files, please refer to their respective licenses. A license notice is included in all files created by us. In case of doubt, please send us an email at: **TODO**.
+
+<a name="software"></a>
+## 2. Software Dependencies
+The system uses two computers, one attached to the UAV, which we call **Manifold**, and one running the VR interface, which we call **VR-Ready Computer**. You may also use a third computer to run a flight simulation using the [DJI Assistant 2 for Matrice](https://www.dji.com/jp/downloads/softwares/assistant-dji-2-for-matrice), but this can be done on the VR-Ready Computer simultaneously as the frontend application is running. The Manifold backend depends on [ROS Kinetic](https://wiki.ros.org/kinetic), which requires Ubuntu 16.04 (Xenial), or another Debian-based GNU/Linux distribution. You will furthermore need the [ROS DJI SDK](https://wiki.ros.org/dji_sdk), and a [Rosbridge Server](https://wiki.ros.org/rosbridge_suite). The frontend interface depends on Unity 2018.4, and can be run on any platform, but has only been tested on Windows 10. <br>
+Although the manifold comes with most things you need installed by default, you will have to setup a ROS Workspace and the Rosbridge Server. Refer to [this page](https://developer.dji.com/onboard-sdk/documentation/development-workflow/sample-setup.html) for more information on how to setup a ROS Workspace. <br>
+
+### Common Problems when Setting up a Workspace
+**\`catkin make\` does not compile**
+You might need to clone the [nmea_msgs](https://github.com/ros-drivers/nmea_msgs) package into the `src` folder, and then try again.
+<br>
+
+**I'm editing the sdk.launch file with \`rosed\`, but I cannot find the correct serial port**
+This will in most cases be `/dev/ttyUSB0`. If this is incorrect, then an error will pop up in the next step. To find the correct serial port:
+
+- `$` `grep -iP PRODUCT= /sys/bus/usb-serial/devices/ttyUSB0/../uevent`
+CAUTION: there is a space between PRODUCT= and /sys'. This is not a typo.
+- `$` `lsusb | grep <ID>`
+Replace \<ID\> with the ID found from the previous step.
+<br>
+
+**I don't know what to set the Baudrate to**
+The Baudrate should be set to 921600. If you are using the DJI Assistant 2 for Matrice to simulate a flight, then you also need to set the same Baudrate inside the DJI Assistant 2 for Matrice app, which can be found under the SDK tab.
+<br>
+
+**Connecting to the simulator and launching the SDK fails for an unknown reason**
+This can be due to many reasons, but generally it means tht you have to set a udev exception, and/or disable advanced sensing and connect the Manifold with the UAV with an additional USB 3.0 to USB 3.0 cable. CAUTION: disabling advanced sensing disables the Matrice 210's built-in object avoidance mechanism.
+
+- `$` `echo 'SUBSYSTEM=="usb", ATTRS{idVendor}=="2ca3", MODE="0666"' | sudo tee /etc/udev/rules.d/m210.rules`
+- Set `enable_adanced_sensing` to `false` in the file `.../Onboard-SDK-ROS/dji_sdk/src/modules/dji_sdk_node.cpp`
+<br>
+
+### Installing the Rosbridge Server on the Manifold
+`$` `sudo apt-get install ros-kinetic-rosbridge-server`
+<br>
+
+### Installing Unity on the VR-Ready Computer
+Unity versions and installation instructions can be found on [this page](https://unity3d.com/get-unity/download/archive).
 <br>
 <br>
 
-GNU General Public License version 3 Notice:
+<a name="installation"></a>
+## 3. Installation and Deployment
+Make sure that you read and went through the Hardware Dependencies and Software Dependencies section, before proceeding with the system installation. This is critically important; the system will not work otherwise. <br>
+
+### Installation (Simulation only)
+1. Clone the project on the VR-Ready Computer with the following command:
+`$` `git clone https://github.com/immersive-command-system/ImmersiveDroneInterface_2.git` <br>
+2. Place the RTK Battery inside the RTK Controller, and turn it on.
+3. Disable RTK Signal (you may need to connect the controller to a phone or tablet with the 'DJI Go 4' app for this step) 
+4. Modify the Manifold's .bashrc to source ROS environment variables:
+`$` `echo 'cd $HOME/DJI/catkin_ws && source devel/setup.bash' >> $HOME/.bashrc`
+5. In a new terminal, start the DJI SDK:
+`$` `roslaunch dji_sdk sdk.launch`
+6. Test if the UAV can receive Manifold instructions by running the following command (this should spin the rotors, without actually flying the drone):
+`$` `rosservice call /dji_sdk/sdk_control_authority 1`
+`$` `rosservice call /dji_sdk/drone_arm_control 1`
+7. If the rotor spin, great, we are almost there! Stop the rotors with the following command:
+`$` `rosservice call /dji_sdk/drone_arm_control 0`
+8. Check that the Manifold is correctly connected to the Ethernet cable. Connect the other end of the Ethernet cable to the VR-Ready computer.
+9. Run the Rosbridge Server. This will launch a WebSocket in port 9090. If you want to use a different port, see [this page](https://wiki.ros.org/rosbridge_suite/Tutorials/RunningRosbridge).
+`$` `roslaunch rosbridge_server rosbridge_websocket.launch`
+10. Connect the Oculus headset with the VR-Ready laptop. If you have not done so already, follow through the [Oculus Rift setup](https://www.oculus.com/setup/).
+11. Connect the Manifold to a computer with the DJI Assistant 2 for Matrice using a USB 3.0 to USB 3.0 cable, and launch the Flight Simulator.
+12. Launch our application via Unity. Find the script named `ROSDroneConnection.cs` _**TODO: Is this the correct script?**_ and replace the IP address of the server with the actual IP address of the Manifold. To find the IP address of the Manifold, use the following command:
+`$` `hostname -I`
+<br>
+13. Save and close the script, and launch our application by clicking on the play (small triangle) button inside Unity. If all went well, you should see printed information that a client connected to the Rosbridge Server, inside the terminal from which the Rosbridge server was launched.
+14. Congratulations, you are ready to fly your UAV in VR!
 <br>
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+### Installation (with UAV flight)
+Follow the steps 1-10 as above, skipping step 11. Then, setup the RTK GPS Station (_**TODO**_).
+Finally, continue with steps 12-14.
 <br>
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+### Deployment
+Each time that you want to run our system, you will have to first disable the RTK signal, and then run the DJI SDK and Rosbridge Server. Each time that you change your internet connection, you will also have to change the IP address that the Unity client subscribes to. The routine is rather simple:
+1. Power-on the UAV, Manifold and VR-Ready Computer
+2. (Optionally) connect the UAV to the DJI Assistant 2 for Matrice, and launch the Flight Simulator
+3. Turn of the RTK signal through the 'DJI Go 4' app
+4. Launch the SDK
+`$` `roslaunch dji_sdk sdk.launch`
+5. Launch the Rosbridge Server
+`$` `roslaunch rosbridge_server rosbridge_websocket.launch`
+6. Open our system in Unity and click the play button
+<br>
 <br>
 
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
+<a name="usage"></a>
+## 4. Usage
+_**TODO: add video guide**_
+(how to manipulate the drone when wearing the VR headset, how to scroll, zoom, rotate...)
+<br>
+<br>
+
+<a name="understanding"></a>
+## 5. Understanding the System
+_**TODO and also add a picture that shows our architecture**_
+
+(Upstream development happens on the Alpha branch. Once most bugs have been eliminated, changes are pushed on the Beta branch for testing. The Master branch gets updated only when the interface is demo-ready.)
+<br>
+<br>
+
+<a name="team"></a>
+## 6. Meet the Team
+_**TODO: Add pictures**_
+**Spring 2020**
+Peru Dayani, Research Lead
+Nitzan Orr, Product Lead | [LinkedIn](https://www.linkedin.com/in/nitzanorr/)
+Apollo Thomopoulos, HCI Lead | [Website](https:apollo.vision)
+Varun Saran, Network and Stream Data Engineer
+Shreyas Krishnaswamy, Localization Engineer | [LinkedIn](https://www.linkedin.com/in/shreyas-krishnaswamy)
+Newman Hu, Virtual Reality Engineer | [Website](https://newmanhu.com/) | [LinkedIn](https://www.linkedin.com/in/newmanhu)
+Rithvik Chuppala, ROS and SDK Administrator | [LinkedIn]()
+Arya Anand, Models and VFX Designer <br>
+**Alumni**
+Jesse Patterson | [Website](http://www.jessepaterson.com/)
+Jessica Lee | [LinkedIn](https://www.linkedin.com/in/jess-l/)
+Ji Han
+Paxtan Laker
+Rishi Upadhyay
+Brian Wu
+Eric Zhang
+Xin Chen
+<br>
+<br>
+
+<a name="acknowledgments"></a>
+## 7. Acknowledgments
+We would like to thank [Dr. Allen Yang](https://people.eecs.berkeley.edu/~yang/) and [Dr. Kai Vetter](https://vcresearch.berkeley.edu/faculty/kai-vetter) for their mentorship and supervision. We would also like to thank our graduate advisors, [David McPherson](https://people.eecs.berkeley.edu/~david.mcpherson/) and [Joe Menke](https://people.eecs.berkeley.edu/~joemenke/) for their continuous support. Finally, a warm thank you goes to [Griffin McGuire](https://www.instagram.com/griffindart/) for illustrating our logo.
+<br>
+<br>
+
+<a name="licensing"></a>
+## 8. Licensing
+This repository contains four types of files: program files, media files (visual content, such as UAV models), Unity assets and SDK (DJI and MapBox) files. All program files, unless otherwise stated, are distributed under the GNU General Public License version 3. All media files are distributed under the Creative Commons Attribution-ShareAlike 4.0 International license. For Unity Assets and SDK files, please refer to their respective licenses. A license notice is included within all files created by us. <br>
+In case of doubt on whether you can use an asset, or on how to correctly attribute its authors, please e-mail us at: **TODO**.
