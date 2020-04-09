@@ -142,7 +142,7 @@ Each time that you want to run our system, you will have to first disable the RT
 <br> `$` `roslaunch rosbridge_server rosbridge_websocket.launch`
 6. Open our system in Unity and click the play button
 
-Moreove, each time your internet connection changes, you will have to change the IP address that the Unity client subscribes to. 
+Moreover, each time your internet connection changes, you will have to change the IP address that the Unity client subscribes to. 
 <br>
 <br>
 
