@@ -165,17 +165,18 @@ _**TODO and also add a picture that shows our architecture**_
 ## 6. Meet the Team
 _**TODO: Add pictures**_ <br>
 ### Spring 2020
-Peru Dayani, Research Lead <br>
-Nitzan Orr, Product Lead | [LinkedIn](https://www.linkedin.com/in/nitzanorr/) <br>
-Apollo Thomopoulos, HCI Lead | [Website](https:apollo.vision) <br>
+[Peru Dayani](https://perudayani.github.io/perudayani/), Research Lead <br>
+[Nitzan Orr](https://www.linkedin.com/in/nitzanorr/), Product Manager <br>
+[Apollo](https://apollo.vision), Interaction Designer <br>
+[Eric Wang](https://www.linkedin.com/in/erwang01), Data Visualization Engineer <br>
 Varun Saran, Network and Streaming Data Engineer <br>
-Shreyas Krishnaswamy, Localization Engineer | [LinkedIn](https://www.linkedin.com/in/shreyas-krishnaswamy) <br>
-Newman Hu, Virtual Reality Engineer | [Website](https://newmanhu.com/) | [LinkedIn](https://www.linkedin.com/in/newmanhu) <br>
-Rithvik Chuppala, ROS and SDK Administrator <br>
-Arya Anand, Models and VFX Designer <br>
+[Shreyas Krishnaswamy](https://www.linkedin.com/in/shreyas-krishnaswamy), Localization Engineer <br>
+[Newman Hu](https://newmanhu.com/), Controls Engineer <br>
+Rithvik Chuppala, System Administrator <br>
+Arya Anand, 3D Artist <br>
 ### Alumni
-Jesse Patterson | [Website](http://www.jessepaterson.com/) <br>
-Jessica Lee | [LinkedIn](https://www.linkedin.com/in/jess-l/) <br>
+[Jesse Patterson](http://www.jessepaterson.com/) <br>
+[Jessica Lee](https://www.linkedin.com/in/jess-l/) <br>
 Ji Han <br>
 Paxtan Laker <br>
 Rishi Upadhyay <br>
@@ -187,12 +188,12 @@ Xin Chen
 
 <a name="acknowledgments"></a>
 ## 7. Acknowledgments
-We would like to thank [Dr. Allen Yang](https://people.eecs.berkeley.edu/~yang/) and [Dr. Kai Vetter](https://vcresearch.berkeley.edu/faculty/kai-vetter) for their mentorship and supervision. We would also like to thank our graduate advisors, [David McPherson](https://people.eecs.berkeley.edu/~david.mcpherson/) and [Joe Menke](https://people.eecs.berkeley.edu/~joemenke/) for their continuous support. Finally, a warm thank you goes to [Griffin McGuire](https://www.instagram.com/griffindart/) for illustrating our logo.
+We would like to thank [Dr. Allen Yang](https://people.eecs.berkeley.edu/~yang/) and [Dr. Kai Vetter](https://vcresearch.berkeley.edu/faculty/kai-vetter) for their mentorship and supervision. We would also like to thank our graduate advisors, [David McPherson](https://people.eecs.berkeley.edu/~david.mcpherson/) and [Joe Menke](https://people.eecs.berkeley.edu/~joemenke/) for their continuous support.
 <br>
 <br>
 
 <a name="licensing"></a>
 ## 8. Licensing
-This repository contains four types of files: program files, media files (visual content, such as UAV models), Unity assets and SDK (DJI and MapBox) files. All program files, unless otherwise stated, are distributed under the GNU General Public License version 3. All media files are distributed under the Creative Commons Attribution-ShareAlike 4.0 International license. For Unity Assets and SDK files, please refer to their respective licenses. A license notice is included within all files created by us. <br>
+This repository contains four types of files: program files, assets created by us (such as UAV models), Unity prefabs, and SDK files (DJI and MapBox). All program files, unless otherwise stated, are distributed under the GNU General Public License version 3. All media files are distributed under the Creative Commons Attribution-ShareAlike 4.0 International license. For Unity prefabs and SDK files, please refer to their respective licenses. A license notice is included within all files created by us. <br>
 <br>
-In case of doubt on whether you can use an asset, or on how to correctly attribute its authors, please e-mail us at: **TODO**.
+In case of doubt on whether you can use an asset, or on how to correctly attribute its authors, please e-mail us at: isaacs@xr.berkeley.edu.
