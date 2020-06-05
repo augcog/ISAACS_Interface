@@ -27,6 +27,8 @@ TagManager:
   - selectionZone
   - drone1
   - rfs_roof
+  - UI_Main_Menu
+  - UI_panel
   layers:
   - Default
   - TransparentFX
