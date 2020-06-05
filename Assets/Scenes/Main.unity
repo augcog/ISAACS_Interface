@@ -420,7 +420,7 @@ GameObject:
   - component: {fileID: 78194255}
   - component: {fileID: 78194258}
   m_Layer: 0
-  m_Name: Ceiling
+  m_Name: Minimap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2695,7 +2695,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &579655692
 GameObject:
@@ -3113,7 +3113,7 @@ Transform:
   m_LocalScale: {x: 0.1, y: 0.100000024, z: 0.1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 83.595, y: 0, z: 0}
 --- !u!1 &697585987
 GameObject:
@@ -3344,7 +3344,7 @@ Transform:
   m_Children:
   - {fileID: 78194254}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &901874428
 GameObject:
@@ -4537,7 +4537,7 @@ GameObject:
   - component: {fileID: 899238562}
   - component: {fileID: 1209669984}
   m_Layer: 0
-  m_Name: Station
+  m_Name: MinimapParent
   m_TagString: Table
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6511,7 +6511,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1668557240
 GameObject:
