@@ -24,7 +24,6 @@ namespace ISAACS
         public GameObject controller_left;
         public GameObject controller_right;
         public GameObject leftUIPanel; /* The panel showing possible actions for the current agent. */
-        public GameObject rightUIPanel; /* The panel showing which agent is currently being controlled. */
         private enum pressedState { INIT, LEFT, RIGHT, BOTH };
         private static pressedState pressed;
 
@@ -50,7 +49,6 @@ namespace ISAACS
                         /* Hide both controllers to give the user a better view for scaling. */
                         controller_right.SetActive(false);
                         controller_left.SetActive(false);
-                        rightUIPanel.SetActive(false);
                         leftUIPanel.SetActive(false);
                         /* Let the program know that both triggers have already been pressed. */
                         pressed = pressedState.BOTH;
@@ -69,18 +67,16 @@ namespace ISAACS
                         GetComponent<VRTK_StraightPointerRenderer>().enabled = true;
                         GetComponent<VRTK_Pointer>().enabled = true;
 
+                        LeftController.GetComponent<VRTK_BezierPointerRenderer>().enabled = true;
+                        LeftController.GetComponent<VRTK_Pointer>().enabled = true;
+
                         leftUIPanel.SetActive(true);
 
                     }
                     else if (pressed == pressedState.LEFT)
                     {
                         /* Hide the right UI panel to give the user a better view for placing waypoints. */
-                        rightUIPanel.SetActive(false);
                         leftUIPanel.SetActive(true);
-                    }
-                    else
-                    {
-                        rightUIPanel.SetActive(false);
                     }
                     pressed = pressedState.RIGHT;
                 }
@@ -100,12 +96,9 @@ namespace ISAACS
 
                         LeftController.GetComponent<VRTK_BezierPointerRenderer>().enabled = true;
                         LeftController.GetComponent<VRTK_Pointer>().enabled = true;
-
-                        rightUIPanel.SetActive(true);
                     }
                     else if (pressed == pressedState.RIGHT)
                     {
-                        rightUIPanel.SetActive(true);
                         leftUIPanel.SetActive(false);
                     }
                     else
@@ -130,12 +123,7 @@ namespace ISAACS
                     LeftController.GetComponent<VRTK_BezierPointerRenderer>().enabled = true;
                     LeftController.GetComponent<VRTK_Pointer>().enabled = true;
 
-                    rightUIPanel.SetActive(true);
                     leftUIPanel.SetActive(true);
-                }
-                if (pressed == pressedState.RIGHT)
-                {
-                    rightUIPanel.SetActive(true);
                 }
                 if (pressed == pressedState.LEFT)
                 {

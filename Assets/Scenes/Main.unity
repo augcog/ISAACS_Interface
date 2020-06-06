@@ -417,8 +417,8 @@ GameObject:
   m_Component:
   - component: {fileID: 78194254}
   - component: {fileID: 78194257}
-  - component: {fileID: 78194255}
   - component: {fileID: 78194258}
+  - component: {fileID: 78194255}
   m_Layer: 0
   m_Name: Minimap
   m_TagString: Untagged
@@ -1143,6 +1143,36 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11400000, guid: 126d619cf4daa52469682f85c1378b4a, type: 2}
       propertyPath: _trackingOriginType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 20000012175207052, guid: 126d619cf4daa52469682f85c1378b4a,
+        type: 2}
+      propertyPath: m_ClearFlags
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2037080, guid: 126d619cf4daa52469682f85c1378b4a, type: 2}
+      propertyPath: orthographic
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2037080, guid: 126d619cf4daa52469682f85c1378b4a, type: 2}
+      propertyPath: m_ClearFlags
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 20000010189485334, guid: 126d619cf4daa52469682f85c1378b4a,
+        type: 2}
+      propertyPath: m_ClearFlags
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2037080, guid: 126d619cf4daa52469682f85c1378b4a, type: 2}
+      propertyPath: m_BackGroundColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2037080, guid: 126d619cf4daa52469682f85c1378b4a, type: 2}
+      propertyPath: m_BackGroundColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2037080, guid: 126d619cf4daa52469682f85c1378b4a, type: 2}
+      propertyPath: m_BackGroundColor.b
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -2275,7 +2305,7 @@ GameObject:
   - component: {fileID: 491234450}
   - component: {fileID: 491234454}
   m_Layer: 5
-  m_Name: UI
+  m_Name: Left UI Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3074,7 +3104,7 @@ Light:
   m_Enabled: 1
   serializedVersion: 8
   m_Type: 1
-  m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
+  m_Color: {r: 1, g: 0.98816353, b: 0.9558824, a: 1}
   m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
@@ -4665,8 +4695,8 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!135 &1320984949
-SphereCollider:
+--- !u!64 &1320984949
+MeshCollider:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
@@ -4674,9 +4704,11 @@ SphereCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_SkinWidth: 0.01
+  m_Mesh: {fileID: 4300000, guid: 51a3eafc04bfff94cb9bb430f7929085, type: 3}
 --- !u!33 &1320984950
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -4698,6 +4730,7 @@ GameObject:
   - component: {fileID: 1347866317}
   - component: {fileID: 1347866315}
   - component: {fileID: 1347866318}
+  - component: {fileID: 1347866316}
   m_Layer: 0
   m_Name: RightController
   m_TagString: GameController
@@ -4839,6 +4872,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   customColliderContainer: {fileID: 0}
+--- !u!114 &1347866316
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1347866310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a9d83d86e553254eba701f0e631ab28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LeftController: {fileID: 2053542333}
+  controller_left: {fileID: 283578732}
+  controller_right: {fileID: 665289476}
+  leftUIPanel: {fileID: 491234449}
 --- !u!114 &1347866317
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7523,7 +7571,6 @@ GameObject:
   - component: {fileID: 2053542341}
   - component: {fileID: 2053542335}
   - component: {fileID: 2053542338}
-  - component: {fileID: 2053542336}
   m_Layer: 0
   m_Name: LeftController
   m_TagString: Untagged
@@ -7556,18 +7603,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   customColliderContainer: {fileID: 0}
---- !u!114 &2053542336
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2053542333}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c7b1f1a628c1b6649ae73dd04b35765d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  panel: {fileID: 491234449}
 --- !u!114 &2053542337
 MonoBehaviour:
   m_ObjectHideFlags: 0
