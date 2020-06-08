@@ -847,6 +847,8 @@ GameObject:
   - component: {fileID: 146794966}
   - component: {fileID: 146794967}
   - component: {fileID: 146794965}
+  - component: {fileID: 146794969}
+  - component: {fileID: 146794968}
   m_Layer: 0
   m_Name: World
   m_TagString: World
@@ -939,10 +941,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aebd008abee601a489d49b2b7b8a3328, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  connectionStatus: 0
-  LampIP: 99.46.143.114
   ManifoldIP: 192.168.60.191
+  connectionStatus: 0
+  implementLamp: 1
+  LampIP: 99.46.143.114
   pointCloudLevel: -1
+  DronePosition: 1
+  DroneBattery: 0
+  GPSHealth: 0
 --- !u!114 &146794967
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -965,6 +971,60 @@ MonoBehaviour:
   initZoom_citySim: 21
   initLat_citySim: 0
   initLong_citySim: 0
+--- !u!114 &146794968
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 146794962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dac87ae293d0bd348a6bcb090e69c517, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DronesList:
+  - droneName: Perry Pepe the Platipus
+    droneTag: M210
+    ipAddress: 75.25.126.85
+    port: 9090
+    droneType: 1
+    droneSubscribers: 0500000001000000
+  SensorsList:
+  - sensorName: Apopopollo
+    sensorTag: LAMP
+    ipAddress: 75.25.126.85
+    port: 9090
+    sensorType: 2
+    sensorSubscribers: 0000000003000000
+  success: 0
+  uniqueID: 0
+--- !u!114 &146794969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 146794962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 029cb2c8d0422ef4a9fa7ff2e8e9fafb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  subscribeSurfacePointCloud: 6
+  subscribeColorized0: 0
+  subscribeColorized1: 1
+  subscribeColorized2: 2
+  subscribeColorized3: 3
+  subscribeColorized4: 4
+  subscribeColorized5: 5
+  getAuthority: q
+  getVersion: w
+  takeoffDrone: e
+  landDrone: r
+  uploadTestMission: t
+  missionInfo: y
+  executeUploadedMission: u
+  worldProperties: {fileID: 0}
+  rosDroneConnection: {fileID: 0}
 --- !u!1 &161977055
 GameObject:
   m_ObjectHideFlags: 0
