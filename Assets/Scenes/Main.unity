@@ -846,9 +846,9 @@ GameObject:
   - component: {fileID: 146794964}
   - component: {fileID: 146794966}
   - component: {fileID: 146794967}
-  - component: {fileID: 146794965}
   - component: {fileID: 146794969}
   - component: {fileID: 146794968}
+  - component: {fileID: 146794965}
   m_Layer: 0
   m_Name: World
   m_TagString: World
@@ -926,10 +926,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 146794962}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bc1dbd07f7a099546995229a1320899c, type: 3}
+  m_Script: {fileID: 11500000, guid: 7787ec4cc870bae4c9e65fbfa30a4364, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0.1
+  speed: 0.2
 --- !u!114 &146794966
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -38,8 +38,8 @@ public class DroneButtons : MonoBehaviour {
             if (simulation)
             {
                 GameObject world = GameObject.FindGameObjectWithTag("World");
-                DroneFlyingDemo drone = world.GetComponent<DroneFlyingDemo>();
-                drone.FlyNextWaypoint(true);
+                DroneSimulationManager droneSim = world.GetComponent<DroneSimulationManager>();
+                droneSim.FlyNextWaypoint(true);
                 return;
             }
 
@@ -57,8 +57,8 @@ public class DroneButtons : MonoBehaviour {
             if (simulation)
             {
                 GameObject world = GameObject.FindGameObjectWithTag("World");
-                DroneFlyingDemo drone = world.GetComponent<DroneFlyingDemo>();
-                drone.pauseFlight();
+                DroneSimulationManager droneSim = world.GetComponent<DroneSimulationManager>();
+                droneSim.pauseFlight();
                 return;
             }
             // Test and switch
@@ -71,8 +71,8 @@ public class DroneButtons : MonoBehaviour {
             if (simulation)
             {
                 GameObject world = GameObject.FindGameObjectWithTag("World");
-                DroneFlyingDemo drone = world.GetComponent<DroneFlyingDemo>();
-                drone.resumeFlight();
+                DroneSimulationManager droneSim = world.GetComponent<DroneSimulationManager>();
+                droneSim.resumeFlight();
                 return;
             }
 
@@ -112,8 +112,8 @@ public class DroneButtons : MonoBehaviour {
             if (simulation)
             {
                 GameObject world = GameObject.FindGameObjectWithTag("World");
-                DroneFlyingDemo drone = world.GetComponent<DroneFlyingDemo>();
-                drone.flyHome();
+                DroneSimulationManager droneSim = world.GetComponent<DroneSimulationManager>();
+                droneSim.flyHome();
                 return;
             }
 

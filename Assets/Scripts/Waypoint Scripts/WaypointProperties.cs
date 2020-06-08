@@ -36,7 +36,7 @@
         private CapsuleCollider lineCollider;
 
         private GameObject world;
-        private GameObject controller;
+        //private GameObject controller;
 
         public static GameObject controller_right;
 
@@ -48,7 +48,7 @@
             referenceDroneGameObject = referenceDrone.gameObjectPointer;
 
             world = GameObject.FindGameObjectWithTag("World");
-            controller = GameObject.FindGameObjectWithTag("GameController");
+            //controller = GameObject.FindGameObjectWithTag("GameController");
             controller_right = GameObject.Find("controller_right");
 
             if (classPointer.prevPathPoint != null)

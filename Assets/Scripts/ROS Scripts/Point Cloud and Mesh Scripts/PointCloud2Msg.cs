@@ -82,7 +82,7 @@ public class PointCloud2Msg : ROSBridgeMsg {
 
    	private PointCloud<PointXYZRGBAIntensity> ReadDataRGBAIntensity(byte[] byteArray) {
 		PointCloud<PointXYZRGBAIntensity> cloud = new PointCloud<PointXYZRGBAIntensity> ();
-        int temp = byteArray.Length / (int)_point_step;
+        //int temp = byteArray.Length / (int)_point_step;
         for (int i = 0; i < _width * _height; i++) {
             float x = System.BitConverter.ToSingle(_data, i * (int)_point_step + 0);
             float y = System.BitConverter.ToSingle(_data, i * (int)_point_step + 4);
@@ -101,7 +101,7 @@ public class PointCloud2Msg : ROSBridgeMsg {
 
    	private PointCloud<PointXYZRGBA> ReadDataRGBA(byte[] byteArray) {
 		PointCloud<PointXYZRGBA> cloud = new PointCloud<PointXYZRGBA> ();
-        int temp = byteArray.Length / (int)_point_step;
+        //int temp = byteArray.Length / (int)_point_step;
         for (int i = 0; i < _width * _height; i++) {
             float x = System.BitConverter.ToSingle(_data, i * (int)_point_step + 0);
             float y = System.BitConverter.ToSingle(_data, i * (int)_point_step + 4);
@@ -121,7 +121,7 @@ public class PointCloud2Msg : ROSBridgeMsg {
 
 	private PointCloud<PointXYZIntensity> ReadDataIntensity(byte[] byteArray) {
 		PointCloud<PointXYZIntensity> cloud = new PointCloud<PointXYZIntensity> ();
-        int temp = byteArray.Length / (int)_point_step;
+        //int temp = byteArray.Length / (int)_point_step;
         for (int i = 0; i < _width * _height; i++) {
             float x = System.BitConverter.ToSingle(_data, i * (int)_point_step + 0);
             float y = System.BitConverter.ToSingle(_data, i * (int)_point_step + 4);

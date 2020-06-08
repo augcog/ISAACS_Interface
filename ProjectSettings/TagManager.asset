@@ -29,6 +29,13 @@ TagManager:
   - rfs_roof
   - UI_Main_Menu
   - UI_panel
+  - M210
+  - M100
+  - M600
+  - SPRITE
+  - LAMP
+  - MESH
+  - PC
   layers:
   - Default
   - TransparentFX

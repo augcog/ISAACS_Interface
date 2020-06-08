@@ -53,8 +53,8 @@
         public float movementAngleDecay = .95f;
 
         // Pointer Controller
-        private GameObject controller;
-        private VRTK.VRTK_StraightPointerRenderer pointer;
+        // private GameObject controller;
+        // private VRTK.VRTK_StraightPointerRenderer pointer;
 
         // Peru: 3/7/2020 : Map Integration Variables
         public bool droneOutOfBounds = false;
@@ -101,8 +101,8 @@
             angles = new LinkedList<float>();
 
             //For accessing StraightPointerRenderer and gradually phase it out
-            controller = GameObject.FindGameObjectWithTag("GameController");
-            pointer = controller.GetComponent<VRTK.VRTK_StraightPointerRenderer>();
+            // controller = GameObject.FindGameObjectWithTag("GameController");
+            // pointer = controller.GetComponent<VRTK.VRTK_StraightPointerRenderer>();
         }
 
         void FixedUpdate()
