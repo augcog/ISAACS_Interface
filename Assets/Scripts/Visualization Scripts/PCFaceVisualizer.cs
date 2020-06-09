@@ -62,6 +62,10 @@ public class PCFaceVisualizer : MonoBehaviour
         float[] x = meshMsg.Vert_x;
         float[] y = meshMsg.Vert_y;
         float[] z = meshMsg.Vert_z;
+        byte[] r = meshMsg.Color_r;
+        byte[] g = meshMsg.Color_g;
+        byte[] b = meshMsg.Color_b;
+        byte[] a = meshMsg.Color_a;
         for (int j = 0; j < x.Length; j++)
         {
             if (flipYZ)
@@ -72,14 +76,6 @@ public class PCFaceVisualizer : MonoBehaviour
             {
                 newVertices.Add(new Vector3(x[j], y[j], z[j]));
             }
-        }
-        byte[] r = meshMsg.Color_r;
-        byte[] g = meshMsg.Color_g;
-        byte[] b = meshMsg.Color_b;
-        byte[] a = meshMsg.Color_a;
-
-        for (int j = 0; j < r.Length; j++)
-        {
             newColors.Add(new Color32(r[j], g[j], b[j], a[j]));
         }
 
