@@ -13,8 +13,11 @@ public class ROSManager : MonoBehaviour {
     public enum DroneType { M100, M210, M600, Sprite };
     public enum DroneSubscribers { attitude, battery_state, flight_status, gimbal_angle, gps_health, gps_position, imu, rc, velocity, height_above_takeoff, local_position };
 
-    public enum SensorType { PointCloud, Mesh, LAMP };
-    public enum SensorSubscribers { surface_pointcloud, mesh, colorized_points_0, colorized_points_1, colorized_points_2, colorized_points_3, colorized_points_4, colorized_points_5 };
+    public enum SensorType { PointCloud, Mesh, LAMP, PCFace };
+    public enum SensorSubscribers { surface_pointcloud, mesh,
+        colorized_points_0, colorized_points_1, colorized_points_2, colorized_points_3, colorized_points_4, colorized_points_5,
+        colorized_points_faced_0, colorized_points_faced_1, colorized_points_faced_2, colorized_points_faced_3, colorized_points_faced_4, colorized_points_faced_5
+    };
 
     [System.Serializable]
     public class ROSDroneConnectionInput
@@ -134,13 +137,21 @@ public class ROSManager : MonoBehaviour {
                 break;
 
             case SensorType.Mesh:
-                Debug.Log("Mesh Sensor architecture not implemented yet");
+                Debug.Log("Mesh Sensor created");
+                MeshSensor_ROSSensorConnection meshSensor_rosSensorConnection = sensor.AddComponent<MeshSensor_ROSSensorConnection>();
+                meshSensor_rosSensorConnection.InitilizeSensor(uniqueID, sensorIP, sensorPort, sensorSubscribers);
                 break;
 
             case SensorType.LAMP:
                 Debug.Log("LAMP Sensor created");
                 LampSensor_ROSSensorConnection lamp_rosSensorConnection = sensor.AddComponent<LampSensor_ROSSensorConnection>();
                 lamp_rosSensorConnection.InitilizeSensor(uniqueID, sensorIP, sensorPort, sensorSubscribers);
+                break;
+
+            case SensorType.PCFace:
+                Debug.Log("PCFace Sensor created");
+                PCFaceSensor_ROSSensorConnection pcFace_rosSensorConnection = sensor.AddComponent<PCFaceSensor_ROSSensorConnection>();
+                pcFace_rosSensorConnection.InitilizeSensor(uniqueID, sensorIP, sensorPort, sensorSubscribers);
                 break;
 
             default:
