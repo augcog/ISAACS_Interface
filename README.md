@@ -105,6 +105,7 @@ Make sure that you red and went through the Hardware Dependencies and Software D
 ### Installation (Simulation only)
 1. Clone the project on the VR-Ready Computer with the following command:
 <br> `$` `git clone https://github.com/immersive-command-system/ImmersiveDroneInterface_2.git`
+1. Initialize Submodules: `git submodule update --init --recursive`
 2. Place the RTK Battery inside the RTK Controller, and turn it on.
 3. Disable RTK Signal (you may need to connect the controller to a phone or tablet with the 'DJI Go 4' app for this step)
 4. Modify the Manifold's .bashrc to source ROS environment variables:
