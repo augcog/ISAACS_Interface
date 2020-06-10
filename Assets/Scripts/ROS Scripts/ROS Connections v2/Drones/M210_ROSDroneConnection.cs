@@ -12,7 +12,7 @@ using ROSBridgeLib.interface_msgs;
 using ISAACS;
 
 
-public class M210_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber
+public class M210_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROSDroneConnectionInterface
 {
     // Drone state enums    
     public enum FlightStatusM100
@@ -98,6 +98,81 @@ public class M210_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber
             ros.Render();
         }
     }
+
+    // Drone Control Logic
+
+    public void StartMission()
+    {
+        // Integrate dynamic waypoint system
+
+        List<MissionWaypointMsg> missionMissionMsgList = new List<MissionWaypointMsg>();
+
+        uint[] command_list = new uint[16];
+        uint[] command_params = new uint[16];
+
+        for (int i = 0; i < 16; i++)
+        {
+            command_list[i] = 0;
+            command_params[i] = 0;
+        }
+
+        bool skip = true;
+
+        // TODO: No need to refence WorldProperties, should be changed to local to drone
+        foreach (Waypoint waypoint in WorldProperties.selectedDrone.waypoints)
+        {
+            if (skip)
+            {
+                skip = false;
+                continue;
+            }
+
+            float x = waypoint.gameObjectPointer.transform.localPosition.x;
+            float y = waypoint.gameObjectPointer.transform.localPosition.y;
+            float z = waypoint.gameObjectPointer.transform.localPosition.z;
+
+            double ROS_x = WorldProperties.UnityXToLat(WorldProperties.droneHomeLat, x);
+            float ROS_y = (y * WorldProperties.Unity_Y_To_Alt_Scale) - 1f;
+            double ROS_z = WorldProperties.UnityZToLong(WorldProperties.droneHomeLong, WorldProperties.droneHomeLat, z);
+
+            MissionWaypointMsg new_waypoint = new MissionWaypointMsg(ROS_x, ROS_z, ROS_y, 3.0f, 0, 0, MissionWaypointMsg.TurnMode.CLOCKWISE, 0, 30, new MissionWaypointActionMsg(0, command_list, command_params));
+            Debug.Log("single waypoint info: " + new_waypoint);
+            missionMissionMsgList.Add(new_waypoint);
+        }
+        MissionWaypointTaskMsg Task = new MissionWaypointTaskMsg(15.0f, 15.0f, MissionWaypointTaskMsg.ActionOnFinish.AUTO_LANDING, 1, MissionWaypointTaskMsg.YawMode.AUTO, MissionWaypointTaskMsg.TraceMode.POINT, MissionWaypointTaskMsg.ActionOnRCLost.FREE, MissionWaypointTaskMsg.GimbalPitchMode.FREE, missionMissionMsgList.ToArray());
+        UploadWaypointsTask(Task);
+
+        // In UploadWaypointsTask Response start the mission
+        //SendWaypointAction(WaypointMissionAction.START);
+    }
+
+    public void PauseMission()
+    {
+        SendWaypointAction(WaypointMissionAction.PAUSE);
+    }
+
+    public void ResumeMission()
+    {
+        SendWaypointAction(WaypointMissionAction.RESUME);
+    }
+
+    public void UpdateMission()
+    {
+        // Integrate dynamic waypoint system
+        SendWaypointAction(WaypointMissionAction.STOP);
+        StartMission();
+    }
+
+    public void LandDrone()
+    {
+        ExecuteTask(DroneTask.LAND);
+    }
+
+    public void FlyHome()
+    {
+        ExecuteTask(DroneTask.GO_HOME);
+    }
+
 
     // Service Calls and corresponding callbacks
     // TODO: Change Debug to return
@@ -205,6 +280,16 @@ public class M210_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber
     {
         response = response["values"];
         Debug.LogFormat("Waypoint task upload {0} (ACK: {1})", (response["result"].AsBool ? "succeeded" : "failed"), response["ack_data"].AsInt);
+
+        // Peru 6/10/20: Start flight upon completing upload
+        if (response["result"].AsBool == true)
+        {
+            SendWaypointAction(WaypointMissionAction.START);
+        }
+        else
+        {
+            StartMission();
+        }
     }
 
     public void SendWaypointAction(WaypointMissionAction action)
