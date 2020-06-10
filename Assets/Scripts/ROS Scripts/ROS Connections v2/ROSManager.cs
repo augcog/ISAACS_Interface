@@ -72,9 +72,13 @@ public class ROSManager : MonoBehaviour {
             droneSubscribers.Add(subscriber.ToString());
         }
 
-        GameObject drone = new GameObject(rosDroneConnectionInput.droneName);
-        drone.transform.parent = this.transform;
+        //GameObject drone = new GameObject(rosDroneConnectionInput.droneName);
+        //drone.transform.parent = this.transform;
+
+        Drone droneInit = new Drone(WorldProperties.worldObject.transform.position);
+        GameObject drone = droneInit.gameObjectPointer;
         drone.tag = rosDroneConnectionInput.droneTag;
+        drone.name = rosDroneConnectionInput.droneName;
 
         switch (droneType)
         {
