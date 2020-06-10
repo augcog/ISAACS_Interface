@@ -33,7 +33,7 @@ public class DroneButtons : MonoBehaviour {
     {
         if (startMission)
         {
-            Debug.Log("Start Mission Button");
+            Debug.Log("Start Mission Button: Currently not connected to Drone_ROS Connection");
 
             if (simulation)
             {
@@ -43,16 +43,11 @@ public class DroneButtons : MonoBehaviour {
                 return;
             }
 
-            // Static Waypoint system:
-            WorldProperties.worldObject.GetComponent<ROSDroneConnection>().CreateMission();
-
-            // Test and switch to dynamic waypoint system
-            WorldProperties.StartDroneMission();
         }
 
         if (pauseMission)
         {
-            Debug.Log("TO TEST: Pause Mission Button");
+            Debug.Log("TO TEST: Pause Mission Button: Currently not connected to Drone_ROS Connection");
 
             if (simulation)
             {
@@ -67,7 +62,7 @@ public class DroneButtons : MonoBehaviour {
 
         if (resumeMission)
         {
-            Debug.Log("TO TEST: Resume Mission Button");
+            Debug.Log("TO TEST: Resume Mission Button: Currently not connected to Drone_ROS Connection");
             if (simulation)
             {
                 GameObject world = GameObject.FindGameObjectWithTag("World");
@@ -100,14 +95,14 @@ public class DroneButtons : MonoBehaviour {
 
         if (landDrone)
         {
-            Debug.Log("Land  Button");
-            WorldProperties.worldObject.GetComponent<ROSDroneConnection>().Land();
+            Debug.Log("Land  Button: Currently not connected to Drone_ROS Connection");
+            //WorldProperties.worldObject.GetComponent<ROSDroneConnection>().Land();
         }
 
 
         if (homeDrone)
         {
-            Debug.Log("Home  Button");
+            Debug.Log("Home  Button: Currently not connected to Drone_ROS Connection");
 
             if (simulation)
             {
@@ -117,7 +112,7 @@ public class DroneButtons : MonoBehaviour {
                 return;
             }
 
-            WorldProperties.worldObject.GetComponent<ROSDroneConnection>().GoHome();
+            //WorldProperties.worldObject.GetComponent<ROSDroneConnection>().GoHome();
         }
 
 
