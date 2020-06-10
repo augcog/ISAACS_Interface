@@ -72,15 +72,6 @@
         }
 
         /// <summary>
-        /// Returns the maximum height that a waypoint can be placed at
-        /// </summary>
-        /// <returns></returns>
-        public static float GetMaxHeight()
-        {
-            return (maxHeight * (actualScale.y)) + worldObject.transform.position.y;
-        }
-
-        /// <summary>
         /// Recursively adds the clipShader to the parent and all its children
         /// </summary>
         /// <param name="parent">The topmost container of the objects which will have the shader added to them</param>
@@ -96,6 +87,7 @@
                 AddClipShader(child);
             }
         }
+        
         
         /// <summary>
         ///     Converts the difference between two latitude values to a difference in meters.
