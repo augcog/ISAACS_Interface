@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using ROSBridgeLib.voxblox_msgs;
@@ -7,7 +7,7 @@ using ROSBridgeLib.rntools;
 public class PCFaceVisualizer : MonoBehaviour
 {
     /// <value> Attach DataServer object. If nonexistant, create an empty GameObject and attach the script `DataServer.cs`.</value>
-    public bool flipYZ = false;
+    public bool flipYZ = true;
 
     /// <summary>
     /// Object that holds all the individual mesh blocks.
@@ -15,19 +15,6 @@ public class PCFaceVisualizer : MonoBehaviour
     private GameObject meshParent;
 
     private bool hasChanged = false;
-
-    /// <summary>
-    /// Number of faces required for a block to be deemed worthy of being rendered.
-    /// </summary>
-    public int faceThreshold = 25;
-    /// <summary>
-    /// Time in seconds between accepting updates of a block.
-    /// </summary>
-    public float updateInterval = 30.0f;
-    /// <summary>
-    /// Maximum distance from the drone to override update time delay. Note that this is total taxi distance x+y+z not crow distance x^2+y^2+z^2
-    /// </summary>
-    public float distThreshold = 10.0f;
 
     void Start()
     {

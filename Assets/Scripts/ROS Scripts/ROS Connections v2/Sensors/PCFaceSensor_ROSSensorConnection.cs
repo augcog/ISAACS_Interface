@@ -46,6 +46,7 @@ public class PCFaceSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
             ros.AddSubscriber(subscriberTopic, this);
         }
 
+        gameObject.AddComponent<PCFaceVisualizer>();        
         Debug.Log("PC Face Mesh Connection Established");
         ros.Connect();
     }
@@ -102,7 +103,7 @@ public class PCFaceSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
         if (parsePCFaceMesh)
         {
             PCFaceMsg meshMsg = new PCFaceMsg(raw_msg);
-            PCFaceVisualizer visualizer = GameObject.Find(rendererObjectName).GetComponent<PCFaceVisualizer>();
+            PCFaceVisualizer visualizer = this.gameObject.GetComponent<PCFaceVisualizer>();
             visualizer.SetMesh(meshMsg);
         }
 
