@@ -23,7 +23,6 @@
 
         public GameObject droneBaseObject;
         public GameObject waypointBaseObject;
-        public GameObject torus;
 
         public static double droneHomeLat;
         public static double droneHomeLong;
@@ -34,7 +33,6 @@
         public static Shader clipShader;
 
         public static Dictionary<char, Drone> dronesDict;
-        public static Dictionary<char, GameObject> hoopsDict;
 
         public static Drone selectedDrone;
         public static Vector3 selectedDroneStartPos;
@@ -50,14 +48,6 @@
 
         private static float maxHeight;
         public static char nextDroneId;
-
-
-        public static List<GameObject> obstacles;
-        public static TextAsset asset; //used in ROSDroneSubscriber
-        public static GameObject closestObstacle;
-        public static float closestDist; //between obstacle and drone
-        public static HashSet<int> obstacleids; //used in ObstacleSubscriber
-        public static List<string> obstacleDistsToPrint;
 
         // M210 ROS-Unity conversion variables
         public static float earth_radius = 6378137;
@@ -86,7 +76,6 @@
 
             selectedDrone = null;
             dronesDict = new Dictionary<char, Drone>(); // Collection of all the drone classObjects
-            hoopsDict = new Dictionary<char, GameObject>(); // Collection of all the hoop gameObjects
             nextDroneId = 'A'; // Used as an incrementing key for the dronesDict and for a piece of the communication about waypoints across the ROSBridge
             worldObject = gameObject;
             placementPlane = GameObject.FindWithTag("Ground");
@@ -99,13 +88,6 @@
             maxHeight = 5;
             clipShader = GameObject.FindWithTag("Ground").GetComponent<Renderer>().material.shader;
 
-            obstacles = new List<GameObject>();
-            asset = (TextAsset)Resources.Load("test");
-            closestObstacle = null;
-            closestDist = -1;
-            obstacleids = new HashSet<int>();
-            obstacleDistsToPrint = new List<string>();
-            
             NewDrone();
         }
 
@@ -448,64 +430,6 @@
 
             Debug.Log(yaw);
             return yaw;
-        }
-
-        public static void FindClosestObstacleAndDist()
-        {
-
-            if (WorldProperties.obstacles.Count > 0)
-            {
-                closestDist = Vector3.Distance(WorldProperties.selectedDrone.gameObjectPointer.transform.localPosition, WorldProperties.obstacles[0].transform.localPosition);
-                closestObstacle = WorldProperties.obstacles[0];
-                float dist;
-                foreach (GameObject obstacle in WorldProperties.obstacles)
-                {
-                    dist = Vector3.Distance(WorldProperties.selectedDrone.gameObjectPointer.transform.localPosition, obstacle.transform.localPosition);
-                    if (dist < closestDist)
-                    {
-                        closestDist = dist;
-                        closestObstacle = obstacle;
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// When the application closes, writes the closest obstacle distances to a text file
-        /// </summary>
-        void OnApplicationQuit()
-        {
-
-        }
-
-        /// <summary>
-        /// WriteData () writes the distances of all the instances of the closestObstacles to Assets/Results/obstacles.txt
-        /// </summary>
-        static void WriteData()
-        {
-            //Find the closest obstacle from the selected drone and its distance
-
-            string path = "Assets/Results/obstacles.txt";
-
-            //clear content of file 
-            FileStream fileStream = File.Open(path, FileMode.Open);
-            fileStream.SetLength(0);
-            fileStream.Close();
-
-
-            StreamWriter writer = new StreamWriter(path, true);
-            foreach (string dist in WorldProperties.obstacleDistsToPrint)
-            {
-                writer.WriteLine(WorldProperties.closestDist);
-            }
-            writer.Close();
-
-
-            //Re-import the file to update the reference in the editor
-            AssetDatabase.ImportAsset(path);
-
-            //Print the text from the file
-            //Debug.Log("Text " + WorldProperties.asset.text);
         }
 
         /// <summary>

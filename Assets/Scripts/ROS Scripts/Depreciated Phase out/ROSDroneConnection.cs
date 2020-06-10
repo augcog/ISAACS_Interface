@@ -376,12 +376,16 @@ public class ROSDroneConnection : MonoBehaviour
         ros.CallService(service_name, "[1]");
     }
 
+    // ISAACS V1 Disabling
+    /*
     public void PublishWaypointUpdateMessage(UserpointInstruction msg)
     {
         Debug.Log("ISAACS V1 Waypoint System Disabled.");
         //Debug.Log("Published new userpoint instruction: "+ msg.ToYAMLString());
         //ros.Publish(UserpointPublisher.GetMessageTopic(), msg);
     }
+    */
+
     /// <summary> a general helper method to call any ROS Service with any argument.</summary>
     public void SendServiceCall(string service, string args)
     {

@@ -88,9 +88,9 @@
                 waypointsOrder.Add(startWaypoint);
 
                 // Send a special Userpoint message marking this as the start
-                UserpointInstruction msg = new UserpointInstruction(
-                    startWaypoint.id, "DRONE", 0, 1, 0, "ADD");
-                WorldProperties.worldObject.GetComponent<ROSDroneConnection>().PublishWaypointUpdateMessage(msg);
+                // ISAACS V1 Disabling
+                // UserpointInstruction msg = new UserpointInstruction(startWaypoint.id, "DRONE", 0, 1, 0, "ADD");
+                // WorldProperties.worldObject.GetComponent<ROSDroneConnection>().PublishWaypointUpdateMessage(msg);
             } else
             {
                 // Otherwise we can add as normal
@@ -109,8 +109,10 @@
 
             // Send a generic ROS ADD Update only if this is not the initial waypoint
             if (prev_id != "DRONE") {
-                UserpointInstruction msg = new UserpointInstruction(newWaypoint, "ADD");
-                WorldProperties.worldObject.GetComponent<ROSDroneConnection>().PublishWaypointUpdateMessage(msg);
+                // ISAACS V1 Disabling
+
+                // UserpointInstruction msg = new UserpointInstruction(newWaypoint, "ADD");
+                // WorldProperties.worldObject.GetComponent<ROSDroneConnection>().PublishWaypointUpdateMessage(msg);
             } else
             {
                 // Otherwise we have just set the starter waypoint and still need to create the real waypoint
@@ -142,8 +144,9 @@
             newWaypoint.nextPathPoint.prevPathPoint = newWaypoint;
 
             //Sending a ROS INSERT Update
-            UserpointInstruction msg = new UserpointInstruction(newWaypoint, "INSERT");
-            WorldProperties.worldObject.GetComponent<ROSDroneConnection>().PublishWaypointUpdateMessage(msg);
+            // ISAACS V1 Disabling
+            // UserpointInstruction msg = new UserpointInstruction(newWaypoint, "INSERT");
+            // WorldProperties.worldObject.GetComponent<ROSDroneConnection>().PublishWaypointUpdateMessage(msg);
         }
 
         /// <summary>
@@ -166,8 +169,10 @@
             float x = deletedWaypoint.gameObjectPointer.transform.localPosition.x;
             float y = deletedWaypoint.gameObjectPointer.transform.localPosition.y;
             float z = deletedWaypoint.gameObjectPointer.transform.localPosition.z;
-            UserpointInstruction msg = new UserpointInstruction(curr_id, prev_id, x, y, z, "DELETE");
-            WorldProperties.worldObject.GetComponent<ROSDroneConnection>().PublishWaypointUpdateMessage(msg);
+            
+            // ISAACS v1 Disabling
+            //UserpointInstruction msg = new UserpointInstruction(curr_id, prev_id, x, y, z, "DELETE");
+            //WorldProperties.worldObject.GetComponent<ROSDroneConnection>().PublishWaypointUpdateMessage(msg);
 
             // Removing the new waypoint from the dictionary, waypoints array and placement order
             waypointsDict.Remove(deletedWaypoint.id);

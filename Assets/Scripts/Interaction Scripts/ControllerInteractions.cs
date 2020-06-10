@@ -233,10 +233,14 @@
                 grabbedWaypoint.UpdateLocation(grabbedWaypoint.gameObjectPointer.transform.localPosition);
 
                 // Sending a ROS MODIFY Update
-                UserpointInstruction msg = new UserpointInstruction(grabbedWaypoint, "MODIFY");
+                // ISAACS V1 Disabling
+
+                // UserpointInstruction msg = new UserpointInstruction(grabbedWaypoint, "MODIFY");
 
                 //grabbedWaypoint.UpdateLocation()
-                WorldProperties.worldObject.GetComponent<ROSDroneConnection>().PublishWaypointUpdateMessage(msg);
+
+                // ISAACS V1 Disabling
+                // WorldProperties.worldObject.GetComponent<ROSDroneConnection>().PublishWaypointUpdateMessage(msg);
 
                 // Updating the controller state and noting that we are not grabbing anything
                 grabbedWaypoint = null;
@@ -337,8 +341,9 @@
             // Releases the waypoint when the right index is released
             if (currentControllerState == ControllerState.PLACING_WAYPOINT && OVRInput.GetUp(OVRInput.Button.SecondaryIndexTrigger))
             {
-                UserpointInstruction msg = new UserpointInstruction(currentWaypoint, "MODIFY");
-                WorldProperties.worldObject.GetComponent<ROSDroneConnection>().PublishWaypointUpdateMessage(msg);
+                // ISAACS V1 Disabling
+                //UserpointInstruction msg = new UserpointInstruction(currentWaypoint, "MODIFY");
+                //WorldProperties.worldObject.GetComponent<ROSDroneConnection>().PublishWaypointUpdateMessage(msg);
                 currentControllerState = ControllerState.IDLE;
             }
         }
