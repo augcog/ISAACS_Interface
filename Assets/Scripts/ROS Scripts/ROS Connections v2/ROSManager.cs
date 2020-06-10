@@ -10,6 +10,8 @@ using ISAACS;
 
 public class ROSManager : MonoBehaviour {
 
+    // Let's gooooo
+
     public enum DroneType { M100, M210, M600, Sprite };
     public enum DroneSubscribers { attitude, battery_state, flight_status, gimbal_angle, gps_health, gps_position, imu, rc, velocity, height_above_takeoff, local_position };
 
