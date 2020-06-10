@@ -20,17 +20,16 @@
     {
         public static double planningTime;
         public static double runtime;
+
         public GameObject droneBaseObject;
         public GameObject waypointBaseObject;
         public GameObject torus;
-        public GameObject rsf_roof;
 
         public static double droneHomeLat;
         public static double droneHomeLong;
         public static float droneHomeAlt;
 
         public static bool droneInitialPositionSet = false;
-
 
         public static Shader clipShader;
 
@@ -70,15 +69,6 @@
         public static float Unity_X_To_Lat_Scale = 10.0f;
         public static float Unity_Y_To_Alt_Scale = 10.0f;
         public static float Unity_Z_To_Long_Scale = 10.0f;
-
-
-        // Peru: 3/7/2020 : Map Integration Move
-        // Mapbox Interactions
-        public GameObject citySim;
-        public AbstractMap abstractMap;
-        public float initZoom_citySim = 21.0f;
-        public double initLat_citySim;
-        public double initLong_citySim;
 
         // Dynamic waypoint system variables
         // We should have a system design discussion on where to have this code
@@ -124,14 +114,6 @@
         private void Update()
         {
             planningTime += Time.deltaTime;
-
-            // Peru: 3/7/2020 : Map Integration 
-            if (Input.GetKeyUp("p"))
-            {
-                WorldProperties.droneHomeLat = 37.91532757;
-                WorldProperties.droneHomeLong = -122.33805556;
-                InitializeCityMap();
-            }
 
             // Peru: 5/24/2020 : Dynamic waypoint system
             //TODO: consider using invokes to not bombard the drone with queries
@@ -380,36 +362,6 @@
         }
 
         /// <summary>
-        /// Initizlize MapBox API
-        /// </summary>
-        // Peru: 3/7/2020 : Map Integration
-        // Apollo: 4/18: This needs to become private
-        public void InitializeCityMap()
-        {
-
-            // Display a map centered around the current drone position
-            initLat_citySim = WorldProperties.droneHomeLat;
-            initLong_citySim = WorldProperties.droneHomeLong;
-
-            Vector2d intiLatLong = new Vector2d(WorldProperties.droneHomeLat, WorldProperties.droneHomeLong);
-            abstractMap.Initialize(intiLatLong, (int)initZoom_citySim);
-
-            this.GetComponent<MapInteractions>().citySimActive = true;
-            this.GetComponent<MapInteractions>().initZoom_citySim = initZoom_citySim;
-
-            // Apollo: 4/18: This needs to be deleted, we are updating these variables on the next block.
-            this.GetComponent<MapInteractions>().initLat_citySim = initLat_citySim;
-            this.GetComponent<MapInteractions>().initLong_citySim = initLong_citySim;
-            this.GetComponent<MapInteractions>().initPosition_citySim = citySim.transform.position;
-
-            this.GetComponent<MapInteractions>().currLat_citySim = initLat_citySim;
-            this.GetComponent<MapInteractions>().currLong_citySim = initLong_citySim;
-            this.GetComponent<MapInteractions>().currPosition_citySim = citySim.transform.position;
-
-            rsf_roof.SetActive(true);
-        }
-
-        /// <summary>
         /// Returns the maximum height that a waypoint can be placed at
         /// </summary>
         /// <returns></returns>
@@ -451,7 +403,6 @@
             }
         }
 
-
         public static void M210_FirstPositionCallback(M210_DronePositionMsg new_ROSPosition, Vector3 _initial_DroneUnity_Position)
         {
             float lat_rad = Mathf.PI * new_ROSPosition._lat / 180;
@@ -478,7 +429,6 @@
             Debug.Log("Initial Drone Unity Pos: " + initial_DroneUnity_Position);
             Debug.Log("Scale set to: " + ROS_to_Unity_Scale);
         }
-
 
         /* Deprecated as of 2/20/2020; changed from scaled conversion to latitude/longitude conversion. See LatDiffMeters(float lat1, float lat2) and LongDiffMeters(float long1, float long2, float lat) for more info. -Varun,Shreyas */
         public static Vector3 M210_ROSToUnity(float ROS_lat, float ROS_alt, float ROS_long)
@@ -643,20 +593,6 @@
             //Print the text from the file
             //Debug.Log("Text " + WorldProperties.asset.text);
         }
-
-        /*
-        public static float latLongtoMetersConverter(float lat1, float long1, float alt1, float lat2, float long2, float alt2)
-        {
-
-            const float Rad = 6378.137f;
-            float dLat = (float) (lat2 * Math.PI / 180 - lat1 * Math.PI / 180);
-            float dLong = (float) (long2 * Math.PI / 180 - long1 * Math.PI / 180);
-            float a = (float) (Math.Sin(dLat / 2) * Math.Sin(dLat / 2) + Math.Cos(lat1 * Math.PI / 180) * Math.Cos(lat2 * Math.PI / 180) * Math.Sin(dLong / 2) * Math.Sin(dLong/2));
-            float c = (float) (2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a)));
-            float d = (float) (Rad * c);
-            return (float) (Math.Sqrt(Math.Pow(d * 1000, 2) + Math.Pow((alt2 - alt1), 2)));
-        }
-        */
 
         /// <summary>
         ///     Converts the difference between two latitude values to a difference in meters.

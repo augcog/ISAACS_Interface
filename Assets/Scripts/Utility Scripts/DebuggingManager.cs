@@ -29,6 +29,9 @@ public class DebuggingManager : MonoBehaviour {
     public string missionInfo = "y";
     public string executeUploadedMission = "u";
 
+    [Header("MapBox Commands")]
+    public string initMapBox = "i";
+
     [Header("Application Variables")]
     public WorldProperties worldProperties;
     public ROSDroneConnection rosDroneConnection;
@@ -139,5 +142,10 @@ public class DebuggingManager : MonoBehaviour {
             rosDroneConnection.ExecuteMission();
         }
 
+        if (Input.GetKeyUp(initMapBox))
+        {
+            MapInteractions mapInteractions = worldProperties.GetComponent<MapInteractions>();
+            mapInteractions.InitializeCityMap();
+        }
     }
 }

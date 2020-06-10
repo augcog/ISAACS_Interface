@@ -83,7 +83,7 @@
                     WorldProperties.droneInitialPositionSet = true;
 
                     // Initilize MapBox cityMap
-                    GameObject.FindWithTag("World").GetComponent<WorldProperties>().InitializeCityMap();
+                    // GameObject.FindWithTag("World").GetComponent<WorldProperties>().InitializeCityMap();
                 }
 
                 /// Calculates the 3D displacement of the drone from it's initial position, to its current position, in Unity coordinates.
