@@ -178,8 +178,6 @@ public class DebuggingManager : MonoBehaviour {
             Debug.Log("Initializing drone");
             Drone newDrone = new Drone( WorldProperties.worldObject.transform.position);
             WorldProperties.selectedDrone = newDrone;
-            WorldProperties.selectedDroneStartPos = newDrone.gameObjectPointer.transform.localPosition;
-
         }
     }
 

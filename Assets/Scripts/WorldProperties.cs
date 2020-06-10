@@ -18,26 +18,25 @@
     /// </summary>
     public class WorldProperties : MonoBehaviour
     {
+        [Header("Required Prefabs")]
         public GameObject droneBaseObject;
         public GameObject waypointBaseObject;
 
-        public static Shader clipShader;
-
+        [Header("Drone state variables")]
+        public static Drone selectedDrone;
+        public static char nextDroneId;
         public static Dictionary<char, Drone> dronesDict;
 
-        public static Drone selectedDrone;
-        public static Vector3 selectedDroneStartPos;
-
+        [Header(" Misc. State variables")]
         public static GameObject worldObject;
         public static GameObject placementPlane;
 
         public static Vector3 actualScale;
         public static Vector3 currentScale;
-        public static Vector3 droneModelOffset;
 
-        private static float maxHeight;
-        public static char nextDroneId;
+        public static Shader clipShader;
 
+        [Header("Unity-ROS Conversion Variables")]
         // ROS-Unity conversion variables
         public static float earth_radius = 6378137;
         public static Vector3 initial_DroneROS_Position = Vector3.zero;
@@ -64,9 +63,6 @@
             actualScale = new Vector3(1, 1, 1);
             currentScale = new Vector3(1, 1, 1);
 
-            droneModelOffset = new Vector3(0.0044f, -0.0388f, 0.0146f);
-
-            maxHeight = 5;
             clipShader = GameObject.FindWithTag("Ground").GetComponent<Renderer>().material.shader;
 
         }

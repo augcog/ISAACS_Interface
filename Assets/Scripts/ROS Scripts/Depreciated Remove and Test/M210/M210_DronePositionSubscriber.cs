@@ -95,7 +95,8 @@
                   );
 
                 /// sets the drone Game Object's local position in the Unity world to be it's start position plus the newly calculated 3d displacement to the drone's current position.
-                drone.transform.localPosition = WorldProperties.selectedDroneStartPos + offsetPos + changePos;
+                // Peru 6/9/20: Phasing out World Properties variables used in depreciated script
+                // drone.transform.localPosition = WorldProperties.selectedDroneStartPos + offsetPos + changePos;
             }
             else
             {
