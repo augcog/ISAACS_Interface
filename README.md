@@ -129,8 +129,8 @@ Make sure that you red and went through the Hardware Dependencies and Software D
 <br>
 
 ### Installation (with UAV flight)
-Follow the steps 1-10 as above, skipping step 11. Then, setup the RTK GPS Station (_**TODO**_).
-Finally, continue with steps 12-14.
+Follow the steps 1-11 as above, skipping step 12. Then, setup the RTK GPS Station (_**TODO**_).
+Finally, continue with steps 13-15.
 <br>
 
 ### Deployment
