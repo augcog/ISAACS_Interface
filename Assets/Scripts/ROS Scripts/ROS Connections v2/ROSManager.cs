@@ -112,6 +112,10 @@ public class ROSManager : MonoBehaviour {
 
         // TODO: Uncomment after implementing ROSDroneConnection
         // drone.InitilizeDrone(uniqueID, droneIP, dronePort, droneSubscribers)
+
+        DroneSimulationManager droneSim = drone.AddComponent<DroneSimulationManager>();
+        droneSim.InitDroneSim(droneInit);
+
         uniqueID ++;
     }
 
