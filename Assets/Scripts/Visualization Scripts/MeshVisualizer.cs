@@ -158,6 +158,9 @@ public class MeshVisualizer : MonoBehaviour
             {
                 Debug.Log("Reusing GameObject");
             }
+            newVertices.Reverse();
+            newColors.Reverse();
+
             mesh.vertices = newVertices.ToArray();
             // ?
             //mesh.uv = newUV;

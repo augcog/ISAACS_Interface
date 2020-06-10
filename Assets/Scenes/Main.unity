@@ -990,12 +990,12 @@ MonoBehaviour:
     droneType: 1
     droneSubscribers: 0500000001000000
   SensorsList:
-  - sensorName: Apopopollo
-    sensorTag: LAMP
-    ipAddress: 75.25.126.85
+  - sensorName: Mesh
+    sensorTag: Mesh
+    ipAddress: localhost
     port: 9090
-    sensorType: 2
-    sensorSubscribers: 0000000003000000
+    sensorType: 1
+    sensorSubscribers: 01000000
   success: 0
   uniqueID: 0
 --- !u!114 &146794969

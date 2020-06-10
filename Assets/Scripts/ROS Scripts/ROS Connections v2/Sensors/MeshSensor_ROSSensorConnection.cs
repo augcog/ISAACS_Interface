@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using UnityEngine;
 using System.Collections.Generic;
 using SimpleJSON;
@@ -67,7 +67,7 @@ public class MeshSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber 
         // Writing all code in here for now. May need to move out to separate handler functions when it gets too unwieldy.
         switch (topic)
         {
-            case "/voxblox_node/surface_pointcloud":
+            case "/voxblox_node/mesh":
                 Debug.Log("Mesh Visualizer Callback.");
                 MeshMsg meshMsg =  new MeshMsg(raw_msg);
                 MeshVisualizer visualizer = GameObject.Find(rendererObjectName).GetComponent<MeshVisualizer>();
