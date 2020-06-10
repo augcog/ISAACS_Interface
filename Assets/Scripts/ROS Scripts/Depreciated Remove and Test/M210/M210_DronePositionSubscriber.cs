@@ -76,11 +76,12 @@
                     InitialGPSLong = new_ROSPosition._long;
                     InitialGPSAlt = new_ROSPosition._altitude;
 
+                    // Peru 6/9/20: Phasing out World Properties
                     //Initial position is also stored as global variables in WorldProperties.
-                    WorldProperties.droneHomeLat = new_ROSPosition._lat;
-                    WorldProperties.droneHomeLong = new_ROSPosition._long;
-                    WorldProperties.droneHomeAlt = new_ROSPosition._altitude;
-                    WorldProperties.droneInitialPositionSet = true;
+                    DebuggingManager.droneHomeLat = new_ROSPosition._lat;
+                    DebuggingManager.droneHomeLong = new_ROSPosition._long;
+                    DebuggingManager.droneHomeAlt = new_ROSPosition._altitude;
+                    //WorldProperties.droneInitialPositionSet = true;
 
                     // Initilize MapBox cityMap
                     // GameObject.FindWithTag("World").GetComponent<WorldProperties>().InitializeCityMap();

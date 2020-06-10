@@ -304,9 +304,9 @@ public class ROSDroneConnection : MonoBehaviour
             float y = waypoint.gameObjectPointer.transform.localPosition.y;
             float z = waypoint.gameObjectPointer.transform.localPosition.z;
 
-            double ROS_x = WorldProperties.UnityXToLat(WorldProperties.droneHomeLat, x);
+            double ROS_x = WorldProperties.UnityXToLat(DebuggingManager.droneHomeLat, x);
             float ROS_y = (y * WorldProperties.Unity_Y_To_Alt_Scale) - 1f;
-            double ROS_z = WorldProperties.UnityZToLong(WorldProperties.droneHomeLong, WorldProperties.droneHomeLat, z);
+            double ROS_z = WorldProperties.UnityZToLong(DebuggingManager.droneHomeLong, DebuggingManager.droneHomeLat, z);
 
             MissionWaypointMsg new_waypoint = new MissionWaypointMsg(ROS_x, ROS_z, ROS_y, 3.0f, 0, 0, MissionWaypointMsg.TurnMode.CLOCKWISE, 0, 30, new MissionWaypointActionMsg(0, command_list, command_params));
             Debug.Log("single waypoint info: " + new_waypoint);

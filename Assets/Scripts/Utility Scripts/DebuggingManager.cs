@@ -34,6 +34,11 @@ public class DebuggingManager : MonoBehaviour {
 
     [Header("Misc.")]
     public string initTestDrone = "o";
+    public string hardcodedWaypoints = "p";
+    public static double droneHomeLat = 37.91532757;
+    public static double droneHomeLong = -122.33805556;
+    public static float droneHomeAlt = 10.0f;
+    public static bool droneInitialPositionSet = false;
 
     [Header("Application Variables")]
     public WorldProperties worldProperties;
@@ -154,6 +159,11 @@ public class DebuggingManager : MonoBehaviour {
         if (Input.GetKeyUp(initTestDrone))
         {
             NewDrone();
+        }
+
+        if (Input.GetKeyUp(hardcodedWaypoints))
+        {
+            droneInitialPositionSet = true;
         }
     }
 

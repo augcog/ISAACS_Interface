@@ -21,12 +21,6 @@
         public GameObject droneBaseObject;
         public GameObject waypointBaseObject;
 
-        public static double droneHomeLat;
-        public static double droneHomeLong;
-        public static float droneHomeAlt;
-
-        public static bool droneInitialPositionSet = false;
-
         public static Shader clipShader;
 
         public static Dictionary<char, Drone> dronesDict;
@@ -54,8 +48,6 @@
         public static float Unity_X_To_Lat_Scale = 10.0f;
         public static float Unity_Y_To_Alt_Scale = 10.0f;
         public static float Unity_Z_To_Long_Scale = 10.0f;
-
-
 
         // Use this for initialization
         void Start()
@@ -105,28 +97,6 @@
             }
         }
         
-        /// <summary>
-        /// Converts the ROSRotation to a yaw angle
-        /// </summary>
-        /// <param name="worldPosition"></param>
-        /// <returns></returns>
-        public static float RosRotationToWorldYaw(float pose_x_rot, float pose_y_rot, float pose_z_rot, float pose_w_rot)
-        {
-            Quaternion q = new Quaternion(
-                pose_x_rot,
-                pose_y_rot,
-                pose_z_rot,
-                pose_w_rot
-                );
-
-            float sqw = q.w * q.w;
-            float sqz = q.z * q.z;
-            float yaw = 57.2958f * (float)Mathf.Atan2(2f * q.x * q.w + 2f * q.y * q.z, 1 - 2f * (sqz + sqw));
-
-            Debug.Log(yaw);
-            return yaw;
-        }
-
         /// <summary>
         ///     Converts the difference between two latitude values to a difference in meters.
         /// </summary>
