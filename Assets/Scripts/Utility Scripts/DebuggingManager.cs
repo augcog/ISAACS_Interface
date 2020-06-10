@@ -32,6 +32,9 @@ public class DebuggingManager : MonoBehaviour {
     [Header("MapBox Commands")]
     public string initMapBox = "i";
 
+    [Header("Misc.")]
+    public string initTestDrone = "o";
+
     [Header("Application Variables")]
     public WorldProperties worldProperties;
     public ROSDroneConnection rosDroneConnection;
@@ -147,5 +150,27 @@ public class DebuggingManager : MonoBehaviour {
             MapInteractions mapInteractions = worldProperties.GetComponent<MapInteractions>();
             mapInteractions.InitializeCityMap();
         }
+
+        if (Input.GetKeyUp(initTestDrone))
+        {
+            NewDrone();
+        }
     }
+
+    /// <summary>
+    /// Creates a new drone
+    /// </summary>
+    public void NewDrone()
+    {
+        if (!GameObject.FindWithTag("Drone"))
+        {
+
+            Debug.Log("Initializing drone");
+            Drone newDrone = new Drone( WorldProperties.worldObject.transform.position);
+            WorldProperties.selectedDrone = newDrone;
+            WorldProperties.selectedDroneStartPos = newDrone.gameObjectPointer.transform.localPosition;
+
+        }
+    }
+
 }

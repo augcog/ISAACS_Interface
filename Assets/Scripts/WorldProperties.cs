@@ -39,14 +39,12 @@
 
         public static Vector3 actualScale;
         public static Vector3 currentScale;
-
         public static Vector3 droneModelOffset;
-        public static Vector3 torusModelOffset;
 
         private static float maxHeight;
         public static char nextDroneId;
 
-        // M210 ROS-Unity conversion variables
+        // ROS-Unity conversion variables
         public static float earth_radius = 6378137;
         public static Vector3 initial_DroneROS_Position = Vector3.zero;
         public static Vector3 initial_DroneUnity_Position = Vector3.zero;
@@ -64,23 +62,21 @@
         {
             selectedDrone = null;
             dronesDict = new Dictionary<char, Drone>(); // Collection of all the drone classObjects
+
             nextDroneId = 'A'; // Used as an incrementing key for the dronesDict and for a piece of the communication about waypoints across the ROSBridge
+
             worldObject = gameObject;
+
             placementPlane = GameObject.FindWithTag("Ground");
+
             actualScale = new Vector3(1, 1, 1);
             currentScale = new Vector3(1, 1, 1);
 
             droneModelOffset = new Vector3(0.0044f, -0.0388f, 0.0146f);
-            torusModelOffset = new Vector3(-.1f, -.07f, 0f);
 
             maxHeight = 5;
             clipShader = GameObject.FindWithTag("Ground").GetComponent<Renderer>().material.shader;
 
-            NewDrone();
-        }
-
-        private void Update()
-        {
         }
 
         /// <summary>
@@ -106,22 +102,6 @@
             foreach (Transform child in parent)
             {
                 AddClipShader(child);
-            }
-        }
-
-        /// <summary>
-        /// Creates a new drone
-        /// </summary>
-        public static void NewDrone()
-        {
-            if (!GameObject.FindWithTag("Drone"))
-            {
-
-                Debug.Log("Initializing drone");
-                Drone newDrone = new Drone(worldObject.transform.position);
-                selectedDrone = newDrone;
-                selectedDroneStartPos = newDrone.gameObjectPointer.transform.localPosition;
-
             }
         }
         
