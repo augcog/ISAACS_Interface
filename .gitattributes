@@ -1,0 +1,7 @@
+# Collapse Unity-generated files on GitHub
+# https://thoughtbot.com/blog/how-to-git-with-unity
+*.asset linguist-generated
+*.mat linguist-generated
+*.meta linguist-generated
+*.prefab linguist-generated
+*.unity linguist-generated
