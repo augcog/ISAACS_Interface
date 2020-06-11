@@ -12,7 +12,7 @@
         public Material deselectedMaterial;
 
         // Assigned in ROS Manager during runtime
-        public dynamic droneROSConnection;
+        public ROSDroneConnectionInterface droneROSConnection;
         public DroneSimulationManager droneSimulationManager;
 
     }
