@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using SimpleJSON;
 using System;
 
@@ -71,6 +71,9 @@ namespace ROSBridgeLib
                 }
             }
 
+            /// <summary>
+            /// List of X values of each vertex.
+            /// </summary>
             public float[] Vert_x
             {
                 get
@@ -84,6 +87,9 @@ namespace ROSBridgeLib
                 }
             }
 
+            /// <summary>
+            /// List of Y values of each vertex.
+            /// </summary>
             public float[] Vert_y
             {
                 get
@@ -97,6 +103,9 @@ namespace ROSBridgeLib
                 }
             }
 
+            /// <summary>
+            /// List of Z values of each vertex.
+            /// </summary>
             public float[] Vert_z
             {
                 get
@@ -110,6 +119,9 @@ namespace ROSBridgeLib
                 }
             }
 
+            /// <summary>
+            /// R Color value of each vertex.
+            /// </summary>
             public byte[] Color_r
             {
                 get
@@ -123,6 +135,9 @@ namespace ROSBridgeLib
                 }
             }
 
+            /// <summary>
+            /// G color value of each vertex.
+            /// </summary>
             public byte[] Color_g
             {
                 get
@@ -136,6 +151,9 @@ namespace ROSBridgeLib
                 }
             }
 
+            /// <summary>
+            /// B color value of each vertex.
+            /// </summary>
             public byte[] Color_b
             {
                 get
@@ -149,6 +167,9 @@ namespace ROSBridgeLib
                 }
             }
 
+            /// <summary>
+            /// A color value of each vertex.
+            /// </summary>
             public byte[] Color_a
             {
                 get
@@ -162,6 +183,9 @@ namespace ROSBridgeLib
                 }
             }
 
+            /// <summary>
+            /// Index of the first vertex of each face.
+            /// </summary>
             public ushort[] Face_0
             {
                 get
@@ -175,6 +199,9 @@ namespace ROSBridgeLib
                 }
             }
 
+            /// <summary>
+            /// Index of the second vertex of each face.
+            /// </summary>
             public ushort[] Face_1
             {
                 get
@@ -188,6 +215,9 @@ namespace ROSBridgeLib
                 }
             }
 
+            /// <summary>
+            /// Index of the third vertex of each face.
+            /// </summary>
             public ushort[] Face_2
             {
                 get
