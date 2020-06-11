@@ -21,6 +21,8 @@ public interface ROSDroneConnectionInterface
     Vector3 GetVelocity();
     float GetHeightAboveTakeoff();
     Vector3 GetGimbleJointAngles();
+    double GetHomeLat();
+    double GetHomeLong();
 
     // Control drone
     void StartMission();
