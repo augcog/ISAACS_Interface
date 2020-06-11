@@ -6,17 +6,14 @@
 
     public class DroneProperties : MonoBehaviour {
 
+        // Assigned in Drone constructor
         public Drone classPointer;
         public Material selectedMaterial;
         public Material deselectedMaterial;
 
-        // Use this for initialization
-        void Start() {
-        }
+        // Assigned in ROS Manager during runtime
+        public dynamic droneROSConnection;
+        public DroneSimulationManager droneSimulationManager;
 
-        // Update is called once per frame
-        void Update() {
-
-        }
     }
 }
