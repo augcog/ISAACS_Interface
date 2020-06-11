@@ -66,6 +66,8 @@ public class PCFaceSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
 
         ROSBridgeMsg result = null;
         bool parsePCFaceMesh = false;
+
+        /// Color of the mesh
         Color color = Color.white;
 
         // Writing all code in here for now. May need to move out to separate handler functions when it gets too unwieldy.
