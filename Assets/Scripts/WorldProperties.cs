@@ -22,10 +22,15 @@
         public GameObject droneBaseObject;
         public GameObject waypointBaseObject;
 
-        [Header("Drone state variables")]
+        [Header("Drone variables")]
         public static Drone selectedDrone;
         public static char nextDroneId;
         public static Dictionary<char, Drone> dronesDict;
+
+        [Header("Sensor vairables")]
+        //Peru, 6/10/20: These do not do anything and it'll cause merge conflicts, made a note and will complete after merging
+        public static GameObject selectedSensor;
+        public static Dictionary<int, GameObject> sensorDict;
 
         [Header(" Misc. State variables")]
         public static GameObject worldObject;
@@ -84,7 +89,6 @@
             }
         }
         
-        
         /// <summary>
         ///     Converts the difference between two latitude values to a difference in meters.
         /// </summary>
@@ -141,5 +145,18 @@
             double delLong = (((unityZCoord * 360) / (1000 * 40075 * (double)Math.Cos(lat))) * Unity_Z_To_Long_Scale) + long1;
             return delLong;
         }
+
+        // Old logic to calculate new position of the drone, will implement in after merge.
+        /// Calculates the 3D displacement of the drone from it's initial position, to its current position, in Unity coordinates.
+        /*
+        changePos = new Vector3(
+            ((float) (WorldProperties.LatDiffMeters(InitialGPSLat, new_ROSPosition._lat)) / WorldProperties.Unity_X_To_Lat_Scale),
+                    ((new_ROSPosition._altitude - InitialGPSAlt) / WorldProperties.Unity_Y_To_Alt_Scale),
+                    ((float)(WorldProperties.LongDiffMeters(InitialGPSLong, new_ROSPosition._long, new_ROSPosition._lat) / WorldProperties.Unity_Z_To_Long_Scale))
+                  );
+        /// sets the drone Game Object's local position in the Unity world to be it's start position plus the newly calculated 3d displacement to the drone's current position.
+        // Peru 6/9/20: Phasing out World Properties variables used in depreciated script
+        // drone.transform.localPosition = WorldProperties.selectedDroneStartPos + offsetPos + changePos;
+        */
     }
 }
