@@ -22,7 +22,6 @@ public class PCFaceVisualizer : MonoBehaviour
         MeshFilter meshFilter = meshParent.AddComponent<MeshFilter>();
         MeshRenderer meshRenderer = meshParent.AddComponent<MeshRenderer>();
         meshRenderer.sharedMaterial = new Material(Shader.Find("Particles/Standard Unlit"));
-        //meshRenderer.sharedMaterial = new Material(Shader.Find("Standard"));
     }
 
     // Update is called once per frame
@@ -32,6 +31,13 @@ public class PCFaceVisualizer : MonoBehaviour
         {
             // Do stuff maybe?
         }
+    }
+
+    public void SetColor(Color color)
+    {
+        MeshRenderer meshRenderer = meshParent.GetComponent<MeshRenderer>();
+        meshRenderer.sharedMaterial = new Material(Shader.Find("Standard"));
+        meshRenderer.sharedMaterial.color = color;
     }
 
     /// <summary>
