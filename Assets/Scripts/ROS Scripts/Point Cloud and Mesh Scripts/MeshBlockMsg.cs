@@ -4,6 +4,8 @@ using System;
 using System.Runtime.CompilerServices;
 using System.CodeDom.Compiler;
 using System.Runtime.InteropServices;
+using System.IO;
+using System.Text;
 
 namespace ROSBridgeLib
 {
@@ -29,37 +31,44 @@ namespace ROSBridgeLib
 
             public Int64[] GetIndex()
             {
-                return (Int64[])_index.Clone();
+                //return (Int64[])_index.Clone();
+                return _index;
             }
 
             public UInt16[] GetX()
             {
-                return (UInt16[])_x.Clone();
+                //return (UInt16[])_x.Clone();
+                return _x;
             }
 
             public UInt16[] GetY()
             {
-                return (UInt16[])_y.Clone();
+                //return (UInt16[])_y.Clone();
+                return _y;
             }
 
             public UInt16[] GetZ()
             {
-                return (UInt16[])_z.Clone();
+                //return (UInt16[])_z.Clone();
+                return _z;
             }
 
             public byte[] GetR()
             {
-                return (byte[])_r.Clone();
+                //return (byte[])_r.Clone();
+                return _r;
             }
 
             public byte[] GetG()
             {
-                return (byte[])_g.Clone();
+                //return (byte[])_g.Clone();
+                return _g;
             }
 
             public byte[] GetB()
             {
-                return (byte[])_b.Clone();
+                //return (byte[])_b.Clone();
+                return _b;
             }
 
             /// <summary>
@@ -96,26 +105,12 @@ namespace ROSBridgeLib
                     _z[i] = (UInt16) temp[i].AsInt;
                 }
                 
-                temp = msg["r"].AsArray;
-                _r = new byte[temp.Count];
-                for (int i = 0; i < _r.Length; i++)
-                {
-                    _r[i] = (byte) temp[i].AsInt;
-                }
-                
-                temp = msg["g"].AsArray;
-                _g = new byte[temp.Count];
-                for (int i = 0; i < _g.Length; i++)
-                {
-                    _g[i] = (byte) temp[i].AsInt;
-                }
-                
-                temp = msg["b"].AsArray;
-                _b = new byte[temp.Count];
-                for (int i = 0; i < _b.Length; i++)
-                {
-                    _b[i] = (byte) temp[i].AsInt;
-                }
+                String tempColor = msg["r"].Value;
+                _r = Convert.FromBase64String(tempColor);
+                tempColor = msg["b"].Value;
+                _b = Convert.FromBase64String(tempColor);
+                tempColor = msg["g"].Value;
+                _g = Convert.FromBase64String(tempColor);
                 
             }
 
