@@ -87,24 +87,30 @@ public class MeshVisualizer : MonoBehaviour
     public void SetMesh(MeshMsg meshMsg)
     {
         Debug.Log("Setting New Mesh");
+        /// The length of one block. Also the scaling factor of the coordinates.
         float scale_factor = meshMsg.GetBlockEdgeLength();
-
+        /// List of all the mesh blocks.
         MeshBlockMsg[] mesh_blocks = meshMsg.GetMeshBlocks();
         Debug.Log(mesh_blocks.Length);
+        /// Iterate through each mesh block generating and updating meshes for each.
         for (int i = 0; i < mesh_blocks.Length; i++)
         {
+            /// index of the mesh block.
             Int64[] index = mesh_blocks[i].GetIndex();
+            
             if (!shouldUpdate(index))
             {
                 Debug.Log("Delay Update");
                 continue;
             }
 
+            // Create a list of vertices and their corresponding colors.
             List<Vector3> newVertices = new List<Vector3>();
-            // Also not sure what to do with all the newColors...
             List<Color> newColors = new List<Color>();
         
             UInt16[] x = mesh_blocks[i].GetX();
+
+            // only render meshes with enough faces to make it worth the resources of an extra game object
             if (x.Length < faceThreshold)
             {
                 Debug.Log("Not enough faces");
@@ -113,6 +119,8 @@ public class MeshVisualizer : MonoBehaviour
 
             UInt16[] y = mesh_blocks[i].GetY();
             UInt16[] z = mesh_blocks[i].GetZ();
+
+            // update indicies, converting from block index to global position transforms.
             for (int j = 0; j < x.Length; j++)
             {
                 float zv = ((float)z[j] / 32768.0f + index[2]) * scale_factor;
@@ -127,6 +135,7 @@ public class MeshVisualizer : MonoBehaviour
                     newVertices.Add(new Vector3(xv, yv, zv));
                 }
             }
+            // update colors
             byte[] r = mesh_blocks[i].GetR();
             byte[] g = mesh_blocks[i].GetG();
             byte[] b = mesh_blocks[i].GetB();
@@ -136,14 +145,15 @@ public class MeshVisualizer : MonoBehaviour
                 newColors.Add(new Color32(r[j], g[j], b[j], 51));
             }
 
+            // Vertices come in triples each corresponding to one face.
             int[] newTriangles = new int[newVertices.Count / 3 * 3];
             for (int j = 0; j < newTriangles.Length; j++)
             {
                 newTriangles[j] = j;
             }
 
-            // TODO
             Mesh mesh = new Mesh();
+            // If there is no existing game object for the block, create one.
             if (!mesh_dict.ContainsKey(index))
             {
                 GameObject meshObject = new GameObject(index.ToString());
@@ -158,16 +168,14 @@ public class MeshVisualizer : MonoBehaviour
             {
                 Debug.Log("Reusing GameObject");
             }
+
+            // correct for inverted mesh. By reversing the lists, the normal vectors point the right direction.
             newVertices.Reverse();
             newColors.Reverse();
 
             mesh.vertices = newVertices.ToArray();
-            // ?
             //mesh.uv = newUV;
-            // Also not sure if this is correct either... Python and Unity seem to disagree on this point.
             mesh.triangles = newTriangles;
-
-            // colors may not be the same lengths as vertices. Unity demands that it be the same as the vertices.
             mesh.colors = newColors.ToArray();
             mesh_dict[index].mesh = mesh;
             last_update[index] = Time.time;
