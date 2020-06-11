@@ -10,6 +10,8 @@ using ISAACS;
 
 public class ROSManager : MonoBehaviour {
 
+    // Let's gooooo
+
     public enum DroneType { M100, M210, M600, Sprite };
     public enum DroneSubscribers { attitude, battery_state, flight_status, gimbal_angle, gps_health, gps_position, imu, rc, velocity, height_above_takeoff, local_position };
 
@@ -25,6 +27,7 @@ public class ROSManager : MonoBehaviour {
         public int port;
         public DroneType droneType;
         public List<DroneSubscribers> droneSubscribers;
+        public bool simFlight;
     }
 
     [System.Serializable]
@@ -63,6 +66,7 @@ public class ROSManager : MonoBehaviour {
         DroneType droneType = rosDroneConnectionInput.droneType;
         string droneIP = rosDroneConnectionInput.ipAddress;
         int dronePort = rosDroneConnectionInput.port;
+        bool simFlight = rosDroneConnectionInput.simFlight;
         List<string> droneSubscribers = new List<string>();
 
         foreach (DroneSubscribers subscriber in rosDroneConnectionInput.droneSubscribers)
@@ -70,28 +74,41 @@ public class ROSManager : MonoBehaviour {
             droneSubscribers.Add(subscriber.ToString());
         }
 
-        GameObject drone = new GameObject(rosDroneConnectionInput.droneName);
-        drone.transform.parent = this.transform;
-        drone.tag = rosDroneConnectionInput.droneTag;
+        //GameObject drone = new GameObject(rosDroneConnectionInput.droneName);
+        //drone.transform.parent = this.transform;
+
+        Drone droneInstance = new Drone(WorldProperties.worldObject.transform.position);
+        GameObject droneGameObject = droneInstance.gameObjectPointer;
+        droneGameObject.tag = rosDroneConnectionInput.droneTag;
+        droneGameObject.name = rosDroneConnectionInput.droneName;
+
+        // Add DroneFlightSim
+        // Peru 6:10:20
+        DroneSimulationManager droneSim = droneGameObject.AddComponent<DroneSimulationManager>();
+        droneGameObject.GetComponent<DroneProperties>().droneSimulationManager = droneSim;
+        droneSim.InitDroneSim(droneInstance);
 
         switch (droneType)
         {
             case DroneType.M100:
                 Debug.Log("M100 created");
-                M100_ROSDroneConnection M100_rosDroneConnection = drone.AddComponent<M100_ROSDroneConnection>();
-                M100_rosDroneConnection.InitilizeDrone(uniqueID, droneIP, dronePort, droneSubscribers);
+                M100_ROSDroneConnection M100_rosDroneConnection = droneGameObject.AddComponent<M100_ROSDroneConnection>();
+                M100_rosDroneConnection.InitilizeDrone(uniqueID, droneIP, dronePort, droneSubscribers, simFlight);
+                droneGameObject.GetComponent<DroneProperties>().droneROSConnection = M100_rosDroneConnection;
                 break;
 
             case DroneType.M210:
                 Debug.Log("M210 created");
-                M210_ROSDroneConnection M210_rosDroneConnection = drone.AddComponent<M210_ROSDroneConnection>();
-                M210_rosDroneConnection.InitilizeDrone(uniqueID, droneIP, dronePort, droneSubscribers);
+                M210_ROSDroneConnection M210_rosDroneConnection = droneGameObject.AddComponent<M210_ROSDroneConnection>();
+                M210_rosDroneConnection.InitilizeDrone(uniqueID, droneIP, dronePort, droneSubscribers, simFlight);
+                droneGameObject.GetComponent<DroneProperties>().droneROSConnection = M210_rosDroneConnection;
                 break;
 
             case DroneType.M600:
                 Debug.Log("M600 created");
-                M600_ROSDroneConnection M600_rosDroneConnection = drone.AddComponent<M600_ROSDroneConnection>();
-                M600_rosDroneConnection.InitilizeDrone(uniqueID, droneIP, dronePort, droneSubscribers);
+                M600_ROSDroneConnection M600_rosDroneConnection = droneGameObject.AddComponent<M600_ROSDroneConnection>();
+                M600_rosDroneConnection.InitilizeDrone(uniqueID, droneIP, dronePort, droneSubscribers, simFlight);
+                droneGameObject.GetComponent<DroneProperties>().droneROSConnection = M600_rosDroneConnection;
                 break;
 
             case DroneType.Sprite:
@@ -106,6 +123,7 @@ public class ROSManager : MonoBehaviour {
 
         // TODO: Uncomment after implementing ROSDroneConnection
         // drone.InitilizeDrone(uniqueID, droneIP, dronePort, droneSubscribers)
+
         uniqueID ++;
     }
 
