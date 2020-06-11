@@ -6,6 +6,7 @@
     using System.Collections.Generic;
     using UnityEngine;
     using UnityEngine.Events;
+    using UnityEngine.UI;
     using VRTK.UnityEventHelper;
     using VRTK;
     using ROSBridgeLib.interface_msgs;
@@ -23,6 +24,7 @@
 
         public GameObject controller_right; // Our right controller
         private GameObject controller; //needed to access pointer
+        public Text altitude_text;
 
         public GameObject grabZone;
         private static GameObject placePoint; // Place waypoint in front of controller
@@ -39,6 +41,9 @@
         public Material heightSelectionPlaneMaterial;
 
         public static Waypoint currentWayPointZone;
+
+        public Text alt_text;
+
 
         /// <summary>
         /// The start method initializes all necessary variables and creates the selection zone (grabZone) and the place point
@@ -107,6 +112,15 @@
             Debug.Log("---");
             **/
 
+            if(controller_right != null)
+            {
+                Debug.Log("text change");
+                //SetAltitudeText(controller_right.transform.position.y);
+            }
+
+            alt_text = GameObject.Find("Right UI Panel/Flight Menu/Start Mission/Background/Label").GetComponent<Text>();
+            alt_text.text = controller_right.transform.position.y.ToString();
+
             // SELECTION POINTER  
             SelectionPointerChecks();
 
@@ -129,6 +143,13 @@
             }
 
             //Debug.Log(currentControllerState);
+        }
+
+
+        public void SetAltitudeText(float alt)
+        {
+            Debug.Log(alt);
+            //altitude_text.text = alt.ToString();
         }
 
         /// <summary>
@@ -433,8 +454,8 @@
             }
             else
             {
-                Debug.DrawRay(waypointLocation, Vector3.up * 1000, Color.white);
-                Debug.Log("Did not Hit from: " + waypointLocation + " in the direction of " + Vector3.up);
+                //Debug.DrawRay(waypointLocation, Vector3.up * 1000, Color.white);
+                //Debug.Log("Did not Hit from: " + waypointLocation + " in the direction of " + Vector3.up);
             }
         }
 
