@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using ISAACS;
@@ -11,7 +11,7 @@ using ROSBridgeLib.interface_msgs;
 public interface ROSDroneConnectionInterface
 {
     // Initlization function
-    void InitilizeDrone(int uniqueID, string droneIP, int dronePort, List<string> droneSubscribers);
+    void InitilizeDrone(int uniqueID, string droneIP, int dronePort, List<string> droneSubscribers, bool simFlight);
 
     // Query state variables for Informative UI and misc. info
     bool HasAuthority();

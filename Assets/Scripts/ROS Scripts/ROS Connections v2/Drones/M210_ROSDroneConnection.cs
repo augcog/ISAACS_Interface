@@ -52,6 +52,7 @@ public class M210_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROSDro
     // Private connection variables
     private ROSBridgeWebSocketConnection ros = null;
     string client_id;
+    bool simDrone = false;
 
     // Private state variables
     public bool sdk_ready
@@ -76,10 +77,11 @@ public class M210_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROSDro
     NavSatFixMsg gps_position;
 
 
-    public void InitilizeDrone(int uniqueID, string droneIP, int dronePort, List<string> droneSubscribers)
+    public void InitilizeDrone(int uniqueID, string droneIP, int dronePort, List<string> droneSubscribers, bool simFlight)
     {
         ros = new ROSBridgeWebSocketConnection("ws://" + droneIP, dronePort);
         client_id = uniqueID.ToString();
+        simDrone = simFlight;
 
         foreach (string subscriber in droneSubscribers)
         {
@@ -87,7 +89,7 @@ public class M210_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROSDro
         }
 
         // TODO: Initilize Informative UI Prefab and attach as child.
-
+        ros.Connect();
     }
 
     // Update is called once per frame in Unity
@@ -104,6 +106,12 @@ public class M210_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROSDro
     public void StartMission()
     {
         // Integrate dynamic waypoint system
+
+        if (simDrone)
+        {
+            this.GetComponent<DroneSimulationManager>().FlyNextWaypoint();
+            return;
+        }
 
         List<MissionWaypointMsg> missionMissionMsgList = new List<MissionWaypointMsg>();
 
@@ -148,16 +156,34 @@ public class M210_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROSDro
 
     public void PauseMission()
     {
+        if (simDrone)
+        {
+            this.GetComponent<DroneSimulationManager>().pauseFlight();
+            return;
+        }
+
         SendWaypointAction(WaypointMissionAction.PAUSE);
     }
 
     public void ResumeMission()
     {
+        if (simDrone)
+        {
+            this.GetComponent<DroneSimulationManager>().resumeFlight();
+            return;
+        }
+
         SendWaypointAction(WaypointMissionAction.RESUME);
     }
 
     public void UpdateMission()
     {
+        if (simDrone)
+        {
+            this.GetComponent<DroneSimulationManager>().FlyNextWaypoint(true);
+            return;
+        }
+
         // Integrate dynamic waypoint system
         SendWaypointAction(WaypointMissionAction.STOP);
         StartMission();
@@ -165,11 +191,23 @@ public class M210_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROSDro
 
     public void LandDrone()
     {
+        if (simDrone)
+        {
+            this.GetComponent<DroneSimulationManager>().flyHome();
+            return;
+        }
+
         ExecuteTask(DroneTask.LAND);
     }
 
     public void FlyHome()
     {
+        if (simDrone)
+        {
+            this.GetComponent<DroneSimulationManager>().flyHome();
+            return;
+        }
+
         ExecuteTask(DroneTask.GO_HOME);
     }
 
