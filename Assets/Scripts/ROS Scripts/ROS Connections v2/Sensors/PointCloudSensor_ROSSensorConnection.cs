@@ -30,6 +30,8 @@ public class PointCloudSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubsc
         {
             ros.AddSubscriber("/voxblox_node/" + subscriber, this);
         }
+        ros.Connect();
+
     }
 
     // Update is called once per frame in Unity

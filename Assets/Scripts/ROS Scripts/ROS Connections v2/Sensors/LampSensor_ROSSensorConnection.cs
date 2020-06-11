@@ -83,13 +83,34 @@ public class LampSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber
         {
             case "/voxblox_node/surface_pointcloud":
                 Debug.Log(" LAMP Recieved surface point cloud message");
-                PointCloud2Msg pointCloudMsg = new PointCloud2Msg(raw_msg);
-                PointCloudVisualizer(pointCloudMsg);
+                pointCloudLevel = PointCloudLevel.WHITE;
+                break;
+            case "/colorized_points_0":
+                pointCloudLevel = PointCloudLevel.RED;
+                break;
+            case "/colorized_points_1":
+                pointCloudLevel = PointCloudLevel.ORANGE;
+                break;
+            case "/colorized_points_2":
+                pointCloudLevel = PointCloudLevel.YELLOW;
+                break;
+            case "/colorized_points_3":
+                pointCloudLevel = PointCloudLevel.GREEN;
+                break;
+            case "/colorized_points_4":
+                pointCloudLevel = PointCloudLevel.BLUE;
+                break;
+            case "/colorized_points_5":
+                pointCloudLevel = PointCloudLevel.LIGHT_BLUE;
                 break;
             default:
                 Debug.LogError("Topic not implemented: " + topic);
-                break;
+                return result;
         }
+
+        PointCloud2Msg pointCloudMsg = new PointCloud2Msg(raw_msg);
+        PointCloudVisualizer(pointCloudMsg);
+ 
         return result;
     }
     public string GetMessageType(string topic)

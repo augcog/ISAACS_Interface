@@ -42,17 +42,17 @@ public class DroneSimulationManager : MonoBehaviour {
 
     }
 
-    public void InitDroneSim()
+    public void InitDroneSim(Drone drone)
     {
         Debug.Log("Drone Flight Sim initilized");
-        drone = WorldProperties.selectedDrone;
+        this.drone = drone;
         home = drone.gameObjectPointer.transform.localPosition;
 
     }
 
     public void FlyNextWaypoint(bool restart = false)
     {
-        ArrayList waypoints = WorldProperties.selectedDrone.waypoints;
+        ArrayList waypoints = drone.waypoints;
 
         if (restart)
         {
