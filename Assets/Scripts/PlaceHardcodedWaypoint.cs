@@ -19,14 +19,14 @@ public class PlaceHardcodedWaypoint : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (WorldProperties.droneInitialPositionSet)
+        if (DebuggingManager.droneInitialPositionSet)
         {
            Vector3 changePos = new Vector3(
-                   ((float) (WorldProperties.LatDiffMeters(WorldProperties.droneHomeLat, waypointLatitude)) / WorldProperties.Unity_X_To_Lat_Scale),
+                   ((float) (WorldProperties.LatDiffMeters(DebuggingManager.droneHomeLat, waypointLatitude)) / WorldProperties.Unity_X_To_Lat_Scale),
                    ((float) (waypointAltitude /*- WorldProperties.droneHomeAlt*/) / WorldProperties.Unity_Y_To_Alt_Scale),
-                   ((float) (WorldProperties.LongDiffMeters(WorldProperties.droneHomeLong, waypointLongitude, waypointLatitude) / WorldProperties.Unity_Z_To_Long_Scale))
+                   ((float) (WorldProperties.LongDiffMeters(DebuggingManager.droneHomeLong, waypointLongitude, waypointLatitude) / WorldProperties.Unity_Z_To_Long_Scale))
                  );
-            initialLat = WorldProperties.droneHomeLat;
+            initialLat = DebuggingManager.droneHomeLat;
             this.transform.localPosition = changePos;
         }
 		

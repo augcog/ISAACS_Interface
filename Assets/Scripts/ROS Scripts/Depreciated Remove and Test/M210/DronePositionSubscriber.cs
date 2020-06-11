@@ -35,7 +35,8 @@ public class DronePositionSubscriber : ROSBridgeSubscriber
         {
             DronePositionMsg pose = (DronePositionMsg)msg;
 
-            robot.transform.localPosition = WorldProperties.RosSpaceToWorldSpace(pose._x, pose._y, pose._z);
+            // Errors in depricated scripts due to phasing out WorldProperties. 
+            //robot.transform.localPosition = WorldProperties.RosSpaceToWorldSpace(pose._x, pose._y, pose._z);
                 //+  WorldProperties.droneModelOffset;
 
             //Vector3 tablePos = GameObject.FindWithTag("Table").transform.position;
@@ -80,8 +81,9 @@ public class DronePositionSubscriber : ROSBridgeSubscriber
     /// </summary>
     static void SaveData()
     {
-        WorldProperties.FindClosestObstacleAndDist();
-        WorldProperties.obstacleDistsToPrint.Add(WorldProperties.closestDist.ToString());
+        // ISAACS V1 Disabling
+        // WorldProperties.FindClosestObstacleAndDist();
+        // WorldProperties.obstacleDistsToPrint.Add(WorldProperties.closestDist.ToString());
     }
 
         

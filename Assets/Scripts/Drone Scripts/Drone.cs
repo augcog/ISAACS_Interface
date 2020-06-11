@@ -27,7 +27,7 @@
             // Create gameObject at position
             GameObject baseObject = (GameObject)WorldProperties.worldObject.GetComponent<WorldProperties>().droneBaseObject;
             gameObjectPointer = Object.Instantiate(baseObject, position, Quaternion.identity);
-            
+          
             Debug.Log("Position init: " + position.ToString());
             gameObjectPointer.GetComponent<DroneProperties>().classPointer = this; // Connect the gameObject back to the classObject
             gameObjectPointer.tag = "Drone";
@@ -87,6 +87,7 @@
                 waypointsDict.Add(startWaypoint.id, startWaypoint);
                 waypoints.Add(startWaypoint);
                 waypointsOrder.Add(startWaypoint);
+
             } else
             {
                 // Otherwise we can add as normal
