@@ -14,6 +14,7 @@
 		public GameObject controller_right;
 
 		// True indicates that the button is being pressed, False that it's released.
+		private bool leftIsGrabbing; // Whether the left hand is grabbing another object.
 		private bool leftIndex;
 		private bool leftMiddle;
 		private bool leftX;
@@ -26,6 +27,7 @@
 		private Vector3 leftAngularVelocity; // How fast the left controller is moving in space.
 
 		// True indicates that the button is being pressed, False that it's released.
+		private bool rightIsGrabbing; // Whether the right hand is grabbing another object.
 		private bool rightIndex;
 		private bool rightMiddle;
 		private bool rightA;
@@ -37,14 +39,18 @@
 		private Vector3 rightVelocity; // How fast the right controller is moving in space.
 		private Vector3 rightAngularVelocity; // How fast the right controller is moving in space.
 
+
 		// Update is called once per frame.
 		void Update () {
 
 			// These variables store the controller state, which can be queried for input information.
             var left = LeftController.GetComponent<VRTK_ControllerEvents>();
+			var leftInteractGrab = LeftController.GetComponent<VRTK_InteractGrab>();
 			var right = RightController.GetComponent<VRTK_ControllerEvents>();
+			var rightInteractGrab = RightController.GetComponent<VRTK_InteractGrab>();
 
 			// Receive input information from the left controller.
+			leftIsGrabbing = leftInteractGrab.GetGrabbedObject != null;
 			leftIndex = left.IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.TriggerPress);
 			leftMiddle = left.IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.GripPress);
 			leftX = left.IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.ButtonOnePress);
@@ -57,6 +63,7 @@
 			leftAngularVelocity = VRTK_DeviceFinder.GetControllerAngularVelocity(VRTK_DeviceFinder.GetControllerReferenceLeftHand());
 
             // Receive input information from the right controller.
+			rightIsGrabbing = rightInteractGrab.GetGrabbedObject != null;
 			rightIndex = right.IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.TriggerPress);
 			rightMiddle = right.IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.GripPress);
 			rightA = right.IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.ButtonOnePress);
@@ -68,7 +75,6 @@
 			rightVelocity = VRTK_DeviceFinder.GetControllerVelocity(VRTK_DeviceFinder.GetControllerReferenceRightHand());
 			rightAngularVelocity = VRTK_DeviceFinder.GetControllerAngularVelocity(VRTK_DeviceFinder.GetControllerReferenceRightHand());
 
-			// TODO: Add whether object is being grabbed. GetComponent<VRTK_InteractGrab>().GetGrabbedObject != null
 			// TODO: Add getter methods.
 
 		}
