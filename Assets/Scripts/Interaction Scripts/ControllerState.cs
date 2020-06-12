@@ -2,7 +2,7 @@
 
     using System.Collections;
     using System.Collections.Generic;
-    using VRTK;
+	using VRTK;
     using UnityEngine;
 
 	public class ControllerState : MonoBehaviour {
@@ -14,30 +14,30 @@
 		public GameObject controller_right;
 
 		// True indicates that the button is being pressed, False that it's released.
-		private bool leftIsGrabbing; // Whether the left hand is grabbing another object.
-		private bool leftIndex;
-		private bool leftMiddle;
-		private bool leftX;
-		private bool leftY;
-		private bool leftThumb;
-		private Vector2 leftThumbDelta; // The distance by which the left stick has been moved in the X-axis and Y-axis.
-		private float leftThumbAngle; // The angle of rotation of the left stick.
-		private Transform leftOrigin; // The origin ("position") of the left controller.
-		private Vector3 leftVelocity; // How fast the left controller is moving in space.
-		private Vector3 leftAngularVelocity; // How fast the left controller is moving in space.
+		private bool LeftIsGrabbing; // Whether the left hand is grabbing another object.
+		private bool LeftIndex;
+		private bool LeftMiddle;
+		private bool LeftX;
+		private bool LeftY;
+		private bool LeftThumb;
+		private Vector2 LeftThumbDelta; // The distance by which the left stick has been moved in the X-axis and Y-axis.
+		private float LeftThumbAngle; // The angle of rotation of the left stick.
+		private Transform LeftOrigin; // The origin ("position") of the left controller.
+		private Vector3 LeftVelocity; // How fast the left controller is moving in space.
+		private Vector3 LeftAngularVelocity; // How fast the left controller is moving in space.
 
 		// True indicates that the button is being pressed, False that it's released.
-		private bool rightIsGrabbing; // Whether the right hand is grabbing another object.
-		private bool rightIndex;
-		private bool rightMiddle;
-		private bool rightA;
-		private bool rightB;
-		private bool rightThumb;
-		private Vector2 rightThumbDelta; // The distance by which the right stick has been moved in the X-axis and Y-axis.
-		private float rightThumbAngle; // The angle of rotation of the right stick.
-		private Transform rightOrigin; // The origin ("position") of the right controller.
-		private Vector3 rightVelocity; // How fast the right controller is moving in space.
-		private Vector3 rightAngularVelocity; // How fast the right controller is moving in space.
+		private bool RightIsGrabbing; // Whether the right hand is grabbing another object.
+		private bool RightIndex;
+		private bool RightMiddle;
+		private bool RightA;
+		private bool RightB;
+		private bool RightThumb;
+		private Vector2 RightThumbDelta; // The distance by which the right stick has been moved in the X-axis and Y-axis.
+		private float RightThumbAngle; // The angle of rotation of the right stick.
+		private Transform RightOrigin; // The origin ("position") of the right controller.
+		private Vector3 RightVelocity; // How fast the right controller is moving in space.
+		private Vector3 RightAngularVelocity; // How fast the right controller is moving in space.
 
 
 		// Update is called once per frame.
@@ -50,33 +50,146 @@
 			var rightInteractGrab = RightController.GetComponent<VRTK_InteractGrab>();
 
 			// Receive input information from the left controller.
-			leftIsGrabbing = leftInteractGrab.GetGrabbedObject != null;
-			leftIndex = left.IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.TriggerPress);
-			leftMiddle = left.IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.GripPress);
-			leftX = left.IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.ButtonOnePress);
-			leftY = left.IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.ButtonTwoPress);
-			leftThumb = left.IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.TouchpadPress);
-			leftThumbDelta = left.GetAxis(VRTK_ControllerEvents.Vector2AxisAlias.Touchpad);
-			leftThumbAngle = left.GetAxisAngle(VRTK_ControllerEvents.Vector2AxisAlias.Touchpad);
-			leftOrigin = VRTK_DeviceFinder.GetControllerOrigin(VRTK_DeviceFinder.GetControllerReferenceLeftHand());
-			leftVelocity = VRTK_DeviceFinder.GetControllerVelocity(VRTK_DeviceFinder.GetControllerReferenceLeftHand());
-			leftAngularVelocity = VRTK_DeviceFinder.GetControllerAngularVelocity(VRTK_DeviceFinder.GetControllerReferenceLeftHand());
+			LeftIsGrabbing = (leftInteractGrab.GetGrabbedObject()) ? true : false;
+			LeftIndex = left.IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.TriggerPress);
+			LeftMiddle = left.IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.GripPress);
+			LeftX = left.IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.ButtonOnePress);
+			LeftY = left.IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.ButtonTwoPress);
+			LeftThumb = left.IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.TouchpadPress);
+			LeftThumbDelta = left.GetAxis(VRTK_ControllerEvents.Vector2AxisAlias.Touchpad);
+			LeftThumbAngle = left.GetAxisAngle(VRTK_ControllerEvents.Vector2AxisAlias.Touchpad);
+			LeftOrigin = VRTK_DeviceFinder.GetControllerOrigin(VRTK_DeviceFinder.GetControllerReferenceLeftHand());
+			LeftVelocity = VRTK_DeviceFinder.GetControllerVelocity(VRTK_DeviceFinder.GetControllerReferenceLeftHand());
+			LeftAngularVelocity = VRTK_DeviceFinder.GetControllerAngularVelocity(VRTK_DeviceFinder.GetControllerReferenceLeftHand());
 
             // Receive input information from the right controller.
-			rightIsGrabbing = rightInteractGrab.GetGrabbedObject != null;
-			rightIndex = right.IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.TriggerPress);
-			rightMiddle = right.IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.GripPress);
-			rightA = right.IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.ButtonOnePress);
-			rightB = right.IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.ButtonTwoPress);
-			rightThumb = right.IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.TouchpadPress);
-			rightThumbDelta = right.GetAxis(VRTK_ControllerEvents.Vector2AxisAlias.Touchpad);
-			rightThumbAngle = right.GetAxisAngle(VRTK_ControllerEvents.Vector2AxisAlias.Touchpad);
-			rightOrigin = VRTK_DeviceFinder.GetControllerOrigin(VRTK_DeviceFinder.GetControllerReferenceRightHand());
-			rightVelocity = VRTK_DeviceFinder.GetControllerVelocity(VRTK_DeviceFinder.GetControllerReferenceRightHand());
-			rightAngularVelocity = VRTK_DeviceFinder.GetControllerAngularVelocity(VRTK_DeviceFinder.GetControllerReferenceRightHand());
-
-			// TODO: Add getter methods.
+			RightIsGrabbing = (rightInteractGrab.GetGrabbedObject()) ? true : false;
+			RightIndex = right.IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.TriggerPress);
+			RightMiddle = right.IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.GripPress);
+			RightA = right.IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.ButtonOnePress);
+			RightB = right.IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.ButtonTwoPress);
+			RightThumb = right.IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.TouchpadPress);
+			RightThumbDelta = right.GetAxis(VRTK_ControllerEvents.Vector2AxisAlias.Touchpad);
+			RightThumbAngle = right.GetAxisAngle(VRTK_ControllerEvents.Vector2AxisAlias.Touchpad);
+			RightOrigin = VRTK_DeviceFinder.GetControllerOrigin(VRTK_DeviceFinder.GetControllerReferenceRightHand());
+			RightVelocity = VRTK_DeviceFinder.GetControllerVelocity(VRTK_DeviceFinder.GetControllerReferenceRightHand());
+			RightAngularVelocity = VRTK_DeviceFinder.GetControllerAngularVelocity(VRTK_DeviceFinder.GetControllerReferenceRightHand());
 
 		}
+
+
+		// Getter methods, left controller.
+		public bool GetLeftIsGrabbing()
+		{
+			return LeftIsGrabbing;
+		}
+		
+		public bool GetLeftIndex()
+		{
+			return LeftIndex;
+		}
+
+		public bool GetLeftMiddle()
+		{
+			return LeftMiddle;
+		}
+		
+		public bool GetLeftX()
+		{
+			return LeftX;
+		}
+
+		public bool GetLeftY()
+		{
+			return LeftY;
+		}
+
+		public bool GetLeftThumb()
+		{
+			return LeftThumb;
+		}
+
+		public Vector2 GetLeftThumbDelta()
+		{
+			return LeftThumbDelta;
+		}
+
+		public float GetLeftThumbAngle()
+		{
+			return LeftThumbAngle;
+		}
+
+		public Transform GetLeftOrigin()
+		{
+			return LeftOrigin;
+		}
+
+		public Vector3 GetLeftVelocity()
+		{
+			return LeftVelocity;
+		}
+
+		public Vector3 GetLeftAngularVelocity()
+		{
+			return LeftAngularVelocity;
+		}
+
+
+		// Getter methods, right controller.
+		public bool GetRightIsGrabbing()
+		{
+			return RightIsGrabbing;
+		}
+		
+		public bool GetRightIndex()
+		{
+			return RightIndex;
+		}
+
+		public bool GetRightMiddle()
+		{
+			return RightMiddle;
+		}
+		
+		public bool GetRightA()
+		{
+			return RightA;
+		}
+
+		public bool GetRightB()
+		{
+			return RightB;
+		}
+
+		public bool GetRightThumb()
+		{
+			return RightThumb;
+		}
+
+		public Vector2 GetRightThumbDelta()
+		{
+			return RightThumbDelta;
+		}
+
+		public float GetRightThumbAngle()
+		{
+			return RightThumbAngle;
+		}
+
+		public Transform GetRightOrigin()
+		{
+			return RightOrigin;
+		}
+
+		public Vector3 GetRightVelocity()
+		{
+			return RightVelocity;
+		}
+
+		public Vector3 GetRightAngularVelocity()
+		{
+			return RightAngularVelocity;
+		}
+
 	}
 }
