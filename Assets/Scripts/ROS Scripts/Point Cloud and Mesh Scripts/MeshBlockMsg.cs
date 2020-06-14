@@ -96,7 +96,7 @@ namespace ROSBridgeLib
                 _z = new UInt16[tempZ.Count];
                 for (int i = 0; i < _x.Length; i++)
                 {
-                    _x[i] = (UInt16) tempX[i].AsInt;
+                    _x[i] = (UInt16)tempX[i].AsInt;
                     _y[i] = (UInt16)tempY[i].AsInt;
                     _z[i] = (UInt16)tempZ[i].AsInt;
                 }
@@ -113,11 +113,6 @@ namespace ROSBridgeLib
                 
                 Debug.Log("Color Time: " + DateTime.Now.Subtract(stageTime).TotalMilliseconds.ToString() + "ms");
                 Debug.Log("Total Time: " + DateTime.Now.Subtract(startTime).TotalMilliseconds.ToString() + "ms");
-                if (_r.Length != _z.Length)
-                {
-                    Debug.Log("Bad color length");
-                }
-
             }
 
             public static string getMessageType()
