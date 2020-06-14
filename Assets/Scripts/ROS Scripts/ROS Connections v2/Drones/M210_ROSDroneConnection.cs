@@ -649,6 +649,11 @@ public class M210_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROSDro
         return "";
     }
 
+    public void DisconnectROSConnection()
+    {
+        ros.Disconnect();
+    }
+
     // Not sure what they do
 
     private void subscribe_to_all_sdk_topics(ROSBridgeWebSocketConnection connection)

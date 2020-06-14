@@ -32,6 +32,8 @@ public interface ROSDroneConnectionInterface
     void LandDrone();
     void FlyHome();
 
+    // Close ROS Connection
+    void DisconnectROSConnection();
     // Optional in the future
     // void DoTask()
 
@@ -39,7 +41,11 @@ public interface ROSDroneConnectionInterface
 
 public interface ROSSensorConnectionInterface
 {
+    // Initlization function
     void InitilizeSensor(int uniqueID, string sensorIP, int sensorPort, List<string> sensorSubscribers);
+
+    // Close ROS Connection
+    void DisconnectROSConnection();
 
     // Anything else common across sensors?
 

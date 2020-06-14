@@ -662,6 +662,10 @@ public class M100_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROSDro
         connection.AddSubscriber("/dji_sdk/local_position", this);
     }
 
+    public void DisconnectROSConnection()
+    {
+        ros.Disconnect();
+    }
     // Not sure what they do
 
     DateTime epoch = new DateTime(1970, 1, 1);

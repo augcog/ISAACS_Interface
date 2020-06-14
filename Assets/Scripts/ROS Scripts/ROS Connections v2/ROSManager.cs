@@ -47,6 +47,9 @@ public class ROSManager : MonoBehaviour {
     public List<ROSDroneConnectionInput> DronesList;
     public List<ROSSensorConnectionInput> SensorsList;
 
+    private Dictionary<int, ROSDroneConnectionInterface> ROSDroneConnections = new Dictionary<int, ROSDroneConnectionInterface>();
+    private Dictionary<int, ROSSensorConnectionInterface> ROSSensorConnections = new Dictionary<int, ROSSensorConnectionInterface>();
+
     public bool success = false;
     public int uniqueID = 0;
 
@@ -98,6 +101,7 @@ public class ROSManager : MonoBehaviour {
                 M100_ROSDroneConnection M100_rosDroneConnection = droneGameObject.AddComponent<M100_ROSDroneConnection>();
                 M100_rosDroneConnection.InitilizeDrone(uniqueID, droneIP, dronePort, droneSubscribers, simFlight);
                 droneGameObject.GetComponent<DroneProperties>().droneROSConnection = M100_rosDroneConnection;
+                ROSDroneConnections.Add(uniqueID,M100_rosDroneConnection);
                 break;
 
             case DroneType.M210:
@@ -105,6 +109,7 @@ public class ROSManager : MonoBehaviour {
                 M210_ROSDroneConnection M210_rosDroneConnection = droneGameObject.AddComponent<M210_ROSDroneConnection>();
                 M210_rosDroneConnection.InitilizeDrone(uniqueID, droneIP, dronePort, droneSubscribers, simFlight);
                 droneGameObject.GetComponent<DroneProperties>().droneROSConnection = M210_rosDroneConnection;
+                ROSDroneConnections.Add(uniqueID, M210_rosDroneConnection);
                 break;
 
             case DroneType.M600:
@@ -112,6 +117,7 @@ public class ROSManager : MonoBehaviour {
                 M600_ROSDroneConnection M600_rosDroneConnection = droneGameObject.AddComponent<M600_ROSDroneConnection>();
                 M600_rosDroneConnection.InitilizeDrone(uniqueID, droneIP, dronePort, droneSubscribers, simFlight);
                 droneGameObject.GetComponent<DroneProperties>().droneROSConnection = M600_rosDroneConnection;
+                ROSDroneConnections.Add(uniqueID, M600_rosDroneConnection);
                 break;
 
             case DroneType.Sprite:
@@ -152,24 +158,28 @@ public class ROSManager : MonoBehaviour {
                 Debug.Log("PointCloud Sensor created");
                 PointCloudSensor_ROSSensorConnection pcSensor_rosSensorConnection = sensor.AddComponent<PointCloudSensor_ROSSensorConnection>();
                 pcSensor_rosSensorConnection.InitilizeSensor(uniqueID, sensorIP, sensorPort, sensorSubscribers);
+                ROSSensorConnections.Add(uniqueID, pcSensor_rosSensorConnection);
                 break;
 
             case SensorType.Mesh:
                 Debug.Log("Mesh Sensor created");
                 MeshSensor_ROSSensorConnection meshSensor_rosSensorConnection = sensor.AddComponent<MeshSensor_ROSSensorConnection>();
                 meshSensor_rosSensorConnection.InitilizeSensor(uniqueID, sensorIP, sensorPort, sensorSubscribers);
+                ROSSensorConnections.Add(uniqueID, meshSensor_rosSensorConnection);
                 break;
 
             case SensorType.LAMP:
                 Debug.Log("LAMP Sensor created");
                 LampSensor_ROSSensorConnection lamp_rosSensorConnection = sensor.AddComponent<LampSensor_ROSSensorConnection>();
                 lamp_rosSensorConnection.InitilizeSensor(uniqueID, sensorIP, sensorPort, sensorSubscribers);
+                ROSSensorConnections.Add(uniqueID, lamp_rosSensorConnection);
                 break;
 
             case SensorType.PCFace:
                 Debug.Log("PCFace Sensor created");
                 PCFaceSensor_ROSSensorConnection pcFace_rosSensorConnection = sensor.AddComponent<PCFaceSensor_ROSSensorConnection>();
                 pcFace_rosSensorConnection.InitilizeSensor(uniqueID, sensorIP, sensorPort, sensorSubscribers);
+                ROSSensorConnections.Add(uniqueID, pcFace_rosSensorConnection);
                 break;
 
             default:
@@ -186,4 +196,20 @@ public class ROSManager : MonoBehaviour {
     void Update () {
 		
 	}
+    
+    void OnApplicationQuit()
+    {
+        foreach (ROSDroneConnectionInterface rosDroneConnection in ROSDroneConnections.Values)
+        {
+            rosDroneConnection.DisconnectROSConnection();
+        }
+
+        foreach (ROSSensorConnectionInterface rosSensorConnection in ROSSensorConnections.Values)
+        {
+            rosSensorConnection.DisconnectROSConnection();
+        }
+    }
+
 }
+
+
