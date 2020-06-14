@@ -32,9 +32,12 @@ public class DebuggingManager : MonoBehaviour {
     [Header("MapBox Commands")]
     public string initMapBox = "i";
 
+    [Header("World Properties")]
+    public string displaySensorList = "o";
+
     [Header("Misc.")]
-    public string initTestDrone = "o";
-    public string hardcodedWaypoints = "p";
+    public string initTestDrone = "p";
+    public string hardcodedWaypoints = "a";
     public static double droneHomeLat = 37.91532757;
     public static double droneHomeLong = -122.33805556;
     public static float droneHomeAlt = 10.0f;
@@ -164,6 +167,11 @@ public class DebuggingManager : MonoBehaviour {
         if (Input.GetKeyUp(hardcodedWaypoints))
         {
             droneInitialPositionSet = true;
+        }
+
+        if (Input.GetKeyUp(displaySensorList))
+        {
+            Debug.Log(WorldProperties.sensorDict.Count.ToString());
         }
     }
 
