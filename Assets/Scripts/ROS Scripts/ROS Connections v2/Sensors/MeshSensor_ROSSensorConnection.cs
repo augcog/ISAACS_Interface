@@ -68,10 +68,19 @@ public class MeshSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber 
         switch (topic)
         {
             case "/voxblox_node/mesh":
-                Debug.Log("Mesh Visualizer Callback.");
+                DateTime startTime = DateTime.Now;
+                DateTime stageTime = startTime;
+                Debug.Log("Mesh Visualizer Callback. Begin: " + startTime.ToString());
+                stageTime = DateTime.Now;
                 MeshMsg meshMsg =  new MeshMsg(raw_msg);
+                Debug.Log("Message Generation: " + DateTime.Now.Subtract(stageTime).TotalMilliseconds.ToString() + "ms");
+                stageTime = DateTime.Now;
                 MeshVisualizer visualizer = GameObject.Find(rendererObjectName).GetComponent<MeshVisualizer>();
+                Debug.Log("Visualizer Find: " + DateTime.Now.Subtract(stageTime).TotalMilliseconds.ToString() + "ms");
+                stageTime = DateTime.Now;
                 visualizer.SetMesh(meshMsg);
+                Debug.Log("Set Mesh: " + DateTime.Now.Subtract(stageTime).TotalMilliseconds.ToString() + "ms");
+                Debug.Log("Total Time: " + DateTime.Now.Subtract(startTime).TotalMilliseconds.ToString() + "ms");
                 break;
             default:
                 Debug.LogError("Topic not implemented: " + topic);
