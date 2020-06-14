@@ -103,23 +103,40 @@ public class MeshVisualizer : MonoBehaviour
                 Debug.Log("Delay Update");
                 continue;
             }
+            
+            ushort[] x = mesh_blocks[i].GetX();
 
+            // If there is no existing game object for the block, create one.
+            if (!mesh_dict.ContainsKey(index))
+            {
+                // only render meshes with enough faces to make it worth the resources of an extra game object
+                if (x.Length < faceThreshold)
+                {
+                    Debug.Log("Not enough faces");
+                    continue;
+                }
+
+                GameObject meshObject = new GameObject(index.ToString());
+                meshObject.transform.parent = meshParent.transform;
+                MeshFilter meshFilter = meshObject.AddComponent<MeshFilter>();
+                MeshRenderer meshRenderer = meshObject.AddComponent<MeshRenderer>();
+                meshRenderer.sharedMaterial = new Material(Shader.Find("Particles/Standard Unlit"));
+                //meshRenderer.sharedMaterial = new Material(Shader.Find("Standard"));
+                mesh_dict.Add(index, meshFilter);
+            }
+            else
+            {
+                Debug.Log("Reusing GameObject");
+            }
+
+       
+            ushort[] y = mesh_blocks[i].GetY();
+            ushort[] z = mesh_blocks[i].GetZ();
+            
             // Create a list of vertices and their corresponding colors.
             List<Vector3> newVertices = new List<Vector3>();
             List<Color> newColors = new List<Color>();
         
-            UInt16[] x = mesh_blocks[i].GetX();
-
-            // only render meshes with enough faces to make it worth the resources of an extra game object
-            if (x.Length < faceThreshold)
-            {
-                Debug.Log("Not enough faces");
-                continue;
-            }
-
-            UInt16[] y = mesh_blocks[i].GetY();
-            UInt16[] z = mesh_blocks[i].GetZ();
-
             // update indicies, converting from block index to global position transforms.
             for (int j = 0; j < x.Length; j++)
             {
@@ -153,23 +170,7 @@ public class MeshVisualizer : MonoBehaviour
             }
 
             Mesh mesh = new Mesh();
-            // If there is no existing game object for the block, create one.
-            if (!mesh_dict.ContainsKey(index))
-            {
-                GameObject meshObject = new GameObject(index.ToString());
-                meshObject.transform.parent = meshParent.transform;
-                MeshFilter meshFilter = meshObject.AddComponent<MeshFilter>();
-                MeshRenderer meshRenderer = meshObject.AddComponent<MeshRenderer>();
-                meshRenderer.sharedMaterial = new Material(Shader.Find("Particles/Standard Unlit"));
-                //meshRenderer.sharedMaterial = new Material(Shader.Find("Standard"));
-                mesh_dict.Add(index, meshFilter);
-            }
-            else
-            {
-                Debug.Log("Reusing GameObject");
-            }
-
-            // correct for inverted mesh. By reversing the lists, the normal vectors point the right direction.
+                       // correct for inverted mesh. By reversing the lists, the normal vectors point the right direction.
             newVertices.Reverse();
             newColors.Reverse();
 
