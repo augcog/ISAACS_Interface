@@ -11,6 +11,12 @@ using ISAACS;
 
 public class DebuggingManager : MonoBehaviour {
 
+    /// <summary>
+    /// This script is for all debugging using keyboard triggers. 
+    /// Each string maps a key to the required function used for debugging.
+    /// </summary>
+
+
     [Header("Radiation Buttons")]
     public string subscribeSurfacePointCloud = "6";
     public string subscribeColorized0 = "0";

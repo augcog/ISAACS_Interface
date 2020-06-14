@@ -12,18 +12,24 @@ public class ROSManager : MonoBehaviour {
 
     // Let's gooooo
 
-    // Drone Types & Subscribers supported by system
+    /// <summary>
+    /// Drone Types and Subscribers supported by ISAACS System
+    /// </summary>
     public enum DroneType { M100, M210, M600, Sprite };
     public enum DroneSubscribers { attitude, battery_state, flight_status, gimbal_angle, gps_health, gps_position, imu, rc, velocity, height_above_takeoff, local_position };
 
-    // Sensor Types and Subscribers supported by system
+    /// <summary>
+    /// Sensor Types and Subscribers supported by ISAACS System
+    /// </summary>
     public enum SensorType { PointCloud, Mesh, LAMP, PCFace };
     public enum SensorSubscribers { surface_pointcloud, mesh,
         colorized_points_0, colorized_points_1, colorized_points_2, colorized_points_3, colorized_points_4, colorized_points_5,
         colorized_points_faced_0, colorized_points_faced_1, colorized_points_faced_2, colorized_points_faced_3, colorized_points_faced_4, colorized_points_faced_5
     };
 
-    // User input required to create a ROS connection with a drone
+    /// <summary>
+    /// All information required to be set by the user in the Editor to create a drone connection
+    /// </summary>
     [System.Serializable]
     public class ROSDroneConnectionInput
     {
@@ -35,8 +41,10 @@ public class ROSManager : MonoBehaviour {
         public List<DroneSubscribers> droneSubscribers;
         public bool simFlight;
     }
-    
-    // User input required to create a ROS connection with a sensor
+
+    /// <summary>
+    /// All information required to be set by the user in the Editor to create a sensor connection
+    /// /// </summary>
     [System.Serializable]
     public class ROSSensorConnectionInput
     {
@@ -54,8 +62,9 @@ public class ROSManager : MonoBehaviour {
     public bool success = false;
     public int uniqueID = 0;
 
-    // Use this for initialization
-    // Create a drone/sensor as per user input
+    /// <summary>
+    /// Initlizie all drones and sensors
+    /// </summary>
     void Start ()
     {
         foreach ( ROSDroneConnectionInput rosDroneConnectionInput in DronesList)
@@ -69,7 +78,10 @@ public class ROSManager : MonoBehaviour {
         }
     }
 
-    // Create a Drone gameobject and attach DroneFlightSim, required ROSDroneConnnection and initilize the ROS connection.
+    /// <summary>
+    /// Create a Drone gameobject and attach DroneFlightSim, required ROSDroneConnnection and initilize the ROS connection.
+    /// </summary>
+    /// <param name="rosDroneConnectionInput"></param>
     private void InstantiateDrone(ROSDroneConnectionInput rosDroneConnectionInput)
     {
         DroneType droneType = rosDroneConnectionInput.droneType;
@@ -136,7 +148,10 @@ public class ROSManager : MonoBehaviour {
         uniqueID ++;
     }
 
-    // Create a Sensor gameobject and attach & init required ROSSensorConnnection.
+    /// <summary>
+    /// Create a Sensor gameobject and attach & init required ROSSensorConnnection.
+    /// </summary>
+    /// <param name="rosSensorConnectionInput"></param>
     private void InstantiateSensor(ROSSensorConnectionInput rosSensorConnectionInput)
     {
         SensorType sensorType = rosSensorConnectionInput.sensorType;
