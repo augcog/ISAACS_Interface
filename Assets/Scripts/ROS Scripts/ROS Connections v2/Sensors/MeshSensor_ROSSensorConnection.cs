@@ -12,7 +12,7 @@ using ROSBridgeLib.voxblox_msgs;
 
 using ISAACS;
 
-public class MeshSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber {
+public class MeshSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber, ROSSensorConnectionInterface {
 
     // Visualizer variables
     public static string rendererObjectName = "PlacementPlane"; // pick a center point of the map, ideally as part of rotating map
@@ -115,5 +115,9 @@ public class MeshSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber 
         **/
     }
 
+    public void DisconnectROSConnection()
+    {
+        ros.Disconnect();
+    }
 
 }

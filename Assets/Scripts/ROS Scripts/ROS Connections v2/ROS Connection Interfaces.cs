@@ -14,23 +14,97 @@ public interface ROSDroneConnectionInterface
     void InitilizeDrone(int uniqueID, string droneIP, int dronePort, List<string> droneSubscribers, bool simFlight);
 
     // Query state variables for Informative UI and misc. info
+
+    /// <summary>
+    /// State of Unity interface authority over controlling the drone
+    /// </summary>
+    /// <returns></returns>
     bool HasAuthority();
+
+    /// <summary>
+    /// Drone attitude
+    /// </summary>
+    /// <returns></returns>
     Quaternion GetAttitude();
+
+    /// <summary>
+    /// Drone GPS position
+    /// </summary>
+    /// <returns></returns>
     NavSatFixMsg GetGPSPosition();
+
+    /// <summary>
+    /// Drone GPS Health
+    /// </summary>
+    /// <returns></returns>
     float GetGPSHealth();
+
+    /// <summary>
+    /// Drone velocity
+    /// </summary>
+    /// <returns></returns>
     Vector3 GetVelocity();
+
+    /// <summary>
+    /// Drone height above takeoff height
+    /// </summary>
+    /// <returns></returns>
     float GetHeightAboveTakeoff();
-    Vector3 GetGimbleJointAngles();
+
+    /// <summary>
+    /// Gimbal angles (if available)
+    /// </summary>
+    /// <returns></returns>
+    Vector3 GetGimbalJointAngles();
+
+    /// <summary>
+    /// Drone home latitude
+    /// </summary>
+    /// <returns></returns>
     double GetHomeLat();
+
+    /// <summary>
+    /// Drone home longitude
+    /// </summary>
+    /// <returns></returns>
     double GetHomeLong();
 
-    // Control drone
+    /// Drone control methods 
+
+    /// <summary>
+    /// Start the drone mission
+    /// </summary>
     void StartMission();
+
+    /// <summary>
+    /// Pause drone mission
+    /// </summary>
     void PauseMission();
+
+    /// <summary>
+    /// Resume drone mission
+    /// </summary>
     void ResumeMission();
+
+    /// <summary>
+    /// Update drone mission
+    /// </summary>
     void UpdateMission();
+
+    /// <summary>
+    /// Land drone
+    /// </summary>
     void LandDrone();
+
+    /// <summary>
+    /// Sent drone to home position
+    /// </summary>
     void FlyHome();
+
+    /// <summary>
+    /// Disconnect the ROS connection
+    /// </summary>
+    void DisconnectROSConnection();
 
     // Optional in the future
     // void DoTask()
@@ -39,7 +113,13 @@ public interface ROSDroneConnectionInterface
 
 public interface ROSSensorConnectionInterface
 {
+    // Initlization function
     void InitilizeSensor(int uniqueID, string sensorIP, int sensorPort, List<string> sensorSubscribers);
+
+    /// <summary>
+    /// Disconnect the ROS connection
+    /// </summary>    
+    void DisconnectROSConnection();
 
     // Anything else common across sensors?
 
