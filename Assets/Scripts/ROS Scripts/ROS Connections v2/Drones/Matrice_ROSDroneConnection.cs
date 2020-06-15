@@ -553,7 +553,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
         string service_name = "dji_sdk/query_drone_version";
         ros.CallService(HandleDroneVersionResponse, service_name, string.Format("{0} {1}", client_id, service_name));
     }
-    void HandleDroneVersionResponse(JSONNode response)
+    public void HandleDroneVersionResponse(JSONNode response)
     {
         response = response["values"];
         Debug.LogFormat("Drone: {0} (Version {1})", response["hardware"].Value, response["version"].AsInt);
@@ -564,7 +564,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
         string service_name = "/dji_sdk/activation";
         ros.CallService(HandleActivationResponse, service_name, string.Format("{0} {1}", client_id, service_name));
     }
-    void HandleActivationResponse(JSONNode response)
+    public void HandleActivationResponse(JSONNode response)
     {
         response = response["values"];
         Debug.LogFormat("Activation {0} (ACK: {1})", (response["result"].AsBool ? "succeeded" : "failed"), response["ack_data"].AsInt);
@@ -576,7 +576,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
         ros.CallService(HandleSetSDKControlResponse, service_name, string.Format("{0} {1}", client_id, service_name), string.Format("[{0}]", (control ? 1 : 0)));
         has_authority = control;
     }
-    void HandleSetSDKControlResponse(JSONNode response)
+    public void HandleSetSDKControlResponse(JSONNode response)
     {
         response = response["values"];
         Debug.Log(response.ToString());
@@ -592,7 +592,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
         string service_name = "/dji_sdk/drone_arm_control";
         ros.CallService(HandleArmResponse, service_name, string.Format("{0} {1}", client_id, service_name), string.Format("[{0}]", (armed ? 1 : 0)));
     }
-    void HandleArmResponse(JSONNode response)
+    public void HandleArmResponse(JSONNode response)
     {
         response = response["values"];
         Debug.LogFormat("Arm/Disarm request {0} (ACK: {1})", (response["result"].AsBool ? "succeeded" : "failed"), response["ack_data"].AsInt);
@@ -603,7 +603,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
         string service_name = "/dji_sdk/drone_task_control";
         ros.CallService(HandleTaskResponse, service_name, string.Format("{0} {1}", client_id, service_name), string.Format("[{0}]", (int)task));
     }
-    void HandleTaskResponse(JSONNode response)
+    public void HandleTaskResponse(JSONNode response)
     {
         response = response["values"];
         Debug.LogFormat("Task request {0} (ACK: {1})", (response["result"].AsBool ? "succeeded" : "failed"), response["ack_data"].AsInt);
@@ -614,7 +614,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
         string service_name = "/dji_sdk/set_local_pos_ref";
         ros.CallService(HandleSetLocalPosOriginResponse, service_name, string.Format("{0} {1}", client_id, service_name));
     }
-    void HandleSetLocalPosOriginResponse(JSONNode response)
+    public void HandleSetLocalPosOriginResponse(JSONNode response)
     {
         response = response["values"];
         Debug.LogFormat("Local position origin set {0}", (response["result"].AsBool ? "succeeded" : "failed"));
@@ -625,7 +625,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
         string service_name = "/dji_sdk/camera_action";
         ros.CallService(HandleCameraActionResponse, service_name, string.Format("{0} {1}", client_id, service_name), args: string.Format("[{0}]", (int)action));
     }
-    void HandleCameraActionResponse(JSONNode response)
+    public void HandleCameraActionResponse(JSONNode response)
     {
         response = response["values"];
         Debug.LogFormat("Camera action {0}", (response["result"].AsBool ? "succeeded" : "failed"));
@@ -636,7 +636,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
         string service_name = "/dji_sdk/mission_status";
         ros.CallService(HandleMissionStatusResponse, service_name, string.Format("{0} {1}", client_id, service_name));
     }
-    void HandleMissionStatusResponse(JSONNode response)
+    public void HandleMissionStatusResponse(JSONNode response)
     {
         response = response["values"];
         Debug.LogFormat("Waypoint Count: {0}\nHotpoint Count: {1}", response["waypoint_mission_count"], response["hotpoint_mission_count"]);
@@ -647,7 +647,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
         string service_name = "/dji_sdk/mission_waypoint_upload";
         ros.CallService(HandleUploadWaypointsTaskResponse, service_name, string.Format("{0} {1}", client_id, service_name), args: string.Format("[{0}]", task.ToYAMLString()));
     }
-    void HandleUploadWaypointsTaskResponse(JSONNode response)
+    public void HandleUploadWaypointsTaskResponse(JSONNode response)
     {
         response = response["values"];
         Debug.LogFormat("Waypoint task upload {0} (ACK: {1})", (response["result"].AsBool ? "succeeded" : "failed"), response["ack_data"].AsInt);
@@ -668,7 +668,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
         string service_name = "/dji_sdk/mission_waypoint_action";
         ros.CallService(HandleWaypointActionResponse, service_name, string.Format("{0} {1}", client_id, service_name), args: string.Format("[{0}]", action));
     }
-    void HandleWaypointActionResponse(JSONNode response)
+    public void HandleWaypointActionResponse(JSONNode response)
     {
         response = response["values"];
         Debug.LogFormat("Waypoint action {0} (ACK: {1})", (response["result"].AsBool ? "succeeded" : "failed"), response["ack_data"].AsInt);
@@ -679,7 +679,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
         string service_name = "/dji_sdk/mission_waypoint_getInfo";
         ros.CallService(HandleCurrentWaypointMissionResponse, service_name, string.Format("{0} {1}", client_id, service_name));
     }
-    void HandleCurrentWaypointMissionResponse(JSONNode response)
+    public void HandleCurrentWaypointMissionResponse(JSONNode response)
     {
         MissionWaypointTaskMsg waypoint_task = new MissionWaypointTaskMsg(response["values"]);
         Debug.LogFormat("Current waypoint mission: \n{0}", waypoint_task.ToYAMLString());
@@ -690,7 +690,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
         string service_name = "/dji_sdk/mission_waypoint_getSpeed";
         ros.CallService(HandleWaypointSpeedResponse, service_name, string.Format("{0} {1}", client_id, service_name));
     }
-    void HandleWaypointSpeedResponse(JSONNode response)
+    public void HandleWaypointSpeedResponse(JSONNode response)
     {
         response = response["values"];
         Debug.LogFormat("Current waypoint speed: {0}", response["speed"].AsFloat);
@@ -701,7 +701,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
         string service_name = "/dji_sdk/mission_waypoint_setSpeed";
         ros.CallService(HandleSetWaypointSpeedResponse, service_name, string.Format("{0} {1}", client_id, service_name), args: string.Format("[{0}]", speed));
     }
-    void HandleSetWaypointSpeedResponse(JSONNode response)
+    public void HandleSetWaypointSpeedResponse(JSONNode response)
     {
         response = response["values"];
         Debug.LogFormat("Set waypoint speed {0} (ACK: {1})", (response["result"].AsBool ? "succeeded" : "failed"), response["ack_data"].AsInt);
@@ -714,7 +714,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
         string args = string.Format("[{0} {1} {2} {3} 0]", front_right ? 1 : 0, front_left ? 1 : 0, down_front ? 1 : 0, down_back ? 1 : 0);
         ros.CallService(HandleSubscribe240pResponse, serviceName, id, args);
     }
-    void HandleSubscribe240pResponse(JSONNode response)
+    public void HandleSubscribe240pResponse(JSONNode response)
     {
         response = response["values"];
         Debug.Log("Subscribe to 240p feeds " + ((response["result"].AsBool) ? "succeeded" : "failed"));
@@ -726,7 +726,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
         string id = string.Format("{0} {1} unsubscribe", client_id, serviceName);
         ros.CallService(HandleUnsubscribe240pResponse, serviceName, id, "[0 0 0 0 1]");
     }
-    void HandleUnsubscribe240pResponse(JSONNode response)
+    public void HandleUnsubscribe240pResponse(JSONNode response)
     {
         response = response["values"];
         Debug.Log("Unsubscribe to 240p feeds " + ((response["result"].AsBool) ? "succeeded" : "failed"));
@@ -738,7 +738,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
         string id = string.Format("{0} {1} subscribe", client_id, serviceName);
         ros.CallService(HandleSubscribeDepthFrontResponse, serviceName, id, "[1 0]");
     }
-    void HandleSubscribeDepthFrontResponse(JSONNode response)
+    public void HandleSubscribeDepthFrontResponse(JSONNode response)
     {
         response = response["values"];
         Debug.Log("Subscribe front depth feed " + ((response["result"].AsBool) ? "succeeded" : "failed"));
@@ -750,7 +750,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
         string id = string.Format("{0} {1} unsubscribe", client_id, serviceName);
         ros.CallService(HandleUnsubscribeDepthFrontResponse, serviceName, id, "[0 1]");
     }
-    void HandleUnsubscribeDepthFrontResponse(JSONNode response)
+    public void HandleUnsubscribeDepthFrontResponse(JSONNode response)
     {
         response = response["values"];
         Debug.Log("Unsubscribe front depth feed " + ((response["result"].AsBool) ? "succeeded" : "failed"));
@@ -762,7 +762,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
         string id = string.Format("{0} {1} subscribe", client_id, serviceName);
         ros.CallService(HandleSubscribeVGAFrontResponse, serviceName, id, string.Format("[{0} 1 0]", use_20Hz ? 0 : 1));
     }
-    void HandleSubscribeVGAFrontResponse(JSONNode response)
+    public void HandleSubscribeVGAFrontResponse(JSONNode response)
     {
         response = response["values"];
         Debug.Log("Subscribe VGA front feed " + ((response["result"].AsBool) ? "succeeded" : "failed"));
@@ -774,7 +774,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
         string id = string.Format("{0} {1} unsubscribe", client_id, serviceName);
         ros.CallService(HandleUnsubscribeVGAFrontResponse, serviceName, id, "[0 0 1]");
     }
-    void HandleUnsubscribeVGAFrontResponse(JSONNode response)
+    public void HandleUnsubscribeVGAFrontResponse(JSONNode response)
     {
         response = response["values"];
         Debug.Log("Unsubscribe VGA front feed " + ((response["result"].AsBool) ? "succeeded" : "failed"));
@@ -786,7 +786,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
         string id = string.Format("{0} {1} subscribe FPV", client_id, serviceName);
         ros.CallService(HandleSubscribeFPVResponse, serviceName, id, "[0 1]");
     }
-    void HandleSubscribeFPVResponse(JSONNode response)
+    public void HandleSubscribeFPVResponse(JSONNode response)
     {
         response = response["values"];
         Debug.Log("Subscribe FPV feed " + ((response["result"].AsBool) ? "succeeded" : "failed"));
@@ -798,7 +798,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
         string id = string.Format("{0} {1} unsubscribe FPV", client_id, serviceName);
         ros.CallService(HandleUnsubscribeFPVResponse, serviceName, id, "[0 0]");
     }
-    void HandleUnsubscribeFPVResponse(JSONNode response)
+    public void HandleUnsubscribeFPVResponse(JSONNode response)
     {
         response = response["values"];
         Debug.Log("Unsubscribe FPV feed " + ((response["result"].AsBool) ? "succeeded" : "failed"));
@@ -810,7 +810,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
         string id = string.Format("{0} {1} subscribe MainCamera", client_id, serviceName);
         ros.CallService(HandleSubscribeMainCameraResponse, serviceName, id, "[1 1]");
     }
-    void HandleSubscribeMainCameraResponse(JSONNode response)
+    public void HandleSubscribeMainCameraResponse(JSONNode response)
     {
         response = response["values"];
         Debug.Log("Subscribe MainCamera feed " + ((response["result"].AsBool) ? "succeeded" : "failed"));
@@ -822,7 +822,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
         string id = string.Format("{0} {1} unsubscribe MainCamera", client_id, serviceName);
         ros.CallService(HandleUnsubscribeMainCameraResponse, serviceName, id, "[1 0]");
     }
-    void HandleUnsubscribeMainCameraResponse(JSONNode response)
+    public void HandleUnsubscribeMainCameraResponse(JSONNode response)
     {
         response = response["values"];
         Debug.Log("Unsubscribe MainCamera feed " + ((response["result"].AsBool) ? "succeeded" : "failed"));
