@@ -223,6 +223,7 @@ public class ROSManager : MonoBehaviour {
         // TODO: Uncomment after implementing ROSDroneConnection
         // sensor.InitilizeSensor(uniqueID, sensorIP, sensorPort ,sensorSubscribers)
         uniqueID++;
+    }
     
     void OnApplicationQuit()
     {
