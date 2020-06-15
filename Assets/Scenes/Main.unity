@@ -626,9 +626,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flipYZ: 1
-  faceThreshold: 25
-  updateInterval: 30
-  distThreshold: 10
 --- !u!21 &122914070
 Material:
   serializedVersion: 6
@@ -880,7 +877,6 @@ GameObject:
   - component: {fileID: 146794966}
   - component: {fileID: 146794969}
   - component: {fileID: 146794968}
-  - component: {fileID: 146794965}
   m_Layer: 0
   m_Name: World
   m_TagString: World
@@ -943,25 +939,13 @@ MonoBehaviour:
   citySimActive: 0
   currLat_citySim: 0
   currLong_citySim: 0
---- !u!114 &146794965
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 146794962}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7787ec4cc870bae4c9e65fbfa30a4364, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 0.2
 --- !u!114 &146794966
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 146794962}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: aebd008abee601a489d49b2b7b8a3328, type: 3}
   m_Name: 
@@ -995,7 +979,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 146794962}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dac87ae293d0bd348a6bcb090e69c517, type: 3}
   m_Name: 
@@ -1007,6 +991,7 @@ MonoBehaviour:
     port: 9090
     droneType: 1
     droneSubscribers: 0500000001000000
+    simFlight: 0
   SensorsList:
   - sensorName: Color0
     sensorTag: Color0
@@ -1072,6 +1057,9 @@ MonoBehaviour:
   missionInfo: y
   executeUploadedMission: u
   initMapBox: i
+  displaySensorList: o
+  initTestDrone: o
+  hardcodedWaypoints: p
   worldProperties: {fileID: 0}
   rosDroneConnection: {fileID: 0}
 --- !u!1 &161977055
@@ -4078,7 +4066,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!154 &1076179633
 TerrainCollider:
   m_ObjectHideFlags: 0
@@ -4608,7 +4596,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!95 &1209669984
 Animator:
   serializedVersion: 3
