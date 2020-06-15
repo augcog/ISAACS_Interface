@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 using SimpleJSON;
 
@@ -160,6 +161,11 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
     double droneHomeLong = 0;
 
     /// <summary>
+    /// Initilize drone home position if it hasn't been set yet
+    /// </summary>
+    bool droneHomeSet = false;
+
+    /// <summary>
     /// Function called by ROSManager when Drone Gameobject is initilized to start the ROS connection with requested subscribers.
     /// </summary>
     /// <param name="uniqueID"></param>
@@ -218,8 +224,9 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
 
         bool skip = true;
 
-        // TODO: No need to refence WorldProperties, should be changed to local to drone
-        foreach (Waypoint waypoint in WorldProperties.selectedDrone.waypoints)
+        ArrayList waypoints = this.GetComponent<DroneProperties>().classPointer.waypoints;
+
+        foreach (Waypoint waypoint in waypoints)
         {
             if (skip)
             {
@@ -322,7 +329,6 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
 
         ExecuteTask(DroneTask.GO_HOME);
     }
-
 
     /// <summary>
     /// Public methods to query state variables of the drone
@@ -466,6 +472,15 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
             case "/dji_sdk/gps_position":
                 gps_position = (parsed == null) ? new NavSatFixMsg(raw_msg) : (NavSatFixMsg)parsed;
                 result = gps_position;
+
+                // Peru 6/14/20: Set drone home latitude and longitutde as first message from drone gps position.
+                if (droneHomeSet == false)
+                {
+                    droneHomeLat = gps_position.GetLatitude();
+                    droneHomeLong = gps_position.GetLongitude();
+                    droneHomeSet = true;
+                }
+
                 break;
             case "/dji_sdk/imu":
                 imu = (parsed == null) ? new IMUMsg(raw_msg) : (IMUMsg)parsed;
