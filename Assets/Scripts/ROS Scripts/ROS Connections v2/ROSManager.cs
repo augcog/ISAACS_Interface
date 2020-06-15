@@ -52,7 +52,7 @@ public class ROSManager : MonoBehaviour {
 
     /// <summary>
     /// All information required to be set by the user in the Editor to create a sensor connection
-    /// /// </summary>
+    /// </summary>
     [System.Serializable]
     public class ROSSensorConnectionInput
     {
