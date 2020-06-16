@@ -872,7 +872,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 146794963}
-  - component: {fileID: 146794964}
   - component: {fileID: 146794967}
   - component: {fileID: 146794966}
   - component: {fileID: 146794969}
@@ -905,42 +904,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &146794964
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 146794962}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fce500faaffe7ac4a9135cb03c53891a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  terrain:
-  - {fileID: 0}
-  pivot: {fileID: 0}
-  originalScale: {x: 0, y: 0, z: 0}
-  actualScale: {x: 0, y: 0, z: 0}
-  currentScale: {x: 0, y: 0, z: 0}
-  originalPosition: {x: 0, y: 0, z: 0}
-  minScale: {x: 0, y: 0, z: 0}
-  maxScale: {x: 0, y: 0, z: 0}
-  speed: 3
-  rotSpeed: 0.5
-  isRotating: 0
-  tableRadius: 1
-  mapRadius: 3
-  rotatingTable: {fileID: 0}
-  handleHeldTrigger: 0
-  currentController: 0
-  movementAngleDecay: 0.98
-  droneOutOfBounds: 0
-  citySim: {fileID: 1672332645}
-  rsf_roof: {fileID: 1320984946}
-  abstractMap: {fileID: 1672332646}
-  citySimActive: 0
-  currLat_citySim: 0
-  currLong_citySim: 0
 --- !u!114 &146794965
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6780,17 +6743,6 @@ Transform:
   m_PrefabParentObject: {fileID: 4187505068457818, guid: 5bb46bae81bf04608ac699be504c5e66,
     type: 2}
   m_PrefabInternal: {fileID: 1672332643}
---- !u!1 &1672332645 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1290224484336908, guid: 5bb46bae81bf04608ac699be504c5e66,
-    type: 2}
-  m_PrefabInternal: {fileID: 1672332643}
---- !u!114 &1672332646 stripped
-MonoBehaviour:
-  m_PrefabParentObject: {fileID: 114196496685157712, guid: 5bb46bae81bf04608ac699be504c5e66,
-    type: 2}
-  m_PrefabInternal: {fileID: 1672332643}
-  m_Script: {fileID: 11500000, guid: cd961b1c9541a4cee99686069ecce852, type: 3}
 --- !u!1 &1699223317
 GameObject:
   m_ObjectHideFlags: 0
@@ -6800,6 +6752,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1699223318}
   - component: {fileID: 1699223319}
+  - component: {fileID: 1699223320}
   m_Layer: 0
   m_Name: Controller
   m_TagString: Untagged
@@ -6835,8 +6788,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1e86e051f2c48f488352f9541c700cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LeftController: {fileID: 1347866310}
-  RightController: {fileID: 2053542333}
+  LeftController: {fileID: 2053542333}
+  RightController: {fileID: 1347866310}
+--- !u!114 &1699223320
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1699223317}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fce500faaffe7ac4a9135cb03c53891a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  controllerState: {fileID: 1699223319}
+  World: {fileID: 146794962}
+  actualScale: {x: 0, y: 0, z: 0}
+  MinimumScale: 10
+  MaximumScale: 10
+  Speed: 3
+  RotationalSpeed: 1
 --- !u!1 &1715641644
 GameObject:
   m_ObjectHideFlags: 0
