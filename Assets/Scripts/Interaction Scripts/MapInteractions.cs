@@ -1,47 +1,37 @@
-﻿namespace ISAACS
-{
+﻿namespace ISAACS {
+
+
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
     using UnityEditor;
-    using Mapbox.Unity.Map;
-    using Mapbox.Utils;
+        using Mapbox.Unity.Map;
+        using Mapbox.Utils;
+        using ISAACS_UserInput;
+
+
+    /*
+    */
 
     public class MapInteractions : MonoBehaviour
     {
-        //terrain is the textured heightmap
-        public GameObject[] terrain;
-        //pivot is the center of the table
-        public GameObject pivot;
-        //originalScale is the original localScale of the world
-        public Vector3 originalScale;
-        //actualScale is the relative localScale of the world in comparison to its original localScale
-        public Vector3 actualScale;
-        //currentScale is the current localScale
-        public Vector3 currentScale;
-        //This is the original position of the world
-        public Vector3 originalPosition;
-        //This is the 1/10th of the originalScale of the world
-        public Vector3 minScale;
-        //This is the 10 times the originalScale of the world
-        public Vector3 maxScale;
-        //This is the speed at which the map can be moved at
-        public float speed = 3;
-        // Rotation speed (in rev/s)
-        public float rotSpeed = 1;
-        //This is the rotating flag
-        public bool isRotating;
-        //This tells us if the map is still moving or being dragged
-        public enum MapState
-        {
-            IDLE, DRAGGING, MOVING, ROTATING, SCALING
-        }
-        // The radius of the table (assuming the table is circular)
-        public float tableRadius;
-        // The radius of the map (assuming the map is circular)
-        public float mapRadius;
-        // The circular table
-        public GameObject rotatingTable;
+        public ControllerState controllerState; /// Initiate a singleton of the ControllerState class.
+
+        public GameObject[] terrain; /// terrain is the textured heightmap
+        public GameObject pivot; /// pivot is the center of the table
+        public Vector3 originalScale; ///originalScale is the original localScale of the world
+        public Vector3 actualScale; ///actualScale is the relative localScale of the world in comparison to its original localScale
+        public Vector3 currentScale; ///currentScale is the current localScale
+        public Vector3 originalPosition; ///This is the original position of the world
+        public Vector3 minScale; ///This is the 1/10th of the originalScale of the world
+        public Vector3 maxScale; ///This is the 10 times the originalScale of the world
+        public float speed = 3; ///This is the speed at which the map can be moved at
+        public float rotSpeed = 1; /// Rotation speed (in rev/s)
+        public bool isRotating; /// True if the map is being rotated
+        public enum MapState { IDLE, DRAGGING, MOVING, ROTATING, SCALING }; /// This tells us if the map is still moving or being dragged
+        public float tableRadius; /// The radius of the table (assuming the table is circular)
+        public float mapRadius; /// The radius of the map (assuming the map is circular)
+        public GameObject rotatingTable; /// The circular table
 
         // Rotation stuff
         public LinkedList<float> angles;
@@ -109,8 +99,8 @@
 
         void FixedUpdate()
         {
-
-            if (OVRInput.Get(OVRInput.Button.PrimaryHandTrigger) && OVRInput.Get(OVRInput.Button.SecondaryHandTrigger))
+            //if (OVRInput.Get(OVRInput.Button.PrimaryHandTrigger) && OVRInput.Get(OVRInput.Button.SecondaryHandTrigger))
+            if (controllerState.GetBothMiddle())
             {
                 // SCALE WORLD - if both grip triggers are held
                 ScaleWorld();
@@ -122,7 +112,6 @@
 
                 // ROTATE WORLD - these methods check for just one grip input on a turntable handle or the right joystick moving
                 ControllerRotateWorld();
-                //ManualRotateWorld();
             }
 
             // MOVING WORLD
@@ -184,85 +173,6 @@
             else if (mapState == MapState.ROTATING)
             {
                 mapState = MapState.IDLE;
-            }
-        }
-
-        // Rotate the world based off of physical movement/interaction
-        private void ManualRotateWorld()
-        {
-            // CASE: User has held the handle.
-            if (handleHeldTrigger)
-            {
-                // Update state.
-                handleHeldTrigger = false;
-                mapState = MapState.DRAGGING;
-
-                // Initialize oldVec: direction vec from hand to pivot.
-                oldVec = OVRInput.GetLocalControllerPosition(currentController) - pivot.transform.position;
-                oldVec.y = 0;
-                oldVec = Vector3.Normalize(oldVec);
-
-                // Initialize angles: linked list that'll contain recent angle rotations.
-                angles.Clear();
-            }
-
-            // CASE: Map is in the dragging state.
-            if (mapState == MapState.DRAGGING)
-            {
-                // CASE: User has released the handle.
-                if (OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger, currentController) < .1f)
-                {
-                    // CASE: User was dragging the table when they released the handle.
-                    if (mapState == MapState.DRAGGING)
-                    {
-                        // Initize movementAngle: the initial movement per fixedupdate, to avg of recent rots
-                        movementAngle = 0;
-                        foreach (float a in angles)
-                            movementAngle += a;
-                        movementAngle /= angles.Count;
-
-                        // Set the map to moving.
-                        mapState = MapState.MOVING;
-                    }
-                }
-
-                // Initialize currVec.
-                Vector3 currVec = OVRInput.GetLocalControllerPosition(currentController) - pivot.transform.position;
-                currVec.y = 0;
-                currVec = Vector3.Normalize(currVec);
-
-                // Find the angle going from oldVec to currVec.
-                float angle = Vector3.Angle(oldVec, currVec);
-                Vector3 cross = Vector3.Cross(oldVec, currVec);
-                if (cross.y > 0) angle = -angle;
-
-                // Rotate the map and circular table by that angle.
-                transform.RotateAround(pivot.transform.position, Vector3.up, angle);
-                rotatingTable.transform.Rotate(Vector3.up, angle);
-
-                // Update startVec
-                oldVec = currVec;
-
-                // Add recent rotation angle to angles. Keep only the N most recent angles.
-                angles.AddLast(angle);
-                if (angles.Count > 10)
-                    angles.RemoveFirst();
-
-            }
-            else if (mapState == MapState.MOVING)
-            {
-                // Rotate the map/table by the movementAngle.
-                transform.RotateAround(pivot.transform.position, Vector3.up, movementAngle);
-                rotatingTable.transform.Rotate(Vector3.up, movementAngle);
-
-                // Decay movementAngle.
-                movementAngle *= movementAngleDecay;
-
-                // Check if we've stopped moving - if so, set to IDLE.
-                if (Mathf.Abs(movementAngle) < 0.005f)
-                {
-                    mapState = MapState.IDLE;
-                }
             }
         }
 
@@ -416,5 +326,4 @@
         }
 
     }
-
 }

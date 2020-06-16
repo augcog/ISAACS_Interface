@@ -1,4 +1,5 @@
-﻿namespace ISAACS {
+﻿namespace ISAACS_UserInput {
+
 
     using System.Collections;
     using System.Collections.Generic;
@@ -8,11 +9,13 @@
 
 	/* This script is a wrapper around VRTK, to be used as a library for
 	higher-level scripts needing access to user input coming from a controller.
+	Initialize the ControllerState class as a singleton of the GameObject Controller.
 	For further clarifications, ask Apollo.
 	*/
 
-	public class ControllerState : MonoBehaviour {
-
+	public class ControllerState : MonoBehaviour
+	{
+		
 		// Remember to set these controllers to actual GameObjects through the Unity GUI.
 		public GameObject LeftController;
 		public GameObject RightController;
@@ -28,7 +31,7 @@
 		private Vector2 LeftThumbDelta; /// The distance by which the left thumbstick has been moved in the X-axis and Y-axis.
 		private float LeftThumbAngle; /// The angle of rotation of the left thumbstick.
 		private bool LeftThumbMoved; /// True if LeftThumbDelta{.x|.y} > 0.1f or LeftThumbAngle > 0.1f, meaning that the left thumbstick has been moved.
-		private Transform LeftOrigin; /// The origin (position, rotation, scale) of the left controller.
+		private Transform LeftTransform; /// The transform (position, rotation, scale) of the left controller.
 		private Vector3 LeftPosition; /// The position of the left controller.
 		private Vector3 LeftLocalPosition; /// The relative position of the left controller.
 		private Quaternion LeftRotation; /// The rotation of the left controller. Can be queried for its normalized value, eulerAngles, and w, x, y, and z components.
@@ -47,7 +50,7 @@
 		private Vector2 RightThumbDelta; /// The distance by which the right thumbstick has been moved in the X-axis and Y-axis.
 		private float RightThumbAngle; /// The angle of rotation of the right thumbstick.
 		private bool RightThumbMoved; /// True if RightThumbDelta{.x|.y} > 0.1f or RightThumbAngle > 0.1f, meaning that the right thumbstick has been moved.
-		private Transform RightOrigin; /// The origin (position, rotation, scale) of the right controller.
+		private Transform RightTransform; /// The transform (position, rotation, scale) of the right controller.
 		private Vector3 RightPosition; /// The position of the right controller.
 		private Vector3 RightLocalPosition; /// The relative position of the right controller.
 		private Quaternion RightRotation; /// The rotation of the right controller. Can be queried for its normalized value, eulerAngles, and w, x, y, and z components.
@@ -67,8 +70,8 @@
 
 
 		// Unlike Update, which gets called once per frame, FixedUpdate is called accordingly to the physics engine.
-		void FixedUpdate() {
-
+		void FixedUpdate()
+		{
 			// These variables store the controller state, which can be queried for input information.
             var left = LeftController.GetComponent<VRTK_ControllerEvents>();
 			var leftInteractGrab = LeftController.GetComponent<VRTK_InteractGrab>();
@@ -76,7 +79,8 @@
 			var rightInteractGrab = RightController.GetComponent<VRTK_InteractGrab>();
 
 			// Receive input information from the left controller.
-			LeftIsGrabbing = (leftInteractGrab.GetGrabbedObject()) ? true : false;
+			//LeftIsGrabbing = (leftInteractGrab.GetGrabbedObject()) ? true : false;
+			LeftIsGrabbing = false;
 			LeftIndex = left.IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.TriggerPress);
 			LeftMiddle = left.IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.GripPress);
 			LeftX = left.IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.ButtonOnePress);
@@ -85,16 +89,17 @@
 			LeftThumbDelta = left.GetAxis(VRTK_ControllerEvents.Vector2AxisAlias.Touchpad);
 			LeftThumbAngle = left.GetAxisAngle(VRTK_ControllerEvents.Vector2AxisAlias.Touchpad);
 			LeftThumbMoved = LeftThumbDelta.x > 0.1f || LeftThumbDelta.y > 0.1f || LeftThumbAngle > 0.1f;
-			LeftOrigin = VRTK_DeviceFinder.GetControllerOrigin(VRTK_DeviceFinder.GetControllerReferenceLeftHand());
-			LeftPosition = LeftOrigin.position;
-			LeftLocalPosition = LeftOrigin.localPosition;
-			LeftRotation = LeftOrigin.rotation;
-			LeftLocalRotation = LeftOrigin.localRotation;
+			LeftTransform = VRTK_DeviceFinder.DeviceTransform(VRTK_DeviceFinder.Devices.LeftController);
+			LeftPosition = LeftTransform.position;
+			LeftLocalPosition = LeftTransform.localPosition;
+			LeftRotation = LeftTransform.rotation;
+			LeftLocalRotation = LeftTransform.localRotation;
 			LeftVelocity = VRTK_DeviceFinder.GetControllerVelocity(VRTK_DeviceFinder.GetControllerReferenceLeftHand());
 			LeftAngularVelocity = VRTK_DeviceFinder.GetControllerAngularVelocity(VRTK_DeviceFinder.GetControllerReferenceLeftHand());
 
             // Receive input information from the right controller.
-			RightIsGrabbing = (rightInteractGrab.GetGrabbedObject()) ? true : false;
+			//RightIsGrabbing = (rightInteractGrab.GetGrabbedObject()) ? true : false;
+			RightIsGrabbing = false;
 			RightIndex = right.IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.TriggerPress);
 			RightMiddle = right.IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.GripPress);
 			RightA = right.IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.ButtonOnePress);
@@ -102,23 +107,23 @@
 			RightThumb = right.IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.TouchpadPress);
 			RightThumbDelta = right.GetAxis(VRTK_ControllerEvents.Vector2AxisAlias.Touchpad);
 			RightThumbAngle = right.GetAxisAngle(VRTK_ControllerEvents.Vector2AxisAlias.Touchpad);
-			RightOrigin = VRTK_DeviceFinder.GetControllerOrigin(VRTK_DeviceFinder.GetControllerReferenceRightHand());
 			RightThumbMoved = RightThumbDelta.x > 0.1f || RightThumbDelta.y > 0.1f || RightThumbAngle > 0.1f;
-			RightPosition = RightOrigin.position;
-			RightLocalPosition = RightOrigin.localPosition;
-			RightRotation = RightOrigin.rotation;
-			RightLocalRotation = RightOrigin.localRotation;
+			RightTransform = VRTK_DeviceFinder.DeviceTransform(VRTK_DeviceFinder.Devices.RightController);
+			RightPosition = RightTransform.position;
+			RightLocalPosition = RightTransform.localPosition;
+			RightRotation = RightTransform.rotation;
+			RightLocalRotation = RightTransform.localRotation;
 			RightVelocity = VRTK_DeviceFinder.GetControllerVelocity(VRTK_DeviceFinder.GetControllerReferenceRightHand());
 			RightAngularVelocity = VRTK_DeviceFinder.GetControllerAngularVelocity(VRTK_DeviceFinder.GetControllerReferenceRightHand());
 
             // Compute information about the state of both controllers.
 			BothMiddle = LeftMiddle && RightMiddle;
-			Distance = LeftPosition - RightPosition;
-			LocalDistance = LeftLocalPosition - RightLocalPosition;
+			//Distance = LeftPosition - RightPosition;
+			//LocalDistance = LeftLocalPosition - RightLocalPosition;
 			VelocityDelta = LeftVelocity - RightVelocity;
 			AngularVelocityDelta = LeftAngularVelocity - RightAngularVelocity;
-			ScalingFactor = Vector3.Dot(VelocityDelta, Distance);
-			LocalScalingFactor = Vector3.Dot(VelocityDelta, LocalDistance);
+			//ScalingFactor = Vector3.Dot(VelocityDelta, Distance);
+			//LocalScalingFactor = Vector3.Dot(VelocityDelta, LocalDistance);
 		}
 
 
@@ -168,9 +173,9 @@
 			return LeftThumbMoved;
 		}
 
-		public Transform GetLeftOrigin() /// The origin ("position") of the left controller.
+		public Transform GetLeftTransform() /// The transform (position, rotation, scale) of the left controller.
 		{
-			return LeftOrigin;
+			return LeftTransform;
 		}
 
 		public Vector3 GetLeftPosition() /// The position of the left controller.
@@ -252,9 +257,9 @@
 			return RightThumbMoved;
 		}
 
-		public Transform GetRightOrigin() /// The origin ("position") of the right controller.
+		public Transform GetRightTransform() /// The transform (position, rotation, scale) of the right controller.
 		{
-			return RightOrigin;
+			return RightTransform;
 		}
 
 		public Vector3 GetRightPosition() /// The position of the right controller.
@@ -325,6 +330,6 @@
 		{
 			return LocalScalingFactor;
 		}
-		
+
 	}
 }
