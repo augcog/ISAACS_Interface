@@ -1,7 +1,9 @@
-using System;
+﻿using System;
 using UnityEngine;
 using System.Collections.Generic;
 using SimpleJSON;
+using System.Threading;
+
 
 using ROSBridgeLib;
 using ROSBridgeLib.geometry_msgs;
@@ -13,13 +15,44 @@ using ROSBridgeLib.voxblox_msgs;
 using ISAACS;
 
 public class MeshSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber {
-
+    
     // Visualizer variables
     public static string rendererObjectName = "PlacementPlane"; // pick a center point of the map, ideally as part of rotating map
 
     // Private connection variables
     private ROSBridgeWebSocketConnection ros = null;
     public string client_id;
+    private Thread rosMsgThread;
+
+    // Queue of jsonMsgs to be parsed on thread
+    private Queue<JSONNode> jsonMsgs = new Queue<JSONNode>();
+
+    // Queue of meshMsgs parsed by thread and to be visualized
+    private Queue<MeshMsg> meshMsgs = new Queue<MeshMsg>();
+
+    private MeshVisualizer visualizer;
+
+    private void CreateThread()
+    {
+        rosMsgThread = new Thread( new ThreadStart(ParseJSON));
+        rosMsgThread.IsBackground = true;
+        rosMsgThread.Start();
+    }
+
+    private void ParseJSON()
+    {
+        while (true)
+        {
+            // Check if any json msgs have been recieved
+            if (jsonMsgs.Count != 0)
+            {
+                // Parse json msg to mesh msg
+                JSONNode rawMsg = jsonMsgs.Dequeue();
+                MeshMsg meshMsg = new MeshMsg(rawMsg);
+                meshMsgs.Enqueue(meshMsg);
+            }
+        }
+    }
 
     // Initilize the sensor
     public void InitilizeSensor(int uniqueID, string sensorIP, int sensorPort, List<string> sensorSubscribers)
@@ -48,6 +81,9 @@ public class MeshSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber 
 
         Debug.Log("Mesh Connection Established");
         ros.Connect();
+
+        // Initilize visualizer
+        visualizer = GameObject.Find(rendererObjectName).GetComponent<MeshVisualizer>();
     }
     // Update is called once per frame in Unity
     void Update()
@@ -55,6 +91,13 @@ public class MeshSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber 
         if (ros != null)
         {
             ros.Render();
+        }
+
+        // Check if any mesh msgs are available to be visualized
+        if (meshMsgs.Count > 0)
+        {
+            MeshMsg meshMsg = meshMsgs.Dequeue();
+            visualizer.SetMesh(meshMsg);
         }
     }
 
@@ -69,9 +112,12 @@ public class MeshSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber 
         {
             case "/voxblox_node/surface_pointcloud":
                 Debug.Log("Mesh Visualizer Callback.");
-                MeshMsg meshMsg =  new MeshMsg(raw_msg);
-                MeshVisualizer visualizer = GameObject.Find(rendererObjectName).GetComponent<MeshVisualizer>();
-                visualizer.SetMesh(meshMsg);
+                // Add raw_msg to the jsonMsgs to be parsed on the thread
+                jsonMsgs.Enqueue(raw_msg);
+
+                //MeshMsg meshMsg =  new MeshMsg(raw_msg);
+                //MeshVisualizer visualizer = GameObject.Find(rendererObjectName).GetComponent<MeshVisualizer>();
+                //visualizer.SetMesh(meshMsg);
                 break;
             default:
                 Debug.LogError("Topic not implemented: " + topic);
