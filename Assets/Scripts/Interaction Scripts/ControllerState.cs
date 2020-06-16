@@ -27,6 +27,7 @@
 		private bool LeftThumb; /// True if the left thumbstick is being pressed.
 		private Vector2 LeftThumbDelta; /// The distance by which the left thumbstick has been moved in the X-axis and Y-axis.
 		private float LeftThumbAngle; /// The angle of rotation of the left thumbstick.
+		private bool LeftThumbMoved; /// True if LeftThumbDelta{.x|.y} > 0.1f or LeftThumbAngle > 0.1f, meaning that the left thumbstick has been moved.
 		private Transform LeftOrigin; /// The origin (position, rotation, scale) of the left controller.
 		private Vector3 LeftPosition; /// The position of the left controller.
 		private Vector3 LeftLocalPosition; /// The relative position of the left controller.
@@ -45,6 +46,7 @@
 		private bool RightThumb; /// True if the right thumbstick is being pressed.
 		private Vector2 RightThumbDelta; /// The distance by which the right thumbstick has been moved in the X-axis and Y-axis.
 		private float RightThumbAngle; /// The angle of rotation of the right thumbstick.
+		private bool RightThumbMoved; /// True if RightThumbDelta{.x|.y} > 0.1f or RightThumbAngle > 0.1f, meaning that the right thumbstick has been moved.
 		private Transform RightOrigin; /// The origin (position, rotation, scale) of the right controller.
 		private Vector3 RightPosition; /// The position of the right controller.
 		private Vector3 RightLocalPosition; /// The relative position of the right controller.
@@ -82,6 +84,7 @@
 			LeftThumb = left.IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.TouchpadPress);
 			LeftThumbDelta = left.GetAxis(VRTK_ControllerEvents.Vector2AxisAlias.Touchpad);
 			LeftThumbAngle = left.GetAxisAngle(VRTK_ControllerEvents.Vector2AxisAlias.Touchpad);
+			LeftThumbMoved = LeftThumbDelta.x > 0.1f || LeftThumbDelta.y > 0.1f || LeftThumbAngle > 0.1f;
 			LeftOrigin = VRTK_DeviceFinder.GetControllerOrigin(VRTK_DeviceFinder.GetControllerReferenceLeftHand());
 			LeftPosition = LeftOrigin.position;
 			LeftLocalPosition = LeftOrigin.localPosition;
@@ -100,6 +103,7 @@
 			RightThumbDelta = right.GetAxis(VRTK_ControllerEvents.Vector2AxisAlias.Touchpad);
 			RightThumbAngle = right.GetAxisAngle(VRTK_ControllerEvents.Vector2AxisAlias.Touchpad);
 			RightOrigin = VRTK_DeviceFinder.GetControllerOrigin(VRTK_DeviceFinder.GetControllerReferenceRightHand());
+			RightThumbMoved = RightThumbDelta.x > 0.1f || RightThumbDelta.y > 0.1f || RightThumbAngle > 0.1f;
 			RightPosition = RightOrigin.position;
 			RightLocalPosition = RightOrigin.localPosition;
 			RightRotation = RightOrigin.rotation;
@@ -157,6 +161,11 @@
 		public float GetLeftThumbAngle() /// The angle of rotation of the left thumbstick.
 		{
 			return LeftThumbAngle;
+		}
+
+		private bool GetLeftThumbMoved() /// True if LeftThumbDelta{.x|.y} > 0.1f or LeftThumbAngle > 0.1f, meaning that the left thumbstick has been moved.
+		{
+			return LeftThumbMoved;
 		}
 
 		public Transform GetLeftOrigin() /// The origin ("position") of the left controller.
@@ -236,6 +245,11 @@
 		public float GetRightThumbAngle() /// The angle of rotation of the right thumbstick.
 		{
 			return RightThumbAngle;
+		}
+		
+		private bool GetRightThumbMoved() /// True if RightThumbDelta{.x|.y} > 0.1f or RightThumbAngle > 0.1f, meaning that the right thumbstick has been moved.
+		{
+			return RightThumbMoved;
 		}
 
 		public Transform GetRightOrigin() /// The origin ("position") of the right controller.
