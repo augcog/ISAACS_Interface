@@ -30,7 +30,7 @@
 		private bool LeftThumb; /// True if the left thumbstick is being pressed.
 		private Vector2 LeftThumbDelta; /// The distance by which the left thumbstick has been moved in the X-axis and Y-axis.
 		private float LeftThumbAngle; /// The angle of rotation of the left thumbstick.
-		private bool LeftThumbMoved; /// True if LeftThumbDelta{.x|.y} > 0.1f or LeftThumbAngle > 0.1f, meaning that the left thumbstick has been moved.
+		private bool LeftThumbMoved; /// True if LeftThumbDelta{.x|.y} != 0.0f or LeftThumbAngle != 0.0f, meaning that the left thumbstick has been moved.
 		private Transform LeftTransform; /// The transform (position, rotation, scale) of the left controller.
 		private Vector3 LeftPosition; /// The position of the left controller.
 		private Vector3 LeftLocalPosition; /// The relative position of the left controller.
@@ -49,7 +49,7 @@
 		private bool RightThumb; /// True if the right thumbstick is being pressed.
 		private Vector2 RightThumbDelta; /// The distance by which the right thumbstick has been moved in the X-axis and Y-axis.
 		private float RightThumbAngle; /// The angle of rotation of the right thumbstick.
-		private bool RightThumbMoved; /// True if RightThumbDelta{.x|.y} > 0.1f or RightThumbAngle > 0.1f, meaning that the right thumbstick has been moved.
+		private bool RightThumbMoved; /// True if RightThumbDelta{.x|.y} != 0.0f or RightThumbAngle != 0.0f, meaning that the right thumbstick has been moved.
 		private Transform RightTransform; /// The transform (position, rotation, scale) of the right controller.
 		private Vector3 RightPosition; /// The position of the right controller.
 		private Vector3 RightLocalPosition; /// The relative position of the right controller.
@@ -88,7 +88,7 @@
 			LeftThumb = left.IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.TouchpadPress);
 			LeftThumbDelta = left.GetAxis(VRTK_ControllerEvents.Vector2AxisAlias.Touchpad);
 			LeftThumbAngle = left.GetAxisAngle(VRTK_ControllerEvents.Vector2AxisAlias.Touchpad);
-			LeftThumbMoved = LeftThumbDelta.x > 0.1f || LeftThumbDelta.y > 0.1f || LeftThumbAngle > 0.1f;
+			LeftThumbMoved = LeftThumbDelta.x != 0.0f || LeftThumbDelta.y != 0.0f;
 			LeftTransform = VRTK_DeviceFinder.DeviceTransform(VRTK_DeviceFinder.Devices.LeftController);
 			LeftPosition = LeftTransform.position;
 			LeftLocalPosition = LeftTransform.localPosition;
@@ -107,7 +107,7 @@
 			RightThumb = right.IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.TouchpadPress);
 			RightThumbDelta = right.GetAxis(VRTK_ControllerEvents.Vector2AxisAlias.Touchpad);
 			RightThumbAngle = right.GetAxisAngle(VRTK_ControllerEvents.Vector2AxisAlias.Touchpad);
-			RightThumbMoved = RightThumbDelta.x > 0.1f || RightThumbDelta.y > 0.1f || RightThumbAngle > 0.1f;
+			RightThumbMoved = RightThumbDelta.x != 0.0f || RightThumbDelta.y != 0.0f;
 			RightTransform = VRTK_DeviceFinder.DeviceTransform(VRTK_DeviceFinder.Devices.RightController);
 			RightPosition = RightTransform.position;
 			RightLocalPosition = RightTransform.localPosition;
@@ -118,12 +118,12 @@
 
             // Compute information about the state of both controllers.
 			BothMiddle = LeftMiddle && RightMiddle;
-			//Distance = LeftPosition - RightPosition;
-			//LocalDistance = LeftLocalPosition - RightLocalPosition;
+			Distance = LeftPosition - RightPosition;
+			LocalDistance = LeftLocalPosition - RightLocalPosition;
 			VelocityDelta = LeftVelocity - RightVelocity;
 			AngularVelocityDelta = LeftAngularVelocity - RightAngularVelocity;
-			//ScalingFactor = Vector3.Dot(VelocityDelta, Distance);
-			//LocalScalingFactor = Vector3.Dot(VelocityDelta, LocalDistance);
+			ScalingFactor = Vector3.Dot(VelocityDelta, Distance);
+			LocalScalingFactor = Vector3.Dot(VelocityDelta, LocalDistance);
 		}
 
 
@@ -168,7 +168,7 @@
 			return LeftThumbAngle;
 		}
 
-		private bool GetLeftThumbMoved() /// True if LeftThumbDelta{.x|.y} > 0.1f or LeftThumbAngle > 0.1f, meaning that the left thumbstick has been moved.
+		public bool GetLeftThumbMoved() /// True if LeftThumbDelta{.x|.y} != 0.0f or LeftThumbAngle != 0.0f, meaning that the left thumbstick has been moved.
 		{
 			return LeftThumbMoved;
 		}
@@ -252,7 +252,7 @@
 			return RightThumbAngle;
 		}
 		
-		private bool GetRightThumbMoved() /// True if RightThumbDelta{.x|.y} > 0.1f or RightThumbAngle > 0.1f, meaning that the right thumbstick has been moved.
+		public bool GetRightThumbMoved() /// True if RightThumbDelta{.x|.y} != 0.0f or RightThumbAngle != 0.0f, meaning that the right thumbstick has been moved.
 		{
 			return RightThumbMoved;
 		}
