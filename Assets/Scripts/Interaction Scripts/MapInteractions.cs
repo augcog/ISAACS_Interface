@@ -12,7 +12,7 @@
 
     public class MapInteractions : MonoBehaviour
     {
-        public ControllerState controllerState; /// Initiate a singleton of the ControllerState class. Assign it to the Controller GameObject.
+        private ControllerState controllerState; /// Initiate a singleton of the ControllerState class. Assign it to the Controller GameObject.
         private GameObject Pivot; /// pivot is the center of the table
 
         private GameObject World; /// The World GameObject. All its children will be scaled, rotate and move with it.
@@ -32,9 +32,8 @@
         // Use this for initialization
         void Start()
         {
-            //controllerState = GameObject.Find("Controller");
+            controllerState = GameObject.Find("Controller").GetComponent<ControllerState>();
             Pivot = GameObject.Find("Pivot");
-
             World = GameObject.Find("World");
 
 
