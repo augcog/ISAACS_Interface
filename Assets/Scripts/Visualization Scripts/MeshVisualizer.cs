@@ -31,7 +31,7 @@ public class MeshVisualizer : MonoBehaviour
     /// <summary>
     /// Dictionary of meshes for each index.
     /// </summary>
-    private Dictionary<Int64[], MeshFilter> mesh_dict;    // Use this for initialization
+    private Dictionary<Int64[], MeshFilter> mesh_filter_dict;    // Use this for initialization
 
     /// <summary>
     /// Dictionary of last update times for each index.
@@ -39,7 +39,7 @@ public class MeshVisualizer : MonoBehaviour
     private Dictionary<Int64[], float> last_update;
     void Start()
     {
-        mesh_dict = new Dictionary<long[], MeshFilter>(new LongArrayEqualityComparer());
+        mesh_filter_dict = new Dictionary<long[], MeshFilter>(new LongArrayEqualityComparer());
         last_update = new Dictionary<long[], float>(new LongArrayEqualityComparer());
         meshParent = new GameObject("Mesh");
     }
@@ -80,6 +80,93 @@ public class MeshVisualizer : MonoBehaviour
         return closeToDrone(index) || last_update[index] < Time.time - updateInterval;
     }
 
+    public Dictionary<long[], Mesh> generateMesh(MeshMsg meshMsg)
+    {
+        Dictionary<Int64[], Mesh> generated_mesh_dict = new Dictionary<long[], Mesh>(new LongArrayEqualityComparer());
+        /// The length of one block. Also the scaling factor of the coordinates.
+        float scale_factor = meshMsg.GetBlockEdgeLength();
+        /// List of all the mesh blocks.
+        MeshBlockMsg[] mesh_blocks = meshMsg.GetMeshBlocks();
+        /// Iterate through each mesh block generating and updating meshes for each.
+        for (int i = 0; i < mesh_blocks.Length; i++)
+        {
+            /// index of the mesh block.
+            Int64[] index = mesh_blocks[i].GetIndex();
+
+            ushort[] x = mesh_blocks[i].GetX();
+            ushort[] y = mesh_blocks[i].GetY();
+            ushort[] z = mesh_blocks[i].GetZ();
+
+            // Create a list of vertices and their corresponding colors.
+            List<Vector3> newVertices = new List<Vector3>();
+            List<Color> newColors = new List<Color>();
+
+            // update indicies, converting from block index to global position transforms.
+            for (int j = 0; j < x.Length; j++)
+            {
+                float zv = ((float)z[j] / 32768.0f + index[2]) * scale_factor;
+                float xv = ((float)x[j] / 32768.0f + index[0]) * scale_factor;
+                float yv = ((float)y[j] / 32768.0f + index[1]) * scale_factor;
+                if (flipYZ)
+                {
+                    newVertices.Add(new Vector3(xv, zv, yv));
+                }
+                else
+                {
+                    newVertices.Add(new Vector3(xv, yv, zv));
+                }
+            }
+            // update colors
+            byte[] r = mesh_blocks[i].GetR();
+            byte[] g = mesh_blocks[i].GetG();
+            byte[] b = mesh_blocks[i].GetB();
+
+            for (int j = 0; j < r.Length; j++)
+            {
+                newColors.Add(new Color32(r[j], g[j], b[j], 51));
+            }
+
+            // Vertices come in triples each corresponding to one face.
+            int[] newTriangles = new int[newVertices.Count / 3 * 3];
+            for (int j = 0; j < newTriangles.Length; j++)
+            {
+                newTriangles[j] = j;
+            }
+
+            Mesh mesh = new Mesh();
+            // correct for inverted mesh. By reversing the lists, the normal vectors point the right direction.
+            newVertices.Reverse();
+            newColors.Reverse();
+
+            mesh.vertices = newVertices.ToArray();
+            //mesh.uv = newUV;
+            mesh.triangles = newTriangles;
+            mesh.colors = newColors.ToArray();
+            generated_mesh_dict[index] = mesh;
+        }
+        return generated_mesh_dict;
+    }
+
+    public void SetMesh(Dictionary<long[], Mesh> mesh_dict)
+    {
+        foreach(KeyValuePair<long[], Mesh> entry in mesh_dict)
+        {
+            long[] index = entry.Key;
+            Mesh mesh = entry.Value;
+            // If there is no existing game object for the block, create one.
+            if (!mesh_filter_dict.ContainsKey(index))
+            {
+                GameObject meshObject = new GameObject(index.ToString());
+                meshObject.transform.parent = meshParent.transform;
+                MeshFilter meshFilter = meshObject.AddComponent<MeshFilter>();
+                MeshRenderer meshRenderer = meshObject.AddComponent<MeshRenderer>();
+                meshRenderer.sharedMaterial = new Material(Shader.Find("Particles/Standard Unlit"));
+                mesh_filter_dict.Add(index, meshFilter);
+            }
+            mesh_filter_dict[index].mesh = mesh;
+        }
+    }
+
     /// <summary>
     /// Update the mesh with the new mesh.
     /// </summary>
@@ -105,7 +192,7 @@ public class MeshVisualizer : MonoBehaviour
             ushort[] x = mesh_blocks[i].GetX();
 
             // If there is no existing game object for the block, create one.
-            if (!mesh_dict.ContainsKey(index))
+            if (!mesh_filter_dict.ContainsKey(index))
             {
                 // only render meshes with enough faces to make it worth the resources of an extra game object
                 if (x.Length < faceThreshold)
@@ -120,7 +207,7 @@ public class MeshVisualizer : MonoBehaviour
                 MeshRenderer meshRenderer = meshObject.AddComponent<MeshRenderer>();
                 meshRenderer.sharedMaterial = new Material(Shader.Find("Particles/Standard Unlit"));
                 //meshRenderer.sharedMaterial = new Material(Shader.Find("Standard"));
-                mesh_dict.Add(index, meshFilter);
+                mesh_filter_dict.Add(index, meshFilter);
             }
             else
             {
@@ -176,7 +263,7 @@ public class MeshVisualizer : MonoBehaviour
             //mesh.uv = newUV;
             mesh.triangles = newTriangles;
             mesh.colors = newColors.ToArray();
-            mesh_dict[index].mesh = mesh;
+            mesh_filter_dict[index].mesh = mesh;
             last_update[index] = Time.time;
         }
         hasChanged = true;
