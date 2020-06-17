@@ -75,6 +75,47 @@
         }
 
         /// <summary>
+        /// Update the selected drone.
+        /// </summary>
+        public static void UpdateSelectedDrone(Drone newSelectedDrone)
+        {
+            selectedDrone.gameObjectPointer.GetComponent<DroneProperties>().DeselectDrone();
+            selectedDrone = newSelectedDrone;
+        }
+
+        /// <summary>
+        /// Get the selected drone
+        /// </summary>
+        public static Drone GetSelectedDrone()
+        {
+            return selectedDrone;
+        }  
+
+        /// <summary>
+        /// Get list of all drones
+        /// </summary>
+        public static Dictionary<char, Drone> GetDronesDict()
+        {
+            return dronesDict;
+        }
+
+        /// <summary>
+        /// Get selected sensor
+        /// </summary>
+        public static GameObject GetSelectedSensor()
+        {
+            return selectedSensor;
+        }
+
+        /// <summary>
+        /// Get list of all sensors
+        /// </summary>
+        public static Dictionary<int, GameObject> GetSensorDict()
+        {
+            return sensorDict;
+        }
+
+        /// <summary>
         /// Recursively adds the clipShader to the parent and all its children
         /// </summary>
         /// <param name="parent">The topmost container of the objects which will have the shader added to them</param>

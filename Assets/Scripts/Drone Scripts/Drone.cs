@@ -50,10 +50,6 @@
             WorldProperties.dronesDict.Add(id, this);
             WorldProperties.nextDroneId++;
 
-            // Select this drone
-            // Peru: 6/10/20: Do not select on initilization but are deselected
-            //this.Select();
-            this.gameObjectPointer.transform.Find("group3").Find("Outline").GetComponent<MeshRenderer>().material = this.gameObjectPointer.GetComponent<DroneProperties>().deselectedMaterial;
             Debug.Log("Created new drone with id: " + id);
         }
 
@@ -168,9 +164,11 @@
         }
 
         /// <summary>
+        /// Depriciated and moved to DroneProperties
         /// Use this to change which drone is selected in the world.
         /// This also changes all drone aura materials so this drone is the only yellow one.
         /// </summary>
+        /*
         public void Select() {
             // Changes the color of the drone to indicate that it has been selected
             this.gameObjectPointer.transform.Find("group3/Outline").GetComponent<MeshRenderer>().material =
@@ -190,5 +188,6 @@
                 }
             }
         }
+        */
     }
 }
