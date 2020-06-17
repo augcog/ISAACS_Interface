@@ -127,83 +127,133 @@
 		}
 
 
-		// Getter methods, left controller.
-		public bool GetLeftIsGrabbing() /// True if left hand is grabbing an object.
+		/* Getter methods, left controller. TODO: correct comment style?
+		*/
+
+		/// <summary>
+		/// True if left hand is grabbing an object.
+		/// </summary>
+		public bool GetLeftIsGrabbing()
 		{
 			return LeftIsGrabbing;
 		}
-		
-		public bool GetLeftIndex() /// True if the left index trigger is being pressed.
+
+		/// <summary>
+		/// True if the left index trigger is being pressed.
+		/// </summary>
+		public bool GetLeftIndex()
 		{
 			return LeftIndex;
 		}
 
-		public bool GetLeftMiddle() /// True if the left middle trigger is being pressed.
+		/// <summary>
+		/// True if the left middle trigger is being pressed.
+		/// </summary>
+		public bool GetLeftMiddle()
 		{
 			return LeftMiddle;
 		}
-		
-		public bool GetLeftX() /// True if the left X button is being pressed.
+
+		/// <summary>
+		/// True if the left X button is being pressed.
+		/// </summary>
+		public bool GetLeftX()
 		{
 			return LeftX;
 		}
 
-		public bool GetLeftY() /// True if the left Y button is being pressed.
+		/// <summary>
+		/// True if the left Y button is being pressed.
+		/// </summary>
+		public bool GetLeftY()
 		{
 			return LeftY;
 		}
 
-		public bool GetLeftThumb() /// True if the left thumbstick is being pressed.
+		/// <summary>
+		/// True if the left thumbstick is being pressed.
+		/// </summary>
+		public bool GetLeftThumb()
 		{
 			return LeftThumb;
 		}
 
-		public Vector2 GetLeftThumbDelta() /// The distance by which the left thumbstick has been moved in the X-axis and Y-axis.
+		/// <summary>
+		/// The distance by which the left thumbstick has been moved in the X-axis and Y-axis.
+		/// </summary>
+		public Vector2 GetLeftThumbDelta()
 		{
 			return LeftThumbDelta;
 		}
 
-		public float GetLeftThumbAngle() /// The angle of rotation of the left thumbstick.
+		/// <summary>
+		/// The angle of rotation of the left thumbstick.
+		/// </summary>
+		public float GetLeftThumbAngle()
 		{
 			return LeftThumbAngle;
 		}
 
-		public bool GetLeftThumbMoved() /// True if LeftThumbDelta{.x|.y} != 0.0f or LeftThumbAngle != 0.0f, meaning that the left thumbstick has been moved.
+		/// <summary>
+		/// True if LeftThumbDelta{.x|.y} != 0.0f or LeftThumbAngle != 0.0f, meaning that the left thumbstick has been moved.
+		/// </summary>
+		public bool GetLeftThumbMoved()
 		{
 			return LeftThumbMoved;
 		}
 
-		public Transform GetLeftTransform() /// The transform (position, rotation, scale) of the left controller.
+		/// <summary>
+		/// The transform (position, rotation, scale) of the left controller.
+		/// </summary>
+		public Transform GetLeftTransform()
 		{
 			return LeftTransform;
 		}
 
-		public Vector3 GetLeftPosition() /// The position of the left controller.
+		/// <summary>
+ 		/// The position of the left controller.
+		/// </summary>
+		public Vector3 GetLeftPosition()
 		{
 			return LeftPosition;
 		}
 
-		public Vector3 GetLeftLocalPosition() /// The relative position of the left controller.
+		/// <summary>
+ 		/// The relative position of the left controller.
+		/// </summary>
+		public Vector3 GetLeftLocalPosition()
 		{
 			return LeftLocalPosition;
 		}
 
-		public Quaternion GetLeftRotation() /// The rotation of the left controller. Can be queried for its normalized value, eulerAngles, and w, x, y, and z components.
+		/// <summary>
+ 		/// The rotation of the left controller. Can be queried for its normalized value, eulerAngles, and w, x, y, and z components.
+		/// </summary>
+		public Quaternion GetLeftRotation()
 		{
 			return LeftRotation;
 		}
 
-		public Quaternion GetLeftLocalRotation() /// The relative rotation of the left controller. Can be queried for its normalized value, eulerAngles, and w, x, y, and z components.
+		/// <summary>
+ 		/// The relative rotation of the left controller. Can be queried for its normalized value, eulerAngles, and w, x, y, and z components.
+		/// </summary>
+		public Quaternion GetLeftLocalRotation()
 		{
 			return LeftLocalRotation;
 		}
 
-		public Vector3 GetLeftVelocity() /// How fast the left controller is moving in space.
+		/// <summary>
+ 		/// How fast the left controller is moving in space.
+		/// </summary>
+		public Vector3 GetLeftVelocity()
 		{
 			return LeftVelocity;
 		}
 
-		public Vector3 GetLeftAngularVelocity() /// How fast the left controller is rotating in space.
+		/// <summary>
+ 		/// How fast the left controller is rotating in space.
+		/// </summary>
+		public Vector3 GetLeftAngularVelocity()
 		{
 			return LeftAngularVelocity;
 		}
@@ -211,83 +261,132 @@
 
 
 
-		// Getter methods, right controller.
-		public bool GetRightIsGrabbing() /// True if the right hand is grabbing an object.
+		// Getter methods, right controller. TODO: correct comment style?
+
+		/// <summary>
+ 		/// True if the right hand is grabbing an object.
+		/// </summary>
+		public bool GetRightIsGrabbing()
 		{
 			return RightIsGrabbing;
 		}
-		
-		public bool GetRightIndex() /// True if the right index trigger is being pressed.
+
+		/// <summary>
+ 		/// True if the right index trigger is being pressed.
+		/// </summary>
+		public bool GetRightIndex()
 		{
 			return RightIndex;
 		}
 
-		public bool GetRightMiddle() /// True if the right middle trigger is being pressed.
+		/// <summary>
+ 		/// True if the right middle trigger is being pressed.
+		/// </summary>
+		public bool GetRightMiddle()
 		{
 			return RightMiddle;
 		}
-		
-		public bool GetRightA() /// True if the right A button is being pressed.
+
+		/// <summary>
+ 		/// True if the right A button is being pressed.
+		/// </summary>
+		public bool GetRightA()
 		{
 			return RightA;
 		}
 
-		public bool GetRightB() /// True if the right B button is being pressed.
+		/// <summary>
+ 		/// True if the right B button is being pressed.
+		/// </summary>
+		public bool GetRightB()
 		{
 			return RightB;
 		}
 
-		public bool GetRightThumb() /// True if the right thumbstick is being pressed.
+		/// <summary>
+ 		/// True if the right thumbstick is being pressed.
+		/// </summary>
+		public bool GetRightThumb()
 		{
 			return RightThumb;
 		}
 
-		public Vector2 GetRightThumbDelta() /// The distance by which the right thumbstick has been moved in the X-axis and Y-axis.
+		/// <summary>
+ 		/// The distance by which the right thumbstick has been moved in the X-axis and Y-axis.
+		/// </summary>
+		public Vector2 GetRightThumbDelta()
 		{
 			return RightThumbDelta;
 		}
 
-		public float GetRightThumbAngle() /// The angle of rotation of the right thumbstick.
+		/// <summary>
+ 		/// The angle of rotation of the right thumbstick.
+		/// </summary>
+		public float GetRightThumbAngle()
 		{
 			return RightThumbAngle;
 		}
-		
-		public bool GetRightThumbMoved() /// True if RightThumbDelta{.x|.y} != 0.0f or RightThumbAngle != 0.0f, meaning that the right thumbstick has been moved.
+
+		/// <summary>
+ 		/// True if RightThumbDelta{.x|.y} != 0.0f or RightThumbAngle != 0.0f, meaning that the right thumbstick has been moved.
+		/// </summary>
+		public bool GetRightThumbMoved()
 		{
 			return RightThumbMoved;
 		}
 
-		public Transform GetRightTransform() /// The transform (position, rotation, scale) of the right controller.
+		/// <summary>
+ 		/// The transform (position, rotation, scale) of the right controller.
+		/// </summary>
+		public Transform GetRightTransform()
 		{
 			return RightTransform;
 		}
 
-		public Vector3 GetRightPosition() /// The position of the right controller.
+		/// <summary>
+ 		/// The position of the right controller.
+		/// </summary>
+		public Vector3 GetRightPosition()
 		{
 			return RightPosition;
 		}
 
-		public Vector3 GetRightLocalPosition() /// The relative position of the right controller.
+		/// <summary>
+ 		/// The relative position of the right controller.
+		/// </summary>
+		public Vector3 GetRightLocalPosition()
 		{
 			return RightLocalPosition;
 		}
 
-		public Quaternion GetRightRotation() /// The rotation of the right controller. Can be queried for its normalized value, eulerAngles, and w, x, y, and z components.
+		/// <summary>
+ 		/// The rotation of the right controller. Can be queried for its normalized value, eulerAngles, and w, x, y, and z components.
+		/// </summary>
+		public Quaternion GetRightRotation()
 		{
 			return RightRotation;
 		}
 
-		public Quaternion GetRightLocalRotation() /// The relative rotation of the right controller. Can be queried for its normalized value, eulerAngles, and w, x, y, and z components.
+		/// <summary>
+		/// The relative rotation of the right controller. Can be queried for its normalized value, eulerAngles, and w, x, y, and z components.
+		/// </summary>
+		public Quaternion GetRightLocalRotation()
 		{
 			return RightLocalRotation;
 		}
 
-		public Vector3 GetRightVelocity() /// How fast the right controller is moving in space.
+		/// <summary>
+ 		/// How fast the right controller is moving in space.
+		/// </summary>
+		public Vector3 GetRightVelocity()
 		{
 			return RightVelocity;
 		}
 
-		public Vector3 GetRightAngularVelocity() /// How fast the right controller is rotating in space.
+		/// <summary>
+ 		/// How fast the right controller is rotating in space.
+		/// </summary>
+		public Vector3 GetRightAngularVelocity()
 		{
 			return RightAngularVelocity;
 		}
@@ -295,38 +394,60 @@
 
 
 
-		// Getter methods, both controllers.
-		public bool GetBothMiddle() /// True if both the right and the left middle triggers are being pressed.
+		// Getter methods, both controllers. TODO
+
+		/// <summary>
+ 		/// True if both the right and the left middle triggers are being pressed.
+		/// </summary>
+		public bool GetBothMiddle()
 		{
 			return BothMiddle;
 		}
-		
-		public Vector3 GetDistance() /// The absolute distance between the two controllers.
+
+		/// <summary>
+ 		/// The absolute distance between the two controllers.
+		/// </summary>
+		public Vector3 GetDistance()
 		{
 			return Distance;
 		}
-		
-		public Vector3 GetLocalDistance() /// The relative distance between the two controller. Unless the local scale is different from the absolute scale, LocalDistance == Distance.
+
+		/// <summary>
+ 		/// The relative distance between the two controller. Unless the local scale is different from the absolute scale, LocalDistance == Distance.
+		/// </summary>
+		public Vector3 GetLocalDistance()
 		{
 			return LocalDistance;
 		}
-		
-		public Vector3 GetVelocityDelta() /// The difference in velocity of the two controllers.
+
+		/// <summary>
+ 		/// The difference in velocity of the two controllers.
+		/// </summary>
+		public Vector3 GetVelocityDelta()
 		{
 			return VelocityDelta;
 		}
-		
-		public Vector3 GetAngularVelocityDelta() /// The difference in angular velocity of the two controllers.
+
+		/// <summary>
+ 		/// The difference in angular velocity of the two controllers.
+		/// </summary>
+		public Vector3 GetAngularVelocityDelta()
 		{
 			return AngularVelocityDelta;
 		}
-		
-		public float GetScalingFactor() /// The dot product of VelocityDelta with Distance, indicating the absolute cartesian scaling factor.
+
+		/// <summary>
+ 		/// The dot product of VelocityDelta with Distance, indicating the absolute cartesian scaling factor.
+		/// </summary>
+		public float GetScalingFactor()
 		{
 			return ScalingFactor;
 		}
-		
-		public float GetLocalScalingFactor() /// The dot product of elocityDelta with LocalDistance, indicating the relative cartesian scaling factor.
+
+		/// <summary>
+ 		/// The dot product of elocityDelta with LocalDistance, indicating the relative cartesian scaling factor.
+		/// </summary>
+		public float GetLocalScalingFactor()
 		{
 			return LocalScalingFactor;
 		}
