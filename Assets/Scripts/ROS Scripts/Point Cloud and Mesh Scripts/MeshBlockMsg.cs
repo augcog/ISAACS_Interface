@@ -86,7 +86,7 @@ namespace ROSBridgeLib
                     // TODO get an int64 instead of an int32.
                     _index[i] = temp[i].AsInt;
                 }
-                Debug.Log("Index Time: " + DateTime.Now.Subtract(stageTime).TotalMilliseconds.ToString() + "ms");
+//                Debug.Log("Index Time: " + DateTime.Now.Subtract(stageTime).TotalMilliseconds.ToString() + "ms");
                 stageTime = DateTime.Now;
                 JSONArray tempX = msg["x"].AsArray;
                 JSONArray tempY = msg["y"].AsArray;
@@ -101,7 +101,7 @@ namespace ROSBridgeLib
                     _z[i] = (UInt16)tempZ[i].AsInt;
                 }
                 
-                Debug.Log("Position Time: " + DateTime.Now.Subtract(stageTime).TotalMilliseconds.ToString() + "ms");
+//                Debug.Log("Position Time: " + DateTime.Now.Subtract(stageTime).TotalMilliseconds.ToString() + "ms");
                 stageTime = DateTime.Now;
                
                 String tempColor = msg["r"].Value;
@@ -111,8 +111,8 @@ namespace ROSBridgeLib
                 tempColor = msg["g"].Value;
                 _g = Convert.FromBase64String(tempColor);
                 
-                Debug.Log("Color Time: " + DateTime.Now.Subtract(stageTime).TotalMilliseconds.ToString() + "ms");
-                Debug.Log("Total Time: " + DateTime.Now.Subtract(startTime).TotalMilliseconds.ToString() + "ms");
+//                Debug.Log("Color Time: " + DateTime.Now.Subtract(stageTime).TotalMilliseconds.ToString() + "ms");
+//                Debug.Log("Total Time: " + DateTime.Now.Subtract(startTime).TotalMilliseconds.ToString() + "ms");
             }
 
             public static string getMessageType()

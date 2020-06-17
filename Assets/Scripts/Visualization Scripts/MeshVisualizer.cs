@@ -86,12 +86,10 @@ public class MeshVisualizer : MonoBehaviour
     /// <param name="meshMsg">ROSBridge Voxblox Mesh Message</param>
     public void SetMesh(MeshMsg meshMsg)
     {
-        Debug.Log("Setting New Mesh");
         /// The length of one block. Also the scaling factor of the coordinates.
         float scale_factor = meshMsg.GetBlockEdgeLength();
         /// List of all the mesh blocks.
         MeshBlockMsg[] mesh_blocks = meshMsg.GetMeshBlocks();
-        Debug.Log(mesh_blocks.Length);
         /// Iterate through each mesh block generating and updating meshes for each.
         for (int i = 0; i < mesh_blocks.Length; i++)
         {
@@ -100,7 +98,7 @@ public class MeshVisualizer : MonoBehaviour
             
             if (!shouldUpdate(index))
             {
-                Debug.Log("Delay Update");
+ //               Debug.Log("Delay Update");
                 continue;
             }
             
@@ -112,7 +110,7 @@ public class MeshVisualizer : MonoBehaviour
                 // only render meshes with enough faces to make it worth the resources of an extra game object
                 if (x.Length < faceThreshold)
                 {
-                    Debug.Log("Not enough faces");
+ //                   Debug.Log("Not enough faces");
                     continue;
                 }
 
@@ -126,7 +124,7 @@ public class MeshVisualizer : MonoBehaviour
             }
             else
             {
-                Debug.Log("Reusing GameObject");
+//                Debug.Log("Reusing GameObject");
             }
 
        

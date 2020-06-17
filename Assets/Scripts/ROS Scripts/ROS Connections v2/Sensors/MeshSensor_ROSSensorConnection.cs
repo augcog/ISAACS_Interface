@@ -44,8 +44,9 @@ public class MeshSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber 
         while (true)
         {
             // Check if any json msgs have been recieved
-            if (jsonMsgs.Count != 0)
+            if (jsonMsgs.Count > 0)
             {
+                Debug.Log("JSON Message Count: " + jsonMsgs.Count);
                 // Parse json msg to mesh msg
                 DateTime startTime = DateTime.Now;
                 JSONNode rawMsg = jsonMsgs.Dequeue();
@@ -54,6 +55,11 @@ public class MeshSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber 
                 Debug.Log("Message Generation: " + DateTime.Now.Subtract(startTime).TotalMilliseconds.ToString() + "ms");
             }
         }
+    }
+
+    public void OnApplicationQuit()
+    {
+        rosMsgThread.Abort();
     }
 
     // Initilize the sensor
@@ -86,7 +92,9 @@ public class MeshSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber 
 
         // Initilize visualizer
         visualizer = GameObject.Find(rendererObjectName).GetComponent<MeshVisualizer>();
+        CreateThread();
     }
+
     // Update is called once per frame in Unity
     void Update()
     {
@@ -98,6 +106,7 @@ public class MeshSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber 
         // Check if any mesh msgs are available to be visualized
         if (meshMsgs.Count > 0)
         {
+            Debug.Log("Mesh Message Count: " + meshMsgs.Count);
             DateTime startTime = DateTime.Now;
             MeshMsg meshMsg = meshMsgs.Dequeue();
             visualizer.SetMesh(meshMsg);
@@ -108,23 +117,13 @@ public class MeshSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber 
     // ROS Topic Subscriber methods
     public ROSBridgeMsg OnReceiveMessage(string topic, JSONNode raw_msg, ROSBridgeMsg parsed = null)
     {
-        Debug.Log(" Mesh Recieved message");
-
         ROSBridgeMsg result = null;
         // Writing all code in here for now. May need to move out to separate handler functions when it gets too unwieldy.
         switch (topic)
         {
             case "/voxblox_node/mesh":
-                Debug.Log("Mesh Visualizer Callback.");
                 // Add raw_msg to the jsonMsgs to be parsed on the thread
-                DateTime startTime = DateTime.Now;
-                Debug.Log("Mesh Visualizer Callback. Begin: " + startTime.ToString());
                 jsonMsgs.Enqueue(raw_msg);
-                Debug.Log("Enqueue Time: " + DateTime.Now.Subtract(startTime).TotalMilliseconds.ToString() + "ms");
-
-                //MeshMsg meshMsg =  new MeshMsg(raw_msg);
-                //MeshVisualizer visualizer = GameObject.Find(rendererObjectName).GetComponent<MeshVisualizer>();
-                //visualizer.SetMesh(meshMsg);
                 break;
             default:
                 Debug.LogError("Topic not implemented: " + topic);
@@ -136,36 +135,6 @@ public class MeshSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber 
     {
         Debug.Log("Mesh message type is returned as voxblox_msgs/Mesh by default");
         return "voxblox_msgs/Mesh";
-        /**
-        switch (topic)
-        {
-            case "/dji_sdk/attitude":
-                return "geometry_msgs/QuaternionStamped";
-            case "/dji_sdk/battery_state":
-                return "sensor_msgs/BatteryState";
-            case "/dji_sdk/flight_status":
-                return "std_msgs/UInt8";
-            case "/dji_sdk/gimbal_angle":
-                return "geometry_msgs/Vector3Stamped";
-            case "/dji_sdk/gps_health":
-                return "std_msgs/UInt8";
-            case "/dji_sdk/gps_position":
-                return "sensor_msgs/NavSatFix";
-            case "/dji_sdk/imu":
-                return "sensor_msgs/Imu";
-            case "/dji_sdk/rc":
-                return "sensor_msgs/Joy";
-            case "/dji_sdk/velocity":
-                return "geometry_msgs/Vector3Stamped";
-            case "/dji_sdk/height_above_takeoff":
-                return "std_msgs/Float32";
-            case "/dji_sdk/local_position":
-                return "geometry_msgs/PointStamped";
-        }
-        Debug.LogError("Topic " + topic + " not registered.");
-        return "";
-
-        **/
     }
 
 

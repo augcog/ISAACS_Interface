@@ -626,9 +626,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flipYZ: 1
-  faceThreshold: 25
-  updateInterval: 30
-  distThreshold: 10
 --- !u!21 &122914070
 Material:
   serializedVersion: 6
@@ -995,55 +992,19 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 146794962}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dac87ae293d0bd348a6bcb090e69c517, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DronesList:
-  - droneName: Perry Pepe the Platipus
-    droneTag: M210
-    ipAddress: 75.25.126.85
-    port: 9090
-    droneType: 1
-    droneSubscribers: 0500000001000000
+  DronesList: []
   SensorsList:
-  - sensorName: Color0
-    sensorTag: Color0
+  - sensorName: mesh
+    sensorTag: mesh
     ipAddress: localhost
     port: 9090
-    sensorType: 3
-    sensorSubscribers: 08000000
-  - sensorName: Color1
-    sensorTag: Color1
-    ipAddress: localhost
-    port: 9090
-    sensorType: 3
-    sensorSubscribers: 09000000
-  - sensorName: Color5
-    sensorTag: Color5
-    ipAddress: localhost
-    port: 9090
-    sensorType: 3
-    sensorSubscribers: 0d000000
-  - sensorName: Color2
-    sensorTag: Color2
-    ipAddress: localhost
-    port: 9090
-    sensorType: 3
-    sensorSubscribers: 0a000000
-  - sensorName: Color3
-    sensorTag: Color3
-    ipAddress: localhost
-    port: 9090
-    sensorType: 3
-    sensorSubscribers: 0b000000
-  - sensorName: Color4
-    sensorTag: Color4
-    ipAddress: localhost
-    port: 9090
-    sensorType: 3
-    sensorSubscribers: 0c000000
+    sensorType: 1
+    sensorSubscribers: 01000000
   success: 0
   uniqueID: 0
 --- !u!114 &146794969
@@ -1072,6 +1033,8 @@ MonoBehaviour:
   missionInfo: y
   executeUploadedMission: u
   initMapBox: i
+  initTestDrone: o
+  hardcodedWaypoints: p
   worldProperties: {fileID: 0}
   rosDroneConnection: {fileID: 0}
 --- !u!1 &161977055
