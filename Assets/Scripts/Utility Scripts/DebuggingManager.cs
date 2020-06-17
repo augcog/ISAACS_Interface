@@ -161,8 +161,9 @@ public class DebuggingManager : MonoBehaviour {
 
         if (Input.GetKeyUp(initMapBox))
         {
-            MapInteractions mapInteractions = worldProperties.GetComponent<MapInteractions>();
-            mapInteractions.InitializeCityMap();
+            Debug.Log("Mapbox deactivated");
+            //MapInteractions mapInteractions = worldProperties.GetComponent<MapInteractions>();
+            //mapInteractions.InitializeCityMap();
         }
 
         if (Input.GetKeyUp(initTestDrone))
