@@ -50,80 +50,96 @@ public class DebuggingManager : MonoBehaviour {
     public static bool droneInitialPositionSet = false;
 
     [Header("Application Variables")]
-    public WorldProperties worldProperties;
-    public ROSDroneConnection rosDroneConnection;
+    public Drone selectedDrone;
+    public GameObject selectedSensor;
     //public ROSSensorConnection rosSensorConnection;
-
-    // Use this for initialization
-    void Start () {
-        worldProperties = GameObject.FindGameObjectWithTag("World").GetComponent<WorldProperties>();
-        rosDroneConnection = GameObject.FindGameObjectWithTag("World").GetComponent<ROSDroneConnection>();
-        //rosSensorConnection = GameObject.FindGameObjectWithTag("World").GetComponent<ROSSensorConnection>();
-    }
 
     // Update is called once per frame
     void Update () {
 
         if (Input.GetKeyUp(subscribeColorized0))
         {
-            // TODO: Switch to rosSensorConnection
-            rosDroneConnection.LampSubscribe_Colorized_0();
+            Debug.Log("Switching to surface point cloud");
+            GameObject sensor = WorldProperties.GetSelectedSensor();
+            LampSensor_ROSSensorConnection lampSensor_ROS = sensor.GetComponent<LampSensor_ROSSensorConnection>();
+            lampSensor_ROS.LampSubscribe_Colorized_0();
         }
 
         if (Input.GetKeyUp(subscribeColorized1))
         {
-            // TODO: Switch to rosSensorConnection
-            rosDroneConnection.LampSubscribe_Colorized_1();
+            Debug.Log("Switching to surface point cloud");
+            GameObject sensor = WorldProperties.GetSelectedSensor();
+            LampSensor_ROSSensorConnection lampSensor_ROS = sensor.GetComponent<LampSensor_ROSSensorConnection>();
+            lampSensor_ROS.LampSubscribe_Colorized_1();
         }
 
         if (Input.GetKeyUp(subscribeColorized2))
         {
-            // TODO: Switch to rosSensorConnection
-            rosDroneConnection.LampSubscribe_Colorized_2();
+            Debug.Log("Switching to surface point cloud");
+            GameObject sensor = WorldProperties.GetSelectedSensor();
+            LampSensor_ROSSensorConnection lampSensor_ROS = sensor.GetComponent<LampSensor_ROSSensorConnection>();
+            lampSensor_ROS.LampSubscribe_Colorized_2();
         }
 
         if (Input.GetKeyUp(subscribeColorized3))
         {
-            // TODO: Switch to rosSensorConnection
-            rosDroneConnection.LampSubscribe_Colorized_3();
+            Debug.Log("Switching to surface point cloud");
+            GameObject sensor = WorldProperties.GetSelectedSensor();
+            LampSensor_ROSSensorConnection lampSensor_ROS = sensor.GetComponent<LampSensor_ROSSensorConnection>();
+            lampSensor_ROS.LampSubscribe_Colorized_3();
         }
 
         if (Input.GetKeyUp(subscribeColorized4))
         {
-            // TODO: Switch to rosSensorConnection
-            rosDroneConnection.LampSubscribe_Colorized_4();
+            Debug.Log("Switching to surface point cloud");
+            GameObject sensor = WorldProperties.GetSelectedSensor();
+            LampSensor_ROSSensorConnection lampSensor_ROS = sensor.GetComponent<LampSensor_ROSSensorConnection>();
+            lampSensor_ROS.LampSubscribe_Colorized_4();
         }
 
         if (Input.GetKeyUp(subscribeColorized5))
         {
-            // TODO: Switch to rosSensorConnection
-            rosDroneConnection.LampSubscribe_Colorized_5();
+            Debug.Log("Switching to surface point cloud");
+            GameObject sensor = WorldProperties.GetSelectedSensor();
+            LampSensor_ROSSensorConnection lampSensor_ROS = sensor.GetComponent<LampSensor_ROSSensorConnection>();
+            lampSensor_ROS.LampSubscribe_Colorized_5();
         }
 
         if (Input.GetKeyUp(subscribeSurfacePointCloud))
         {
-            // TODO: Switch to rosSensorConnection
-            rosDroneConnection.LampSubscribe_SurfacePointcloud();
+            Debug.Log("Switching to surface point cloud");
+            GameObject sensor = WorldProperties.GetSelectedSensor();
+            LampSensor_ROSSensorConnection lampSensor_ROS = sensor.GetComponent<LampSensor_ROSSensorConnection>();
+            lampSensor_ROS.LampSubscribe_SurfacePointcloud();
         }
         
         if (Input.GetKeyUp(getAuthority))
         {
-            rosDroneConnection.GetAuthority();
+            Drone selectedDrone = WorldProperties.GetSelectedDrone();
+            Matrice_ROSDroneConnection droneROSConnection = (Matrice_ROSDroneConnection) selectedDrone.droneProperties.droneROSConnection;
+            droneROSConnection.HasAuthority();
+
         }
 
         if (Input.GetKeyUp(getVersion))
         {
-            rosDroneConnection.GetVersion();
+            Drone selectedDrone = WorldProperties.GetSelectedDrone();
+            Matrice_ROSDroneConnection droneROSConnection = (Matrice_ROSDroneConnection)selectedDrone.droneProperties.droneROSConnection;
+            droneROSConnection.FetchDroneVersion();
         }
 
         if (Input.GetKeyUp(takeoffDrone))
         {
-            rosDroneConnection.Takeoff();
+            Drone selectedDrone = WorldProperties.GetSelectedDrone();
+            Matrice_ROSDroneConnection droneROSConnection = (Matrice_ROSDroneConnection)selectedDrone.droneProperties.droneROSConnection;
+            droneROSConnection.ExecuteTask(Matrice_ROSDroneConnection.DroneTask.TAKEOFF);
         }
 
         if (Input.GetKeyUp(landDrone))
         {
-            rosDroneConnection.Land();
+            Drone selectedDrone = WorldProperties.GetSelectedDrone();
+            ROSDroneConnectionInterface droneROSConnection = selectedDrone.droneProperties.droneROSConnection;
+            droneROSConnection.LandDrone();
         }
 
         if (Input.GetKeyUp(uploadTestMission))
@@ -146,17 +162,24 @@ public class DebuggingManager : MonoBehaviour {
 
             MissionWaypointTaskMsg test_Task = new MissionWaypointTaskMsg(15.0f, 15.0f, MissionWaypointTaskMsg.ActionOnFinish.RETURN_TO_HOME, 1, MissionWaypointTaskMsg.YawMode.AUTO, MissionWaypointTaskMsg.TraceMode.COORDINATED, MissionWaypointTaskMsg.ActionOnRCLost.FREE, MissionWaypointTaskMsg.GimbalPitchMode.FREE, test_waypoint_array);
 
-            rosDroneConnection.UploadMission(test_Task);
+
+            Drone selectedDrone = WorldProperties.GetSelectedDrone();
+            Matrice_ROSDroneConnection droneROSConnection = (Matrice_ROSDroneConnection)selectedDrone.droneProperties.droneROSConnection;
+            droneROSConnection.UploadWaypointsTask(test_Task);
         }
 
         if (Input.GetKeyUp(missionInfo))
         {
-            rosDroneConnection.InfoMission();
+            Drone selectedDrone = WorldProperties.GetSelectedDrone();
+            Matrice_ROSDroneConnection droneROSConnection = (Matrice_ROSDroneConnection)selectedDrone.droneProperties.droneROSConnection;
+            droneROSConnection.FetchMissionStatus();
         }
 
         if (Input.GetKeyUp(executeUploadedMission))
         {
-            rosDroneConnection.ExecuteMission();
+            Drone selectedDrone = WorldProperties.GetSelectedDrone();
+            Matrice_ROSDroneConnection droneROSConnection = (Matrice_ROSDroneConnection)selectedDrone.droneProperties.droneROSConnection;
+            droneROSConnection.SendWaypointAction(Matrice_ROSDroneConnection.WaypointMissionAction.START);
         }
 
         if (Input.GetKeyUp(initMapBox))
