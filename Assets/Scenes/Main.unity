@@ -876,7 +876,6 @@ GameObject:
   - component: {fileID: 146794966}
   - component: {fileID: 146794969}
   - component: {fileID: 146794968}
-  - component: {fileID: 146794965}
   m_Layer: 0
   m_Name: World
   m_TagString: World

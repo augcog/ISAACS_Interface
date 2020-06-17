@@ -11,7 +11,7 @@ using ROSBridgeLib.interface_msgs;
 
 using ISAACS;
 
-public class PointCloudSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber
+public class PointCloudSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber, ROSSensorConnectionInterface
 {
     // Visualizer variables
     public static string rendererObjectName = "PlacementPlane"; // pick a center point of the map, ideally as part of rotating map
@@ -80,5 +80,11 @@ public class PointCloudSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubsc
         visualizer.SetPointCloud(pointCloudMsg.GetCloud());
         Debug.Log("Updated Point Cloud");
     }
+
+    public void DisconnectROSConnection()
+    {
+        ros.Disconnect();
+    }
+
 
 }
