@@ -51,6 +51,11 @@
             WorldProperties.IncrementDroneID();
 
             Debug.Log("Created new drone with id: " + id);
+
+            // Select this drone
+            // TODO: Must be done by the user in the application
+            gameObjectPointer.GetComponent<DroneProperties>().SelectDrone();
+
         }
 
         /// <summary>

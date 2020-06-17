@@ -95,7 +95,10 @@
         /// </summary>
         public static void UpdateSelectedDrone(Drone newSelectedDrone)
         {
-            selectedDrone.gameObjectPointer.GetComponent<DroneProperties>().DeselectDrone();
+            if (selectedDrone != null)
+            {
+                selectedDrone.gameObjectPointer.GetComponent<DroneProperties>().DeselectDrone();
+            }
             selectedDrone = newSelectedDrone;
         }
 

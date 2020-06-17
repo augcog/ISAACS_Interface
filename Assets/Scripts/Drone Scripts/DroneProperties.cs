@@ -24,6 +24,8 @@
 
             // Changes the color of the drone to indicate that it has been selected
             this.transform.Find("group3/Outline").GetComponent<MeshRenderer>().material = selectedMaterial;
+
+            WorldProperties.UpdateSelectedDrone(classPointer);
             this.classPointer.selected = true;
         }
 
