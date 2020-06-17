@@ -12,15 +12,32 @@ public class ROSManager : MonoBehaviour {
 
     // Let's gooooo
 
+    /// <summary>
+    /// Drone Types supported by ISAACS System
+    /// </summary>
     public enum DroneType { M100, M210, M600, Sprite };
+
+    /// <summary>
+    /// Drone Subscribers supported by ISAACS System
+    /// </summary>
     public enum DroneSubscribers { attitude, battery_state, flight_status, gimbal_angle, gps_health, gps_position, imu, rc, velocity, height_above_takeoff, local_position };
 
+    /// <summary>
+    /// Sensor types supported by ISAACS System
+    /// </summary>
     public enum SensorType { PointCloud, Mesh, LAMP, PCFace };
+
+    /// <summary>
+    /// Sensor subscribers supported by ISAACS System
+    /// </summary>
     public enum SensorSubscribers { surface_pointcloud, mesh,
-        colorized_points_0, colorized_points_1, colorized_points_2, colorized_points_3, colorized_points_4, colorized_points_5,
+    colorized_points_0, colorized_points_1, colorized_points_2, colorized_points_3, colorized_points_4, colorized_points_5,
         colorized_points_faced_0, colorized_points_faced_1, colorized_points_faced_2, colorized_points_faced_3, colorized_points_faced_4, colorized_points_faced_5
     };
 
+    /// <summary>
+    /// All information required to be set by the user in the Editor to create a drone connection
+    /// </summary>
     [System.Serializable]
     public class ROSDroneConnectionInput
     {
@@ -33,6 +50,9 @@ public class ROSManager : MonoBehaviour {
         public bool simFlight;
     }
 
+    /// <summary>
+    /// All information required to be set by the user in the Editor to create a sensor connection
+    /// </summary>
     [System.Serializable]
     public class ROSSensorConnectionInput
     {
@@ -47,10 +67,15 @@ public class ROSManager : MonoBehaviour {
     public List<ROSDroneConnectionInput> DronesList;
     public List<ROSSensorConnectionInput> SensorsList;
 
+    private Dictionary<int, ROSDroneConnectionInterface> ROSDroneConnections = new Dictionary<int, ROSDroneConnectionInterface>();
+    private Dictionary<int, ROSSensorConnectionInterface> ROSSensorConnections = new Dictionary<int, ROSSensorConnectionInterface>();
+
     public bool success = false;
     public int uniqueID = 0;
 
-    // Use this for initialization
+    /// <summary>
+    /// Initlizie all drones and sensors
+    /// </summary>
     void Start ()
     {
         foreach ( ROSDroneConnectionInput rosDroneConnectionInput in DronesList)
@@ -64,6 +89,10 @@ public class ROSManager : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Create a Drone gameobject and attach DroneFlightSim, required ROSDroneConnnection and initilize the ROS connection.
+    /// </summary>
+    /// <param name="rosDroneConnectionInput"></param>
     private void InstantiateDrone(ROSDroneConnectionInput rosDroneConnectionInput)
     {
         DroneType droneType = rosDroneConnectionInput.droneType;
@@ -98,6 +127,7 @@ public class ROSManager : MonoBehaviour {
                 M100_ROSDroneConnection M100_rosDroneConnection = droneGameObject.AddComponent<M100_ROSDroneConnection>();
                 M100_rosDroneConnection.InitilizeDrone(uniqueID, droneIP, dronePort, droneSubscribers, simFlight);
                 droneGameObject.GetComponent<DroneProperties>().droneROSConnection = M100_rosDroneConnection;
+                ROSDroneConnections.Add(uniqueID,M100_rosDroneConnection);
                 break;
 
             case DroneType.M210:
@@ -105,6 +135,7 @@ public class ROSManager : MonoBehaviour {
                 M210_ROSDroneConnection M210_rosDroneConnection = droneGameObject.AddComponent<M210_ROSDroneConnection>();
                 M210_rosDroneConnection.InitilizeDrone(uniqueID, droneIP, dronePort, droneSubscribers, simFlight);
                 droneGameObject.GetComponent<DroneProperties>().droneROSConnection = M210_rosDroneConnection;
+                ROSDroneConnections.Add(uniqueID, M210_rosDroneConnection);
                 break;
 
             case DroneType.M600:
@@ -112,6 +143,7 @@ public class ROSManager : MonoBehaviour {
                 M600_ROSDroneConnection M600_rosDroneConnection = droneGameObject.AddComponent<M600_ROSDroneConnection>();
                 M600_rosDroneConnection.InitilizeDrone(uniqueID, droneIP, dronePort, droneSubscribers, simFlight);
                 droneGameObject.GetComponent<DroneProperties>().droneROSConnection = M600_rosDroneConnection;
+                ROSDroneConnections.Add(uniqueID, M600_rosDroneConnection);
                 break;
 
             case DroneType.Sprite:
@@ -130,6 +162,10 @@ public class ROSManager : MonoBehaviour {
         uniqueID ++;
     }
 
+    /// <summary>
+    /// Create a Sensor gameobject and attach & init required ROSSensorConnnection.
+    /// </summary>
+    /// <param name="rosSensorConnectionInput"></param>
     private void InstantiateSensor(ROSSensorConnectionInput rosSensorConnectionInput)
     {
         SensorType sensorType = rosSensorConnectionInput.sensorType;
@@ -152,24 +188,28 @@ public class ROSManager : MonoBehaviour {
                 Debug.Log("PointCloud Sensor created");
                 PointCloudSensor_ROSSensorConnection pcSensor_rosSensorConnection = sensor.AddComponent<PointCloudSensor_ROSSensorConnection>();
                 pcSensor_rosSensorConnection.InitilizeSensor(uniqueID, sensorIP, sensorPort, sensorSubscribers);
+                ROSSensorConnections.Add(uniqueID, pcSensor_rosSensorConnection);
                 break;
 
             case SensorType.Mesh:
                 Debug.Log("Mesh Sensor created");
                 MeshSensor_ROSSensorConnection meshSensor_rosSensorConnection = sensor.AddComponent<MeshSensor_ROSSensorConnection>();
                 meshSensor_rosSensorConnection.InitilizeSensor(uniqueID, sensorIP, sensorPort, sensorSubscribers);
+                ROSSensorConnections.Add(uniqueID, meshSensor_rosSensorConnection);
                 break;
 
             case SensorType.LAMP:
                 Debug.Log("LAMP Sensor created");
                 LampSensor_ROSSensorConnection lamp_rosSensorConnection = sensor.AddComponent<LampSensor_ROSSensorConnection>();
                 lamp_rosSensorConnection.InitilizeSensor(uniqueID, sensorIP, sensorPort, sensorSubscribers);
+                ROSSensorConnections.Add(uniqueID, lamp_rosSensorConnection);
                 break;
 
             case SensorType.PCFace:
                 Debug.Log("PCFace Sensor created");
                 PCFaceSensor_ROSSensorConnection pcFace_rosSensorConnection = sensor.AddComponent<PCFaceSensor_ROSSensorConnection>();
                 pcFace_rosSensorConnection.InitilizeSensor(uniqueID, sensorIP, sensorPort, sensorSubscribers);
+                ROSSensorConnections.Add(uniqueID, pcFace_rosSensorConnection);
                 break;
 
             default:
@@ -177,13 +217,27 @@ public class ROSManager : MonoBehaviour {
                 return;
         }
 
+        // Add sensor to list of sensors in World Properties
+        WorldProperties.sensorDict.Add(uniqueID, sensor);
+
         // TODO: Uncomment after implementing ROSDroneConnection
         // sensor.InitilizeSensor(uniqueID, sensorIP, sensorPort ,sensorSubscribers)
         uniqueID++;
     }
+    
+    void OnApplicationQuit()
+    {
+        foreach (ROSDroneConnectionInterface rosDroneConnection in ROSDroneConnections.Values)
+        {
+            rosDroneConnection.DisconnectROSConnection();
+        }
 
-    // Update is called once per frame
-    void Update () {
-		
-	}
+        foreach (ROSSensorConnectionInterface rosSensorConnection in ROSSensorConnections.Values)
+        {
+            rosSensorConnection.DisconnectROSConnection();
+        }
+    }
+
 }
+
+

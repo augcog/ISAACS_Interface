@@ -13,7 +13,8 @@ using ROSBridgeLib.rntools;
 
 using ISAACS;
 
-public class PCFaceSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber {
+public class PCFaceSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber, ROSSensorConnectionInterface
+{
     // Visualizer variables
     public static string rendererObjectName = "PlacementPlane"; // pick a center point of the map, ideally as part of rotating map
 
@@ -125,4 +126,8 @@ public class PCFaceSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
         return "rntools/PCFace";
     }
 
+    public void DisconnectROSConnection()
+    {
+        ros.Disconnect();
+    }
 }

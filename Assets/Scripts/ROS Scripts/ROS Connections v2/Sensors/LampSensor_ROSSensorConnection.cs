@@ -13,7 +13,7 @@ using ISAACS;
 
 // TODO: Integrate Colour Logic
 
-public class LampSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber
+public class LampSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber, ROSSensorConnectionInterface
 {
     // Helper enum
     public enum PointCloudLevel
@@ -208,4 +208,8 @@ public class LampSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber
         pointCloudLevel = PointCloudLevel.LIGHT_BLUE;
     }
 
+    public void DisconnectROSConnection()
+    {
+        ros.Disconnect();
+    }
 }

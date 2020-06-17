@@ -28,7 +28,6 @@
         public static Dictionary<char, Drone> dronesDict;
 
         [Header("Sensor vairables")]
-        //Peru, 6/10/20: These do not do anything and it'll cause merge conflicts, made a note and will complete after merging
         public static GameObject selectedSensor;
         public static Dictionary<int, GameObject> sensorDict;
 
@@ -58,6 +57,9 @@
         {
             selectedDrone = null;
             dronesDict = new Dictionary<char, Drone>(); // Collection of all the drone classObjects
+
+            selectedSensor = null;
+            sensorDict = new Dictionary<int, GameObject>();
 
             nextDroneId = 'A'; // Used as an incrementing key for the dronesDict and for a piece of the communication about waypoints across the ROSBridge
 
