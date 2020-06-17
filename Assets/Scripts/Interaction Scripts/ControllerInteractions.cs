@@ -14,6 +14,8 @@
 
     public class ControllerInteractions : MonoBehaviour
     {
+        
+
         public enum ControllerState { IDLE, GRABBING, PLACING_DRONE, PLACING_WAYPOINT, POINTING, SETTING_HEIGHT, SCALING, DELETING }; // These are the possible values for the controller's state
         public static ControllerState currentControllerState; // We use this to determine what state the controller is in - and what actions are available
 
@@ -59,7 +61,7 @@
             tempSphere.transform.parent = this.gameObject.transform;
             this.gameObject.transform.position = new Vector3(0F, 0F, 0F);
             tempSphere.transform.position = new Vector3(0F, 0F, 0.1F);
-            tempSphere.transform.localScale = new Vector3(0.08F, 0.08F, 0.08F);
+            tempSphere.transform.localScale = new Vector3(0.01F, 0.01F, 0.01F);
             this.gameObject.GetComponent<VRTK_InteractTouch>().customColliderContainer = tempSphere;
             tempSphere.gameObject.name = "grabZone";
             Renderer tempRend = tempSphere.GetComponent<Renderer>();
