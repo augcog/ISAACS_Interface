@@ -15,5 +15,10 @@
         public ROSDroneConnectionInterface droneROSConnection;
         public DroneSimulationManager droneSimulationManager;
 
+        public void SelectDrone()
+        {
+            Debug.Log("Drone selected");
+        }
+
     }
 }
