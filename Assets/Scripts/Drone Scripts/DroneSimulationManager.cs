@@ -7,7 +7,7 @@ public class DroneSimulationManager : MonoBehaviour {
 
     [Header("Selected drone and simulation speed")]
     public Drone drone;
-    public float speed = 0.2f;
+    public float speed = 1.0f;
 
     private int nextWaypointID = 0;
     private bool flying = false;
@@ -25,7 +25,7 @@ public class DroneSimulationManager : MonoBehaviour {
         {
             if (fraction < 1)
             {
-                fraction += Time.deltaTime * speed;
+                fraction += Time.deltaTime * speed / 5.0f;
                 Vector3 new_position = Vector3.Lerp(origin, destination, fraction);
                 drone.gameObjectPointer.transform.localPosition = new_position;
             }
