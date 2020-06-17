@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 namespace ISAACS
@@ -8,6 +8,9 @@ namespace ISAACS
 
         public Material selectedPassedLine;
         public Material unselectedPassedLine;
+
+        public GameObject targetWaypoint;
+        public int currentWaypoint;
         public GameObject prevPoint;
 
         private int totalWaypoints;
@@ -29,6 +32,7 @@ namespace ISAACS
                 DisplayPastPath();
             }
 
+            SelectTarget();
         }
 
         private void DisplayPastPath()
@@ -51,6 +55,44 @@ namespace ISAACS
             else
             {
                 line.material = unselectedPassedLine;
+            }
+        }
+
+        private void SelectTarget()
+        {
+            if (thisDrone.waypoints.Count != 0)
+            {
+                if (totalWaypoints > currentWaypoint)
+                {
+                    targetWaypoint = ((Waypoint)thisDrone.waypoints[currentWaypoint + 1]).gameObjectPointer;
+                    if (this.transform.position == targetWaypoint.transform.position)
+                    {
+                        prevPoint = (GameObject)thisDrone.waypoints[currentWaypoint + 1];
+                        currentWaypoint++;
+                    }
+                }
+                else if (totalWaypoints < currentWaypoint)
+                {
+                    //targetWaypoint = (GameObject)this.GetComponentInParent<SetWaypoint>().waypoints[totalWaypoints];
+                    //prevPoint = (GameObject)this.GetComponentInParent<SetWaypoint>().waypoints[totalWaypoints];
+                    //if (this.transform.position == targetWaypoint.transform.position)
+                    //{
+                    //    currentWaypoint = totalWaypoints;
+                    //}
+                    currentWaypoint = totalWaypoints;
+                    prevPoint = (GameObject)thisDrone.waypoints[totalWaypoints];
+                }
+                else
+                {
+                    if (targetWaypoint != null && this.transform.position == targetWaypoint.transform.position)
+                    {
+                        targetWaypoint = null;
+                    }
+                    else
+                    {
+                        targetWaypoint = prevPoint;
+                    }
+                }
             }
         }
 
