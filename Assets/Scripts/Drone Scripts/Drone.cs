@@ -9,6 +9,7 @@
     {
 
         public GameObject gameObjectPointer; // This is the related game object
+        public DroneProperties droneProperties;
         public char id; // This is the identifier of the drone in the dronesDict and across the ROSBridge
         public bool selected;
 
@@ -29,7 +30,9 @@
             gameObjectPointer = Object.Instantiate(baseObject, position, Quaternion.identity);
           
             Debug.Log("Position init: " + position.ToString());
-            gameObjectPointer.GetComponent<DroneProperties>().classPointer = this; // Connect the gameObject back to the classObject
+            droneProperties = gameObjectPointer.GetComponent<DroneProperties>();
+            droneProperties.classPointer = this; // Connect the gameObject back to the classObject
+
             gameObjectPointer.tag = "Drone";
             gameObjectPointer.name = baseObject.name;
             gameObjectPointer.transform.localScale = WorldProperties.actualScale / 5;
@@ -166,6 +169,20 @@
 
             // Deleting the waypoint gameObject
             Object.Destroy(deletedWaypoint.gameObjectPointer);
+        }
+
+        /// <summary>
+        /// Delete all the waypoints
+        /// </summary>
+        public void DeleteAllWaypoints()
+        {
+            while (this.waypoints.Count > 1)
+            {
+                if (((Waypoint)this.waypoints[this.waypoints.Count - 1]).prevPathPoint != null)
+                {
+                    this.DeleteWaypoint((Waypoint)this.waypoints[this.waypoints.Count - 1]);
+                }
+            }
         }
 
         /// <summary>
