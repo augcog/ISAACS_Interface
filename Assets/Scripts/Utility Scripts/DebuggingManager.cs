@@ -29,6 +29,17 @@ public class DebuggingManager : MonoBehaviour {
     public string missionInfo = "y";
     public string executeUploadedMission = "u";
 
+    [Header("MapBox Commands")]
+    public string initMapBox = "i";
+
+    [Header("Misc.")]
+    public string initTestDrone = "o";
+    public string hardcodedWaypoints = "p";
+    public static double droneHomeLat = 37.91532757;
+    public static double droneHomeLong = -122.33805556;
+    public static float droneHomeAlt = 10.0f;
+    public static bool droneInitialPositionSet = false;
+
     [Header("Application Variables")]
     public WorldProperties worldProperties;
     public ROSDroneConnection rosDroneConnection;
@@ -139,5 +150,35 @@ public class DebuggingManager : MonoBehaviour {
             rosDroneConnection.ExecuteMission();
         }
 
+        if (Input.GetKeyUp(initMapBox))
+        {
+            MapInteractions mapInteractions = worldProperties.GetComponent<MapInteractions>();
+            mapInteractions.InitializeCityMap();
+        }
+
+        if (Input.GetKeyUp(initTestDrone))
+        {
+            NewDrone();
+        }
+
+        if (Input.GetKeyUp(hardcodedWaypoints))
+        {
+            droneInitialPositionSet = true;
+        }
     }
+
+    /// <summary>
+    /// Creates a new drone
+    /// </summary>
+    public void NewDrone()
+    {
+        if (!GameObject.FindWithTag("Drone"))
+        {
+
+            Debug.Log("Initializing drone");
+            Drone newDrone = new Drone( WorldProperties.worldObject.transform.position);
+            WorldProperties.selectedDrone = newDrone;
+        }
+    }
+
 }

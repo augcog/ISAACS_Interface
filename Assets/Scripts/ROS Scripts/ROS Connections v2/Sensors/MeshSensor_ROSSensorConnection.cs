@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 using System.Collections.Generic;
 using SimpleJSON;
@@ -47,9 +47,11 @@ public class MeshSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber 
             if (jsonMsgs.Count != 0)
             {
                 // Parse json msg to mesh msg
+                DateTime startTime = DateTime.Now;
                 JSONNode rawMsg = jsonMsgs.Dequeue();
                 MeshMsg meshMsg = new MeshMsg(rawMsg);
                 meshMsgs.Enqueue(meshMsg);
+                Debug.Log("Message Generation: " + DateTime.Now.Subtract(startTime).TotalMilliseconds.ToString() + "ms");
             }
         }
     }
@@ -96,8 +98,10 @@ public class MeshSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber 
         // Check if any mesh msgs are available to be visualized
         if (meshMsgs.Count > 0)
         {
+            DateTime startTime = DateTime.Now;
             MeshMsg meshMsg = meshMsgs.Dequeue();
             visualizer.SetMesh(meshMsg);
+            Debug.Log("Set Mesh: " + DateTime.Now.Subtract(startTime).TotalMilliseconds.ToString() + "ms");
         }
     }
 
@@ -110,10 +114,13 @@ public class MeshSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber 
         // Writing all code in here for now. May need to move out to separate handler functions when it gets too unwieldy.
         switch (topic)
         {
-            case "/voxblox_node/surface_pointcloud":
+            case "/voxblox_node/mesh":
                 Debug.Log("Mesh Visualizer Callback.");
                 // Add raw_msg to the jsonMsgs to be parsed on the thread
+                DateTime startTime = DateTime.Now;
+                Debug.Log("Mesh Visualizer Callback. Begin: " + startTime.ToString());
                 jsonMsgs.Enqueue(raw_msg);
+                Debug.Log("Enqueue Time: " + DateTime.Now.Subtract(startTime).TotalMilliseconds.ToString() + "ms");
 
                 //MeshMsg meshMsg =  new MeshMsg(raw_msg);
                 //MeshVisualizer visualizer = GameObject.Find(rendererObjectName).GetComponent<MeshVisualizer>();

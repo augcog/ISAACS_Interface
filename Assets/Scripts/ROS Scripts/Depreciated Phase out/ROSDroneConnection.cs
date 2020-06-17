@@ -304,9 +304,9 @@ public class ROSDroneConnection : MonoBehaviour
             float y = waypoint.gameObjectPointer.transform.localPosition.y;
             float z = waypoint.gameObjectPointer.transform.localPosition.z;
 
-            double ROS_x = WorldProperties.UnityXToLat(WorldProperties.droneHomeLat, x);
+            double ROS_x = WorldProperties.UnityXToLat(DebuggingManager.droneHomeLat, x);
             float ROS_y = (y * WorldProperties.Unity_Y_To_Alt_Scale) - 1f;
-            double ROS_z = WorldProperties.UnityZToLong(WorldProperties.droneHomeLong, WorldProperties.droneHomeLat, z);
+            double ROS_z = WorldProperties.UnityZToLong(DebuggingManager.droneHomeLong, DebuggingManager.droneHomeLat, z);
 
             MissionWaypointMsg new_waypoint = new MissionWaypointMsg(ROS_x, ROS_z, ROS_y, 3.0f, 0, 0, MissionWaypointMsg.TurnMode.CLOCKWISE, 0, 30, new MissionWaypointActionMsg(0, command_list, command_params));
             Debug.Log("single waypoint info: " + new_waypoint);
@@ -376,12 +376,16 @@ public class ROSDroneConnection : MonoBehaviour
         ros.CallService(service_name, "[1]");
     }
 
+    // ISAACS V1 Disabling
+    /*
     public void PublishWaypointUpdateMessage(UserpointInstruction msg)
     {
         Debug.Log("ISAACS V1 Waypoint System Disabled.");
         //Debug.Log("Published new userpoint instruction: "+ msg.ToYAMLString());
         //ros.Publish(UserpointPublisher.GetMessageTopic(), msg);
     }
+    */
+
     /// <summary> a general helper method to call any ROS Service with any argument.</summary>
     public void SendServiceCall(string service, string args)
     {

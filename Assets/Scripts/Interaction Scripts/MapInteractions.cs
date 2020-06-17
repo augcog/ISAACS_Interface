@@ -56,26 +56,28 @@
         // private GameObject controller;
         // private VRTK.VRTK_StraightPointerRenderer pointer;
 
-        // Peru: 3/7/2020 : Map Integration Variables
+        // Peru: 6/9/2020 : MapBox now completely in MapInteractions
         public bool droneOutOfBounds = false;
 
+        // Mapbox Interactions
+        public GameObject citySim;
+        public GameObject rsf_roof;
+
+        public AbstractMap abstractMap;
+        private float initZoom_citySim = 21.0f;
+        private double initLat_citySim = 37.91532757;
+        private double initLong_citySim = -122.33805556;
 
         public bool citySimActive = false;
-        public GameObject citySimParent;
-        public GameObject citySim;
-        public AbstractMap abstractMap;
-
-        public float initZoom_citySim = 21.0f;
-        public double initLat_citySim;
-        public double initLong_citySim;
-        public Vector3 initPosition_citySim;
+        private GameObject citySimParent;
+        private Vector3 initPosition_citySim;
 
         public double currLat_citySim;
         public double currLong_citySim;
-        public Vector3 currPosition_citySim;
+        private Vector3 currPosition_citySim;
 
-        public float minZoom_citySim = 0.0f;
-        public float maxZoom_citySim = 22.0f;
+        private float minZoom_citySim = 0.0f;
+        private float maxZoom_citySim = 22.0f;
 
 
         // Use this for initialization
@@ -126,6 +128,25 @@
             // MOVING WORLD
             MoveWorld();
             EnforceMapBoundary();
+        }
+
+        // Initilize MapBox
+        public void InitializeCityMap()
+        {
+
+            // Display a map centered around the current drone position
+            // Hardcoded to RFS for now
+            // TODO: Connect to selected drone when the architecture upgrade allows
+            Vector2d intiLatLong = new Vector2d(initLat_citySim, initLong_citySim);
+            abstractMap.Initialize(intiLatLong, (int)initZoom_citySim);
+
+            this.citySimActive = true;
+            this.initPosition_citySim = citySim.transform.position;
+            this.currLat_citySim = initLat_citySim;
+            this.currLong_citySim = initLong_citySim;
+            this.currPosition_citySim = citySim.transform.position;
+
+            rsf_roof.SetActive(true);
         }
 
         // Rotate the world based off of the right thumbstick
@@ -300,7 +321,6 @@
            
         }
 
-
         private void ScaleWorld()
         {
             //Obtaining distance and velocity
@@ -394,7 +414,6 @@
                 droneOutOfBounds = false;
             }
         }
-
 
     }
 

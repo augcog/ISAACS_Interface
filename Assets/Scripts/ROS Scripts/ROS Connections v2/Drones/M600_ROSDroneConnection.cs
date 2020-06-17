@@ -11,7 +11,7 @@ using ROSBridgeLib.interface_msgs;
 
 using ISAACS;
 
-public class M600_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber
+public class M600_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROSDroneConnectionInterface
 {
     // Drone state enums    
     public enum FlightStatus
@@ -44,6 +44,7 @@ public class M600_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber
     // Private connection variables
     private ROSBridgeWebSocketConnection ros = null;
     string client_id;
+    bool simDrone = false;
 
     // Private state variables
     public bool sdk_ready
@@ -53,6 +54,7 @@ public class M600_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber
             return ros != null;
         }
     }
+
     bool has_authority = false;
     BatteryStateMsg battery_state;
     FlightStatus flight_status;
@@ -66,17 +68,130 @@ public class M600_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber
     Vector3 gimble_joint_angles;
     uint gps_health;
     NavSatFixMsg gps_position;
+    double droneHomeLat = 0;
+    double droneHomeLong = 0;
 
-
-    public void InitilizeDrone(int uniqueID, string droneIP, int dronePort, List<string> droneSubscribers)
+    public void InitilizeDrone(int uniqueID, string droneIP, int dronePort, List<string> droneSubscribers, bool simFlight)
     {
         ros = new ROSBridgeWebSocketConnection("ws://" + droneIP, dronePort);
         client_id = uniqueID.ToString();
+        simDrone = simFlight;
 
         foreach (string subscriber in droneSubscribers)
         {
             ros.AddSubscriber("/dji_sdk/" + subscriber, this);
         }
+        ros.Connect();
+
+    }
+
+    // Drone Control Logic
+
+    public void StartMission()
+    {
+        // Integrate dynamic waypoint system
+        if (simDrone)
+        {
+            this.GetComponent<DroneSimulationManager>().FlyNextWaypoint();
+            return;
+        }
+
+        List<MissionWaypointMsg> missionMissionMsgList = new List<MissionWaypointMsg>();
+
+        uint[] command_list = new uint[16];
+        uint[] command_params = new uint[16];
+
+        for (int i = 0; i < 16; i++)
+        {
+            command_list[i] = 0;
+            command_params[i] = 0;
+        }
+
+        bool skip = true;
+
+        // TODO: No need to refence WorldProperties, should be changed to local to drone
+        foreach (Waypoint waypoint in WorldProperties.selectedDrone.waypoints)
+        {
+            if (skip)
+            {
+                skip = false;
+                continue;
+            }
+
+            float x = waypoint.gameObjectPointer.transform.localPosition.x;
+            float y = waypoint.gameObjectPointer.transform.localPosition.y;
+            float z = waypoint.gameObjectPointer.transform.localPosition.z;
+
+            double ROS_x = WorldProperties.UnityXToLat(this.droneHomeLat, x);
+            float ROS_y = (y * WorldProperties.Unity_Y_To_Alt_Scale) - 1f;
+            double ROS_z = WorldProperties.UnityZToLong(this.droneHomeLong, this.droneHomeLat, z);
+
+            MissionWaypointMsg new_waypoint = new MissionWaypointMsg(ROS_x, ROS_z, ROS_y, 3.0f, 0, 0, MissionWaypointMsg.TurnMode.CLOCKWISE, 0, 30, new MissionWaypointActionMsg(0, command_list, command_params));
+            Debug.Log("single waypoint info: " + new_waypoint);
+            missionMissionMsgList.Add(new_waypoint);
+        }
+        MissionWaypointTaskMsg Task = new MissionWaypointTaskMsg(15.0f, 15.0f, MissionWaypointTaskMsg.ActionOnFinish.AUTO_LANDING, 1, MissionWaypointTaskMsg.YawMode.AUTO, MissionWaypointTaskMsg.TraceMode.POINT, MissionWaypointTaskMsg.ActionOnRCLost.FREE, MissionWaypointTaskMsg.GimbalPitchMode.FREE, missionMissionMsgList.ToArray());
+        UploadWaypointsTask(Task);
+
+        // In UploadWaypointsTask Response start the mission
+        //SendWaypointAction(WaypointMissionAction.START);
+    }
+
+    public void PauseMission()
+    {
+        if (simDrone)
+        {
+            this.GetComponent<DroneSimulationManager>().pauseFlight();
+            return;
+        }
+
+        SendWaypointAction(WaypointMissionAction.PAUSE);
+    }
+
+    public void ResumeMission()
+    {
+        if (simDrone)
+        {
+            this.GetComponent<DroneSimulationManager>().resumeFlight();
+            return;
+        }
+
+        SendWaypointAction(WaypointMissionAction.RESUME);
+    }
+
+    public void UpdateMission()
+    {
+        if (simDrone)
+        {
+            this.GetComponent<DroneSimulationManager>().FlyNextWaypoint(true);
+            return;
+        }
+
+        // Integrate dynamic waypoint system
+        SendWaypointAction(WaypointMissionAction.STOP);
+        StartMission();
+    }
+
+    public void LandDrone()
+    {
+        if (simDrone)
+        {
+            this.GetComponent<DroneSimulationManager>().flyHome();
+            return;
+        }
+
+        ExecuteTask(DroneTask.LAND);
+    }
+
+    public void FlyHome()
+    {
+        if (simDrone)
+        {
+            this.GetComponent<DroneSimulationManager>().flyHome();
+            return;
+        }
+
+        ExecuteTask(DroneTask.GO_HOME);
     }
 
     // Update is called once per frame in Unity
@@ -196,6 +311,16 @@ public class M600_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber
     {
         response = response["values"];
         Debug.LogFormat("Waypoint task upload {0} (ACK: {1})", (response["result"].AsBool ? "succeeded" : "failed"), response["ack_data"].AsInt);
+
+        // Peru 6/10/20: Start flight upon completing upload
+        if (response["result"].AsBool == true)
+        {
+            SendWaypointAction(WaypointMissionAction.START);
+        }
+        else
+        {
+            StartMission();
+        }
     }
 
     public void SendWaypointAction(WaypointMissionAction action)
@@ -408,6 +533,16 @@ public class M600_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber
     public float GetGPSHealth()
     {
         return gps_health;
+    }
+
+    public double GetHomeLat()
+    {
+        return droneHomeLat;
+    }
+
+    public double GetHomeLong()
+    {
+        return droneHomeLong;
     }
 
     // Common CallBack for all subscribers
