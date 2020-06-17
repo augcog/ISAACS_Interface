@@ -16,9 +16,9 @@
 	public class ControllerState : MonoBehaviour
 	{
 		
-		// Remember to set these controllers to actual GameObjects through the Unity GUI.
-		public GameObject LeftController;
-		public GameObject RightController;
+		// TODO.
+		private GameObject LeftController;
+		private GameObject RightController;
 
 
 		// These variables store information on the state of the left controller.
@@ -69,6 +69,12 @@
 		private float LocalScalingFactor; /// The dot product of elocityDelta with LocalDistance, indicating the relative cartesian scaling factor.
 
 
+		void Start()
+		{
+			LeftController = GameObject.Find("LeftController");
+			RightController = GameObject.Find("RightController");
+		}
+
 		// Unlike Update, which gets called once per frame, FixedUpdate is called accordingly to the physics engine.
 		void FixedUpdate()
 		{
@@ -79,8 +85,7 @@
 			var rightInteractGrab = RightController.GetComponent<VRTK_InteractGrab>();
 
 			// Receive input information from the left controller.
-			//LeftIsGrabbing = (leftInteractGrab.GetGrabbedObject()) ? true : false;
-			LeftIsGrabbing = false;
+			LeftIsGrabbing = (leftInteractGrab.GetGrabbedObject()) ? true : false;
 			LeftIndex = left.IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.TriggerPress);
 			LeftMiddle = left.IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.GripPress);
 			LeftX = left.IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.ButtonOnePress);
@@ -98,8 +103,7 @@
 			LeftAngularVelocity = VRTK_DeviceFinder.GetControllerAngularVelocity(VRTK_DeviceFinder.GetControllerReferenceLeftHand());
 
             // Receive input information from the right controller.
-			//RightIsGrabbing = (rightInteractGrab.GetGrabbedObject()) ? true : false;
-			RightIsGrabbing = false;
+			RightIsGrabbing = (rightInteractGrab.GetGrabbedObject()) ? true : false;
 			RightIndex = right.IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.TriggerPress);
 			RightMiddle = right.IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.GripPress);
 			RightA = right.IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.ButtonOnePress);

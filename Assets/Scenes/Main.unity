@@ -521,7 +521,7 @@ GameObject:
   - component: {fileID: 78194258}
   - component: {fileID: 78194255}
   m_Layer: 0
-  m_Name: Minimap
+  m_Name: Pivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -533,12 +533,12 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 78194253}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.42, z: 0}
-  m_LocalScale: {x: 1, y: -0.0059844493, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.25, y: 2.0682538, z: -0.25}
+  m_LocalScale: {x: 2.600603, y: -0.015563183, z: 2.600604}
   m_Children: []
-  m_Father: {fileID: 899238562}
-  m_RootOrder: 0
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &78194255
 MeshRenderer:
@@ -554,7 +554,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: f5e394a942fae453583e8e6009ee49a1, type: 2}
+  - {fileID: 2100000, guid: fedc75da63b32e249bccd7450cd29351, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1875,7 +1875,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 578ceabbac682ee4680e7ff06395e8d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  simulation: 1
   startMission: 1
   pauseMission: 0
   resumeMission: 0
@@ -1932,6 +1931,10 @@ Prefab:
     - target: {fileID: 400172, guid: 804ac96ebacbb37488605e7a96725e34, type: 3}
       propertyPath: m_LocalScale.z
       value: 4.8397713
+      objectReference: {fileID: 0}
+    - target: {fileID: 100172, guid: 804ac96ebacbb37488605e7a96725e34, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 804ac96ebacbb37488605e7a96725e34, type: 3}
@@ -2064,7 +2067,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 578ceabbac682ee4680e7ff06395e8d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  simulation: 1
   startMission: 0
   pauseMission: 0
   resumeMission: 0
@@ -2486,7 +2488,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 578ceabbac682ee4680e7ff06395e8d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  simulation: 1
   startMission: 0
   pauseMission: 1
   resumeMission: 0
@@ -3222,20 +3223,6 @@ GameObject:
 Transform:
   m_PrefabParentObject: {fileID: 482130, guid: 126d619cf4daa52469682f85c1378b4a, type: 2}
   m_PrefabInternal: {fileID: 242895466}
---- !u!4 &899238562
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 400002, guid: 0433faf8882fcc14f97be02d6656dbd9, type: 3}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1209669983}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.25, y: 0.976, z: -0.25}
-  m_LocalScale: {x: 2.600603, y: 2.600604, z: 2.600604}
-  m_Children:
-  - {fileID: 78194254}
-  m_Father: {fileID: 0}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &901874428
 GameObject:
   m_ObjectHideFlags: 0
@@ -3645,7 +3632,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 578ceabbac682ee4680e7ff06395e8d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  simulation: 1
   startMission: 0
   pauseMission: 0
   resumeMission: 0
@@ -4339,40 +4325,6 @@ CanvasRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1209136060}
---- !u!1 &1209669983
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 100002, guid: 0433faf8882fcc14f97be02d6656dbd9, type: 3}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 899238562}
-  - component: {fileID: 1209669984}
-  m_Layer: 0
-  m_Name: MinimapParent
-  m_TagString: Table
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!95 &1209669984
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 9500000, guid: 0433faf8882fcc14f97be02d6656dbd9,
-    type: 3}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1209669983}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 0433faf8882fcc14f97be02d6656dbd9, type: 3}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
 --- !u!1 &1221798502
 GameObject:
   m_ObjectHideFlags: 0
@@ -4687,6 +4639,7 @@ GameObject:
   - component: {fileID: 1347866315}
   - component: {fileID: 1347866318}
   - component: {fileID: 1347866316}
+  - component: {fileID: 1347866319}
   m_Layer: 0
   m_Name: RightController
   m_TagString: GameController
@@ -4887,6 +4840,24 @@ MonoBehaviour:
   controllerEvents: {fileID: 0}
   interactTouch: {fileID: 0}
   interactGrab: {fileID: 0}
+--- !u!114 &1347866319
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1347866310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 947b27445602ed640b885db7e667dfc1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  grabButton: 3
+  grabPrecognition: 0
+  throwMultiplier: 1
+  createRigidBodyWhenNotTouching: 0
+  controllerAttachPoint: {fileID: 0}
+  controllerEvents: {fileID: 0}
+  interactTouch: {fileID: 0}
 --- !u!21 &1348097625
 Material:
   serializedVersion: 6
@@ -5174,7 +5145,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 578ceabbac682ee4680e7ff06395e8d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  simulation: 1
   startMission: 0
   pauseMission: 0
   resumeMission: 1
@@ -6730,9 +6700,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controllerState: {fileID: 1699223320}
-  World: {fileID: 146794962}
-  MinimumScale: 0.1
   MaximumScale: 10
+  MinimumScale: 0.1
   Speed: 1
   RotationalSpeed: 1
 --- !u!114 &1699223320
@@ -7027,7 +6996,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 578ceabbac682ee4680e7ff06395e8d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  simulation: 1
   startMission: 0
   pauseMission: 0
   resumeMission: 0
@@ -7669,6 +7637,7 @@ GameObject:
   - component: {fileID: 2053542341}
   - component: {fileID: 2053542335}
   - component: {fileID: 2053542338}
+  - component: {fileID: 2053542336}
   m_Layer: 0
   m_Name: LeftController
   m_TagString: Untagged
@@ -7701,6 +7670,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   customColliderContainer: {fileID: 0}
+--- !u!114 &2053542336
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2053542333}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 947b27445602ed640b885db7e667dfc1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  grabButton: 3
+  grabPrecognition: 0
+  throwMultiplier: 1
+  createRigidBodyWhenNotTouching: 0
+  controllerAttachPoint: {fileID: 0}
+  controllerEvents: {fileID: 0}
+  interactTouch: {fileID: 0}
 --- !u!114 &2053542337
 MonoBehaviour:
   m_ObjectHideFlags: 0

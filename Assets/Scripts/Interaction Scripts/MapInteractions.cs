@@ -13,7 +13,8 @@
     public class MapInteractions : MonoBehaviour
     {
         public ControllerState controllerState; /// Initiate a singleton of the ControllerState class. Assign it to the Controller GameObject.
-        
+        private GameObject Pivot; /// pivot is the center of the table
+
         private GameObject World; /// The World GameObject. All its children will be scaled, rotate and move with it.
         private Vector3 WorldScaleInitial; ///originalScale is the original localScale of the world
         private Vector3 WorldScaleMin; /// This is the TODO of the originalScale of the world
@@ -25,17 +26,17 @@
         public float Speed = 1.0f; /// This is the speed at which the map can be moved around.
         public float RotationalSpeed = 1.0f; /// This is the speed at which the map can be rotated around (revolutions/second).
 
-        private GameObject pivot; /// pivot is the center of the table
 
 
 
         // Use this for initialization
         void Start()
         {
+            //controllerState = GameObject.Find("Controller");
+            Pivot = GameObject.Find("Pivot");
+
             World = GameObject.Find("World");
 
-            //Pivot assignment
-            pivot = GameObject.FindWithTag("Table");
 
             //This provides us with basis to create bounds on scaling and something to return to
             WorldScaleInitial = World.transform.localScale;
@@ -71,7 +72,7 @@
         private void ControllerRotateWorld()
         {
             float angle = controllerState.GetRightThumbDelta().x * RotationalSpeed * 360 * Time.fixedDeltaTime;
-            World.transform.RotateAround(pivot.transform.position, Vector3.up, angle);
+            World.transform.RotateAround(Pivot.transform.position, Vector3.up, angle);
 
             // Peru: 5/28/2020 : Point Cloud Rotate
             // FIXME: Is declaring here correct?
@@ -79,7 +80,7 @@
 
             if (pointCloud)
             {
-                pointCloud.transform.RotateAround(pivot.transform.position, Vector3.up, angle);
+                pointCloud.transform.RotateAround(Pivot.transform.position, Vector3.up, angle);
             }
         }
 
@@ -110,7 +111,7 @@
             {
                 // FIXME: Jank. and comments.
                 Vector3 A = World.transform.position;
-                Vector3 B = pivot.transform.position;
+                Vector3 B = Pivot.transform.position;
                 B.y = A.y;
 
                 Vector3 startScale = World.transform.localScale;
