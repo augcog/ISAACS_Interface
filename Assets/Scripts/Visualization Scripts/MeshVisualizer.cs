@@ -80,6 +80,11 @@ public class MeshVisualizer : MonoBehaviour
         return closeToDrone(index) || last_update[index] < Time.time - updateInterval;
     }
 
+    /// <summary>
+    /// Generates a dictionary of MeshArrays specified by the message.
+    /// </summary>
+    /// <param name="meshMsg">Voxblox Mesh message to generate Meshes with.</param>
+    /// <returns>A dictionary of MeshArrays.</returns>
     public Dictionary<long[], MeshArray> generateMesh(MeshMsg meshMsg)
     {
         Dictionary<Int64[], MeshArray> generated_mesh_dict = new Dictionary<long[], MeshArray>(new LongArrayEqualityComparer());
@@ -162,108 +167,6 @@ public class MeshVisualizer : MonoBehaviour
             mesh_filter_dict[index].mesh = mesh;
         }
     }
-
-    /// <summary>
-    /// Update the mesh with the new mesh.
-    /// </summary>
-    /// <param name="meshMsg">ROSBridge Voxblox Mesh Message</param>
-    public void SetMesh(MeshMsg meshMsg)
-    {
-        /// The length of one block. Also the scaling factor of the coordinates.
-        float scale_factor = meshMsg.GetBlockEdgeLength();
-        /// List of all the mesh blocks.
-        MeshBlockMsg[] mesh_blocks = meshMsg.GetMeshBlocks();
-        /// Iterate through each mesh block generating and updating meshes for each.
-        for (int i = 0; i < mesh_blocks.Length; i++)
-        {
-            /// index of the mesh block.
-            Int64[] index = mesh_blocks[i].GetIndex();
-            
-            if (!shouldUpdate(index))
-            {
- //               Debug.Log("Delay Update");
-                continue;
-            }
-            
-            ushort[] x = mesh_blocks[i].GetX();
-
-            // If there is no existing game object for the block, create one.
-            if (!mesh_filter_dict.ContainsKey(index))
-            {
-                // only render meshes with enough faces to make it worth the resources of an extra game object
-                if (x.Length < faceThreshold)
-                {
- //                   Debug.Log("Not enough faces");
-                    continue;
-                }
-
-                GameObject meshObject = new GameObject(index.ToString());
-                meshObject.transform.parent = meshParent.transform;
-                MeshFilter meshFilter = meshObject.AddComponent<MeshFilter>();
-                MeshRenderer meshRenderer = meshObject.AddComponent<MeshRenderer>();
-                meshRenderer.sharedMaterial = new Material(Shader.Find("Particles/Standard Unlit"));
-                //meshRenderer.sharedMaterial = new Material(Shader.Find("Standard"));
-                mesh_filter_dict.Add(index, meshFilter);
-            }
-            else
-            {
-//                Debug.Log("Reusing GameObject");
-            }
-
-       
-            ushort[] y = mesh_blocks[i].GetY();
-            ushort[] z = mesh_blocks[i].GetZ();
-            
-            // Create a list of vertices and their corresponding colors.
-            List<Vector3> newVertices = new List<Vector3>();
-            List<Color> newColors = new List<Color>();
-        
-            // update indicies, converting from block index to global position transforms.
-            for (int j = 0; j < x.Length; j++)
-            {
-                float zv = ((float)z[j] / 32768.0f + index[2]) * scale_factor;
-                float xv = ((float)x[j] / 32768.0f + index[0]) * scale_factor;
-                float yv = ((float)y[j] / 32768.0f + index[1]) * scale_factor;
-                if (flipYZ)
-                {
-                    newVertices.Add(new Vector3(xv, zv, yv));
-                } 
-                else
-                {
-                    newVertices.Add(new Vector3(xv, yv, zv));
-                }
-            }
-            // update colors
-            byte[] r = mesh_blocks[i].GetR();
-            byte[] g = mesh_blocks[i].GetG();
-            byte[] b = mesh_blocks[i].GetB();
-
-            for (int j = 0; j < r.Length; j++)
-            {
-                newColors.Add(new Color32(r[j], g[j], b[j], 51));
-            }
-
-            // Vertices come in triples each corresponding to one face.
-            int[] newTriangles = new int[newVertices.Count / 3 * 3];
-            for (int j = 0; j < newTriangles.Length; j++)
-            {
-                newTriangles[j] = j;
-            }
-
-            Mesh mesh = new Mesh();
-                       // correct for inverted mesh. By reversing the lists, the normal vectors point the right direction.
-            newVertices.Reverse();
-            newColors.Reverse();
-
-            mesh.vertices = newVertices.ToArray();
-            //mesh.uv = newUV;
-            mesh.triangles = newTriangles;
-            mesh.colors = newColors.ToArray();
-            mesh_filter_dict[index].mesh = mesh;
-            last_update[index] = Time.time;
-        }
-        hasChanged = true;
-    }
 }
 
 /// <summary>
@@ -301,8 +204,17 @@ public class LongArrayEqualityComparer : IEqualityComparer<long[]>
     }
 }
 
+/// <summary>
+/// A Struct of Arrays necessary to create a Mesh.
+/// </summary>
 public struct MeshArray
 {
+    /// <summary>
+    /// Create a new Mesh struct.
+    /// </summary>
+    /// <param name="vertices">Vertices of the mesh (their positions)</param>
+    /// <param name="triangles">Triangles each vertex corresponds to</param>
+    /// <param name="colors">Colors of each vertex</param>
     public MeshArray(Vector3[] vertices, int[] triangles, Color[] colors)
     {
         Vertices = vertices;
@@ -310,10 +222,23 @@ public struct MeshArray
         Colors = colors;
     }
 
+    /// <summary>
+    /// Vertices of the Mesh.
+    /// </summary>
     public Vector3[] Vertices { get; }
+    /// <summary>
+    /// Triangles each vertex correspond to.
+    /// </summary>
     public int[] Triangles { get; }
+    /// <summary>
+    /// Color of each vertex.
+    /// </summary>
     public Color[] Colors { get; }
 
+    /// <summary>
+    /// Generate a Mesh using the arrays of this struct. Must be called in the Main thread.
+    /// </summary>
+    /// <returns>A new mesh</returns>
     public Mesh GetMesh()
     {
         Mesh mesh = new Mesh();
