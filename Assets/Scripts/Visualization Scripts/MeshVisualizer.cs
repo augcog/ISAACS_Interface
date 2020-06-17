@@ -128,7 +128,7 @@ public class MeshVisualizer : MonoBehaviour
 
             for (int j = 0; j < r.Length; j++)
             {
-                newColors.Add(new Color32(r[j], g[j], b[j], 51));
+                newColors.Add(new Color32(r[j], g[j], b[j], 150));
             }
 
             // Vertices come in triples each corresponding to one face.
@@ -161,7 +161,8 @@ public class MeshVisualizer : MonoBehaviour
                 meshObject.transform.parent = meshParent.transform;
                 MeshFilter meshFilter = meshObject.AddComponent<MeshFilter>();
                 MeshRenderer meshRenderer = meshObject.AddComponent<MeshRenderer>();
-                meshRenderer.sharedMaterial = new Material(Shader.Find("Particles/Standard Unlit"));
+                //meshRenderer.sharedMaterial = new Material(Shader.Find("Particles/Standard Unlit"));
+                meshRenderer.sharedMaterial = new Material(Shader.Find("Particles/Alpha Blended"));
                 mesh_filter_dict.Add(index, meshFilter);
             }
             mesh_filter_dict[index].mesh = mesh;
