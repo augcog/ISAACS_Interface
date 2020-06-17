@@ -876,6 +876,7 @@ GameObject:
   - component: {fileID: 146794966}
   - component: {fileID: 146794969}
   - component: {fileID: 146794968}
+  - component: {fileID: 146794965}
   m_Layer: 0
   m_Name: World
   m_TagString: World
@@ -1005,6 +1006,12 @@ MonoBehaviour:
     port: 9090
     sensorType: 3
     sensorSubscribers: 0c000000
+  - sensorName: mesh
+    sensorTag: mesh
+    ipAddress: localhost
+    port: 9090
+    sensorType: 1
+    sensorSubscribers: 01000000
   success: 0
   uniqueID: 0
 --- !u!114 &146794969
@@ -1033,6 +1040,7 @@ MonoBehaviour:
   missionInfo: y
   executeUploadedMission: u
   initMapBox: i
+  displaySensorList: o
   initTestDrone: o
   hardcodedWaypoints: p
   worldProperties: {fileID: 0}
@@ -6787,8 +6795,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1e86e051f2c48f488352f9541c700cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LeftController: {fileID: 2053542333}
-  RightController: {fileID: 1347866310}
 --- !u!114 &1699223320
 MonoBehaviour:
   m_ObjectHideFlags: 0

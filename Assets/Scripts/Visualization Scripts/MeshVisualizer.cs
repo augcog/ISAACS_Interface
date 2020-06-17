@@ -31,7 +31,7 @@ public class MeshVisualizer : MonoBehaviour
     /// <summary>
     /// Dictionary of meshes for each index.
     /// </summary>
-    private Dictionary<Int64[], MeshFilter> mesh_dict;    // Use this for initialization
+    private Dictionary<Int64[], MeshFilter> mesh_filter_dict;    // Use this for initialization
 
     /// <summary>
     /// Dictionary of last update times for each index.
@@ -39,7 +39,7 @@ public class MeshVisualizer : MonoBehaviour
     private Dictionary<Int64[], float> last_update;
     void Start()
     {
-        mesh_dict = new Dictionary<long[], MeshFilter>(new LongArrayEqualityComparer());
+        mesh_filter_dict = new Dictionary<long[], MeshFilter>(new LongArrayEqualityComparer());
         last_update = new Dictionary<long[], float>(new LongArrayEqualityComparer());
         meshParent = new GameObject("Mesh");
     }
@@ -81,44 +81,30 @@ public class MeshVisualizer : MonoBehaviour
     }
 
     /// <summary>
-    /// Update the mesh with the new mesh.
+    /// Generates a dictionary of MeshArrays specified by the message.
     /// </summary>
-    /// <param name="meshMsg">ROSBridge Voxblox Mesh Message</param>
-    public void SetMesh(MeshMsg meshMsg)
+    /// <param name="meshMsg">Voxblox Mesh message to generate Meshes with.</param>
+    /// <returns>A dictionary of MeshArrays.</returns>
+    public Dictionary<long[], MeshArray> generateMesh(MeshMsg meshMsg)
     {
-        Debug.Log("Setting New Mesh");
+        Dictionary<Int64[], MeshArray> generated_mesh_dict = new Dictionary<long[], MeshArray>(new LongArrayEqualityComparer());
         /// The length of one block. Also the scaling factor of the coordinates.
         float scale_factor = meshMsg.GetBlockEdgeLength();
         /// List of all the mesh blocks.
         MeshBlockMsg[] mesh_blocks = meshMsg.GetMeshBlocks();
-        Debug.Log(mesh_blocks.Length);
         /// Iterate through each mesh block generating and updating meshes for each.
         for (int i = 0; i < mesh_blocks.Length; i++)
         {
             /// index of the mesh block.
             Int64[] index = mesh_blocks[i].GetIndex();
-            
-            if (!shouldUpdate(index))
-            {
-                Debug.Log("Delay Update");
-                continue;
-            }
+
+            ushort[] x = mesh_blocks[i].GetX();
+            ushort[] y = mesh_blocks[i].GetY();
+            ushort[] z = mesh_blocks[i].GetZ();
 
             // Create a list of vertices and their corresponding colors.
             List<Vector3> newVertices = new List<Vector3>();
             List<Color> newColors = new List<Color>();
-        
-            UInt16[] x = mesh_blocks[i].GetX();
-
-            // only render meshes with enough faces to make it worth the resources of an extra game object
-            if (x.Length < faceThreshold)
-            {
-                Debug.Log("Not enough faces");
-                continue;
-            }
-
-            UInt16[] y = mesh_blocks[i].GetY();
-            UInt16[] z = mesh_blocks[i].GetZ();
 
             // update indicies, converting from block index to global position transforms.
             for (int j = 0; j < x.Length; j++)
@@ -129,7 +115,7 @@ public class MeshVisualizer : MonoBehaviour
                 if (flipYZ)
                 {
                     newVertices.Add(new Vector3(xv, zv, yv));
-                } 
+                }
                 else
                 {
                     newVertices.Add(new Vector3(xv, yv, zv));
@@ -142,7 +128,7 @@ public class MeshVisualizer : MonoBehaviour
 
             for (int j = 0; j < r.Length; j++)
             {
-                newColors.Add(new Color32(r[j], g[j], b[j], 51));
+                newColors.Add(new Color32(r[j], g[j], b[j], 150));
             }
 
             // Vertices come in triples each corresponding to one face.
@@ -152,35 +138,35 @@ public class MeshVisualizer : MonoBehaviour
                 newTriangles[j] = j;
             }
 
-            Mesh mesh = new Mesh();
+            // correct for inverted mesh. By reversing the lists, the normal vectors point the right direction.
+            newVertices.Reverse();
+            newColors.Reverse();
+
+            generated_mesh_dict[index] = new MeshArray(newVertices.ToArray(), newTriangles, newColors.ToArray());
+        }
+        return generated_mesh_dict;
+    }
+
+    public void SetMesh(Dictionary<long[], MeshArray> mesh_dict)
+    {
+        foreach(KeyValuePair<long[], MeshArray> entry in mesh_dict)
+        {
+            long[] index = entry.Key;
+            MeshArray meshArray = entry.Value;
+            Mesh mesh = meshArray.GetMesh();
             // If there is no existing game object for the block, create one.
-            if (!mesh_dict.ContainsKey(index))
+            if (!mesh_filter_dict.ContainsKey(index))
             {
                 GameObject meshObject = new GameObject(index.ToString());
                 meshObject.transform.parent = meshParent.transform;
                 MeshFilter meshFilter = meshObject.AddComponent<MeshFilter>();
                 MeshRenderer meshRenderer = meshObject.AddComponent<MeshRenderer>();
-                meshRenderer.sharedMaterial = new Material(Shader.Find("Particles/Standard Unlit"));
-                //meshRenderer.sharedMaterial = new Material(Shader.Find("Standard"));
-                mesh_dict.Add(index, meshFilter);
+                //meshRenderer.sharedMaterial = new Material(Shader.Find("Particles/Standard Unlit"));
+                meshRenderer.sharedMaterial = new Material(Shader.Find("Particles/Alpha Blended"));
+                mesh_filter_dict.Add(index, meshFilter);
             }
-            else
-            {
-                Debug.Log("Reusing GameObject");
-            }
-
-            // correct for inverted mesh. By reversing the lists, the normal vectors point the right direction.
-            newVertices.Reverse();
-            newColors.Reverse();
-
-            mesh.vertices = newVertices.ToArray();
-            //mesh.uv = newUV;
-            mesh.triangles = newTriangles;
-            mesh.colors = newColors.ToArray();
-            mesh_dict[index].mesh = mesh;
-            last_update[index] = Time.time;
+            mesh_filter_dict[index].mesh = mesh;
         }
-        hasChanged = true;
     }
 }
 
@@ -216,5 +202,50 @@ public class LongArrayEqualityComparer : IEqualityComparer<long[]>
             }
         }
         return result;
+    }
+}
+
+/// <summary>
+/// A Struct of Arrays necessary to create a Mesh.
+/// </summary>
+public struct MeshArray
+{
+    /// <summary>
+    /// Create a new Mesh struct.
+    /// </summary>
+    /// <param name="vertices">Vertices of the mesh (their positions)</param>
+    /// <param name="triangles">Triangles each vertex corresponds to</param>
+    /// <param name="colors">Colors of each vertex</param>
+    public MeshArray(Vector3[] vertices, int[] triangles, Color[] colors)
+    {
+        Vertices = vertices;
+        Triangles = triangles;
+        Colors = colors;
+    }
+
+    /// <summary>
+    /// Vertices of the Mesh.
+    /// </summary>
+    public Vector3[] Vertices { get; }
+    /// <summary>
+    /// Triangles each vertex correspond to.
+    /// </summary>
+    public int[] Triangles { get; }
+    /// <summary>
+    /// Color of each vertex.
+    /// </summary>
+    public Color[] Colors { get; }
+
+    /// <summary>
+    /// Generate a Mesh using the arrays of this struct. Must be called in the Main thread.
+    /// </summary>
+    /// <returns>A new mesh</returns>
+    public Mesh GetMesh()
+    {
+        Mesh mesh = new Mesh();
+        mesh.vertices = Vertices;
+        mesh.triangles = Triangles;
+        mesh.colors = Colors;
+        return mesh;
     }
 }
