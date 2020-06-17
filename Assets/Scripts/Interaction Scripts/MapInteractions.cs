@@ -14,23 +14,22 @@
     {
         public ControllerState controllerState; /// Initiate a singleton of the ControllerState class. Assign it to the Controller GameObject.
         public GameObject World; /// The World GameObject. All its children will be scaled, rotate and move with it.
+        
+        private Vector3 originalScale; ///originalScale is the original localScale of the world
+        private Vector3 minScale; /// This is the TODO of the originalScale of the world
+        private Vector3 maxScale; /// This is the TODO times the originalScale of the world
+        public float MinimumScale = 0.1f; /// This the minimum size (with respect to the original world size) that the player can scale the world at. For example, MinimumScale = 0.1 signifies that the world can be scaled down to 1/10th of its original size.
+        public float MaximumScale = 10.0f; /// This the maximum size (with respect to the original world size) that the player can scale the world at. For example, MaximumScale = 10 signifies that the world can be scaled up to 10 times its original size.
 
+        public float Speed = 1.0f; /// This is the speed at which the map can be moved around.
+        public float RotationalSpeed = 1.0f; /// This is the speed at which the map can be rotated around (revolutions/second).
 
         private GameObject pivot; /// pivot is the center of the table
 
-        private Vector3 originalScale; ///originalScale is the original localScale of the world
         // FIXME: Remove.
-        public Vector3 actualScale; ///actualScale is the relative localScale of the world in comparison to its original localScale
+        //public Vector3 actualScale; ///actualScale is the relative localScale of the world in comparison to its original localScale
         // FIXME: Remove.
-        private Vector3 currentScale; ///currentScale is the current localScale
-
-        public float MinimumScale; /// Let the user specify TODO
-        public float MaximumScale; /// Let the user specify TODO
-        private Vector3 minScale; ///This is the TODO of the originalScale of the world
-        private Vector3 maxScale; ///This is the TODO times the originalScale of the world
-
-        public float Speed; ///This is the speed at which the map can be moved at
-        public float RotationalSpeed; /// Rotation speed (in rev/s)
+        //private Vector3 currentScale; ///currentScale is the current localScale
 
 
         // Use this for initialization
@@ -41,10 +40,10 @@
 
             //This provides us with basis to create bounds on scaling and something to return to
             originalScale = World.transform.localScale;
-            actualScale = new Vector3(1, 1, 1);
+            //actualScale = new Vector3(1, 1, 1);
 
             //These are the bounds on scaling
-            minScale = Vector3.Scale(originalScale, new Vector3(1.0f / MinimumScale, 1.0f / MinimumScale, 1.0f / MinimumScale));
+            minScale = Vector3.Scale(originalScale, new Vector3(MinimumScale, MinimumScale, MinimumScale));
             maxScale = Vector3.Scale(originalScale, new Vector3(MaximumScale, MaximumScale, MaximumScale));
 
         }
@@ -77,6 +76,7 @@
             World.transform.RotateAround(pivot.transform.position, Vector3.up, angle);
 
             // Peru: 5/28/2020 : Point Cloud Rotate
+            // FIXME: Is declaring here correct?
             GameObject pointCloud = GameObject.Find("PointCloud");
 
             if (pointCloud)
@@ -89,14 +89,14 @@
         {
             // Negative values are here to make moving around look natural.
             // Without occlusion this looks mediocre because it seems like the map is being moved in the wrong direction.
-            float moveX = -controllerState.GetLeftThumbDelta().x;
-            float moveZ = -controllerState.GetLeftThumbDelta().y;
+            float moveX = controllerState.GetLeftThumbDelta().x;
+            float moveZ = controllerState.GetLeftThumbDelta().y;
             
             // update map position based on input
             Vector3 position = World.transform.position;
 
-            position.x += moveX * Speed * Time.deltaTime;
-            position.z += moveZ * Speed * Time.deltaTime;
+            position.x -= moveX * Speed * Time.deltaTime / 3.0f;
+            position.z -= moveZ * Speed * Time.deltaTime / 3.0f;
 
             World.transform.position = position;
         }
@@ -130,13 +130,13 @@
 
 
             // FIXME. Janky: should use a setter instead. Or even better, query directly the WorldScale, than keep a useless variable in WOrldProperties.
-            currentScale = World.transform.localScale;
-            WorldProperties.currentScale = currentScale;
+            //currentScale = World.transform.localScale;
+            //WorldProperties.currentScale = currentScale;
             // FIXME. Janky: should use a setter instead. Or even better, query directly the WorldScale, than keep a useless variable in WOrldProperties.
-            actualScale.x = (currentScale.x / originalScale.x);
-            actualScale.y = (currentScale.y / originalScale.y);
-            actualScale.z = (currentScale.z / originalScale.z);
-            WorldProperties.actualScale = actualScale;
+            //actualScale.x = (currentScale.x / originalScale.x);
+            //actualScale.y = (currentScale.y / originalScale.y);
+            //actualScale.z = (currentScale.z / originalScale.z);
+            //WorldProperties.actualScale = actualScale;
         }
 
     }

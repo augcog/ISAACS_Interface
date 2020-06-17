@@ -915,7 +915,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7787ec4cc870bae4c9e65fbfa30a4364, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0.2
+  speed: 1
 --- !u!114 &146794966
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6350,7 +6350,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1583911696}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7696221f0cbbc764498b26fbbf4228af, type: 3}
+  m_Script: {fileID: 11500000, guid: d3d21b6f05cd4bb46ad4b1b974628ef7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!4 &1583911698
@@ -6752,8 +6752,8 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1699223318}
-  - component: {fileID: 1699223319}
   - component: {fileID: 1699223320}
+  - component: {fileID: 1699223319}
   m_Layer: 0
   m_Name: Controller
   m_TagString: Untagged
@@ -6786,11 +6786,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 1699223317}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f3c930cb716449459c64c5dcdf81bcc, type: 3}
+  m_Script: {fileID: 11500000, guid: fce500faaffe7ac4a9135cb03c53891a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LeftController: {fileID: 2053542333}
-  RightController: {fileID: 1347866310}
+  controllerState: {fileID: 1699223320}
+  World: {fileID: 146794962}
+  MinimumScale: 0.1
+  MaximumScale: 10
+  Speed: 1
+  RotationalSpeed: 1
 --- !u!114 &1699223320
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6799,16 +6803,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1699223317}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fce500faaffe7ac4a9135cb03c53891a, type: 3}
+  m_Script: {fileID: 11500000, guid: 7f3c930cb716449459c64c5dcdf81bcc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controllerState: {fileID: 1699223319}
-  World: {fileID: 146794962}
-  actualScale: {x: 0, y: 0, z: 0}
-  MinimumScale: 0.1
-  MaximumScale: 10
-  Speed: 1
-  RotationalSpeed: 1
+  LeftController: {fileID: 2053542333}
+  RightController: {fileID: 1347866310}
 --- !u!1 &1715641644
 GameObject:
   m_ObjectHideFlags: 0

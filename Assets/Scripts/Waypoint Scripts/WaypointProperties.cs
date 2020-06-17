@@ -35,7 +35,10 @@
         private LineRenderer LineProperties;
         private CapsuleCollider lineCollider;
 
-        private GameObject world;
+        private GameObject World;
+        private Vector3 WorldScaleInitial;
+        private Vector3 WorldScaleCurrent;
+        private Vector3 WorldScaleActual;
         //private GameObject controller;
 
         public static GameObject controller_right;
@@ -47,7 +50,8 @@
             referenceDrone = classPointer.referenceDrone;
             referenceDroneGameObject = referenceDrone.gameObjectPointer;
 
-            world = GameObject.FindGameObjectWithTag("World");
+            World = GameObject.FindGameObjectWithTag("World");
+            WorldScaleInitial = World.transform.localScale;
             //controller = GameObject.FindGameObjectWithTag("GameController");
             controller_right = GameObject.Find("controller_right");
 
@@ -110,6 +114,14 @@
             UpdateGroundpointLine();
         }
 
+        private void ComputeWorldScaleActual() {
+            // TODO: check if already computed
+            WorldScaleCurrent = World.transform.localScale;
+            WorldScaleActual.x = WorldScaleCurrent.x / WorldScaleInitial.x;
+            WorldScaleActual.y = WorldScaleCurrent.y / WorldScaleInitial.y;
+            WorldScaleActual.z = WorldScaleCurrent.z / WorldScaleInitial.z;
+        }
+
         // Positions line between waypoints and drones
         public void SetLine()
         {
@@ -132,8 +144,9 @@
                 endpoint = prevPoint.transform.position;
                 LineProperties.SetPosition(1, endpoint);
 
-                LineProperties.startWidth = world.GetComponent<MapInteractions>().actualScale.y / 200;
-                LineProperties.endWidth = world.GetComponent<MapInteractions>().actualScale.y / 200;
+                ComputeWorldScaleActual();
+                LineProperties.startWidth = WorldScaleActual.y / 200;
+                LineProperties.endWidth = WorldScaleActual.y / 200;
             }
         }
         
@@ -142,14 +155,16 @@
         {
             Vector3 endpoint = prevPoint.transform.position;
 
+            ComputeWorldScaleActual();
+
             lineCollider.transform.parent = LineProperties.transform;
-            lineCollider.radius = world.GetComponent<MapInteractions>().actualScale.y / 50;
+            lineCollider.radius = WorldScaleActual.y / 50;
             lineCollider.center = Vector3.zero;
             lineCollider.transform.position = (endpoint + this.gameObject.transform.position) / 2;
             lineCollider.direction = 2;
             lineCollider.transform.LookAt(this.gameObject.transform, Vector3.up);
             lineCollider.height = (endpoint - this.transform.position).magnitude;
-            lineCollider.transform.parent = world.transform;
+            lineCollider.transform.parent = World.transform;
         }
 
         // Places a collider around the waypoint line
@@ -167,20 +182,25 @@
             if (groundpointLine != null)
                 Destroy(groundpointLine);
 
-            Vector3 groundpoint = new Vector3(this.transform.position.x, world.transform.position.y + modelGroundpoint.transform.localScale.y, this.transform.position.z);
+            Vector3 groundpoint = new Vector3(this.transform.position.x, World.transform.position.y + modelGroundpoint.transform.localScale.y, this.transform.position.z);
+            
+            ComputeWorldScaleActual();
+            
             thisGroundpoint = Instantiate(modelGroundpoint, groundpoint, Quaternion.identity);
-            thisGroundpoint.transform.localScale = world.GetComponent<MapInteractions>().actualScale / 100;
-            thisGroundpoint.transform.parent = world.transform;
+            thisGroundpoint.transform.localScale = WorldScaleActual / 100;
+            thisGroundpoint.transform.parent = World.transform;
             groundpointLine = thisGroundpoint.GetComponent<LineRenderer>();
         }
 
         // Creates a new Waypoint Indicator
         public void CreateWaypointIndicator()
         {
+            ComputeWorldScaleActual();
+
             groundpointLine.SetPosition(0, thisGroundpoint.transform.position);
             groundpointLine.SetPosition(1, this.transform.position);
-            groundpointLine.startWidth = world.GetComponent<MapInteractions>().actualScale.y / 400;
-            groundpointLine.endWidth = world.GetComponent<MapInteractions>().actualScale.y / 400;
+            groundpointLine.startWidth = WorldScaleActual.y / 400;
+            groundpointLine.endWidth = WorldScaleActual.y / 400;
             if (referenceDrone.selected)
             {
                 groundpointLine.material = selectedGroundpointLine;
@@ -260,7 +280,7 @@
                 return;
             }
 
-            Vector3 groundPointLocation = new Vector3(this.transform.position.x, world.transform.position.y + modelGroundpoint.transform.localScale.y, this.transform.position.z);
+            Vector3 groundPointLocation = new Vector3(this.transform.position.x, World.transform.position.y + modelGroundpoint.transform.localScale.y, this.transform.position.z);
             thisGroundpoint.transform.position = groundPointLocation;
             groundpointLine = thisGroundpoint.GetComponent<LineRenderer>(); 
         }
