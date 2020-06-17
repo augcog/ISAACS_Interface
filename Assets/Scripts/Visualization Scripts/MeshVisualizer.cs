@@ -80,9 +80,9 @@ public class MeshVisualizer : MonoBehaviour
         return closeToDrone(index) || last_update[index] < Time.time - updateInterval;
     }
 
-    public Dictionary<long[], Mesh> generateMesh(MeshMsg meshMsg)
+    public Dictionary<long[], MeshArray> generateMesh(MeshMsg meshMsg)
     {
-        Dictionary<Int64[], Mesh> generated_mesh_dict = new Dictionary<long[], Mesh>(new LongArrayEqualityComparer());
+        Dictionary<Int64[], MeshArray> generated_mesh_dict = new Dictionary<long[], MeshArray>(new LongArrayEqualityComparer());
         /// The length of one block. Also the scaling factor of the coordinates.
         float scale_factor = meshMsg.GetBlockEdgeLength();
         /// List of all the mesh blocks.
@@ -133,26 +133,22 @@ public class MeshVisualizer : MonoBehaviour
                 newTriangles[j] = j;
             }
 
-            Mesh mesh = new Mesh();
             // correct for inverted mesh. By reversing the lists, the normal vectors point the right direction.
             newVertices.Reverse();
             newColors.Reverse();
 
-            mesh.vertices = newVertices.ToArray();
-            //mesh.uv = newUV;
-            mesh.triangles = newTriangles;
-            mesh.colors = newColors.ToArray();
-            generated_mesh_dict[index] = mesh;
+            generated_mesh_dict[index] = new MeshArray(newVertices.ToArray(), newTriangles, newColors.ToArray());
         }
         return generated_mesh_dict;
     }
 
-    public void SetMesh(Dictionary<long[], Mesh> mesh_dict)
+    public void SetMesh(Dictionary<long[], MeshArray> mesh_dict)
     {
-        foreach(KeyValuePair<long[], Mesh> entry in mesh_dict)
+        foreach(KeyValuePair<long[], MeshArray> entry in mesh_dict)
         {
             long[] index = entry.Key;
-            Mesh mesh = entry.Value;
+            MeshArray meshArray = entry.Value;
+            Mesh mesh = meshArray.GetMesh();
             // If there is no existing game object for the block, create one.
             if (!mesh_filter_dict.ContainsKey(index))
             {
@@ -302,5 +298,28 @@ public class LongArrayEqualityComparer : IEqualityComparer<long[]>
             }
         }
         return result;
+    }
+}
+
+public struct MeshArray
+{
+    public MeshArray(Vector3[] vertices, int[] triangles, Color[] colors)
+    {
+        Vertices = vertices;
+        Triangles = triangles;
+        Colors = colors;
+    }
+
+    public Vector3[] Vertices { get; }
+    public int[] Triangles { get; }
+    public Color[] Colors { get; }
+
+    public Mesh GetMesh()
+    {
+        Mesh mesh = new Mesh();
+        mesh.vertices = Vertices;
+        mesh.triangles = Triangles;
+        mesh.colors = Colors;
+        return mesh;
     }
 }
