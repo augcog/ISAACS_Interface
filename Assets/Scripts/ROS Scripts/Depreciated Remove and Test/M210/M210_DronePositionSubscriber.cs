@@ -58,7 +58,7 @@
         {
 
             // Get the Drone Gameobject
-            GameObject drone = WorldProperties.selectedDrone.gameObjectPointer;
+            GameObject drone = WorldProperties.GetSelectedDrone().gameObjectPointer;
 
             /// <summary>
             /// Upon first CallBack, save initial ROS and Unity positions.
@@ -88,11 +88,14 @@
                 }
 
                 /// Calculates the 3D displacement of the drone from it's initial position, to its current position, in Unity coordinates.
+                /// Depreciated script: commenting out references causing errors
+                /*
                 changePos = new Vector3(
                     ((float) (WorldProperties.LatDiffMeters(InitialGPSLat, new_ROSPosition._lat)) / WorldProperties.Unity_X_To_Lat_Scale),
                     ((new_ROSPosition._altitude - InitialGPSAlt) / WorldProperties.Unity_Y_To_Alt_Scale),
                     ((float)(WorldProperties.LongDiffMeters(InitialGPSLong, new_ROSPosition._long, new_ROSPosition._lat) / WorldProperties.Unity_Z_To_Long_Scale))
                   );
+                */
 
                 /// sets the drone Game Object's local position in the Unity world to be it's start position plus the newly calculated 3d displacement to the drone's current position.
                 // Peru 6/9/20: Phasing out World Properties variables used in depreciated script

@@ -218,7 +218,7 @@ public class ROSManager : MonoBehaviour {
         }
 
         // Add sensor to list of sensors in World Properties
-        WorldProperties.sensorDict.Add(uniqueID, sensor);
+        WorldProperties.AddSensor(uniqueID, sensor);
 
         // TODO: Uncomment after implementing ROSDroneConnection
         // sensor.InitilizeSensor(uniqueID, sensorIP, sensorPort ,sensorSubscribers)

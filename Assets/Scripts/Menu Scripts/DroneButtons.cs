@@ -81,7 +81,7 @@ public class DroneButtons : MonoBehaviour {
             Debug.Log(" Clear Waypoints  Button");
             if (controller.GetComponent<VRTK_Pointer>().IsPointerActive())
             {
-                drone = WorldProperties.selectedDrone;
+                drone = WorldProperties.GetSelectedDrone();
                 while (drone.waypoints.Count > 1)
                 {
                     if (((Waypoint)drone.waypoints[drone.waypoints.Count - 1]).prevPathPoint != null)

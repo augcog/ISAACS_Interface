@@ -240,7 +240,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
 
             double ROS_lat = WorldProperties.UnityXToLat(this.droneHomeLat, x);
             // TODO: Clean hardcoded quanities in Unity - ROS Coordinates clean up
-            float ROS_alt = (y * WorldProperties.Unity_Y_To_Alt_Scale) - 1f;
+            float ROS_alt = WorldProperties.UnityYtoAlt(y);
             double ROS_long = WorldProperties.UnityZToLong(this.droneHomeLong, this.droneHomeLat, z);
 
             MissionWaypointMsg new_waypoint = new MissionWaypointMsg(ROS_lat, ROS_long, ROS_alt, 3.0f, 0, 0, MissionWaypointMsg.TurnMode.CLOCKWISE, 0, 30, new MissionWaypointActionMsg(0, command_list, command_params));

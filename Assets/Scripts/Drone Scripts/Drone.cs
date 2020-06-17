@@ -46,9 +46,9 @@
             waypointsDict = new Dictionary<string, Waypoint>();
 
             // Updating the world properties to reflect a new drone being added
-            id = WorldProperties.nextDroneId;
-            WorldProperties.dronesDict.Add(id, this);
-            WorldProperties.nextDroneId++;
+            id = WorldProperties.GetNextDroneID();
+            WorldProperties.AddDrone(id, this);
+            WorldProperties.IncrementDroneID();
 
             Debug.Log("Created new drone with id: " + id);
         }

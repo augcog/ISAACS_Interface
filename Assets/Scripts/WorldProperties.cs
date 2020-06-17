@@ -23,13 +23,13 @@
         public GameObject waypointBaseObject;
 
         [Header("Drone variables")]
-        public static Drone selectedDrone;
-        public static char nextDroneId;
-        public static Dictionary<char, Drone> dronesDict;
+        private static Drone selectedDrone;
+        private static char nextDroneId;
+        private static Dictionary<char, Drone> dronesDict;
 
         [Header("Sensor vairables")]
-        public static GameObject selectedSensor;
-        public static Dictionary<int, GameObject> sensorDict;
+        private static GameObject selectedSensor;
+        private static Dictionary<int, GameObject> sensorDict;
 
         [Header(" Misc. State variables")]
         public static GameObject worldObject;
@@ -38,19 +38,19 @@
         public static Vector3 actualScale;
         public static Vector3 currentScale;
 
-        public static Shader clipShader;
+        private static Shader clipShader;
 
         [Header("Unity-ROS Conversion Variables")]
         // ROS-Unity conversion variables
-        public static float earth_radius = 6378137;
-        public static Vector3 initial_DroneROS_Position = Vector3.zero;
-        public static Vector3 initial_DroneUnity_Position = Vector3.zero;
-        public static float ROS_to_Unity_Scale = 0.0f;
+        private static float earth_radius = 6378137;
+        private static Vector3 initial_DroneROS_Position = Vector3.zero;
+        private static Vector3 initial_DroneUnity_Position = Vector3.zero;
+        private static float ROS_to_Unity_Scale = 0.0f;
 
         //Unity to lat --> multiply by scale; lat to Unity --> divide by scale
-        public static float Unity_X_To_Lat_Scale = 10.0f;
-        public static float Unity_Y_To_Alt_Scale = 10.0f;
-        public static float Unity_Z_To_Long_Scale = 10.0f;
+        private static float Unity_X_To_Lat_Scale = 10.0f;
+        private static float Unity_Y_To_Alt_Scale = 10.0f;
+        private static float Unity_Z_To_Long_Scale = 10.0f;
 
         // Use this for initialization
         void Start()
@@ -74,6 +74,22 @@
 
         }
 
+        /// <summary> 
+        /// Get nextDroneID 
+        /// </summary>
+        public static char GetNextDroneID()
+        {
+            return nextDroneId;
+        }
+        
+        /// <summary>
+        /// Increment the next drone ID
+        /// </summary>
+        public static void IncrementDroneID()
+        {
+            nextDroneId++;
+        }
+
         /// <summary>
         /// Update the selected drone.
         /// </summary>
@@ -89,7 +105,17 @@
         public static Drone GetSelectedDrone()
         {
             return selectedDrone;
-        }  
+        }
+
+        /// <summary>
+        /// Add a drone to the drones dictionary
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="drone"></param>
+        public static void AddDrone(char id, Drone drone)
+        {
+            dronesDict.Add(id, drone);
+        }
 
         /// <summary>
         /// Get list of all drones
@@ -105,6 +131,16 @@
         public static GameObject GetSelectedSensor()
         {
             return selectedSensor;
+        }
+
+        /// <summary>
+        /// Add a sensor to the sensor dictionary
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="sensor"></param>
+        public static void AddSensor(int id, GameObject sensor)
+        {
+            sensorDict.Add(id, sensor);
         }
 
         /// <summary>
@@ -189,6 +225,43 @@
             return delLong;
         }
 
+        /// <summary>
+        /// Converts unity Y coordinate to Altitude
+        /// </summary>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public static float UnityYtoAlt(float y)
+        {
+            return (y * WorldProperties.Unity_Y_To_Alt_Scale) - 1f;
+        }
+
+        /// <summary>
+        /// Query UnityX to World Lat scale
+        /// </summary>
+        /// <returns></returns>
+        public static float GetUnityXtoLatScale()
+        {
+            return Unity_X_To_Lat_Scale;
+        }
+
+        /// <summary>
+        /// Query UnityY to World Alt scale
+        /// </summary>
+        /// <returns></returns>
+        public static float GetUnityYtoAltScale()
+        {
+            return Unity_Y_To_Alt_Scale;
+        }
+
+        /// <summary>
+        /// Query UnityZ to World Long scale
+        /// </summary>
+        /// <returns></returns>
+        public static float GetUnityZtoLongScale()
+        {
+            return Unity_Z_To_Long_Scale;
+        }
+        
         // Old logic to calculate new position of the drone, will implement in after merge.
         /// Calculates the 3D displacement of the drone from it's initial position, to its current position, in Unity coordinates.
         /*

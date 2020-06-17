@@ -178,7 +178,7 @@ public class DebuggingManager : MonoBehaviour {
 
         if (Input.GetKeyUp(displaySensorList))
         {
-            Debug.Log(WorldProperties.sensorDict.Count.ToString());
+            Debug.Log(WorldProperties.GetSensorDict().Count.ToString());
         }
     }
 
@@ -192,7 +192,7 @@ public class DebuggingManager : MonoBehaviour {
 
             Debug.Log("Initializing drone");
             Drone newDrone = new Drone( WorldProperties.worldObject.transform.position);
-            WorldProperties.selectedDrone = newDrone;
+            WorldProperties.UpdateSelectedDrone(newDrone);
         }
     }
 
