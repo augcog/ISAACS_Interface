@@ -77,32 +77,32 @@ public class PCFaceSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
             case "/colorized_points_faced_0":
                 Debug.Log("PC Face Mesh Visualizer Callback: " + topic);
                 parsePCFaceMesh = true;
-                color = Color.red;
+                color = new Color(0, 0, 0.5f);
                 break;
             case "/colorized_points_faced_1":
                 Debug.Log("PC Face Mesh Visualizer Callback: " + topic);
                 parsePCFaceMesh = true;
-                color = Color.yellow;
+                color = Color.blue;
                 break;
             case "/colorized_points_faced_2":
                 Debug.Log("PC Face Mesh Visualizer Callback: " + topic);
                 parsePCFaceMesh = true;
-                color = Color.green;
+                color = Color.cyan;
                 break;
             case "/colorized_points_faced_3":
                 Debug.Log("PC Face Mesh Visualizer Callback: " + topic);
                 parsePCFaceMesh = true;
-                color = Color.cyan;
+                color = Color.green;
                 break;
             case "/colorized_points_faced_4":
                 Debug.Log("PC Face Mesh Visualizer Callback: " + topic);
                 parsePCFaceMesh = true;
-                color = Color.blue;
+                color = Color.yellow;
                 break;
             case "/colorized_points_faced_5":
                 Debug.Log("PC Face Mesh Visualizer Callback: " + topic);
                 parsePCFaceMesh = true;
-                color = new Color(0, 0, 0.5f);
+                color = Color.red;
                 break;
             default:
                 Debug.LogError("Topic not implemented: " + topic);
