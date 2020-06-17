@@ -72,7 +72,15 @@
         // Rotate the world based off of the right thumbstick
         private void ControllerRotateWorld()
         {
-            float angle = controllerState.GetRightThumbDelta().x * rotationalSpeed * 360 * Time.fixedDeltaTime;
+            float angle;
+            if (direction == Direction.REGULAR)
+            {
+                angle = -controllerState.GetRightThumbDelta().x * rotationalSpeed * 360 * Time.fixedDeltaTime;
+            }
+            else
+            {
+                angle = controllerState.GetRightThumbDelta().x * rotationalSpeed * 360 * Time.fixedDeltaTime;
+            }
             World.transform.RotateAround(Pivot.transform.position, Vector3.up, angle);
 
             // Peru: 5/28/2020 : Point Cloud Rotate
@@ -95,8 +103,17 @@
             // update map position based on input
             Vector3 position = World.transform.position;
 
-            position.x -= moveX * speed * Time.deltaTime * 3.0f;
-            position.z -= moveZ * speed * Time.deltaTime * 3.0f;
+            if (direction == Direction.REGULAR)
+            {
+                position.x -= moveX * speed * Time.deltaTime * 3.0f;
+                position.z -= moveZ * speed * Time.deltaTime * 3.0f;
+            }
+            else
+            {
+                position.x = moveX * speed * Time.deltaTime * 3.0f;
+                position.z = moveZ * speed * Time.deltaTime * 3.0f;
+            }
+
 
             World.transform.position = position;
         }
