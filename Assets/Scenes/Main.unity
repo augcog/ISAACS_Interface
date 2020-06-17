@@ -948,7 +948,7 @@ MonoBehaviour:
     port: 9090
     droneType: 1
     droneSubscribers: 0500000001000000
-    simFlight: 0
+    simFlight: 1
   SensorsList:
   - sensorName: Color0
     sensorTag: Color0
@@ -1017,8 +1017,7 @@ MonoBehaviour:
   displaySensorList: o
   initTestDrone: o
   hardcodedWaypoints: p
-  worldProperties: {fileID: 0}
-  rosDroneConnection: {fileID: 0}
+  selectedSensor: {fileID: 0}
 --- !u!1 &161977055
 GameObject:
   m_ObjectHideFlags: 0
@@ -2658,7 +2657,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &579655692
 GameObject:
@@ -3076,7 +3075,7 @@ Transform:
   m_LocalScale: {x: 0.1, y: 0.100000024, z: 0.1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 83.595, y: 0, z: 0}
 --- !u!1 &716024044
 GameObject:
@@ -6188,7 +6187,7 @@ Transform:
   m_Children:
   - {fileID: 901874430}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!21 &1537848749
 Material:
@@ -6686,7 +6685,7 @@ Transform:
   - {fileID: 934963557}
   - {fileID: 317661247}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1699223319
 MonoBehaviour:
@@ -6699,7 +6698,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fce500faaffe7ac4a9135cb03c53891a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controllerState: {fileID: 1699223320}
   MaximumScale: 10
   MinimumScale: 0.1
   Speed: 1
@@ -6715,8 +6713,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f3c930cb716449459c64c5dcdf81bcc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LeftController: {fileID: 2053542333}
-  RightController: {fileID: 1347866310}
 --- !u!1 &1715641644
 GameObject:
   m_ObjectHideFlags: 0

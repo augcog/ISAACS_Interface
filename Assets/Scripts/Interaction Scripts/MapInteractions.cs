@@ -20,14 +20,16 @@
         private Vector3 WorldScaleMin; /// This is the TODO of the originalScale of the world
         private Vector3 WorldScaleMax; /// This is the TODO times the originalScale of the world
 
-        public float MaximumScale = 10.0f; /// This the maximum size (with respect to the original world size) that the player can scale the world at. For example, MaximumScale = 10 signifies that the world can be scaled up to 10 times its original size.
-        public float MinimumScale = 0.1f; /// This the minimum size (with respect to the original world size) that the player can scale the world at. For example, MinimumScale = 0.1 signifies that the world can be scaled down to 1/10th of its original size.
+        public float minScale = 0.1f; /// This the minimum size (with respect to the original world size) that the player can scale the world at. For example, MinimumScale = 0.1 signifies that the world can be scaled down to 1/10th of its original size.
+        public float maxScale = 10.0f; /// This the maximum size (with respect to the original world size) that the player can scale the world at. For example, MaximumScale = 10 signifies that the world can be scaled up to 10 times its original size.
 
-        public float Speed = 1.0f; /// This is the speed at which the map can be moved around.
-        public float RotationalSpeed = 1.0f; /// This is the speed at which the map can be rotated around (revolutions/second).
+        public float speed = 1.0f; /// This is the speed at which the map can be moved around.
+        public enum Direction { REGULAR, INVERSE }
+        public Direction direction = Direction.REGULAR;
 
-
-
+        public float rotationalSpeed = 1.0f; /// This is the speed at which the map can be rotated around (revolutions/second).
+        public enum RotationalDirection { REGULAR, INVERSE }
+        public RotationalDirection rotationalDirection = RotationalDirection.REGULAR;
 
         // Use this for initialization
         void Start()
@@ -41,8 +43,8 @@
             WorldScaleInitial = World.transform.localScale;
 
             //These are the bounds on scaling
-            WorldScaleMax = Vector3.Scale(WorldScaleInitial, new Vector3(MaximumScale, MaximumScale, MaximumScale));
-            WorldScaleMin = Vector3.Scale(WorldScaleInitial, new Vector3(MinimumScale, MinimumScale, MinimumScale));
+            WorldScaleMin = Vector3.Scale(WorldScaleInitial, new Vector3(minScale, minScale, minScale));
+            WorldScaleMax = Vector3.Scale(WorldScaleInitial, new Vector3(maxScale, maxScale, maxScale));
 
         }
 
@@ -70,7 +72,7 @@
         // Rotate the world based off of the right thumbstick
         private void ControllerRotateWorld()
         {
-            float angle = controllerState.GetRightThumbDelta().x * RotationalSpeed * 360 * Time.fixedDeltaTime;
+            float angle = controllerState.GetRightThumbDelta().x * rotationalSpeed * 360 * Time.fixedDeltaTime;
             World.transform.RotateAround(Pivot.transform.position, Vector3.up, angle);
 
             // Peru: 5/28/2020 : Point Cloud Rotate
@@ -93,8 +95,8 @@
             // update map position based on input
             Vector3 position = World.transform.position;
 
-            position.x -= moveX * Speed * Time.deltaTime * 3.0f;
-            position.z -= moveZ * Speed * Time.deltaTime * 3.0f;
+            position.x -= moveX * speed * Time.deltaTime * 3.0f;
+            position.z -= moveZ * speed * Time.deltaTime * 3.0f;
 
             World.transform.position = position;
         }
