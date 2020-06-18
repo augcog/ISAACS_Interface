@@ -45,7 +45,7 @@ public class PCFaceVisualizer : MonoBehaviour
     public void SetColor(Color color)
     {
         MeshRenderer meshRenderer = meshParent.GetComponent<MeshRenderer>();
-        meshRenderer.sharedMaterial = new Material(Shader.Find("Standard Unlit"));
+        meshRenderer.sharedMaterial = new Material(Shader.Find("Standard"));
         meshRenderer.sharedMaterial.color = color;
     }
 
