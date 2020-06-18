@@ -22,6 +22,9 @@ public class PCFaceSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
     private ROSBridgeWebSocketConnection ros = null;
     public string client_id;
 
+    // List of visualizers
+    private Dictionary<string, PCFaceVisualizer> pcFaceVisualizers = new Dictionary<string, PCFaceVisualizer>();
+
     // Initilize the sensor
     public void InitilizeSensor(int uniqueID, string sensorIP, int sensorPort, List<string> sensorSubscribers)
     {
@@ -29,7 +32,7 @@ public class PCFaceSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
 
         ros = new ROSBridgeWebSocketConnection("ws://" + sensorIP, sensorPort);
         client_id = uniqueID.ToString();
-
+        
         foreach (string subscriber in sensorSubscribers)
         {
             string subscriberTopic = "";
@@ -41,15 +44,22 @@ public class PCFaceSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
                     break;
                 default:
                     subscriberTopic = "/" + subscriber;
+                    PCFaceVisualizer pcFaceVisualizer = gameObject.AddComponent<PCFaceVisualizer>();
+                    pcFaceVisualizer.CreateMeshGameobject(this.transform);
+                    pcFaceVisualizers.Add(subscriberTopic, pcFaceVisualizer);
                     break;
             }
             Debug.Log(" PC Face Mesh Subscribing to : " + subscriberTopic);
             ros.AddSubscriber(subscriberTopic, this);
         }
 
-        gameObject.AddComponent<PCFaceVisualizer>();        
-        Debug.Log("PC Face Mesh Connection Established");
         ros.Connect();
+
+        // Hardcode Parent transform
+        this.transform.position = new Vector3(0.198f, 2.186f, -0.694f);
+        this.transform.Rotate(0f, 124.654f ,0f);
+        this.transform.localScale = new Vector3(0.0505388f, 0.0505388f, 0.0505388f);
+
     }
     // Update is called once per frame in Unity
     void Update()
@@ -70,6 +80,7 @@ public class PCFaceSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
 
         /// Color of the mesh
         Color color = Color.white;
+
 
         // Writing all code in here for now. May need to move out to separate handler functions when it gets too unwieldy.
         switch (topic)
@@ -113,7 +124,7 @@ public class PCFaceSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
         if (parsePCFaceMesh)
         {
             PCFaceMsg meshMsg = new PCFaceMsg(raw_msg);
-            PCFaceVisualizer visualizer = this.gameObject.GetComponent<PCFaceVisualizer>();
+            PCFaceVisualizer visualizer = pcFaceVisualizers[topic];
             visualizer.SetMesh(meshMsg);
             visualizer.SetColor(color);
         }

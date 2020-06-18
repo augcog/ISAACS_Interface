@@ -16,14 +16,6 @@ public class PCFaceVisualizer : MonoBehaviour
 
     private bool hasChanged = false;
 
-    void Start()
-    {
-        meshParent = new GameObject("PCFace Mesh");
-        MeshFilter meshFilter = meshParent.AddComponent<MeshFilter>();
-        MeshRenderer meshRenderer = meshParent.AddComponent<MeshRenderer>();
-        meshRenderer.sharedMaterial = new Material(Shader.Find("Particles/Standard Unlit"));
-    }
-
     // Update is called once per frame
     void Update()
     {
@@ -31,6 +23,19 @@ public class PCFaceVisualizer : MonoBehaviour
         {
             // Do stuff maybe?
         }
+    }
+
+    /// <summary>
+    /// Set the parent of this visualizer to the sensor
+    /// </summary>
+    /// <param name="parent"></param>
+    public void CreateMeshGameobject(Transform parent)
+    {
+        meshParent = new GameObject("PCFace Mesh");
+        MeshFilter meshFilter = meshParent.AddComponent<MeshFilter>();
+        MeshRenderer meshRenderer = meshParent.AddComponent<MeshRenderer>();
+        meshRenderer.sharedMaterial = new Material(Shader.Find("Particles/Standard Unlit"));
+        meshParent.transform.parent = parent;
     }
 
     /// <summary>
