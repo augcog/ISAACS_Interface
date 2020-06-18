@@ -1,4 +1,4 @@
-﻿namespace ISAACS_UserInput {
+﻿namespace ISAACS_ControllerInput {
 
 
     using System.Collections;
@@ -13,12 +13,12 @@
 	For further clarifications, ask Apollo.
 	*/
 
-	public class ControllerState : MonoBehaviour
+	public class ControllerInput : MonoBehaviour
 	{
 		
 		// TODO.
-		private GameObject LeftController;
-		private GameObject RightController;
+		public GameObject LeftController;
+		public GameObject RightController;
 
 
 		// These variables store information on the state of the left controller.
@@ -69,12 +69,6 @@
 		private float LocalScalingFactor; /// The dot product of elocityDelta with LocalDistance, indicating the relative cartesian scaling factor.
 
 
-		void Start()
-		{
-			LeftController = GameObject.Find("LeftController");
-			RightController = GameObject.Find("RightController");
-		}
-
 		// Unlike Update, which gets called once per frame, FixedUpdate is called accordingly to the physics engine.
 		void FixedUpdate()
 		{
@@ -119,7 +113,7 @@
 			RightLocalRotation = RightTransform.localRotation;
 			RightVelocity = VRTK_DeviceFinder.GetControllerVelocity(VRTK_DeviceFinder.GetControllerReferenceRightHand());
 			RightAngularVelocity = VRTK_DeviceFinder.GetControllerAngularVelocity(VRTK_DeviceFinder.GetControllerReferenceRightHand());
-
+	
             // Compute information about the state of both controllers.
 			BothMiddle = LeftMiddle && RightMiddle;
 			Distance = LeftPosition - RightPosition;
