@@ -9,9 +9,8 @@
     {
         public Drone referenceDrone; // The drone whose path this waypoint belongs to
         public GameObject gameObjectPointer; // This is the related game object
-        public ArrayList ROSpoints; // Keeps track of the ROSpoints received over the ROSBridge
+        //public ArrayList ROSpoints; // Keeps track of the ROSpoints received over the ROSBridge
         public string id; // This is the identifier of the drone in the dronesDict and across the ROSBridge
-        //public Vector3 unityLocation;
 
         // The PathPoints are used by the line renderer to connect the full path.
         // NOTE: The assignment of these variables is handled by the drone based on how the waypoint is added/removed from the path
@@ -41,7 +40,7 @@
             WorldProperties.AddClipShader(gameObjectPointer.transform);
 
             // Initializing the ROSpoints Arraylist
-            ROSpoints = new ArrayList(0);
+            // ROSpoints = new ArrayList(0);
 
             // Establishing the unique waypoint identifier
             id = "" + referenceDrone.id + referenceDrone.nextWaypointId;
@@ -61,7 +60,7 @@
 
         public void UpdateLocation(Vector3 newLocation)
         {
-            Debug.Log("Updating Location");
+            Debug.Log("Peru TODO: IF this doesn't update the location of the waypoint what does?");
             //this.unityLocation = newLocation;
         }
     }

@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 namespace ISAACS
@@ -73,12 +73,6 @@ namespace ISAACS
                 }
                 else if (totalWaypoints < currentWaypoint)
                 {
-                    //targetWaypoint = (GameObject)this.GetComponentInParent<SetWaypoint>().waypoints[totalWaypoints];
-                    //prevPoint = (GameObject)this.GetComponentInParent<SetWaypoint>().waypoints[totalWaypoints];
-                    //if (this.transform.position == targetWaypoint.transform.position)
-                    //{
-                    //    currentWaypoint = totalWaypoints;
-                    //}
                     currentWaypoint = totalWaypoints;
                     prevPoint = (GameObject)thisDrone.waypoints[totalWaypoints];
                 }
