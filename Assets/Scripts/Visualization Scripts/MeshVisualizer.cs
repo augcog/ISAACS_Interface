@@ -48,11 +48,11 @@ public class MeshVisualizer : MonoBehaviour
     /// <summary>
     /// Shader to use to render meshes.
     /// </summary>
-    public Shader shader;
+    public Shader shader = Shader.Find("Standard");
     /// <summary>
     /// Color to render the meshes.
     /// </summary>
-    public Color color;
+    public Color color = new Color32(255, 255, 255, 100);
 
     void Start()
     {
