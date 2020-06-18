@@ -44,6 +44,7 @@ public class PCFaceSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
                     break;
                 default:
                     subscriberTopic = "/" + subscriber;
+                    // Create PC Face Visualizer, initilize it as a child of this sensor gameobject and add it to the PCFaceVisualizer dictionary
                     PCFaceVisualizer pcFaceVisualizer = gameObject.AddComponent<PCFaceVisualizer>();
                     pcFaceVisualizer.CreateMeshGameobject(this.transform);
                     pcFaceVisualizers.Add(subscriberTopic, pcFaceVisualizer);
@@ -124,6 +125,7 @@ public class PCFaceSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
         if (parsePCFaceMesh)
         {
             PCFaceMsg meshMsg = new PCFaceMsg(raw_msg);
+            // Obtain visualizer for this topic and update mesh & color
             PCFaceVisualizer visualizer = pcFaceVisualizers[topic];
             visualizer.SetMesh(meshMsg);
             visualizer.SetColor(color);
