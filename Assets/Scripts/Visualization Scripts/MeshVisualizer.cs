@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using ROSBridgeLib.voxblox_msgs;
@@ -48,7 +48,7 @@ public class MeshVisualizer : MonoBehaviour
     /// <summary>
     /// Shader to use to render meshes.
     /// </summary>
-    public Shader shader = Shader.Find("Standard");
+    public Shader shader;
     /// <summary>
     /// Color to render the meshes.
     /// </summary>
@@ -56,7 +56,8 @@ public class MeshVisualizer : MonoBehaviour
 
     void Start()
     {
-        material = new Material(Shader.Find("Particles/Alpha Blended"));
+        shader = Shader.Find("Particles/Alpha Blended");
+        material = new Material(shader);
         gameobject_dict = new Dictionary<long[], GameObject>(new LongArrayEqualityComparer());
         last_update = new Dictionary<long[], float>(new LongArrayEqualityComparer());
         meshParent = new GameObject("Mesh");
