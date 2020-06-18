@@ -39,9 +39,7 @@ public class MeshVisualizer : MonoBehaviour
     private Dictionary<Int64[], float> last_update;
     void Start()
     {
-        mesh_filter_dict = new Dictionary<long[], MeshFilter>(new LongArrayEqualityComparer());
-        last_update = new Dictionary<long[], float>(new LongArrayEqualityComparer());
-        meshParent = new GameObject("Mesh");
+
     }
 
     // Update is called once per frame
@@ -51,6 +49,18 @@ public class MeshVisualizer : MonoBehaviour
         {
             // Do stuff maybe?
         }
+    }
+
+    /// <summary>
+    /// Instantiate required components for the Mesh and make child of Mesh Sensor
+    /// </summary>
+    /// <param name="parent"></param>
+    public void CreateMeshVisualizer(Transform parent)
+    {
+        mesh_filter_dict = new Dictionary<long[], MeshFilter>(new LongArrayEqualityComparer());
+        last_update = new Dictionary<long[], float>(new LongArrayEqualityComparer());
+        meshParent = new GameObject("Mesh");
+        meshParent.transform.parent = parent;
     }
 
     /// <summary>

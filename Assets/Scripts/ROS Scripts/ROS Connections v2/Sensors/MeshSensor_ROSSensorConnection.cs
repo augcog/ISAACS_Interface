@@ -16,9 +16,6 @@ using ISAACS;
 
 public class MeshSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber, ROSSensorConnectionInterface {
 
-    // Visualizer variables
-    public static string rendererObjectName = "PlacementPlane"; // pick a center point of the map, ideally as part of rotating map
-
     // Private connection variables
     private ROSBridgeWebSocketConnection ros = null;
     public string client_id;
@@ -93,7 +90,7 @@ public class MeshSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
                     subscriberTopic = "/voxblox_node/" + subscriber;
                     break;
                 default:
-                    subscriberTopic = "/" + subscriber;
+                    Debug.Log("Subscriber not defined: " + subscriber);
                     break;
             }
             Debug.Log(" Mesh Subscribing to : " + subscriberTopic);
@@ -104,7 +101,10 @@ public class MeshSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
         ros.Connect();
 
         // Initilize visualizer
-        visualizer = GameObject.Find(rendererObjectName).GetComponent<MeshVisualizer>();
+        visualizer = this.gameObject.AddComponent<MeshVisualizer>();
+        visualizer.CreateMeshVisualizer(this.transform);
+        
+        //visualizer = GameObject.Find(rendererObjectName).GetComponent<MeshVisualizer>();
         CreateThread();
     }
 
