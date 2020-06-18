@@ -6,7 +6,7 @@ using ROSBridgeLib.voxblox_msgs;
 public class MeshVisualizer : MonoBehaviour
 {
     /// <value> Attach DataServer object. If nonexistant, create an empty GameObject and attach the script `DataServer.cs`.</value>
-    public bool flipYZ = false;
+    public bool flipYZ = true;
 
     /// <summary>
     /// Object that holds all the individual mesh blocks.
@@ -54,13 +54,11 @@ public class MeshVisualizer : MonoBehaviour
     /// <summary>
     /// Instantiate required components for the Mesh and make child of Mesh Sensor
     /// </summary>
-    /// <param name="parent"></param>
-    public void CreateMeshVisualizer(Transform parent)
+    public void CreateMeshVisualizer()
     {
         mesh_filter_dict = new Dictionary<long[], MeshFilter>(new LongArrayEqualityComparer());
         last_update = new Dictionary<long[], float>(new LongArrayEqualityComparer());
-        meshParent = new GameObject("Mesh");
-        meshParent.transform.parent = parent;
+        meshParent = this.gameObject; 
     }
 
     /// <summary>
@@ -169,6 +167,9 @@ public class MeshVisualizer : MonoBehaviour
             {
                 GameObject meshObject = new GameObject(index.ToString());
                 meshObject.transform.parent = meshParent.transform;
+                meshObject.transform.localPosition = new Vector3(0, 0, 0);
+                meshObject.transform.localEulerAngles = new Vector3(0, 0, 0);
+                meshObject.transform.localScale = new Vector3(1, 1, 1);
                 MeshFilter meshFilter = meshObject.AddComponent<MeshFilter>();
                 MeshRenderer meshRenderer = meshObject.AddComponent<MeshRenderer>();
                 //meshRenderer.sharedMaterial = new Material(Shader.Find("Particles/Standard Unlit"));

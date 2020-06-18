@@ -102,10 +102,15 @@ public class MeshSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
 
         // Initilize visualizer
         visualizer = this.gameObject.AddComponent<MeshVisualizer>();
-        visualizer.CreateMeshVisualizer(this.transform);
+        visualizer.CreateMeshVisualizer();
         
         //visualizer = GameObject.Find(rendererObjectName).GetComponent<MeshVisualizer>();
         CreateThread();
+
+        // Hardcode Parent transform
+        this.transform.position = new Vector3(0.198f, 2.146f, -0.694f);
+        this.transform.Rotate(0f, 124.654f ,0f);
+        this.transform.localScale = new Vector3(0.505388f, 0.505388f, 0.505388f);
     }
 
     // Update is called once per frame in Unity
