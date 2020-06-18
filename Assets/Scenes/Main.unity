@@ -607,8 +607,6 @@ GameObject:
   - component: {fileID: 79141384}
   - component: {fileID: 79141383}
   - component: {fileID: 79141386}
-  - component: {fileID: 79141388}
-  - component: {fileID: 79141387}
   m_Layer: 0
   m_Name: PlacementPlane
   m_TagString: Ground
@@ -700,33 +698,6 @@ MonoBehaviour:
   pointObject: {fileID: 1834927014}
   size: 0.1
   cloud_scale: 0.05286196
---- !u!114 &79141387
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 79141381}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0d05a78da9fc38443a36c1fa24bc3d9f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  flipYZ: 1
-  faceThreshold: 25
-  updateInterval: 30
-  distThreshold: 10
---- !u!114 &79141388
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 79141381}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c42b202f3f26e7e4791a622aee1a1e8e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  flipYZ: 1
 --- !u!1 &125690756
 GameObject:
   m_ObjectHideFlags: 0
@@ -970,45 +941,15 @@ MonoBehaviour:
     droneSubscribers: 0500000001000000
     simFlight: 0
   SensorsList:
-  - sensorName: Color0
-    sensorTag: Color0
+  - sensorName: Colors
+    sensorTag: Colors
     ipAddress: 75.25.126.85
     port: 9090
     sensorType: 3
-    sensorSubscribers: 08000000
-  - sensorName: Color1
-    sensorTag: Color1
+    sensorSubscribers: 08000000090000000a0000000b0000000c0000000d000000
+  - sensorName: Mesh
+    sensorTag: Mesh
     ipAddress: 75.25.126.85
-    port: 9090
-    sensorType: 3
-    sensorSubscribers: 09000000
-  - sensorName: Color5
-    sensorTag: Color5
-    ipAddress: 75.25.126.85
-    port: 9090
-    sensorType: 3
-    sensorSubscribers: 0d000000
-  - sensorName: Color2
-    sensorTag: Color2
-    ipAddress: 75.25.126.85
-    port: 9090
-    sensorType: 3
-    sensorSubscribers: 0a000000
-  - sensorName: Color3
-    sensorTag: Color3
-    ipAddress: 75.25.126.85
-    port: 9090
-    sensorType: 3
-    sensorSubscribers: 0b000000
-  - sensorName: Color4
-    sensorTag: Color4
-    ipAddress: 75.25.126.85
-    port: 9090
-    sensorType: 3
-    sensorSubscribers: 0c000000
-  - sensorName: mesh
-    sensorTag: mesh
-    ipAddress: localhost
     port: 9090
     sensorType: 1
     sensorSubscribers: 01000000

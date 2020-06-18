@@ -6,7 +6,7 @@ using ROSBridgeLib.voxblox_msgs;
 public class MeshVisualizer : MonoBehaviour
 {
     /// <value> Attach DataServer object. If nonexistant, create an empty GameObject and attach the script `DataServer.cs`.</value>
-    public bool flipYZ = false;
+    public bool flipYZ = true;
 
     /// <summary>
     /// Object that holds all the individual mesh blocks.
@@ -29,28 +29,52 @@ public class MeshVisualizer : MonoBehaviour
     public float distThreshold = 10.0f;
 
     /// <summary>
-    /// Dictionary of meshes for each index.
+    /// Alpha value for individual vertex colorings.
     /// </summary>
-    private Dictionary<Int64[], MeshFilter> mesh_filter_dict;    // Use this for initialization
+    public byte alpha = 200;
+
+    private Material material;
+
+    /// <summary>
+    /// Dictionary of gameobjects for each index.
+    /// </summary>
+    private Dictionary<Int64[], GameObject> gameobject_dict;    // Use this for initialization
 
     /// <summary>
     /// Dictionary of last update times for each index.
     /// </summary>
     private Dictionary<Int64[], float> last_update;
+
+    /// <summary>
+    /// Shader to use to render meshes.
+    /// </summary>
+    public Shader shader;
+    /// <summary>
+    /// Color to render the meshes.
+    /// </summary>
+    public Color color = new Color32(255, 255, 255, 100);
+
     void Start()
     {
-        mesh_filter_dict = new Dictionary<long[], MeshFilter>(new LongArrayEqualityComparer());
-        last_update = new Dictionary<long[], float>(new LongArrayEqualityComparer());
-        meshParent = new GameObject("Mesh");
+        shader = Shader.Find("Particles/Alpha Blended");
+        material = new Material(shader);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (hasChanged)
-        {
-            // Do stuff maybe?
-        }
+        SetShader(shader);
+        SetColor(color);
+    }
+
+    /// <summary>
+    /// Instantiate required components for the Mesh and make child of Mesh Sensor
+    /// </summary>
+    public void CreateMeshVisualizer()
+    {
+        gameobject_dict = new Dictionary<long[], GameObject>(new LongArrayEqualityComparer());
+        last_update = new Dictionary<long[], float>(new LongArrayEqualityComparer());
+        meshParent = this.gameObject;
     }
 
     /// <summary>
@@ -128,7 +152,7 @@ public class MeshVisualizer : MonoBehaviour
 
             for (int j = 0; j < r.Length; j++)
             {
-                newColors.Add(new Color32(r[j], g[j], b[j], 150));
+                newColors.Add(new Color32(r[j], g[j], b[j], alpha));
             }
 
             // Vertices come in triples each corresponding to one face.
@@ -155,18 +179,39 @@ public class MeshVisualizer : MonoBehaviour
             MeshArray meshArray = entry.Value;
             Mesh mesh = meshArray.GetMesh();
             // If there is no existing game object for the block, create one.
-            if (!mesh_filter_dict.ContainsKey(index))
+            if (!gameobject_dict.ContainsKey(index))
             {
                 GameObject meshObject = new GameObject(index.ToString());
                 meshObject.transform.parent = meshParent.transform;
+                meshObject.transform.localPosition = new Vector3(0, 0, 0);
+                meshObject.transform.localEulerAngles = new Vector3(0, 0, 0);
+                meshObject.transform.localScale = new Vector3(1, 1, 1);
                 MeshFilter meshFilter = meshObject.AddComponent<MeshFilter>();
                 MeshRenderer meshRenderer = meshObject.AddComponent<MeshRenderer>();
                 //meshRenderer.sharedMaterial = new Material(Shader.Find("Particles/Standard Unlit"));
-                meshRenderer.sharedMaterial = new Material(Shader.Find("Particles/Alpha Blended"));
-                mesh_filter_dict.Add(index, meshFilter);
+                meshRenderer.sharedMaterial = material;
+                gameobject_dict.Add(index, meshObject);
             }
-            mesh_filter_dict[index].mesh = mesh;
+            gameobject_dict[index].GetComponent<MeshFilter>().mesh = mesh;
         }
+    }
+
+    /// <summary>
+    /// Sets the shader.
+    /// </summary>
+    /// <param name="shader"></param>
+    public void SetShader(Shader shader)
+    {
+        material.shader = shader;
+    }
+
+    /// <summary>
+    /// Sets the Color.
+    /// </summary>
+    /// <param name="color"></param>
+    public void SetColor(Color color)
+    {
+        material.color = color;
     }
 }
 
