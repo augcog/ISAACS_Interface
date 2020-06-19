@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using ROSBridgeLib.voxblox_msgs;
@@ -16,14 +16,6 @@ public class PCFaceVisualizer : MonoBehaviour
 
     private bool hasChanged = false;
 
-    void Start()
-    {
-        meshParent = new GameObject("PCFace Mesh");
-        MeshFilter meshFilter = meshParent.AddComponent<MeshFilter>();
-        MeshRenderer meshRenderer = meshParent.AddComponent<MeshRenderer>();
-        meshRenderer.sharedMaterial = new Material(Shader.Find("Particles/Standard Unlit"));
-    }
-
     // Update is called once per frame
     void Update()
     {
@@ -34,13 +26,26 @@ public class PCFaceVisualizer : MonoBehaviour
     }
 
     /// <summary>
+    /// Set the parent of this visualizer to the sensor
+    /// </summary>
+    /// <param name="parent"></param>
+    public void CreateMeshGameobject(Transform parent)
+    {
+        meshParent = new GameObject("PCFace Mesh");
+        MeshFilter meshFilter = meshParent.AddComponent<MeshFilter>();
+        MeshRenderer meshRenderer = meshParent.AddComponent<MeshRenderer>();
+        meshRenderer.sharedMaterial = new Material(Shader.Find("Oculus/Unlit Transparent Color"));
+        meshParent.transform.parent = parent;
+    }
+
+    /// <summary>
     /// Sets the mesh to be of the specified color. Also sets the Shader to Standard.
     /// </summary>
     /// <param name="color">Color to set the mesh to.</param>
     public void SetColor(Color color)
     {
         MeshRenderer meshRenderer = meshParent.GetComponent<MeshRenderer>();
-        meshRenderer.sharedMaterial = new Material(Shader.Find("Standard"));
+        meshRenderer.sharedMaterial = new Material(Shader.Find("Oculus/Unlit Transparent Color"));
         meshRenderer.sharedMaterial.color = color;
     }
 

@@ -268,6 +268,9 @@
         {
             switch (currentTutorialState)
             {
+
+                // Removing mapState references
+                /*
                 case Tutorial.TutorialState.MOVINGMAP:
                     if (MapInteractions.mapState == MapInteractions.MapState.MOVING)
                     {
@@ -286,6 +289,7 @@
                         stepFinished = true;
                     }
                     break;
+                */
                 case Tutorial.TutorialState.PRIMARYPLACEMENT:
                     if (ControllerInteractions.currentControllerState == ControllerInteractions.ControllerState.PLACING_WAYPOINT)
                     {
