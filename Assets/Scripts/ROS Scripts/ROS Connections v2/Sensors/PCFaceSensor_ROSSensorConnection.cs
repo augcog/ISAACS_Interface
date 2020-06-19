@@ -21,6 +21,7 @@ public class PCFaceSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
     // Private connection variables
     private ROSBridgeWebSocketConnection ros = null;
     public string client_id;
+    public float alpha = 0.8f;
 
     // List of visualizers
     private Dictionary<string, PCFaceVisualizer> pcFaceVisualizers = new Dictionary<string, PCFaceVisualizer>();
@@ -89,32 +90,32 @@ public class PCFaceSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
             case "/colorized_points_faced_0":
                 Debug.Log("PC Face Mesh Visualizer Callback: " + topic);
                 parsePCFaceMesh = true;
-                color = new Color(0, 0, 0.5f);
+                color = new Color(0, 0, 0.5f, alpha);
                 break;
             case "/colorized_points_faced_1":
                 Debug.Log("PC Face Mesh Visualizer Callback: " + topic);
                 parsePCFaceMesh = true;
-                color = Color.blue;
+                color = new Color(0, 0, 1, alpha);
                 break;
             case "/colorized_points_faced_2":
                 Debug.Log("PC Face Mesh Visualizer Callback: " + topic);
                 parsePCFaceMesh = true;
-                color = Color.cyan;
+                color = new Color(0, 1, 1, alpha);
                 break;
             case "/colorized_points_faced_3":
                 Debug.Log("PC Face Mesh Visualizer Callback: " + topic);
                 parsePCFaceMesh = true;
-                color = Color.green;
+                color = new Color(0, 1, 0, alpha);
                 break;
             case "/colorized_points_faced_4":
                 Debug.Log("PC Face Mesh Visualizer Callback: " + topic);
                 parsePCFaceMesh = true;
-                color = Color.yellow;
+                color = new Color(1, 1, 0, alpha);
                 break;
             case "/colorized_points_faced_5":
                 Debug.Log("PC Face Mesh Visualizer Callback: " + topic);
                 parsePCFaceMesh = true;
-                color = Color.red;
+                color = new Color(1, 0, 0, alpha);
                 break;
             default:
                 Debug.LogError("Topic not implemented: " + topic);
