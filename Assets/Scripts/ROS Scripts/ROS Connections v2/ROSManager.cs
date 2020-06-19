@@ -70,6 +70,8 @@ public class ROSManager : MonoBehaviour {
     private Dictionary<int, ROSDroneConnectionInterface> ROSDroneConnections = new Dictionary<int, ROSDroneConnectionInterface>();
     private Dictionary<int, ROSSensorConnectionInterface> ROSSensorConnections = new Dictionary<int, ROSSensorConnectionInterface>();
 
+    private DroneMenu droneMenu;
+
     public bool success = false;
     public int uniqueID = 0;
 
@@ -119,6 +121,10 @@ public class ROSManager : MonoBehaviour {
         DroneSimulationManager droneSim = droneGameObject.AddComponent<DroneSimulationManager>();
         droneGameObject.GetComponent<DroneProperties>().droneSimulationManager = droneSim;
         droneSim.InitDroneSim(droneInstance);
+
+        droneMenu = droneGameObject.AddComponent<DroneMenu>();
+
+
 
         switch (droneType)
         {
