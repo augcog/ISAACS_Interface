@@ -31,7 +31,7 @@ public class MeshVisualizer : MonoBehaviour
     /// <summary>
     /// Alpha value for individual vertex colorings.
     /// </summary>
-    public byte alpha = 200;
+    public byte alpha = 60;
 
     private Material material;
 
@@ -56,7 +56,7 @@ public class MeshVisualizer : MonoBehaviour
 
     void Start()
     {
-        shader = Shader.Find("Particles/Alpha Blended");
+        shader = Shader.Find("Mobile/Particles/Alpha Blended");
         material = new Material(shader);
     }
 
