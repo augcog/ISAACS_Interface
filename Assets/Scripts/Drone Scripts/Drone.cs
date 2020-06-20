@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using UnityEngine;
     using ROSBridgeLib.interface_msgs;
+    using UnityEngine.UI;
 
     public class Drone
     {
@@ -28,10 +29,10 @@
             // Create gameObject at position
             GameObject baseObject = (GameObject)WorldProperties.worldObject.GetComponent<WorldProperties>().droneBaseObject;
             gameObjectPointer = Object.Instantiate(baseObject, position, Quaternion.identity);
-          
+
             Debug.Log("Position init: " + position.ToString());
             droneProperties = gameObjectPointer.GetComponent<DroneProperties>();
-            droneProperties.classPointer = this; // Connect the gameObject back to the classObject
+            droneProperties.droneClassPointer = this; // Connect the gameObject back to the classObject
 
             gameObjectPointer.tag = "Drone";
             gameObjectPointer.name = baseObject.name;
@@ -57,7 +58,7 @@
 
             // Select this drone
             // TODO: Must be done by the user in the application
-            gameObjectPointer.GetComponent<DroneProperties>().SelectDrone();
+            gameObjectPointer.GetComponent<DroneProperties>().DeselectDrone();
 
         }
 

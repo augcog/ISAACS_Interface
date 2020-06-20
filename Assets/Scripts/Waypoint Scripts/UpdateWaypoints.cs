@@ -19,7 +19,7 @@ namespace ISAACS
 
         void Start()
         {
-            thisDrone = gameObject.GetComponent<DroneProperties>().classPointer;
+            thisDrone = gameObject.GetComponent<DroneProperties>().droneClassPointer;
             line = this.GetComponentInParent<LineRenderer>();
         }
 

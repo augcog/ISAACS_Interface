@@ -101,7 +101,7 @@
             }
             selectedDrone = newSelectedDrone;
         }
-
+        
         /// <summary>
         /// Get the selected drone
         /// </summary>
