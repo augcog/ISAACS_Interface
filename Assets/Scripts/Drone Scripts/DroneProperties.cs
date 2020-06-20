@@ -6,7 +6,7 @@
     using UnityEngine.UI;
     using VRTK;
 
-    public class DroneProperties : VRTK_InteractableObject
+    public class DroneProperties : MonoBehaviour
     {
 
         // Assigned in Drone constructor
@@ -20,18 +20,6 @@
         // Assigned in ROS Manager during runtime
         public ROSDroneConnectionInterface droneROSConnection;
         public DroneSimulationManager droneSimulationManager;
-
-        public override void StartUsing(VRTK_InteractUse currentUsingObject = null)
-        {
-            base.StartUsing(currentUsingObject);
-            Debug.Log("Something should start happening?");
-        }
-
-        public override void StopUsing(VRTK_InteractUse previousUsingObject = null, bool resetUsingObjectState = true)
-        {
-            base.StopUsing(previousUsingObject, resetUsingObjectState);
-            Debug.Log("Something should stop happening?");
-        }
 
         public void SelectDrone()
         {
