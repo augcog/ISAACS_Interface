@@ -832,11 +832,9 @@ GameObject:
   - component: {fileID: 4064626513410216}
   - component: {fileID: 95997159724389742}
   - component: {fileID: 114575724737126230}
-  - component: {fileID: 114568125012931094}
-  - component: {fileID: 114654833738737616}
+  - component: {fileID: 114113094254671172}
   - component: {fileID: 54791174084844380}
   - component: {fileID: 135519695496822468}
-  - component: {fileID: 114988712960092174}
   m_Layer: 0
   m_Name: drone_obj
   m_TagString: Finish
@@ -7559,7 +7557,7 @@ TextMesh:
   m_Color:
     serializedVersion: 2
     rgba: 4294967295
---- !u!114 &114568125012931094
+--- !u!114 &114113094254671172
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -7567,17 +7565,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1497704686498948}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e3db36a039854e43ac6e0b8e40b9aef, type: 3}
+  m_Script: {fileID: 11500000, guid: 7787ec4cc870bae4c9e65fbfa30a4364, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedPassedLine: {fileID: 2100000, guid: 27c39b5231ccc5442911794c139776f0, type: 2}
-  unselectedPassedLine: {fileID: 2100000, guid: 1e28fed50ea79664484fd85b6c397929,
-    type: 2}
-  speed: 0.1
-  move: 0
-  targetWaypoint: {fileID: 0}
-  currentWaypoint: 0
-  prevPoint: {fileID: 0}
+  speed: 1
 --- !u!114 &114575724737126230
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -7589,21 +7580,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ceae650947d4b244f88ade35c574bdf0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedMaterial: {fileID: 2100000, guid: 97c9345d2c577e543b55b547a33c4858, type: 2}
-  deselectedMaterial: {fileID: 2100000, guid: 1fe7c2dc0eb2fb34b989fb4e05287a4d, type: 2}
-  droneSimulationManager: {fileID: 0}
---- !u!114 &114654833738737616
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1497704686498948}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a3abaf4521bf2344ea21ed3020b98eb2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  disableWhenIdle: 1
+  disableWhenIdle: 0
   allowedNearTouchControllers: 0
   allowedTouchControllers: 0
   ignoredColliders: []
@@ -7615,56 +7592,18 @@ MonoBehaviour:
   allowedGrabControllers: 0
   grabAttachMechanicScript: {fileID: 0}
   secondaryGrabActionScript: {fileID: 0}
-  isUsable: 0
-  holdButtonToUse: 1
+  isUsable: 1
+  holdButtonToUse: 0
   useOnlyIfGrabbed: 0
-  pointerActivatesUseAction: 0
+  pointerActivatesUseAction: 1
   useOverrideButton: 0
   allowedUseControllers: 0
   objectHighlighter: {fileID: 0}
   touchHighlightColor: {r: 0, g: 0, b: 0, a: 0}
   usingState: 0
---- !u!114 &114988712960092174
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1497704686498948}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1392445389, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Navigation:
-    m_Mode: 3
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
-  m_Transition: 0
-  m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
-    m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
-  m_SpriteState:
-    m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 0}
-  m_AnimationTriggers:
-    m_NormalTrigger: Normal
-    m_HighlightedTrigger: Highlighted
-    m_PressedTrigger: Pressed
-    m_DisabledTrigger: Disabled
-  m_Interactable: 1
-  m_TargetGraphic: {fileID: 0}
-  m_OnClick:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
-      Culture=neutral, PublicKeyToken=null
+  selectedMaterial: {fileID: 2100000, guid: 97c9345d2c577e543b55b547a33c4858, type: 2}
+  deselectedMaterial: {fileID: 2100000, guid: 1fe7c2dc0eb2fb34b989fb4e05287a4d, type: 2}
+  droneSimulationManager: {fileID: 114113094254671172}
 --- !u!135 &135519695496822468
 SphereCollider:
   m_ObjectHideFlags: 1

@@ -32,6 +32,7 @@
 
             Debug.Log("Position init: " + position.ToString());
             droneProperties = gameObjectPointer.GetComponent<DroneProperties>();
+            droneProperties.enabled = true;
             droneProperties.droneClassPointer = this; // Connect the gameObject back to the classObject
 
             gameObjectPointer.tag = "Drone";

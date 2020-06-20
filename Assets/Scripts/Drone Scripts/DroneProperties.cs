@@ -4,8 +4,10 @@
     using System.Collections.Generic;
     using UnityEngine;
     using UnityEngine.UI;
+    using VRTK;
 
-    public class DroneProperties : MonoBehaviour {
+    public class DroneProperties : VRTK_InteractableObject
+    {
 
         // Assigned in Drone constructor
         public Drone droneClassPointer;
@@ -19,27 +21,16 @@
         public ROSDroneConnectionInterface droneROSConnection;
         public DroneSimulationManager droneSimulationManager;
 
-        // Button attached to gameobject
-        public Button droneButton;
-
-
-        void Awake()
+        public override void StartUsing(VRTK_InteractUse currentUsingObject = null)
         {
-            //droneButton = GetComponent<Button>(); // <-- you get access to the button component here
-            droneButton.onClick.AddListener(() => { OnClickEvent(); });  // <-- you assign a method to the button OnClick event here
+            base.StartUsing(currentUsingObject);
+            Debug.Log("Something should start happening?");
         }
 
-        void OnClickEvent()
+        public override void StopUsing(VRTK_InteractUse previousUsingObject = null, bool resetUsingObjectState = true)
         {
-            if (droneClassPointer.selected)
-            {
-                DeselectDrone();
-            }
-            else
-            {
-                SelectDrone();
-            }
-
+            base.StopUsing(previousUsingObject, resetUsingObjectState);
+            Debug.Log("Something should stop happening?");
         }
 
         public void SelectDrone()
