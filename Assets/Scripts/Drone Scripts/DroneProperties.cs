@@ -20,12 +20,12 @@
         public DroneSimulationManager droneSimulationManager;
 
         // Button attached to gameobject
-        Button droneButton;
+        public Button droneButton;
 
 
         void Awake()
         {
-            droneButton = GetComponent<Button>(); // <-- you get access to the button component here
+            //droneButton = GetComponent<Button>(); // <-- you get access to the button component here
             droneButton.onClick.AddListener(() => { OnClickEvent(); });  // <-- you assign a method to the button OnClick event here
         }
 

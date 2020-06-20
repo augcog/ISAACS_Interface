@@ -1,6 +1,5 @@
 ﻿namespace ISAACS {
 
-
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
@@ -25,7 +24,7 @@
 
         public ControllerInput controllerInput; /// Initiate a singleton of the ControllerState class. Assign it to the Controller GameObject.
 
-        private enum ControllerState { IDLE, SCALING, AIMING_TELEPORT, TELEPORTING, AIMING_SELECTOR, PRESSING_UI_BUTTON, SELECTING_DRONE, SETTING_WAYPOINT_HEIGHT, PLACING_WAYPOINT, MOVING_WAYPOINT, UNDOING, REDOING }
+        private enum ControllerState { IDLE, SCALING, AIMING_SELECTOR, SETTING_WAYPOINT_HEIGHT, PLACING_WAYPOINT, MOVING_WAYPOINT, UNDOING, REDOING }
         private ControllerState controllerState;
         
         public GameObject Pivot; /// pivot is the center of the table
@@ -64,6 +63,9 @@
             LeftPointerRenderer = LeftController.GetComponent<VRTK_BezierPointerRenderer>();
             RightPointer = RightController.GetComponent<VRTK_Pointer>();
             RightPointerRenderer = RightController.GetComponent<VRTK_StraightPointerRenderer>();
+
+            LeftPointer.enabled = false;
+            LeftPointerRenderer.enabled = false;
         }
 
 
@@ -73,41 +75,66 @@
             {
                 case ControllerState.IDLE:
                 {
-                    // if placing waypoint...
                     if (controllerInput.GetBothMiddle())
                     {
                         controllerState = ControllerState.SCALING;
                         LeftUI.SetActive(false);
                         RightUI.SetActive(false);
-                        LeftPointer.enabled = false;
-                        LeftPointerRenderer.enabled = false;
                         RightPointer.enabled = false;
                         RightPointerRenderer.enabled = false;
                         ScaleWorld();
                         break;
                     }
-                    if (controllerInput.GetRightThumbMoved())
+
+                    /*if (controllerInput.GetRightMiddle())
+                    {
+                        controllerState = ControllerState.AIMING_SELECTOR;
+                        RightUI.SetActive(false);
+                        // TODO: shoot pointer
+                        break;
+                    }*/
+
+                    /*if (controllerInput.GetRightIndex())
+                    {
+                        controllerState = ControllerState.PLACING_WAYPOINT;
+                        RightPointer.enabled = false;
+                        RightPointerRenderer.enabled = false;
+                        /// TODO: start linecollider
+                        break;
+                    }
+
+                    if (controllerInput.GetRightA())
+                    {
+                        controllerState = ControllerState.UNDOING;
+                        RightPointer.enabled = false;
+                        RightPointerRenderer.enabled = false;
+                        /// TODO: make waypoint slightly fade
+                        break;
+                    }
+
+                    if (controllerInput.GetRightB())
+                    {
+                        controllerState = ControllerState.REDOING;
+                        RightPointer.enabled = false;
+                        RightPointerRenderer.enabled = false;
+                        /// TODO: make waypoint slightly appear
+                        break;
+                    }*/
+
+                    if (controllerInput.GetRightThumbMoved()) /// Rotate the world
                     {
                         RotateWorld();
                     }
-                    if (controllerInput.GetLeftThumbMoved())
+
+                    if (controllerInput.GetLeftThumbMoved()) /// Move the world
                     {
                         MoveWorld();
                     }
-                    //if (ControllerInput.GetRightMiddle())
-                    //{
 
-                    //}
-                    if (controllerInput.GetRightIndex())
-                    {
-                        controllerState = ControllerState.PLACING_WAYPOINT;
-                        CreateWaypoint(RightUI.transform.position);
-                        break;
-                    }
                     break;
                 }
 
-                case ControllerState.SCALING: //DONE
+                case ControllerState.SCALING: ///DONE
                 {
                     if (controllerInput.GetBothMiddle())
                     {
@@ -117,54 +144,68 @@
                         controllerState = ControllerState.IDLE;
                         LeftUI.SetActive(true);
                         RightUI.SetActive(true);
-                        LeftPointer.enabled = true;
-                        LeftPointerRenderer.enabled = true;
                         RightPointer.enabled = true;
                         RightPointerRenderer.enabled = true;
                     }
                     break;
                 }
 
-                case ControllerState.AIMING_TELEPORT:
+                /*ase ControllerState.AIMING_SELECTOR:
+                {
+                    /// set wp height if aimed
+                    /// If no right middle, break
+                    break;
+                }*/
+
+                /*case ControllerState.SETTING_WAYPOINT_HEIGHT:
                 {
                     break;
-                }
-                case ControllerState.TELEPORTING:
+                }*/
+
+                /*case ControllerState.PLACING_WAYPOINT:
+                {
+                    if (controllerInput.GetRightMiddle()) /// Cancel waypoint placement
+                    {
+                        /// TODO: stop showing line
+                        controllerState = ControllerState.IDLE;
+                        RightPointer.enabled = true;
+                        RightPointerRenderer.enabled = true;
+                        break;
+                    }
+
+                    if (!controllerInput.GetRightIndex())
+                    {
+                        controllerState = ControllerState.IDLE;
+                        CreateWaypoint(RightUI.transform.position);
+                        RightPointer.enabled = true;
+                        RightPointerRenderer.enabled = true;
+                    }
+                    else
+                    {
+                        /// TODO: continue line showing
+                    }
+                    break;
+
+                }*/
+
+                /*case ControllerState.MOVING_WAYPOINT:
                 {
                     break;
-                }
-                case ControllerState.AIMING_SELECTOR:
+                }*/
+
+                /*case ControllerState.UNDOING:
                 {
+                    controllerState = ControllerState.UNDOING;
+                    RightPointer.enabled = false;
+                    RightPointerRenderer.enabled = false;
                     break;
                 }
-                case ControllerState.PRESSING_UI_BUTTON:
-                {
-                    break;
-                }
-                case ControllerState.SELECTING_DRONE:
-                {
-                    break;
-                }
-                case ControllerState.SETTING_WAYPOINT_HEIGHT:
-                {
-                    break;
-                }
-                case ControllerState.PLACING_WAYPOINT:
-                {
-                    break;
-                }
-                case ControllerState.MOVING_WAYPOINT:
-                {
-                    break;
-                }
-                case ControllerState.UNDOING:
-                {
-                    break;
-                }
+
                 case ControllerState.REDOING:
                 {
                     break;
-                }
+                }*/
+
             }
 
         }
