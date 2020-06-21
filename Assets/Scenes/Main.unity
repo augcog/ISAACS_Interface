@@ -113,10 +113,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &8423660 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 113768, guid: 126d619cf4daa52469682f85c1378b4a, type: 2}
-  m_PrefabInternal: {fileID: 242895466}
 --- !u!4 &8423661 stripped
 Transform:
   m_PrefabParentObject: {fileID: 487254, guid: 126d619cf4daa52469682f85c1378b4a, type: 2}
@@ -428,7 +424,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   surface_pointcloud: 0
-  Level_0: 1
+  Level_0: 0
   Level_1: 0
   Level_2: 0
   Level_3: 0
@@ -700,9 +696,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7627303cdac4288439995816494a2ab8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  flipYZ: 1
-  pointObject: {fileID: 1834927014}
-  size: 0.1
+  flipYZ: 0
+  pointObject: {fileID: 0}
+  size: 0.001
   cloud_scale: 0.05286196
 --- !u!114 &79141387
 MonoBehaviour:
@@ -715,7 +711,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d05a78da9fc38443a36c1fa24bc3d9f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  flipYZ: 1
+  flipYZ: 0
   faceThreshold: 25
   updateInterval: 30
   distThreshold: 10
@@ -865,7 +861,7 @@ MonoBehaviour:
   Level_0: 0
   Level_1: 0
   Level_2: 0
-  Level_3: 1
+  Level_3: 0
   Level_4: 0
   Level_5: 0
 --- !u!1 &146794962
@@ -930,10 +926,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd25a2c5bd1119744b97e85c7643d505, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  droneBaseObject: {fileID: 1497704686498948, guid: 23ccd6cb144b5f54db5836aa8a1f377b,
-    type: 2}
-  waypointBaseObject: {fileID: 1161822125618724, guid: c209b41633a109640bb6a3527c86c801,
-    type: 2}
+  droneBaseObject: {fileID: 0}
+  waypointBaseObject: {fileID: 0}
 --- !u!114 &146794968
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -945,51 +939,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dac87ae293d0bd348a6bcb090e69c517, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DronesList:
-  - droneName: Perry Pepe the Platipus
-    droneTag: M210
-    ipAddress: 75.25.126.85
-    port: 9090
-    droneType: 1
-    droneSubscribers: 0500000001000000
-    simFlight: 1
-  SensorsList:
-  - sensorName: Color0
-    sensorTag: Color0
-    ipAddress: 75.25.126.85
-    port: 9090
-    sensorType: 3
-    sensorSubscribers: 08000000
-  - sensorName: Color1
-    sensorTag: Color1
-    ipAddress: 75.25.126.85
-    port: 9090
-    sensorType: 3
-    sensorSubscribers: 09000000
-  - sensorName: Color5
-    sensorTag: Color5
-    ipAddress: 75.25.126.85
-    port: 9090
-    sensorType: 3
-    sensorSubscribers: 0d000000
-  - sensorName: Color2
-    sensorTag: Color2
-    ipAddress: 75.25.126.85
-    port: 9090
-    sensorType: 3
-    sensorSubscribers: 0a000000
-  - sensorName: Color3
-    sensorTag: Color3
-    ipAddress: 75.25.126.85
-    port: 9090
-    sensorType: 3
-    sensorSubscribers: 0b000000
-  - sensorName: Color4
-    sensorTag: Color4
-    ipAddress: 75.25.126.85
-    port: 9090
-    sensorType: 3
-    sensorSubscribers: 0c000000
+  DronesList: []
+  SensorsList: []
   success: 0
   uniqueID: 0
 --- !u!114 &146794969
@@ -1019,8 +970,8 @@ MonoBehaviour:
   executeUploadedMission: u
   initMapBox: i
   displaySensorList: o
-  initTestDrone: o
-  hardcodedWaypoints: p
+  initTestDrone: p
+  hardcodedWaypoints: a
   selectedSensor: {fileID: 0}
 --- !u!1 &161977055
 GameObject:
@@ -1484,11 +1435,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6cf31acc592f8214e8c38c62860f8b3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waypointLatitude: 37.915457249
-  waypointLongitude: -122.338015517
-  waypointAltitude: 20
+  waypointLatitude: 0
+  waypointLongitude: 0
+  waypointAltitude: 0
   initialLat: 0
-  hardcodedWaypointSphere: {fileID: 277881835}
+  hardcodedWaypointSphere: {fileID: 0}
 --- !u!1 &279732760
 GameObject:
   m_ObjectHideFlags: 0
@@ -1687,12 +1638,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91e8c9c1b065aa049bb5ce5f1e4ffc5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objects:
-  - {fileID: 0}
-  - {fileID: 0}
-  retoggle:
-  - {fileID: 0}
-  - {fileID: 0}
+  objects: []
+  retoggle: []
   controllerEvents: {fileID: 0}
   toggleButton: 16
 --- !u!1 &322076860
@@ -1826,7 +1773,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 578ceabbac682ee4680e7ff06395e8d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startMission: 1
+  startMission: 0
   pauseMission: 0
   resumeMission: 0
   clearWaypoints: 0
@@ -2366,7 +2313,7 @@ MonoBehaviour:
   pauseMission: 0
   resumeMission: 0
   clearWaypoints: 0
-  landDrone: 1
+  landDrone: 0
   homeDrone: 0
 --- !u!65 &459626913
 BoxCollider:
@@ -2629,7 +2576,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1518a5e598c7da244bc4850d3ae63354, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  clickOnPointerCollision: 1
+  clickOnPointerCollision: 0
   autoActivateWithinDistance: 0
 --- !u!1 &524727667
 GameObject:
@@ -2727,11 +2674,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6cf31acc592f8214e8c38c62860f8b3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waypointLatitude: 37.91570281982422
-  waypointLongitude: -122.337967237
-  waypointAltitude: 20
+  waypointLatitude: 0
+  waypointLongitude: 0
+  waypointAltitude: 0
   initialLat: 0
-  hardcodedWaypointSphere: {fileID: 524727667}
+  hardcodedWaypointSphere: {fileID: 0}
 --- !u!1 &553067302
 GameObject:
   m_ObjectHideFlags: 0
@@ -2784,7 +2731,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startMission: 0
-  pauseMission: 1
+  pauseMission: 0
   resumeMission: 0
   clearWaypoints: 0
   landDrone: 0
@@ -3259,7 +3206,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   surface_pointcloud: 0
   Level_0: 0
-  Level_1: 1
+  Level_1: 0
   Level_2: 0
   Level_3: 0
   Level_4: 0
@@ -3343,10 +3290,6 @@ CanvasRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 716024044}
---- !u!1 &731156518 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 109308, guid: 126d619cf4daa52469682f85c1378b4a, type: 2}
-  m_PrefabInternal: {fileID: 242895466}
 --- !u!4 &731156519 stripped
 Transform:
   m_PrefabParentObject: {fileID: 482130, guid: 126d619cf4daa52469682f85c1378b4a, type: 2}
@@ -3465,31 +3408,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoPopulateObjectReferences: 1
-  actualBoundaries: {fileID: 1578342133}
-  actualHeadset: {fileID: 1234393007}
-  actualLeftController: {fileID: 731156518}
-  actualRightController: {fileID: 8423660}
-  modelAliasLeftController: {fileID: 283578732}
-  modelAliasRightController: {fileID: 665289476}
+  actualBoundaries: {fileID: 0}
+  actualHeadset: {fileID: 0}
+  actualLeftController: {fileID: 0}
+  actualRightController: {fileID: 0}
+  modelAliasLeftController: {fileID: 0}
+  modelAliasRightController: {fileID: 0}
   cachedSystemSDKInfo:
     baseTypeName: VRTK.SDK_BaseSystem
     fallbackTypeName: VRTK.SDK_FallbackSystem
-    typeName: VRTK.SDK_OculusSystem
+    typeName: VRTK.SDK_FallbackSystem
     descriptionIndex: 0
   cachedBoundariesSDKInfo:
     baseTypeName: VRTK.SDK_BaseBoundaries
     fallbackTypeName: VRTK.SDK_FallbackBoundaries
-    typeName: VRTK.SDK_OculusBoundaries
+    typeName: VRTK.SDK_FallbackBoundaries
     descriptionIndex: 0
   cachedHeadsetSDKInfo:
     baseTypeName: VRTK.SDK_BaseHeadset
     fallbackTypeName: VRTK.SDK_FallbackHeadset
-    typeName: VRTK.SDK_OculusHeadset
+    typeName: VRTK.SDK_FallbackHeadset
     descriptionIndex: 0
   cachedControllerSDKInfo:
     baseTypeName: VRTK.SDK_BaseController
     fallbackTypeName: VRTK.SDK_FallbackController
-    typeName: VRTK.SDK_OculusController
+    typeName: VRTK.SDK_FallbackController
     descriptionIndex: 0
 --- !u!4 &901874430
 Transform:
@@ -3608,7 +3551,7 @@ MonoBehaviour:
   operation: 0
   checkType: 1
   identifiers:
-  - ExcludeTeleport
+  - 
 --- !u!4 &934963557
 Transform:
   m_ObjectHideFlags: 0
@@ -3851,7 +3794,7 @@ MonoBehaviour:
   resumeMission: 0
   clearWaypoints: 0
   landDrone: 0
-  homeDrone: 1
+  homeDrone: 0
 --- !u!65 &1050719670
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4175,11 +4118,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6cf31acc592f8214e8c38c62860f8b3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waypointLatitude: 37.91558527
-  waypointLongitude: -122.338122805
-  waypointAltitude: 20
+  waypointLatitude: 0
+  waypointLongitude: 0
+  waypointAltitude: 0
   initialLat: 0
-  hardcodedWaypointSphere: {fileID: 1094677130}
+  hardcodedWaypointSphere: {fileID: 0}
 --- !u!1 &1095793701
 GameObject:
   m_ObjectHideFlags: 0
@@ -4223,25 +4166,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a139d83bf6796734db220df8a5bfacbd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DiffuseFallbacks:
-  - {fileID: 2800000, guid: 7d8da3d06466cc04da8c020819170a59, type: 3}
-  - {fileID: 2800000, guid: 502d438d2584976448c3cdb146ed836d, type: 3}
-  - {fileID: 2800000, guid: 502d438d2584976448c3cdb146ed836d, type: 3}
-  - {fileID: 2800000, guid: 502d438d2584976448c3cdb146ed836d, type: 3}
-  - {fileID: 2800000, guid: b3e87b1024f5fa8408d004b398e7b0c0, type: 3}
-  NormalFallbacks:
-  - {fileID: 2800000, guid: 93a54b3b63bcc6d49b16f6bdb655b940, type: 3}
-  - {fileID: 2800000, guid: 9fb4a3be60417d043865e457a9d51e63, type: 3}
-  - {fileID: 2800000, guid: 9fb4a3be60417d043865e457a9d51e63, type: 3}
-  - {fileID: 2800000, guid: 9fb4a3be60417d043865e457a9d51e63, type: 3}
-  - {fileID: 2800000, guid: 22a046c12fc7f3c4d98a98add109fa96, type: 3}
-  BodyColorTints:
-  - {r: 0.9764706, g: 0.8509804, b: 0.6862745, a: 1}
-  - {r: 1, g: 0.9529412, b: 0.92156863, a: 1}
-  - {r: 0.9764706, g: 0.9019608, b: 0.6745098, a: 1}
-  - {r: 0.7647059, g: 0.6039216, b: 0.2509804, a: 1}
-  - {r: 0.45490196, g: 0.1882353, b: 0, a: 1}
-  - {r: 0.22352941, g: 0.023529412, b: 0.011764706, a: 1}
+  DiffuseFallbacks: []
+  NormalFallbacks: []
+  BodyColorTints: []
   LocalAvatarConfig:
     ComponentMaterialProperties: []
     MaterialPropertyBlock:
@@ -4251,73 +4178,13 @@ MonoBehaviour:
       BacklightIntensities: []
       ReflectionIntensities: []
   DefaultAvatarConfig:
-    ComponentMaterialProperties:
-    - TypeIndex: 0
-      Color: {r: 1, g: 0.9529412, b: 0.92156863, a: 1}
-      Textures: []
-      DiffuseIntensity: 0.301
-      RimIntensity: 5
-      BacklightIntensity: 1
-      ReflectionIntensity: 0
-    - TypeIndex: 1
-      Color: {r: 1, g: 1, b: 1, a: 1}
-      Textures: []
-      DiffuseIntensity: 0.1
-      RimIntensity: 2
-      BacklightIntensity: 0.7
-      ReflectionIntensity: 0.3
-    - TypeIndex: 2
-      Color: {r: 0.80784315, g: 0.80784315, b: 0.80784315, a: 1}
-      Textures: []
-      DiffuseIntensity: 0
-      RimIntensity: 2.84
-      BacklightIntensity: 0.7
-      ReflectionIntensity: 0.4
-    - TypeIndex: 3
-      Color: {r: 0.22352941, g: 0.11372549, b: 0, a: 1}
-      Textures: []
-      DiffuseIntensity: 0.15
-      RimIntensity: 4
-      BacklightIntensity: 0.7
-      ReflectionIntensity: 0
-    - TypeIndex: 4
-      Color: {r: 0.22352941, g: 0.023529412, b: 0.011764706, a: 1}
-      Textures: []
-      DiffuseIntensity: 0.15
-      RimIntensity: 4
-      BacklightIntensity: 0.7
-      ReflectionIntensity: 0
+    ComponentMaterialProperties: []
     MaterialPropertyBlock:
-      Colors:
-      - {x: 0, y: 0, z: 0, w: 0}
-      - {x: 0, y: 0, z: 0, w: 0}
-      - {x: 0, y: 0, z: 0, w: 0}
-      - {x: 0, y: 0, z: 0, w: 0}
-      - {x: 0, y: 0, z: 0, w: 0}
-      DiffuseIntensities:
-      - 0
-      - 0
-      - 0
-      - 0
-      - 0
-      RimIntensities:
-      - 0
-      - 0
-      - 0
-      - 0
-      - 0
-      BacklightIntensities:
-      - 0
-      - 0
-      - 0
-      - 0
-      - 0
-      ReflectionIntensities:
-      - 0
-      - 0
-      - 0
-      - 0
-      - 0
+      Colors: []
+      DiffuseIntensities: []
+      RimIntensities: []
+      BacklightIntensities: []
+      ReflectionIntensities: []
 --- !u!1 &1131774351
 GameObject:
   m_ObjectHideFlags: 0
@@ -4568,10 +4435,6 @@ Transform:
   m_Father: {fileID: 79141382}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1234393007 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 100002, guid: 126d619cf4daa52469682f85c1378b4a, type: 2}
-  m_PrefabInternal: {fileID: 242895466}
 --- !u!1 &1236873334
 GameObject:
   m_ObjectHideFlags: 0
@@ -4880,8 +4743,8 @@ MonoBehaviour:
     maxAllowedPerFrameDistanceDifference: 0.003
     smoothsRotation: 0
     maxAllowedPerFrameAngleDifference: 1.5
-  validCollisionColor: {r: 0.5411765, g: 0.9019608, b: 1, a: 1}
-  invalidCollisionColor: {r: 0.9, g: 0, b: 0, a: 1}
+  validCollisionColor: {r: 0, g: 1, b: 0, a: 1}
+  invalidCollisionColor: {r: 1, g: 0, b: 0, a: 1}
   tracerVisibility: 0
   cursorVisibility: 0
   maximumLength: 100
@@ -4905,13 +4768,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enableTeleport: 1
   targetListPolicy: {fileID: 0}
-  pointerRenderer: {fileID: 1347866311}
-  activationButton: 7
+  pointerRenderer: {fileID: 0}
+  activationButton: 10
   holdButtonToActivate: 1
   activateOnEnable: 0
   activationDelay: 0
-  selectionButton: 4
-  selectOnPress: 1
+  selectionButton: 10
+  selectOnPress: 0
   selectionDelay: 0
   selectAfterHoverDuration: 0
   interactWithObjects: 0
@@ -5007,7 +4870,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   activationButton: 10
-  activationMode: 2
+  activationMode: 0
   selectionButton: 3
   clickMethod: 0
   attemptClickOnDeactivate: 0
@@ -5037,18 +4900,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   OnControllerStartGrabInteractableObject:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: startGrab
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_TypeName: VRTK.UnityEventHelper.VRTK_InteractGrab_UnityEvents+ObjectInteractEvent,
       Assembly-CSharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   OnControllerGrabInteractableObject:
@@ -5063,18 +4915,7 @@ MonoBehaviour:
       Assembly-CSharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   OnControllerUngrabInteractableObject:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: stopGrab
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_TypeName: VRTK.UnityEventHelper.VRTK_InteractGrab_UnityEvents+ObjectInteractEvent,
       Assembly-CSharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   OnGrabButtonPressed:
@@ -5113,10 +4954,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 947b27445602ed640b885db7e667dfc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grabButton: 7
+  grabButton: 3
   grabPrecognition: 0
   throwMultiplier: 1
-  createRigidBodyWhenNotTouching: 1
+  createRigidBodyWhenNotTouching: 0
   controllerAttachPoint: {fileID: 0}
   controllerEvents: {fileID: 0}
   interactTouch: {fileID: 0}
@@ -5409,7 +5250,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startMission: 0
   pauseMission: 0
-  resumeMission: 1
+  resumeMission: 0
   clearWaypoints: 0
   landDrone: 0
   homeDrone: 0
@@ -5631,7 +5472,7 @@ MonoBehaviour:
   surface_pointcloud: 0
   Level_0: 0
   Level_1: 0
-  Level_2: 1
+  Level_2: 0
   Level_3: 0
   Level_4: 0
   Level_5: 0
@@ -5880,7 +5721,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe5040c2eaa9ff147b80ded004191c67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameObjectToFollow: {fileID: 1578342133}
+  gameObjectToFollow: {fileID: 0}
   gameObjectToChange: {fileID: 0}
   followsPosition: 1
   smoothsPosition: 0
@@ -5891,7 +5732,7 @@ MonoBehaviour:
   followsScale: 1
   smoothsScale: 0
   maxAllowedPerFrameSizeDifference: 0.003
-  _moment: 2
+  _moment: 3
 --- !u!114 &1499370452
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5998,18 +5839,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00f3402a2ea5bff4880c0313515240cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DefaultBodyMaterialManager: {fileID: 1668557242}
-  DefaultHandMaterialManager: {fileID: 1095793703}
-  Driver: {fileID: 1499370452}
-  Base: {fileID: 1381474398}
-  Body: {fileID: 279732762}
-  ControllerLeft: {fileID: 283578734}
-  ControllerRight: {fileID: 665289477}
-  HandLeft: {fileID: 1381997860}
-  HandRight: {fileID: 1480599132}
+  DefaultBodyMaterialManager: {fileID: 0}
+  DefaultHandMaterialManager: {fileID: 0}
+  Driver: {fileID: 0}
+  Base: {fileID: 0}
+  Body: {fileID: 0}
+  ControllerLeft: {fileID: 0}
+  ControllerRight: {fileID: 0}
+  HandLeft: {fileID: 0}
+  HandRight: {fileID: 0}
   RecordPackets: 0
   UseSDKPackets: 1
-  StartWithControllers: 1
+  StartWithControllers: 0
   FirstPersonLayer:
     layerIndex: 0
   ThirdPersonLayer:
@@ -6017,19 +5858,14 @@ MonoBehaviour:
   ShowFirstPerson: 1
   ShowThirdPerson: 0
   Capabilities: -1
-  SurfaceShader: {fileID: 4800000, guid: 73f67c4e7bf718b4385aa6b1f8a06591, type: 3}
-  SurfaceShaderSelfOccluding: {fileID: 4800000, guid: 69f342b79d37541489919a19cfd8a924,
-    type: 3}
-  SurfaceShaderPBS: {fileID: 4800000, guid: 5e52aa58207bbf24d8eb8ec969e9ae88, type: 3}
-  SurfaceShaderPBSV2Single: {fileID: 4800000, guid: c26fc51e445dcfd4db09305d861dc11c,
-    type: 3}
-  SurfaceShaderPBSV2Combined: {fileID: 4800000, guid: 37d2b8298f61cd2469465fc36108675d,
-    type: 3}
-  SurfaceShaderPBSV2Simple: {fileID: 4800000, guid: 36b8b481cf607814a8cec318f0148d63,
-    type: 3}
-  SurfaceShaderPBSV2Loading: {fileID: 4800000, guid: 822f5e641dc5dd54ca9555b727b3277f,
-    type: 3}
-  oculusUserID: 0
+  SurfaceShader: {fileID: 0}
+  SurfaceShaderSelfOccluding: {fileID: 0}
+  SurfaceShaderPBS: {fileID: 0}
+  SurfaceShaderPBSV2Single: {fileID: 0}
+  SurfaceShaderPBSV2Combined: {fileID: 0}
+  SurfaceShaderPBSV2Simple: {fileID: 0}
+  SurfaceShaderPBSV2Loading: {fileID: 0}
+  oculusUserID: 
   AssetsDoneLoading:
     m_PersistentCalls:
       m_Calls: []
@@ -6098,7 +5934,7 @@ MonoBehaviour:
   Level_2: 0
   Level_3: 0
   Level_4: 0
-  Level_5: 1
+  Level_5: 0
 --- !u!65 &1509680897
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6427,15 +6263,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoManageScriptDefines: 1
-  activeScriptingDefineSymbolsWithoutSDKClasses:
-  - symbol: VRTK_DEFINE_SDK_OCULUS_AVATAR
-    buildTargetGroupName: Standalone
-  scriptAliasLeftController: {fileID: 2053542333}
-  scriptAliasRightController: {fileID: 1347866310}
+  activeScriptingDefineSymbolsWithoutSDKClasses: []
+  scriptAliasLeftController: {fileID: 0}
+  scriptAliasRightController: {fileID: 0}
   autoManageVRSettings: 1
   autoLoadSetup: 1
-  setups:
-  - {fileID: 901874429}
+  setups: []
   excludeTargetGroups: 1b0000001a000000
   persistOnLoad: 0
 --- !u!4 &1526639727
@@ -6530,10 +6363,6 @@ Material:
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
---- !u!1 &1578342133 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 100004, guid: 126d619cf4daa52469682f85c1378b4a, type: 2}
-  m_PrefabInternal: {fileID: 242895466}
 --- !u!4 &1578342134 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400004, guid: 126d619cf4daa52469682f85c1378b4a, type: 2}
@@ -6581,191 +6410,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a139d83bf6796734db220df8a5bfacbd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DiffuseFallbacks:
-  - {fileID: 2800000, guid: 7d8da3d06466cc04da8c020819170a59, type: 3}
-  - {fileID: 2800000, guid: 502d438d2584976448c3cdb146ed836d, type: 3}
-  - {fileID: 2800000, guid: 502d438d2584976448c3cdb146ed836d, type: 3}
-  - {fileID: 2800000, guid: 502d438d2584976448c3cdb146ed836d, type: 3}
-  - {fileID: 2800000, guid: b3e87b1024f5fa8408d004b398e7b0c0, type: 3}
-  NormalFallbacks:
-  - {fileID: 2800000, guid: 93a54b3b63bcc6d49b16f6bdb655b940, type: 3}
-  - {fileID: 2800000, guid: 9fb4a3be60417d043865e457a9d51e63, type: 3}
-  - {fileID: 2800000, guid: 9fb4a3be60417d043865e457a9d51e63, type: 3}
-  - {fileID: 2800000, guid: 9fb4a3be60417d043865e457a9d51e63, type: 3}
-  - {fileID: 2800000, guid: 22a046c12fc7f3c4d98a98add109fa96, type: 3}
-  BodyColorTints:
-  - {r: 0.9764706, g: 0.8509804, b: 0.6862745, a: 1}
-  - {r: 1, g: 0.9529412, b: 0.92156863, a: 1}
-  - {r: 0.9764706, g: 0.9019608, b: 0.6745098, a: 1}
-  - {r: 0.7647059, g: 0.6039216, b: 0.2509804, a: 1}
-  - {r: 0.45490196, g: 0.1882353, b: 0, a: 1}
-  - {r: 0.22352941, g: 0.023529412, b: 0.011764706, a: 1}
+  DiffuseFallbacks: []
+  NormalFallbacks: []
+  BodyColorTints: []
   LocalAvatarConfig:
-    ComponentMaterialProperties:
-    - TypeIndex: 0
-      Color: {r: 1, g: 0.86, b: 0.77, a: 1}
-      Textures:
-      - {fileID: 0}
-      - {fileID: 0}
-      - {fileID: 0}
-      DiffuseIntensity: 0.3
-      RimIntensity: 5
-      BacklightIntensity: 1
-      ReflectionIntensity: 0
-    - TypeIndex: 1
-      Color: {r: 1, g: 1, b: 1, a: 1}
-      Textures:
-      - {fileID: 0}
-      - {fileID: 0}
-      - {fileID: 0}
-      DiffuseIntensity: 0.1
-      RimIntensity: 2
-      BacklightIntensity: 0.7
-      ReflectionIntensity: 0.3
-    - TypeIndex: 2
-      Color: {r: 1, g: 1, b: 1, a: 1}
-      Textures:
-      - {fileID: 0}
-      - {fileID: 0}
-      - {fileID: 0}
-      DiffuseIntensity: 0
-      RimIntensity: 2.84
-      BacklightIntensity: 0.7
-      ReflectionIntensity: 0.4
-    - TypeIndex: 3
-      Color: {r: 0.6235, g: 0.4627, b: 0.3412, a: 1}
-      Textures:
-      - {fileID: 0}
-      - {fileID: 0}
-      - {fileID: 0}
-      DiffuseIntensity: 0.15
-      RimIntensity: 4
-      BacklightIntensity: 0.7
-      ReflectionIntensity: 0
-    - TypeIndex: 4
-      Color: {r: -5.3487954e+9, g: 771.1758, b: -5.6686517e+23, a: 4.9667446e-34}
-      Textures:
-      - {fileID: 2800000, guid: 502d438d2584976448c3cdb146ed836d, type: 3}
-      - {fileID: 2800000, guid: 9fb4a3be60417d043865e457a9d51e63, type: 3}
-      - {fileID: 2800000, guid: 502d438d2584976448c3cdb146ed836d, type: 3}
-      DiffuseIntensity: 0.15
-      RimIntensity: 4
-      BacklightIntensity: 0.7
-      ReflectionIntensity: 0
+    ComponentMaterialProperties: []
     MaterialPropertyBlock:
-      Colors:
-      - {x: 1, y: 0.86, z: 0.77, w: 1}
-      - {x: 1, y: 1, z: 1, w: 1}
-      - {x: 1, y: 1, z: 1, w: 1}
-      - {x: 0.6235, y: 0.4627, z: 0.3412, w: 1}
-      - {x: -0.025753247, y: -2.0311036e-13, z: -6.2685677e-31, w: -2.0021067e+22}
-      DiffuseIntensities:
-      - 0.3
-      - 0.1
-      - 0
-      - 0.15
-      - 0.15
-      RimIntensities:
-      - 5
-      - 2
-      - 2.84
-      - 4
-      - 4
-      BacklightIntensities:
-      - 1
-      - 0.7
-      - 0.7
-      - 0.7
-      - 0.7
-      ReflectionIntensities:
-      - 0
-      - 0.3
-      - 0.4
-      - 0
-      - 0
+      Colors: []
+      DiffuseIntensities: []
+      RimIntensities: []
+      BacklightIntensities: []
+      ReflectionIntensities: []
   DefaultAvatarConfig:
-    ComponentMaterialProperties:
-    - TypeIndex: 0
-      Color: {r: 1, g: 0.86, b: 0.77, a: 1}
-      Textures:
-      - {fileID: 0}
-      - {fileID: 0}
-      - {fileID: 0}
-      DiffuseIntensity: 0.3
-      RimIntensity: 5
-      BacklightIntensity: 1
-      ReflectionIntensity: 0
-    - TypeIndex: 1
-      Color: {r: 1, g: 1, b: 1, a: 1}
-      Textures:
-      - {fileID: 0}
-      - {fileID: 0}
-      - {fileID: 0}
-      DiffuseIntensity: 0.1
-      RimIntensity: 2
-      BacklightIntensity: 0.7
-      ReflectionIntensity: 0.3
-    - TypeIndex: 2
-      Color: {r: 1, g: 1, b: 1, a: 1}
-      Textures:
-      - {fileID: 0}
-      - {fileID: 0}
-      - {fileID: 0}
-      DiffuseIntensity: 0
-      RimIntensity: 2.84
-      BacklightIntensity: 0.7
-      ReflectionIntensity: 0.4
-    - TypeIndex: 3
-      Color: {r: 0.6235, g: 0.4627, b: 0.3412, a: 1}
-      Textures:
-      - {fileID: 0}
-      - {fileID: 0}
-      - {fileID: 0}
-      DiffuseIntensity: 0.15
-      RimIntensity: 4
-      BacklightIntensity: 0.7
-      ReflectionIntensity: 0
-    - TypeIndex: 4
-      Color: {r: -5.3487954e+9, g: 771.1758, b: -5.6686517e+23, a: 4.9667446e-34}
-      Textures:
-      - {fileID: 2800000, guid: 502d438d2584976448c3cdb146ed836d, type: 3}
-      - {fileID: 2800000, guid: 9fb4a3be60417d043865e457a9d51e63, type: 3}
-      - {fileID: 2800000, guid: 502d438d2584976448c3cdb146ed836d, type: 3}
-      DiffuseIntensity: 0.15
-      RimIntensity: 4
-      BacklightIntensity: 0.7
-      ReflectionIntensity: 0
+    ComponentMaterialProperties: []
     MaterialPropertyBlock:
-      Colors:
-      - {x: 1, y: 0.86, z: 0.77, w: 1}
-      - {x: 1, y: 1, z: 1, w: 1}
-      - {x: 1, y: 1, z: 1, w: 1}
-      - {x: 0.6235, y: 0.4627, z: 0.3412, w: 1}
-      - {x: -0.025753247, y: -2.0311036e-13, z: -6.2685677e-31, w: -2.0021067e+22}
-      DiffuseIntensities:
-      - 0.3
-      - 0.1
-      - 0
-      - 0.15
-      - 0.15
-      RimIntensities:
-      - 5
-      - 2
-      - 2.84
-      - 4
-      - 4
-      BacklightIntensities:
-      - 1
-      - 0.7
-      - 0.7
-      - 0.7
-      - 0.7
-      ReflectionIntensities:
-      - 0
-      - 0.3
-      - 0.4
-      - 0
-      - 0
+      Colors: []
+      DiffuseIntensities: []
+      RimIntensities: []
+      BacklightIntensities: []
+      ReflectionIntensities: []
 --- !u!1001 &1672332643
 Prefab:
   m_ObjectHideFlags: 0
@@ -7269,7 +6932,7 @@ MonoBehaviour:
   startMission: 0
   pauseMission: 0
   resumeMission: 0
-  clearWaypoints: 1
+  clearWaypoints: 0
   landDrone: 0
   homeDrone: 0
 --- !u!1 &1834927014
@@ -7708,8 +7371,8 @@ MonoBehaviour:
   stepDropThreshold: 0.08
   customRaycast: {fileID: 0}
   fallRestriction: 0
-  gravityFallYThreshold: 0.1
-  blinkYThreshold: 0
+  gravityFallYThreshold: 1
+  blinkYThreshold: 0.15
   floorHeightTolerance: 0.001
   fallCheckPrecision: 5
   teleporter: {fileID: 0}
@@ -7728,7 +7391,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blinkToColor: {r: 0, g: 0, b: 0, a: 1}
-  blinkTransitionSpeed: 0
+  blinkTransitionSpeed: 0.6
   distanceBlinkDelay: 0
   headsetPositionCompensation: 1
   targetListPolicy: {fileID: 0}
@@ -8036,11 +7699,11 @@ MonoBehaviour:
   enableTeleport: 1
   targetListPolicy: {fileID: 0}
   pointerRenderer: {fileID: 0}
-  activationButton: 7
+  activationButton: 10
   holdButtonToActivate: 1
   activateOnEnable: 0
   activationDelay: 0
-  selectionButton: 3
+  selectionButton: 10
   selectOnPress: 0
   selectionDelay: 0
   selectAfterHoverDuration: 0
@@ -8070,26 +7733,22 @@ MonoBehaviour:
     maxAllowedPerFrameDistanceDifference: 0.003
     smoothsRotation: 0
     maxAllowedPerFrameAngleDifference: 1.5
-  validCollisionColor: {r: 0.5411765, g: 0.9019608, b: 1, a: 1}
-  invalidCollisionColor: {r: 0.903, g: 0, b: 0, a: 1}
+  validCollisionColor: {r: 0, g: 1, b: 0, a: 1}
+  invalidCollisionColor: {r: 1, g: 0, b: 0, a: 1}
   tracerVisibility: 0
   cursorVisibility: 0
   maximumLength: {x: 10, y: Infinity}
   tracerDensity: 10
-  cursorRadius: 0.2
+  cursorRadius: 0.5
   heightLimitAngle: 100
   curveOffset: 1
-  rescaleTracer: 1
-  cursorMatchTargetRotation: 1
+  rescaleTracer: 0
+  cursorMatchTargetRotation: 0
   collisionCheckFrequency: 0
-  customTracer: {fileID: 1243129740067272, guid: 55819859b7f22784e98360b14b14b88e,
-    type: 2}
-  customCursor: {fileID: 1992590638579992, guid: da6c46fadc74b154ca5df638cdb2d592,
-    type: 2}
-  validLocationObject: {fileID: 1652574584400748, guid: 12370ddcc6985ba4abe57fc5b64502f8,
-    type: 2}
-  invalidLocationObject: {fileID: 1413768137026182, guid: af1c322da33b9ec40b0f5a418ed90ef4,
-    type: 2}
+  customTracer: {fileID: 0}
+  customCursor: {fileID: 0}
+  validLocationObject: {fileID: 0}
+  invalidLocationObject: {fileID: 0}
 --- !u!1 &2093951358
 GameObject:
   m_ObjectHideFlags: 0
@@ -8146,7 +7805,7 @@ MonoBehaviour:
   Level_1: 0
   Level_2: 0
   Level_3: 0
-  Level_4: 1
+  Level_4: 0
   Level_5: 0
 --- !u!65 &2093951361
 BoxCollider:

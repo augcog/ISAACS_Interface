@@ -16,6 +16,10 @@
 
         public ArrayList waypoints; // All waypoints held by the drone
         public ArrayList waypointsOrder; // Keeps track of the order in which waypoints were created for the undo function
+        private ArrayList deletedWaypoints; // All waypoints that were deleted, in case the player wants to redo them
+        private ArrayList deletedWaypointsOrder; // The deleted waypoints order
+
+        private float consecutiveWaypointDeletionsCount;
 
         public int nextWaypointId; // Incrementing counter to give all waypoints a unique ID when combined with the Drone ID
         public Dictionary<string, Waypoint> waypointsDict; // Collection of the waypoints in this drone's path
@@ -61,6 +65,7 @@
             // TODO: Must be done by the user in the application
             gameObjectPointer.GetComponent<DroneProperties>().DeselectDrone();
 
+            consecutiveWaypointDeletionsCount = 0; /// Initialize the deletion count to 0
         }
 
         /// <summary>
@@ -147,11 +152,11 @@
         /// <param name="deletedWaypoint"> The waypoint which is to be deleted </param>
         public void DeleteWaypoint(Waypoint deletedWaypoint)
         {
-    
             // Removing the new waypoint from the dictionary, waypoints array and placement order
             waypointsDict.Remove(deletedWaypoint.id);
             waypoints.Remove(deletedWaypoint);
             waypointsOrder.Remove(deletedWaypoint);
+            deletedWaypoints.Add(deletedWaypoint);
 
             // Removing from the path linked list by adjusting the next and previous pointers of the surrounding waypoints. Check if first waypoint in the list.
             if (deletedWaypoint.prevPathPoint != null)
@@ -171,7 +176,36 @@
 
             // Deleting the waypoint gameObject
             Object.Destroy(deletedWaypoint.gameObjectPointer);
+            consecutiveWaypointDeletionsCount++;
         }
+
+        public Waypoint PopWaypoint()
+        {
+            if (waypoints.Count > 1)
+            {
+                Waypoint lastWaypoint = (Waypoint)waypoints[waypoints.Count - 1];
+                DeleteWaypoint(lastWaypoint);
+                return lastWaypoint;
+            }
+            else
+            {
+                return null;
+            }
+
+        }
+
+
+        public void RestoreLastlyDeletedWaypoint()
+        {
+            if (consecutiveWaypointDeletionsCount >= 1)
+            {
+                Waypoint restoredWaypoint = (Waypoint)deletedWaypoints[0];
+                AddWaypoint(restoredWaypoint);
+                deletedWaypoints.Remove(restoredWaypoint);
+                consecutiveWaypointDeletionsCount--;
+            }
+        }
+
 
         /// <summary>
         /// Delete all the waypoints
@@ -187,31 +221,15 @@
             }
         }
 
-        /// <summary>
-        /// Depriciated and moved to DroneProperties
-        /// Use this to change which drone is selected in the world.
-        /// This also changes all drone aura materials so this drone is the only yellow one.
-        /// </summary>
-        /*
-        public void Select() {
-            // Changes the color of the drone to indicate that it has been selected
-            this.gameObjectPointer.transform.Find("group3/Outline").GetComponent<MeshRenderer>().material =
-                this.gameObjectPointer.GetComponent<DroneProperties>().selectedMaterial;
-            this.selected = true;
-
-            WorldProperties.selectedDrone = this;
-
-            // Check through all other drones and change their materials to deselected
-            foreach (Drone otherDrone in WorldProperties.dronesDict.Values)
+        public int GetWaypointsCount() /// helper
+        {
+            if (waypoints != null)
             {
-                if (otherDrone != this)
-                {
-                    otherDrone.gameObjectPointer.transform.Find("group3").Find("Outline").GetComponent<MeshRenderer>().material = 
-                        this.gameObjectPointer.GetComponent<DroneProperties>().deselectedMaterial;
-                    otherDrone.selected = false;
-                }
+                return 0;
             }
+            return waypoints.Count;
         }
-        */
+
+       
     }
 }

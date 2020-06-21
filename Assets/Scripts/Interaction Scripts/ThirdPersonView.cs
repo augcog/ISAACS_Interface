@@ -21,6 +21,7 @@
         private VRTK_BezierPointerRenderer LeftPointerRenderer;
         private VRTK_Pointer RightPointer;
         private VRTK_StraightPointerRenderer RightPointerRenderer;
+        private VRTK_UIPointer RightUIPointer;
 
         public ControllerInput controllerInput; /// Initiate a singleton of the ControllerState class. Assign it to the Controller GameObject.
 
@@ -63,6 +64,7 @@
             LeftPointerRenderer = LeftController.GetComponent<VRTK_BezierPointerRenderer>();
             RightPointer = RightController.GetComponent<VRTK_Pointer>();
             RightPointerRenderer = RightController.GetComponent<VRTK_StraightPointerRenderer>();
+            RightUIPointer = RightController.GetComponent<VRTK_UIPointer>();
 
             LeftPointer.enabled = false;
             LeftPointerRenderer.enabled = false;
@@ -82,23 +84,24 @@
                         RightUI.SetActive(false);
                         RightPointer.enabled = false;
                         RightPointerRenderer.enabled = false;
+                        RightUIPointer.enabled = false;
                         ScaleWorld();
                         break;
                     }
 
-                    /*if (controllerInput.GetRightMiddle())
+                    if (controllerInput.GetRightMiddle())
                     {
                         controllerState = ControllerState.AIMING_SELECTOR;
                         RightUI.SetActive(false);
-                        // TODO: shoot pointer
                         break;
-                    }*/
+                    }
 
-                    /*if (controllerInput.GetRightIndex())
+                    if (controllerInput.GetRightIndex())
                     {
                         controllerState = ControllerState.PLACING_WAYPOINT;
                         RightPointer.enabled = false;
                         RightPointerRenderer.enabled = false;
+                        RightUIPointer.enabled = false;
                         /// TODO: start linecollider
                         break;
                     }
@@ -108,6 +111,7 @@
                         controllerState = ControllerState.UNDOING;
                         RightPointer.enabled = false;
                         RightPointerRenderer.enabled = false;
+                        RightUIPointer.enabled = false;
                         /// TODO: make waypoint slightly fade
                         break;
                     }
@@ -117,9 +121,10 @@
                         controllerState = ControllerState.REDOING;
                         RightPointer.enabled = false;
                         RightPointerRenderer.enabled = false;
+                        RightUIPointer.enabled = false;
                         /// TODO: make waypoint slightly appear
                         break;
-                    }*/
+                    }
 
                     if (controllerInput.GetRightThumbMoved()) /// Rotate the world
                     {
@@ -134,7 +139,7 @@
                     break;
                 }
 
-                case ControllerState.SCALING: ///DONE
+                case ControllerState.SCALING:
                 {
                     if (controllerInput.GetBothMiddle())
                     {
@@ -150,19 +155,33 @@
                     break;
                 }
 
-                /*ase ControllerState.AIMING_SELECTOR:
+                case ControllerState.AIMING_SELECTOR:
                 {
-                    /// set wp height if aimed
-                    /// If no right middle, break
+                    /// TODO: set wp height if GetRightIndex()
+                    if (controllerInput.GetBothMiddle())
+                    {
+                        controllerState = ControllerState.SCALING;
+                        LeftUI.SetActive(false);
+                        RightPointer.enabled = false;
+                        RightPointerRenderer.enabled = false;
+                        RightUIPointer.enabled = false;
+                        ScaleWorld();
+                        break;
+                    }
+                    if (!controllerInput.GetRightMiddle())
+                    {
+                        controllerState = ControllerState.IDLE;
+                        RightUI.SetActive(true);
+                    }
                     break;
-                }*/
+                }
 
-                /*case ControllerState.SETTING_WAYPOINT_HEIGHT:
+                case ControllerState.SETTING_WAYPOINT_HEIGHT:
                 {
                     break;
-                }*/
+                }
 
-                /*case ControllerState.PLACING_WAYPOINT:
+                case ControllerState.PLACING_WAYPOINT:
                 {
                     if (controllerInput.GetRightMiddle()) /// Cancel waypoint placement
                     {
@@ -179,6 +198,7 @@
                         CreateWaypoint(RightUI.transform.position);
                         RightPointer.enabled = true;
                         RightPointerRenderer.enabled = true;
+                        RightUIPointer.enabled = true;
                     }
                     else
                     {
@@ -186,79 +206,54 @@
                     }
                     break;
 
-                }*/
+                }
 
-                /*case ControllerState.MOVING_WAYPOINT:
+                case ControllerState.MOVING_WAYPOINT:
                 {
                     break;
-                }*/
+                }
 
-                /*case ControllerState.UNDOING:
+                case ControllerState.UNDOING:
                 {
-                    controllerState = ControllerState.UNDOING;
-                    RightPointer.enabled = false;
-                    RightPointerRenderer.enabled = false;
+                    if (!controllerInput.GetRightA())
+                    {
+                        Undo();
+                        break;
+                    }
+                    if (controllerInput.GetRightMiddle())
+                    {
+                        controllerState = ControllerState.IDLE;
+                        RightPointer.enabled = true;
+                        RightPointerRenderer.enabled = true;
+                        RightUIPointer.enabled = true;
+                        /// TODO: make waypoint disappear
+                        break;
+                    }
                     break;
                 }
 
                 case ControllerState.REDOING:
                 {
+                    if (!controllerInput.GetRightB())
+                    {
+                        Redo();
+                    }
+                    if (controllerInput.GetRightMiddle())
+                    {
+                        controllerState = ControllerState.IDLE;
+                        RightPointer.enabled = true;
+                        RightPointerRenderer.enabled = true;
+                        RightUIPointer.enabled = true;
+                        /// TODO: make waypoint disappear
+                        break;
+                    }
                     break;
-                }*/
+                }
 
             }
 
         }
 
-
-        // Rotate the world based off of the right thumbstick
-        private void RotateWorld()
-        {
-            float angle;
-            if (direction == Direction.REGULAR)
-            {
-                angle = -controllerInput.GetRightThumbDelta().x * rotationalSpeed * 360 * Time.fixedDeltaTime;
-            }
-            else
-            {
-                angle = controllerInput.GetRightThumbDelta().x * rotationalSpeed * 360 * Time.fixedDeltaTime;
-            }
-            World.transform.RotateAround(Pivot.transform.position, Vector3.up, angle);
-
-            // Peru: 5/28/2020 : Point Cloud Rotate
-            // FIXME: Is declaring here correct?
-            GameObject pointCloud = GameObject.Find("PointCloud");
-
-            if (pointCloud)
-            {
-                pointCloud.transform.RotateAround(Pivot.transform.position, Vector3.up, angle);
-            }
-        }
-
-        private void MoveWorld()
-        {
-            // Negative values are here to make moving around look natural.
-            // Without occlusion this looks mediocre because it seems like the map is being moved in the wrong direction.
-            float moveX = controllerInput.GetLeftThumbDelta().x;
-            float moveZ = controllerInput.GetLeftThumbDelta().y;
-            
-            // update map position based on input
-            Vector3 position = World.transform.position;
-
-            if (direction == Direction.REGULAR)
-            {
-                position.x -= moveX * speed * Time.deltaTime * 3.0f;
-                position.z -= moveZ * speed * Time.deltaTime * 3.0f;
-            }
-            else
-            {
-                position.x = moveX * speed * Time.deltaTime * 3.0f;
-                position.z = moveZ * speed * Time.deltaTime * 3.0f;
-            }
-
-
-            World.transform.position = position;
-        }
 
         private void ScaleWorld()
         {
@@ -290,6 +285,57 @@
         }
 
 
+        // Rotate the world based off of the right thumbstick
+        private void RotateWorld()
+        {
+            float angle;
+            if (direction == Direction.REGULAR)
+            {
+                angle = -controllerInput.GetRightThumbDelta().x * rotationalSpeed * 360 * Time.fixedDeltaTime;
+            }
+            else
+            {
+                angle = controllerInput.GetRightThumbDelta().x * rotationalSpeed * 360 * Time.fixedDeltaTime;
+            }
+            World.transform.RotateAround(Pivot.transform.position, Vector3.up, angle);
+
+            // Peru: 5/28/2020 : Point Cloud Rotate
+            // FIXME: Is declaring here correct?
+            GameObject pointCloud = GameObject.Find("PointCloud");
+
+            if (pointCloud)
+            {
+                pointCloud.transform.RotateAround(Pivot.transform.position, Vector3.up, angle);
+            }
+        }
+
+
+        private void MoveWorld()
+        {
+            // Negative values are here to make moving around look natural.
+            // Without occlusion this looks mediocre because it seems like the map is being moved in the wrong direction.
+            float moveX = controllerInput.GetLeftThumbDelta().x;
+            float moveZ = controllerInput.GetLeftThumbDelta().y;
+            
+            // update map position based on input
+            Vector3 position = World.transform.position;
+
+            if (direction == Direction.REGULAR)
+            {
+                position.x -= moveX * speed * Time.deltaTime * 3.0f;
+                position.z -= moveZ * speed * Time.deltaTime * 3.0f;
+            }
+            else
+            {
+                position.x = moveX * speed * Time.deltaTime * 3.0f;
+                position.z = moveZ * speed * Time.deltaTime * 3.0f;
+            }
+
+
+            World.transform.position = position;
+        }
+
+
         /// <summary>
         /// Instantiates and returns a new waypoint at the placePoint position.
         /// Modifies behavior to add or insert if we are currently colliding with a line
@@ -314,6 +360,53 @@
             // If we have not added or inserted a waypoint, we need to return null
             return null;
         }
+
+        
+        /// <summary>
+        /// This method handles the undo and delete functionality
+        /// Removes the waypoint from the scene and from the drone's path
+        /// </summary>
+        public void Undo() /// TODO: add undo for moving around
+        {
+            Drone currentlySelectedDrone = WorldProperties.GetSelectedDrone();
+
+            if (currentlySelectedDrone != null) {
+                // Make sure the currently selected drone has waypoints
+                if (currentlySelectedDrone.GetWaypointsCount() >= 1)
+                {
+                    // Otherwise we default to removing the last waypoint (UNDO)
+                    Debug.Log("Removing most recently placed waypoint");
+
+                    Waypoint lastWaypoint = currentlySelectedDrone.PopWaypoint();
+
+                    // Remove from collisions list
+                    //currentCollisions.RemoveAll(collision => collision.waypoint == lastWaypoint &&
+                     //                       collision.type == CollisionType.WAYPOINT);
+                   // currentCollisions.RemoveAll(collision => collision.waypoint == lastWaypoint &&
+                     //                       collision.type == CollisionType.LINE);
+
+                    // Catching edge case in which most recent collision was the last waypoint
+                    //if (lastWaypoint == mostRecentCollision.waypoint)
+                    //{
+                     //   mostRecentCollision.type = CollisionType.NOTHING;
+                      //  mostRecentCollision.waypoint = null;
+                   // }
+                }   
+            }
+
+
+        }
+
+        public void Redo()
+        {
+            Drone currentlySelectedDrone = WorldProperties.GetSelectedDrone();
+            if (currentlySelectedDrone != null)
+            {
+                currentlySelectedDrone.RestoreLastlyDeletedWaypoint();
+            }
+        }
+
+
 
     }
 }
