@@ -1,4 +1,5 @@
-using ISAACS;
+﻿using ISAACS;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -46,12 +47,12 @@ public class DroneMenu : MonoBehaviour {
         //menuCanvas.transform.LookAt(GameObject.Find("OVRCameraRig").transform); // TODO: make menu always face the user
 
         //37.915345, -122.337932
-        double lat = WorldProperties.UnityXToLat(37.915345, dronePosition.x);
-        double lon = WorldProperties.UnityZToLong(-122.337932, lat, dronePosition.z);
+        double lat = WorldProperties.UnityXToLat(37.915345, dronePosition.x); // HARDCODED
+        double lon = WorldProperties.UnityZToLong(-122.337932, lat, dronePosition.z); // HARDCODED
         //double lat = WorldProperties.UnityXToLat(homeLat, dronePosition.x);
         //double lon = WorldProperties.UnityZToLong(homeLong, lat, dronePosition.z);
 
-        dronePosText.text = "(" + lat.ToString() + ", " + lon.ToString() + ")";
+        dronePosText.text = "Lat:   " + String.Format("{0:0.0000000}", lat) + "\nLon: " + String.Format("{0:0.0000000}", lon); 
         droneNameText.text = this.name;
         if (hasAuthority)
         {
@@ -60,7 +61,7 @@ public class DroneMenu : MonoBehaviour {
         } else
         {
             droneAuthorityText.text = "Request Authority";
-            droneAuthorityText.color = Color.red;
+            droneAuthorityText.color = Color.white;
         }
     }
 }
