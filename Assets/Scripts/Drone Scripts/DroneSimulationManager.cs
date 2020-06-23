@@ -20,8 +20,6 @@ public class DroneSimulationManager : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        Debug.Log("The drone is null: " + (drone == null));
-
         if (flying)
         {
             if (fraction < 1)
@@ -53,9 +51,8 @@ public class DroneSimulationManager : MonoBehaviour {
 
     public void FlyNextWaypoint(bool restart = false)
     {
-        Debug.Log("######################### Random debug statement");
-        Debug.Log("The selected drone is: " + (drone == null));
-        ArrayList waypoints = drone.waypoints;
+        // TODO: debug drone variable osciallting
+        ArrayList waypoints = WorldProperties.selectedDrone.waypoints;
 
         if (restart)
         {
