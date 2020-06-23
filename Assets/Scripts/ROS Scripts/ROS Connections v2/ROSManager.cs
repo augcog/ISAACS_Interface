@@ -111,6 +111,7 @@ public class ROSManager : MonoBehaviour {
 
         Drone droneInstance = new Drone(WorldProperties.worldObject.transform.position);
         GameObject droneGameObject = droneInstance.gameObjectPointer;
+        WorldProperties.selectedDrone = droneInstance; // TODO: hardcoded, remove
         droneGameObject.tag = rosDroneConnectionInput.droneTag;
         droneGameObject.name = rosDroneConnectionInput.droneName;
 

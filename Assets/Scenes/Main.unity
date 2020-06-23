@@ -6733,9 +6733,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1699223317}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a1e86e051f2c48f488352f9541c700cd, type: 3}
+  m_Script: {fileID: 11500000, guid: 7f3c930cb716449459c64c5dcdf81bcc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  LeftController: {fileID: 2053542333}
+  RightController: {fileID: 1347866310}
 --- !u!114 &1699223320
 MonoBehaviour:
   m_ObjectHideFlags: 0
