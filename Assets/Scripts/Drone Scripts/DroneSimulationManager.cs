@@ -6,7 +6,7 @@ using ISAACS;
 public class DroneSimulationManager : MonoBehaviour {
 
     [Header("Selected drone and simulation speed")]
-    public Drone drone;
+    private Drone drone;
     public float speed = 0.2f;
 
     private int nextWaypointID = 0;
@@ -20,6 +20,7 @@ public class DroneSimulationManager : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
+        Debug.Log("The drone is null: " + (drone == null));
 
         if (flying)
         {
@@ -42,16 +43,18 @@ public class DroneSimulationManager : MonoBehaviour {
 
     }
 
-    public void InitDroneSim(Drone drone)
+    public void InitDroneSim(Drone droneInit)
     {
         Debug.Log("Drone Flight Sim initilized");
-        this.drone = drone;
+        drone = droneInit;
         home = drone.gameObjectPointer.transform.localPosition;
-
+        Debug.Log("The selected drone is: " + drone.gameObjectPointer.name);
     }
 
     public void FlyNextWaypoint(bool restart = false)
     {
+        Debug.Log("######################### Random debug statement");
+        Debug.Log("The selected drone is: " + (drone == null));
         ArrayList waypoints = drone.waypoints;
 
         if (restart)

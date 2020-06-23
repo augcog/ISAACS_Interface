@@ -52,7 +52,7 @@
 
             // Select this drone
             // Peru: 6/10/20: Do not select on initilization but are deselected
-            //this.Select();
+            this.Select();
             this.gameObjectPointer.transform.Find("group3").Find("Outline").GetComponent<MeshRenderer>().material = this.gameObjectPointer.GetComponent<DroneProperties>().deselectedMaterial;
             Debug.Log("Created new drone with id: " + id);
         }

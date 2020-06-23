@@ -939,7 +939,7 @@ MonoBehaviour:
     port: 9090
     droneType: 1
     droneSubscribers: 0500000001000000
-    simFlight: 0
+    simFlight: 1
   SensorsList:
   - sensorName: Colors
     sensorTag: Colors
