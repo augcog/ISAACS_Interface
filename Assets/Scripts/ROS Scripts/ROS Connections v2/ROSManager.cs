@@ -166,6 +166,7 @@ public class ROSManager : MonoBehaviour {
     /// Create a Sensor gameobject and attach & init required ROSSensorConnnection.
     /// </summary>
     /// <param name="rosSensorConnectionInput"></param>
+    /// generate UI from here
     private void InstantiateSensor(ROSSensorConnectionInput rosSensorConnectionInput)
     {
         SensorType sensorType = rosSensorConnectionInput.sensorType;
