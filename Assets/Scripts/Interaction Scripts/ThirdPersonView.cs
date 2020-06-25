@@ -195,7 +195,7 @@
                     if (!controllerInput.GetRightIndex())
                     {
                         controllerState = ControllerState.IDLE;
-                        CreateWaypoint(RightUI.transform.position);
+                        PlaceWaypoint(RightUI.transform.position);
                         RightPointer.enabled = true;
                         RightPointerRenderer.enabled = true;
                         RightUIPointer.enabled = true;
@@ -335,6 +335,10 @@
             World.transform.position = position;
         }
 
+        private void SetWaypointHeight()
+        {
+            // TODO
+        }
 
         /// <summary>
         /// Instantiates and returns a new waypoint at the placePoint position.
@@ -342,7 +346,7 @@
         /// </summary>
         /// <param name="groundPoint"> This is the location on the ground that the waypoint will be directly above. </param>
         /// <returns></returns>
-        private Waypoint CreateWaypoint(Vector3 groundPoint)
+        private Waypoint PlaceWaypoint(Vector3 groundPoint)
         {
             Drone currentlySelectedDrone = WorldProperties.GetSelectedDrone(); // Grabbing the drone that we are creating this waypoint for
             // Make sure our drone exists
@@ -354,13 +358,18 @@
                 Waypoint newWaypoint = new Waypoint(currentlySelectedDrone, newLocation);
                 // Add the new waypoint to the drone's path
                 currentlySelectedDrone.AddWaypoint(newWaypoint);
-                // Return the waypoint to announce that we successfully created one
+                // Return the waypoint to announce that we successfully placed one
                 return newWaypoint;
             }
             // If we have not added or inserted a waypoint, we need to return null
             return null;
         }
 
+
+        private Waypoint MoveWaypoint()
+        {
+            //TODO
+        }
         
         /// <summary>
         /// This method handles the undo and delete functionality
@@ -394,7 +403,6 @@
                 }   
             }
 
-
         }
 
         public void Redo()
@@ -405,8 +413,6 @@
                 currentlySelectedDrone.RestoreLastlyDeletedWaypoint();
             }
         }
-
-
 
     }
 }
