@@ -160,7 +160,7 @@ public class M210_Flight_TestManager : MonoBehaviour {
 
         if (Input.GetKeyUp(viewSafeWaypointMission))
         {
-
+            //TODO: Port over hardcoded sphere logic
         }
 
         if (Input.GetKeyUp(uploadUserMission))
@@ -179,5 +179,9 @@ public class M210_Flight_TestManager : MonoBehaviour {
             rosDroneConnection.SendWaypointAction(Matrice_ROSDroneConnection.WaypointMissionAction.RESUME);
         }
 
+        if (Input.GetKeyDown(stopMission))
+        {
+            rosDroneConnection.SendWaypointAction(Matrice_ROSDroneConnection.WaypointMissionAction.STOP);
+        }
     }
 }

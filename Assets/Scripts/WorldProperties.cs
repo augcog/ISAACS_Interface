@@ -11,6 +11,7 @@
     using ROSBridgeLib.interface_msgs;
     using Mapbox.Unity.Map;
     using Mapbox.Utils;
+    using ROSBridgeLib.sensor_msgs;
 
     // TODO: we might want to lock FPS!
     /// <summary>
@@ -120,6 +121,17 @@
             //slight inaccuracies
             double delLong = (long2 - long1) * 40075 * (double)Math.Cos(lat) / 360 * 1000;
             return delLong;
+        }
+
+        // TODO: Complete the function
+
+        /// <summary>
+        /// Convert the Given ROS NavSatFixMsg to Unity XYZ space.
+        /// </summary>
+        /// <returns></returns>
+        public static Vector3 ROSCoordToUnityCoord(NavSatFixMsg gpsPosition)
+        {
+            return Vector3.zero;
         }
 
         /// <summary>
