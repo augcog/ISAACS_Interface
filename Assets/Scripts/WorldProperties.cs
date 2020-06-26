@@ -71,7 +71,6 @@
             currentScale = new Vector3(1, 1, 1);
 
             clipShader = GameObject.FindWithTag("Ground").GetComponent<Renderer>().material.shader;
-
         }
 
         /// <summary>

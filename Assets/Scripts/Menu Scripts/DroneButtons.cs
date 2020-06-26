@@ -8,7 +8,7 @@ using ISAACS;
 public class DroneButtons : MonoBehaviour {
 
     Button myButton;
-    Drone drone;
+    private Drone drone;
     private GameObject controller; //needed to access pointer
 
     public bool simulation = true;
