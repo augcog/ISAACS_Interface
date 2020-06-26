@@ -844,10 +844,8 @@ GameObject:
   m_Component:
   - component: {fileID: 146794963}
   - component: {fileID: 146794967}
-  - component: {fileID: 146794966}
-  - component: {fileID: 146794969}
   - component: {fileID: 146794968}
-  - component: {fileID: 146794965}
+  - component: {fileID: 146794964}
   m_Layer: 0
   m_Name: World
   m_TagString: World
@@ -875,7 +873,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &146794965
+--- !u!114 &146794964
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -883,29 +881,30 @@ MonoBehaviour:
   m_GameObject: {fileID: 146794962}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7787ec4cc870bae4c9e65fbfa30a4364, type: 3}
+  m_Script: {fileID: 11500000, guid: b00dbd53d3f787e479e60d37c5c3af6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0.2
---- !u!114 &146794966
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 146794962}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aebd008abee601a489d49b2b7b8a3328, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ManifoldIP: 192.168.60.191
-  connectionStatus: 0
-  implementLamp: 1
-  LampIP: 99.46.143.114
-  pointCloudLevel: -1
-  DronePosition: 1
-  DroneBattery: 0
-  GPSHealth: 0
+  init: 0
+  viewHomeLat: q
+  viewHomeLong: w
+  printLatLong: 0
+  printGPSHealth: 0
+  getAuthority: e
+  hasAuthority: r
+  killSwitch: SPACE
+  spinMotors: y
+  stopMotors: u
+  takeoffDrone: i
+  landDrone: o
+  uploadTestMission: p
+  missionInfo: a
+  executeUploadedMission: s
+  viewSafeWaypointMission: d
+  uploadUserMission: f
+  pauseMission: g
+  resumeMission: h
+  stopMission: j
+  rosDroneConnection: {fileID: 0}
 --- !u!114 &146794967
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -955,37 +954,6 @@ MonoBehaviour:
     sensorSubscribers: 01000000
   success: 0
   uniqueID: 0
---- !u!114 &146794969
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 146794962}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 029cb2c8d0422ef4a9fa7ff2e8e9fafb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  subscribeSurfacePointCloud: 6
-  subscribeColorized0: 0
-  subscribeColorized1: 1
-  subscribeColorized2: 2
-  subscribeColorized3: 3
-  subscribeColorized4: 4
-  subscribeColorized5: 5
-  getAuthority: q
-  getVersion: w
-  takeoffDrone: e
-  landDrone: r
-  uploadTestMission: t
-  missionInfo: y
-  executeUploadedMission: u
-  initMapBox: i
-  displaySensorList: o
-  initTestDrone: o
-  hardcodedWaypoints: p
-  worldProperties: {fileID: 0}
-  rosDroneConnection: {fileID: 0}
 --- !u!1 &161977055
 GameObject:
   m_ObjectHideFlags: 0

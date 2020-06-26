@@ -733,6 +733,8 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
         Debug.LogFormat("Waypoint task upload {0} (ACK: {1})", (response["result"].AsBool ? "succeeded" : "failed"), response["ack_data"].AsInt);
 
         // Start flight upon completing upload
+        // Disabled for now
+        /*
         if (response["result"].AsBool == true)
         {
             SendWaypointAction(WaypointMissionAction.START);
@@ -741,6 +743,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
         {
             StartMission();
         }
+        */
     }
 
     /// <summary>

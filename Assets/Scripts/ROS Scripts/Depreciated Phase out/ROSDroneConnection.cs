@@ -304,13 +304,16 @@ public class ROSDroneConnection : MonoBehaviour
             float y = waypoint.gameObjectPointer.transform.localPosition.y;
             float z = waypoint.gameObjectPointer.transform.localPosition.z;
 
+            /* Depreciated Code
             double ROS_x = WorldProperties.UnityXToLat(DebuggingManager.droneHomeLat, x);
             float ROS_y = (y * WorldProperties.Unity_Y_To_Alt_Scale) - 1f;
             double ROS_z = WorldProperties.UnityZToLong(DebuggingManager.droneHomeLong, DebuggingManager.droneHomeLat, z);
 
+
             MissionWaypointMsg new_waypoint = new MissionWaypointMsg(ROS_x, ROS_z, ROS_y, 3.0f, 0, 0, MissionWaypointMsg.TurnMode.CLOCKWISE, 0, 30, new MissionWaypointActionMsg(0, command_list, command_params));
             Debug.Log("single waypoint info: " + new_waypoint);
             missionMissionMsgList.Add(new_waypoint);
+                        */
         }
         MissionWaypointTaskMsg Task = new MissionWaypointTaskMsg(15.0f, 15.0f, MissionWaypointTaskMsg.ActionOnFinish.AUTO_LANDING, 1, MissionWaypointTaskMsg.YawMode.AUTO, MissionWaypointTaskMsg.TraceMode.POINT, MissionWaypointTaskMsg.ActionOnRCLost.FREE, MissionWaypointTaskMsg.GimbalPitchMode.FREE, missionMissionMsgList.ToArray());
         UploadMission(Task);
