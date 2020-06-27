@@ -113,6 +113,16 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
     Quaternion attitude = Quaternion.identity;
 
     /// <summary>
+    /// Home attitude of the drone
+    /// </summary>
+    Quaternion home_attitude = Quaternion.identity;
+
+    /// <summary>
+    /// Status of the home attitude
+    /// </summary>
+    bool home_attitude_set = false;
+
+    /// <summary>
     /// Offset used to convert drone attitude to Unity axis.
     /// </summary>
     Quaternion offset = Quaternion.Euler(90, 180, 0);
@@ -123,7 +133,17 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
     /// Note that raw accelerometer reading will give a Z direction 9.8 m/s2 when the drone is put on a level ground statically.
     /// </summary>
     IMUMsg imu;
-    
+
+    /// <summary>
+    /// Initial imu reading used to localize attached sensors
+    /// </summary>
+    IMUMsg home_imu;
+
+    /// <summary>
+    /// Status of home imu and imu readings
+    /// </summary>
+    bool home_imu_set = false;
+
     /// <summary>
     /// Current velocity of the drone
     /// </summary>
@@ -354,6 +374,33 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
     {
         return attitude;
     }
+    
+    /// <summary>
+    /// Home attitude
+    /// </summary>
+    /// <returns></returns>
+    public Quaternion GetHomeAttitude()
+    {
+        return home_attitude;
+    }
+
+    /// <summary>
+    /// Current IMU readings
+    /// </summary>
+    /// <returns></returns>
+    public IMUMsg GetIMU()
+    {
+        return imu;
+    }
+
+    /// <summary>
+    /// Home IMU readings
+    /// </summary>
+    /// <returns></returns>
+    public IMUMsg GetHomeIMU()
+    {
+        return home_imu;
+    }
 
     /// <summary>
     /// Current GPS Position of the drone
@@ -434,7 +481,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
     /// <returns></returns>
     public NavSatFixMsg GetHome()
     {
-        return home_position
+        return home_position;
     }
 
     /// ROSTopicSubscriber Interface methods
@@ -459,6 +506,21 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
                 // Update drone transform to new quaternion
                 // this.transform.rotation = attitude;
                 // this.transform.localRotation = attitude;
+
+                if (home_attitude_set == false)
+                {
+                    home_attitude = attitude;
+                    home_attitude_set = true;
+
+
+                    // Localize sensors when both orientation and gps position is set
+                    /*
+                    if (droneHomeSet)
+                    {
+                        LocalizeSensors();
+                    }
+                    */
+                }
 
                 result = attitudeMsg;
                 break;
@@ -486,6 +548,14 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
                 {
                     home_position = gps_position;
                     droneHomeSet = true;
+
+                    // Localize sensors when both orientation and gps position is set
+                    /*
+                    if (home_attitude_set or home_imu_set)
+                    {
+                        LocalizeSensors();
+                    }
+                    */
                 }
 
                 // TODO: Complete function in World properties.
@@ -502,6 +572,20 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
                 // Update drone orientation based on imu reading?
                 // this.transform.localRotation = orientation;
                 // this.transform.rotation = orientation;
+
+                if (home_imu_set == false)
+                {
+                    home_imu = imu;
+                    home_imu_set = true;
+
+                    // Localize sensors when both orientation and gps position is set
+                    /*
+                    if (droneHomeSet)
+                    {
+                        LocalizeSensors();
+                    }
+                    */
+                }
 
                 result = imu;
                 break;
@@ -594,6 +678,18 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
         ros.Disconnect();
     }
 
+    /// <summary>
+    /// Localize all the sensors attached to the drone when both orientation and gps positions are set
+    /// </summary>
+    public void LocalizeSensors()
+    {
+        Quaternion orientation = home_attitude; // or imu.GetOrientation()
+        Vector3 position = WorldProperties.ROSCoordToUnityCoord(home_position);
+
+        // TODO: Integrate new drone-sensor architecture
+        // TODO: Cycle through each sensor and call the SetLocal functions to localize them.
+
+    }
 
     /// <para>
     /// Methods to execute service calls to the DJI SDK onboard the drone and corresponding methods to handle DJI SDK response
