@@ -451,6 +451,9 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
             case "/dji_sdk/attitude":
                 QuaternionMsg attitudeMsg = (parsed == null) ? new QuaternionMsg(raw_msg["quaternion"]) : (QuaternionMsg)parsed;
                 attitude = offset * (new Quaternion(attitudeMsg.GetX(), attitudeMsg.GetY(), attitudeMsg.GetZ(), attitudeMsg.GetW()));
+
+                // Update drone transform to new quaternion
+
                 result = attitudeMsg;
                 break;
             case "/dji_sdk/battery_state":
@@ -492,6 +495,8 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
                 break;
             case "/dji_sdk/imu":
                 imu = (parsed == null) ? new IMUMsg(raw_msg) : (IMUMsg)parsed;
+
+                // Update drone orientation based on imu reading?
                 result = imu;
                 break;
             case "/dji_sdk/rc":
@@ -512,6 +517,9 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
                 result = pointMsg;
                 Debug.Log(result);
                 break;
+
+            //TODO: Add rtk gps subscribers
+
             default:
                 Debug.LogError("Topic not implemented: " + topic);
                 break;
