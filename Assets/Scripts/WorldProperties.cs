@@ -11,6 +11,7 @@
     using ROSBridgeLib.interface_msgs;
     using Mapbox.Unity.Map;
     using Mapbox.Utils;
+    using ROSBridgeLib.sensor_msgs;
 
     // TODO: we might want to lock FPS!
     /// <summary>
@@ -89,7 +90,32 @@
                 AddClipShader(child);
             }
         }
-        
+
+
+        // TODO: Complete these functions
+
+        /// <summary>
+        /// Convert the Given ROS NavSatFixMsg to Unity XYZ space.
+        /// To Be used to convert drone coordinates to unity space
+        /// </summary>
+        /// <returns></returns>
+        public static Vector3 ROSCoordToUnityCoord(NavSatFixMsg gpsPosition)
+        {
+            return Vector3.zero;
+        }
+
+        /// <summary>
+        /// Convert Unity coordinates to ROS world lat,long,alt
+        /// To be used to convert waypint unity coordinates to world lat.long.alt
+        /// </summary>
+        /// <param name="unityPosition"></param>
+        /// <returns></returns>
+        public static NavSatFixMsg UnityCoordToROSCoord(Vector3 unityPosition)
+        {
+            return null;
+        }
+
+
         /// <summary>
         ///     Converts the difference between two latitude values to a difference in meters.
         /// </summary>

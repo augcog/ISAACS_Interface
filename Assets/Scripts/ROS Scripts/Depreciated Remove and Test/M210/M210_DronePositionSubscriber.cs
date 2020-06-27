@@ -78,11 +78,12 @@
 
                     // Peru 6/9/20: Phasing out World Properties
                     //Initial position is also stored as global variables in WorldProperties.
+                    /* Phasing out
                     DebuggingManager.droneHomeLat = new_ROSPosition._lat;
                     DebuggingManager.droneHomeLong = new_ROSPosition._long;
                     DebuggingManager.droneHomeAlt = new_ROSPosition._altitude;
                     //WorldProperties.droneInitialPositionSet = true;
-
+                    */
                     // Initilize MapBox cityMap
                     // GameObject.FindWithTag("World").GetComponent<WorldProperties>().InitializeCityMap();
                 }
