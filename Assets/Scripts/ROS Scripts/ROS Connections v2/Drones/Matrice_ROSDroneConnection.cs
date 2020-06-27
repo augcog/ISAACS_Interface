@@ -156,14 +156,9 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
     NavSatFixMsg gps_position;
     
     /// <summary>
-    /// The latitude of the starting point of the drone flight
+    /// Home position of the drone
     /// </summary>
-    double droneHomeLat = 0;
-    
-    /// <summary>
-    /// The longitude of the starting point of the drone flight
-    /// </summary>
-    double droneHomeLong = 0;
+    NavSatFixMsg home_position;
 
     /// <summary>
     /// Initilize drone home position if it hasn't been set yet
@@ -238,10 +233,10 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
             float y = waypoint.gameObjectPointer.transform.localPosition.y;
             float z = waypoint.gameObjectPointer.transform.localPosition.z;
 
-            double ROS_lat = WorldProperties.UnityXToLat(this.droneHomeLat, x);
+            double ROS_lat = WorldProperties.UnityXToLat(this.home_position.GetLatitude(), x);
             // TODO: Clean hardcoded quanities in Unity - ROS Coordinates clean up
             float ROS_alt = (y * WorldProperties.Unity_Y_To_Alt_Scale) - 1f;
-            double ROS_long = WorldProperties.UnityZToLong(this.droneHomeLong, this.droneHomeLat, z);
+            double ROS_long = WorldProperties.UnityZToLong(this.home_position.GetLongitude(), this.home_position.GetLatitude(), z);
 
             MissionWaypointMsg new_waypoint = new MissionWaypointMsg(ROS_lat, ROS_long, ROS_alt, 3.0f, 0, 0, MissionWaypointMsg.TurnMode.CLOCKWISE, 0, 30, new MissionWaypointActionMsg(0, command_list, command_params));
             Debug.Log("Adding waypoint at: " + new_waypoint);
@@ -421,7 +416,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
     /// <returns></returns>
     public double GetHomeLat()
     {
-        return droneHomeLat;
+        return home_position.GetLatitude();
     }
 
     /// <summary>
@@ -430,7 +425,16 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
     /// <returns></returns>
     public double GetHomeLong()
     {
-        return droneHomeLong;
+        return home_position.GetLongitude();
+    }
+
+    /// <summary>
+    /// Home coordinates of the drone
+    /// </summary>
+    /// <returns></returns>
+    public NavSatFixMsg GetHome()
+    {
+        return home_position
     }
 
     /// ROSTopicSubscriber Interface methods
@@ -453,6 +457,8 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
                 attitude = offset * (new Quaternion(attitudeMsg.GetX(), attitudeMsg.GetY(), attitudeMsg.GetZ(), attitudeMsg.GetW()));
 
                 // Update drone transform to new quaternion
+                // this.transform.rotation = attitude;
+                // this.transform.localRotation = attitude;
 
                 result = attitudeMsg;
                 break;
@@ -475,14 +481,10 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
                 gps_position = (parsed == null) ? new NavSatFixMsg(raw_msg) : (NavSatFixMsg)parsed;
                 result = gps_position;
 
-                double droneLat = gps_position.GetLatitude();
-                double droneLong = gps_position.GetLongitude();
-
                 // TODO: Test that setting drone home latitude and longitutde as first message from drone gps position works.
                 if (droneHomeSet == false)
                 {
-                    droneHomeLat = droneLat;
-                    droneHomeLong = droneLong;
+                    home_position = gps_position;
                     droneHomeSet = true;
                 }
 
@@ -495,8 +497,12 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
                 break;
             case "/dji_sdk/imu":
                 imu = (parsed == null) ? new IMUMsg(raw_msg) : (IMUMsg)parsed;
+                Quaternion orientation = imu.GetOrientation();
 
                 // Update drone orientation based on imu reading?
+                // this.transform.localRotation = orientation;
+                // this.transform.rotation = orientation;
+
                 result = imu;
                 break;
             case "/dji_sdk/rc":
@@ -517,9 +523,24 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
                 result = pointMsg;
                 Debug.Log(result);
                 break;
+            case "dji_sdk/rtk_position":
+                gps_position = (parsed == null) ? new NavSatFixMsg(raw_msg) : (NavSatFixMsg)parsed;
+                result = gps_position;
 
-            //TODO: Add rtk gps subscribers
+                // TODO: Test that setting drone home latitude and longitutde as first message from drone gps position works.
+                if (droneHomeSet == false)
+                {
+                    home_position = gps_position;
+                    droneHomeSet = true;
+                }
 
+                // TODO: Complete function in World properties.
+                if (droneHomeSet)
+                {
+                    this.transform.localPosition = WorldProperties.ROSCoordToUnityCoord(gps_position);
+                }
+
+                break;
             default:
                 Debug.LogError("Topic not implemented: " + topic);
                 break;
@@ -558,6 +579,8 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
                 return "std_msgs/Float32";
             case "/dji_sdk/local_position":
                 return "geometry_msgs/PointStamped";
+            case "/dji_sdk/rtk_position":
+                return "sensor_msgs/NavSatFix";
         }
         Debug.LogError("Topic " + topic + " not registered.");
         return "";
