@@ -17,6 +17,7 @@
 
         public int nextWaypointId; // Incrementing counter to give all waypoints a unique ID when combined with the Drone ID
         public Dictionary<string, Waypoint> waypointsDict; // Collection of the waypoints in this drone's path
+        public List<GameObject> attachedSensors;
 
         /// <summary>
         /// Constructor method for Drone class objects
@@ -49,6 +50,11 @@
             id = WorldProperties.nextDroneId;
             WorldProperties.dronesDict.Add(id, this);
             WorldProperties.nextDroneId++;
+
+            // Initilize the sensor list
+            // @Jasmine: this is populated by ROS Manager when initilzing the drone and can be used for the UI
+            // @Jasmine: feel free to add/remove functionality as needed, it's a very rough structure right now
+            attachedSensors = new List<GameObject>();
 
             this.gameObjectPointer.transform.Find("group3").Find("Outline").GetComponent<MeshRenderer>().material = this.gameObjectPointer.GetComponent<DroneProperties>().deselectedMaterial;
 

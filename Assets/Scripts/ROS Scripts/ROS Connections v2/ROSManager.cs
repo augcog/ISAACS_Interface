@@ -49,6 +49,7 @@ public class ROSManager : MonoBehaviour {
         public DroneType droneType;
         public List<DroneSubscribers> droneSubscribers;
         public bool simFlight;
+        public List<ROSSensorConnectionInput> attachedSensors;
     }
 
     /// <summary>
@@ -66,7 +67,7 @@ public class ROSManager : MonoBehaviour {
     }
 
     public List<ROSDroneConnectionInput> DronesList;
-    public List<ROSSensorConnectionInput> SensorsList;
+    //public List<ROSSensorConnectionInput> SensorsList;
 
     private Dictionary<int, ROSDroneConnectionInterface> ROSDroneConnections = new Dictionary<int, ROSDroneConnectionInterface>();
     private Dictionary<int, ROSSensorConnectionInterface> ROSSensorConnections = new Dictionary<int, ROSSensorConnectionInterface>();
@@ -83,11 +84,6 @@ public class ROSManager : MonoBehaviour {
         {
             InstantiateDrone(rosDroneConnectionInput);
         }
-
-        foreach (ROSSensorConnectionInput rosSensorConnectionInput in SensorsList)
-        {
-            InstantiateSensor(rosSensorConnectionInput);
-        }
     }
 
     /// <summary>
@@ -96,31 +92,29 @@ public class ROSManager : MonoBehaviour {
     /// <param name="rosDroneConnectionInput"></param>
     private void InstantiateDrone(ROSDroneConnectionInput rosDroneConnectionInput)
     {
+        // All the variables required to create the drone
         DroneType droneType = rosDroneConnectionInput.droneType;
         string droneIP = rosDroneConnectionInput.ipAddress;
         int dronePort = rosDroneConnectionInput.port;
         bool simFlight = rosDroneConnectionInput.simFlight;
         List<string> droneSubscribers = new List<string>();
-
         foreach (DroneSubscribers subscriber in rosDroneConnectionInput.droneSubscribers)
         {
             droneSubscribers.Add(subscriber.ToString());
         }
 
-        //GameObject drone = new GameObject(rosDroneConnectionInput.droneName);
-        //drone.transform.parent = this.transform;
-
+        // Create a new drone
         Drone droneInstance = new Drone(WorldProperties.worldObject.transform.position);
         GameObject droneGameObject = droneInstance.gameObjectPointer;
         droneGameObject.tag = rosDroneConnectionInput.droneTag;
         droneGameObject.name = rosDroneConnectionInput.droneName;
 
-        // Add DroneFlightSim
-        // Peru 6:10:20
+        // Add drone sim manager script on the drone
         DroneSimulationManager droneSim = droneGameObject.AddComponent<DroneSimulationManager>();
         droneGameObject.GetComponent<DroneProperties>().droneSimulationManager = droneSim;
         droneSim.InitDroneSim(droneInstance);
 
+        // Add corresponding ros drone connection script
         switch (droneType)
         {
             case DroneType.M100:
@@ -157,8 +151,14 @@ public class ROSManager : MonoBehaviour {
                 return;
         }
 
-        // TODO: Uncomment after implementing ROSDroneConnection
-        // drone.InitilizeDrone(uniqueID, droneIP, dronePort, droneSubscribers)
+        // Create attached sensors
+        // @Jasmine: We should refine this based on what makes the most sense 
+        foreach (ROSSensorConnectionInput rosSensorInput in rosDroneConnectionInput.attachedSensors)
+        {
+            // @Jasmine: We might need a sensor properties type script to connect a sensor back to the drone?
+            GameObject sensor = InstantiateSensor(rosSensorInput);
+            droneInstance.attachedSensors.Add(sensor);
+        }
 
         uniqueID ++;
     }
@@ -167,7 +167,7 @@ public class ROSManager : MonoBehaviour {
     /// Create a Sensor gameobject and attach & init required ROSSensorConnnection.
     /// </summary>
     /// <param name="rosSensorConnectionInput"></param>
-    private void InstantiateSensor(ROSSensorConnectionInput rosSensorConnectionInput)
+    private GameObject InstantiateSensor(ROSSensorConnectionInput rosSensorConnectionInput)
     {
         SensorType sensorType = rosSensorConnectionInput.sensorType;
         string sensorIP = rosSensorConnectionInput.ipAddress;
@@ -184,7 +184,6 @@ public class ROSManager : MonoBehaviour {
         senseText = senseTextComp.text;
         Debug.Log("Sensor text currently is: " + senseText);
  
-       
         foreach (SensorSubscribers subscriber in rosSensorConnectionInput.sensorSubscribers)
         {
             sensorSubscribers.Add(subscriber.ToString());
@@ -230,7 +229,7 @@ public class ROSManager : MonoBehaviour {
 
             default:
                 Debug.Log("No sensor type selected");
-                return;
+                return null;
         }
         senseText += rosSensorConnectionInput.sensorName + " ,Sensor IP " + sensorIP; //what information do we need per sensor?
         senseTextComp.text = senseText;
@@ -241,6 +240,8 @@ public class ROSManager : MonoBehaviour {
         // TODO: Uncomment after implementing ROSDroneConnection
         // sensor.InitilizeSensor(uniqueID, sensorIP, sensorPort ,sensorSubscribers)
         uniqueID++;
+
+        return sensor;
 
     }
     
