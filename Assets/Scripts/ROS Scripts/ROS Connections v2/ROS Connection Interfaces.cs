@@ -121,25 +121,23 @@ public interface ROSSensorConnectionInterface
     /// </summary>    
     void DisconnectROSConnection();
 
-
-
     /// <summary>
-    /// Returns a dictionary of connected subscribers with unique identifiers for each.
+    /// Returns a list of connected subscriber topics (which are unique identifiers).
     /// </summary>
     /// <returns></returns>
-    Dictionary<int, string> GetSensorSubscribers();
+    List<string> GetSensorSubscribers();
 
     /// <summary>
     /// Function to disconnect a specific subscriber
     /// </summary>
     /// <param name="subscriberID"></param>
-    void Unsubscriber(int subscriberID);
+    void Unsubscriber(string subscriberTopic);
 
     /// <summary>
     /// Function to connect a specific subscriber
     /// </summary>
     /// <param name="subscriberID"></param>
-    void Subscribe(int subscriberID);
+    void Subscribe(string subscriberTopic);
 
 
     // Anything else common across sensors?
