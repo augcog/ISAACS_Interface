@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 using System.Collections.Generic;
 using SimpleJSON;
@@ -256,5 +256,20 @@ public class LampSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
     public void DisconnectROSConnection()
     {
         ros.Disconnect();
+    }
+
+    public void SetLocalOrientation(Quaternion quaternion)
+    {
+        this.transform.localRotation = quaternion; 
+    }
+
+    public void SetLocalPosition(Vector3 position)
+    {
+        this.transform.localPosition = position;
+    }
+
+    public void SetLocalScale(Vector3 scale)
+    {
+        this.transform.localScale = scale;
     }
 }
