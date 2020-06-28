@@ -131,7 +131,7 @@ public interface ROSSensorConnectionInterface
     /// Function to disconnect a specific subscriber
     /// </summary>
     /// <param name="subscriberID"></param>
-    void Unsubscriber(string subscriberTopic);
+    void Unsubscribe(string subscriberTopic);
 
     /// <summary>
     /// Function to connect a specific subscriber
