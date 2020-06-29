@@ -109,17 +109,15 @@
         }
 
 
-        // TODO: Complete these functions
-
         /// <summary>
         /// Convert the Given ROS NavSatFixMsg to Unity XYZ space.
         /// To Be used to convert drone coordinates to unity space
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Unity position vector to use within World GameObject</returns>
         public static Vector3 ROSCoordToUnityCoord(NavSatFixMsg gpsPosition)
         {
             Vector3 unityCoord = Vector3.zero;
-            unityCoord.z= (float)((gpsPosition.GetLatitude() - Lat0) * EARTH_RADIUS);
+            unityCoord.z = (float)((gpsPosition.GetLatitude() - Lat0) * EARTH_RADIUS);
             unityCoord.x = (float)((gpsPosition.GetLongitude() - Lng0) * EARTH_RADIUS * lngCorrection);
             unityCoord.y = (float)(gpsPosition.GetAltitude() - Alt0);
 
@@ -131,7 +129,7 @@
         /// To be used to convert waypint unity coordinates to world lat.long.alt
         /// </summary>
         /// <param name="unityPosition"></param>
-        /// <returns></returns>
+        /// <returns>Vector 3 of (Lng, Lat, Alt)</returns>
         public static Vector3 UnityCoordToROSCoord(Vector3 unityPosition)
         {
             Vector3 gpsCoord = Vector3.zero;
