@@ -141,7 +141,7 @@
             return gpsCoord;
         }
 
-
+        /*
         /// <summary>
         ///     Converts the difference between two latitude values to a difference in meters.
         /// </summary>
@@ -199,7 +199,8 @@
             return delLong;
         }
 
-        // Old logic to calculate new position of the drone, will implement in after merge.
+        */
+        // Old logic to calculate new position of the drone and for waypoints.
         /// Calculates the 3D displacement of the drone from it's initial position, to its current position, in Unity coordinates.
         /*
         changePos = new Vector3(
