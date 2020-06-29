@@ -136,6 +136,16 @@
                         MoveWorld();
                     }
 
+                    if (controllerInput.GetLeftX()) /// Cycle through drones
+                    {
+                        WorldProperties.SelectNextDrone();
+                    }
+
+                    if (controllerInput.GetLeftY()) /// Cycle through sensors
+                    {
+                        // @Jasmine: Make the connection to display the next sensor in the UI here
+                    }
+
                     break;
                 }
 
@@ -369,6 +379,7 @@
         private Waypoint MoveWaypoint()
         {
             //TODO
+            return null;
         }
         
         /// <summary>

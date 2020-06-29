@@ -61,9 +61,9 @@
 
             Debug.Log("Created new drone with id: " + id);
 
-            // Select this drone
-            // TODO: Must be done by the user in the application
-            gameObjectPointer.GetComponent<DroneProperties>().DeselectDrone();
+            // Init as unselected
+            gameObjectPointer.transform.Find("group3/Outline").GetComponent<MeshRenderer>().material = droneProperties.deselectedMaterial;
+            selected = false;
 
             consecutiveWaypointDeletionsCount = 0; /// Initialize the deletion count to 0
         }
