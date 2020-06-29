@@ -20,6 +20,7 @@ public class MeshSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
     private ROSBridgeWebSocketConnection ros = null;
     public string client_id;
     private Thread rosMsgThread;
+    private List<string> sensorSubscriberTopics = new List<string>();
 
     /// Queue of jsonMsgs to be parsed on thread
     private Queue<JSONNode> jsonMsgs = new Queue<JSONNode>();
@@ -94,6 +95,7 @@ public class MeshSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
                     break;
             }
             Debug.Log(" Mesh Subscribing to : " + subscriberTopic);
+            sensorSubscriberTopics.Add(subscriberTopic);
             ros.AddSubscriber(subscriberTopic, this);
         }
 
@@ -129,6 +131,63 @@ public class MeshSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
             Dictionary<long[], MeshArray> mesh_dict = meshDicts.Dequeue();
             visualizer.SetMesh(mesh_dict);
             Debug.Log("Set Mesh: " + DateTime.Now.Subtract(startTime).TotalMilliseconds.ToString() + "ms");
+        }
+
+        if (Input.GetKeyDown("n"))
+        {
+            string topic = sensorSubscriberTopics[0];
+            Debug.Log("Testing with topic: " + topic);
+            Unsubscribe(topic);
+        }
+
+        if (Input.GetKeyDown("m"))
+        {
+            string topic = sensorSubscriberTopics[0];
+            Debug.Log("Testing with topic: " + topic);
+            Subscribe(topic);
+        }
+    }
+
+    /// <summary>
+    /// Returns a list of connected subscriber topics (which are unique identifiers).
+    /// </summary>
+    /// <returns></returns>
+    public List<string> GetSensorSubscribers()
+    {
+        return sensorSubscriberTopics;
+    }
+
+    /// <summary>
+    /// Function to disconnect a specific subscriber
+    /// </summary>
+    /// <param name="subscriberID"></param>
+    public void Unsubscribe(string subscriberTopic)
+    {
+        if (sensorSubscriberTopics.Contains(subscriberTopic))
+        {
+            sensorSubscriberTopics.Remove(subscriberTopic);
+            ros.RemoveSubscriber(subscriberTopic);
+        }
+        else
+        {
+            Debug.Log("No such subscriber exists: " + subscriberTopic);
+        }
+
+    }
+
+    /// <summary>
+    /// Function to connect a specific subscriber
+    /// </summary>
+    /// <param name="subscriberID"></param>
+    public void Subscribe(string subscriberTopic)
+    {
+        if (sensorSubscriberTopics.Contains(subscriberTopic) == false)
+        {
+            ros.AddSubscriber(subscriberTopic, this);
+        }
+        else
+        {
+            Debug.Log("Subscriber already registered: " + subscriberTopic);
         }
     }
 

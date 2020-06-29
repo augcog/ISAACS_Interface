@@ -15,7 +15,8 @@ public class PointCloudSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubsc
 {
     // Private connection variables
     private ROSBridgeWebSocketConnection ros = null;
-    string client_id;
+    private string client_id;
+    private List<string> sensorSubscriberTopics = new List<string>();
 
     private Dictionary<string, PointCloudVisualizer> pcVisualizers = new Dictionary<string, PointCloudVisualizer>();
 
@@ -45,6 +46,50 @@ public class PointCloudSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubsc
         if (ros != null)
         {
             ros.Render();
+        }
+    }
+
+
+    /// <summary>
+    /// Returns a list of connected subscriber topics (which are unique identifiers).
+    /// </summary>
+    /// <returns></returns>
+    public List<string> GetSensorSubscribers()
+    {
+        return sensorSubscriberTopics;
+    }
+
+    /// <summary>
+    /// Function to disconnect a specific subscriber
+    /// </summary>
+    /// <param name="subscriberID"></param>
+    public void Unsubscribe(string subscriberTopic)
+    {
+        if (sensorSubscriberTopics.Contains(subscriberTopic))
+        {
+            sensorSubscriberTopics.Remove(subscriberTopic);
+            ros.RemoveSubscriber(subscriberTopic);
+        }
+        else
+        {
+            Debug.Log("No such subscriber exists: " + subscriberTopic);
+        }
+
+    }
+
+    /// <summary>
+    /// Function to connect a specific subscriber
+    /// </summary>
+    /// <param name="subscriberID"></param>
+    public void Subscribe(string subscriberTopic)
+    {
+        if (sensorSubscriberTopics.Contains(subscriberTopic) == false)
+        {
+            ros.AddSubscriber(subscriberTopic, this);
+        }
+        else
+        {
+            Debug.Log("Subscriber already registered: " + subscriberTopic);
         }
     }
 

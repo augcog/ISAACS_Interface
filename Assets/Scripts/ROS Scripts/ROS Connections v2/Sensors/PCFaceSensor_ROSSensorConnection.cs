@@ -19,6 +19,7 @@ public class PCFaceSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
     private ROSBridgeWebSocketConnection ros = null;
     public string client_id;
     public float alpha = 0.8f;
+    private List<string> sensorSubscriberTopics = new List<string>();
 
     // List of visualizers
     private Dictionary<string, PCFaceVisualizer> pcFaceVisualizers = new Dictionary<string, PCFaceVisualizer>();
@@ -46,6 +47,7 @@ public class PCFaceSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
                     break;
             }
             Debug.Log(" PC Face Mesh Subscribing to : " + subscriberTopic);
+            sensorSubscriberTopics.Add(subscriberTopic);
             ros.AddSubscriber(subscriberTopic, this);
         }
 
@@ -63,6 +65,50 @@ public class PCFaceSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
         if (ros != null)
         {
             ros.Render();
+        }
+    }
+
+
+    /// <summary>
+    /// Returns a list of connected subscriber topics (which are unique identifiers).
+    /// </summary>
+    /// <returns></returns>
+    public List<string> GetSensorSubscribers()
+    {
+        return sensorSubscriberTopics;
+    }
+
+    /// <summary>
+    /// Function to disconnect a specific subscriber
+    /// </summary>
+    /// <param name="subscriberID"></param>
+    public void Unsubscribe(string subscriberTopic)
+    {
+        if (sensorSubscriberTopics.Contains(subscriberTopic))
+        {
+            sensorSubscriberTopics.Remove(subscriberTopic);
+            ros.RemoveSubscriber(subscriberTopic);
+        }
+        else
+        {
+            Debug.Log("No such subscriber exists: " + subscriberTopic);
+        }
+
+    }
+
+    /// <summary>
+    /// Function to connect a specific subscriber
+    /// </summary>
+    /// <param name="subscriberID"></param>
+    public void Subscribe(string subscriberTopic)
+    {
+        if (sensorSubscriberTopics.Contains(subscriberTopic) == false)
+        {
+            ros.AddSubscriber(subscriberTopic, this);
+        }
+        else
+        {
+            Debug.Log("Subscriber already registered: " + subscriberTopic);
         }
     }
 
