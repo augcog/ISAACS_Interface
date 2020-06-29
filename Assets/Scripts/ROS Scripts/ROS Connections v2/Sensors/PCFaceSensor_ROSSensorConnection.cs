@@ -15,9 +15,6 @@ using ISAACS;
 
 public class PCFaceSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber, ROSSensorConnectionInterface
 {
-    // Visualizer variables
-    public static string rendererObjectName = "PlacementPlane"; // pick a center point of the map, ideally as part of rotating map
-
     // Private connection variables
     private ROSBridgeWebSocketConnection ros = null;
     public string client_id;
@@ -40,9 +37,6 @@ public class PCFaceSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
 
             switch (subscriber)
             {
-                case "mesh":
-                    subscriberTopic = "/voxblox_node/" + subscriber;
-                    break;
                 default:
                     subscriberTopic = "/" + subscriber;
                     // Create PC Face Visualizer, initilize it as a child of this sensor gameobject and add it to the PCFaceVisualizer dictionary

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using UnityEngine;
 using System.Collections.Generic;
 using SimpleJSON;
@@ -27,9 +27,8 @@ public class LampSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
         WHITE = 6
     }
 
-    // Visualizer variables
-    public static string rendererObjectName = "PlacementPlane"; // pick a center point of the map, ideally as part of rotating map
     public PointCloudLevel pointCloudLevel = PointCloudLevel.WHITE;
+    private Dictionary<string, PointCloudVisualizer> pcVisualizers = new Dictionary<string, PointCloudVisualizer>();
 
     // Private connection variables
     private ROSBridgeWebSocketConnection ros = null;
@@ -56,6 +55,10 @@ public class LampSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
                     subscriberTopic = "/" + subscriber;
                     break;
             }
+
+            PointCloudVisualizer pcVisualizer = gameObject.AddComponent<PointCloudVisualizer>();
+            pcVisualizer.SetParentTransform(this.transform);
+            pcVisualizers.Add(subscriberTopic, pcVisualizer);
             Debug.Log(" LAMP Subscribing to : " + subscriberTopic);
             ros.AddSubscriber(subscriberTopic, this);
         }
@@ -109,8 +112,9 @@ public class LampSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
         }
 
         PointCloud2Msg pointCloudMsg = new PointCloud2Msg(raw_msg);
-        PointCloudVisualizer(pointCloudMsg);
- 
+        this.pcVisualizers[topic].PointCloudLevel = pointCloudLevel;
+        this.pcVisualizers[topic].SetPointCloud(pointCloudMsg.GetCloud());
+        Debug.Log("Updated Point Cloud");
         return result;
     }
     public string GetMessageType(string topic)
@@ -147,15 +151,6 @@ public class LampSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
         return "";
 
         **/
-    }
-
-    // Visualizer helper scripts
-    private void PointCloudVisualizer(PointCloud2Msg pointCloudMsg)
-    {
-        // Idea: We could have each sesnor have a PointCloudVisualizer attached to it and use that one.
-        PointCloudVisualizer visualizer = GameObject.Find(rendererObjectName).GetComponent<PointCloudVisualizer>();
-        visualizer.SetPointCloud(pointCloudMsg.GetCloud());
-        Debug.Log("Updated Point Cloud");
     }
 
     /// <summary>
