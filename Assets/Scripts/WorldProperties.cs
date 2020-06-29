@@ -26,6 +26,7 @@
         private static Drone selectedDrone;
         private static char nextDroneId;
         private static Dictionary<char, Drone> dronesDict;
+        private static Queue<Drone> dronesQueue;
 
         [Header("Sensor vairables")]
         private static GameObject selectedSensor;
@@ -57,6 +58,7 @@
         {
             selectedDrone = null;
             dronesDict = new Dictionary<char, Drone>(); // Collection of all the drone classObjects
+            dronesQueue = new Queue<Drone>();
 
             selectedSensor = null;
             sensorDict = new Dictionary<int, GameObject>();
@@ -71,6 +73,30 @@
             currentScale = new Vector3(1, 1, 1);
 
             clipShader = GameObject.FindWithTag("Ground").GetComponent<Renderer>().material.shader;
+
+        }
+
+        /// <summary>
+        /// Cycle through the connected drones
+        /// </summary>
+        public static void SelectNextDrone()
+        {
+            Debug.Log("Selection next drone");
+
+            if(selectedDrone != null)
+            {
+                dronesQueue.Enqueue(selectedDrone);
+            }
+
+            if (dronesQueue.Count > 0)
+            {
+                Drone nextDrone = dronesQueue.Dequeue();
+                nextDrone.gameObjectPointer.GetComponent<DroneProperties>().SelectDrone();
+            }
+            else
+            {
+                Debug.Log("No drones connected");
+            }
 
         }
 
@@ -118,6 +144,7 @@
         public static void AddDrone(char id, Drone drone)
         {
             dronesDict.Add(id, drone);
+            dronesQueue.Enqueue(drone);
         }
 
         /// <summary>
