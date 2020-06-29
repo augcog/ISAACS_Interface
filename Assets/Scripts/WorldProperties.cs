@@ -12,6 +12,7 @@
     using Mapbox.Unity.Map;
     using Mapbox.Utils;
     using ROSBridgeLib.sensor_msgs;
+    using JetBrains.Annotations;
 
     // TODO: we might want to lock FPS!
     /// <summary>
@@ -43,10 +44,22 @@
 
         [Header("Unity-ROS Conversion Variables")]
         // ROS-Unity conversion variables
-        public static float earth_radius = 6378137;
-        public static Vector3 initial_DroneROS_Position = Vector3.zero;
-        public static Vector3 initial_DroneUnity_Position = Vector3.zero;
-        public static float ROS_to_Unity_Scale = 0.0f;
+        public double missionCenterLat;
+        public double missionCenterLng;
+        // Relative to the surface of the WGS 84 Ellipsoid
+        public double missionCenterAltitude;
+
+        private static double Lat0;
+        private static double Lng0;
+        private static double Alt0;
+        /// <summary>
+        /// Cosine of missionCenterLat. This correction is applied to the longitude calculations.
+        /// </summary>
+        private static double lngCorrection;
+        /// <summary>
+        /// Radius of the Earth in meters.
+        /// </summary>
+        private const double EARTH_RADIUS = 6378137;
 
         //Unity to lat --> multiply by scale; lat to Unity --> divide by scale
         public static float Unity_X_To_Lat_Scale = 10.0f;
@@ -71,6 +84,10 @@
             actualScale = new Vector3(1, 1, 1);
             currentScale = new Vector3(1, 1, 1);
 
+            Lat0 = missionCenterLat;
+            Lng0 = missionCenterLng;
+            Alt0 = missionCenterAltitude;
+            lngCorrection = Math.Cos(missionCenterLat / 180.0 * Math.PI);
             clipShader = GameObject.FindWithTag("Ground").GetComponent<Renderer>().material.shader;
         }
 
@@ -101,9 +118,12 @@
         /// <returns></returns>
         public static Vector3 ROSCoordToUnityCoord(NavSatFixMsg gpsPosition)
         {
+            Vector3 unityCoord = Vector3.zero;
+            unityCoord.z= (float)((gpsPosition.GetLatitude() - Lat0) * EARTH_RADIUS);
+            unityCoord.x = (float)((gpsPosition.GetLongitude() - Lng0) * EARTH_RADIUS * lngCorrection);
+            unityCoord.y = (float)(gpsPosition.GetAltitude() - Alt0);
 
-
-            return Vector3.zero;
+            return unityCoord;
         }
 
         /// <summary>
@@ -112,9 +132,13 @@
         /// </summary>
         /// <param name="unityPosition"></param>
         /// <returns></returns>
-        public static NavSatFixMsg UnityCoordToROSCoord(Vector3 unityPosition)
+        public static Vector3 UnityCoordToROSCoord(Vector3 unityPosition)
         {
-            return null;
+            Vector3 gpsCoord = Vector3.zero;
+            gpsCoord.x = (float)((unityPosition.x / (EARTH_RADIUS * lngCorrection)) + Lng0);
+            gpsCoord.z = (float)((unityPosition.z / EARTH_RADIUS) + Lat0);
+            gpsCoord.y = (float)((unityPosition.y) + Alt0);
+            return gpsCoord;
         }
 
 
