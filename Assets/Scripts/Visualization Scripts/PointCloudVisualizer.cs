@@ -7,7 +7,7 @@ using ISAACS;
 public class PointCloudVisualizer : MonoBehaviour
 {
     /// <value> Attach DataServer object. If nonexistant, create an empty GameObject and attach the script `DataServer.cs`.</value>
-    public bool flipYZ = false;
+    public bool flipYZ = true;
 
 
     Color red = new Color32(255, 0, 0, 128);
@@ -27,17 +27,35 @@ public class PointCloudVisualizer : MonoBehaviour
     /// <summary>
     /// scale of the pointObject.
     /// </summary>
-    public float size = 0.001f; // see comment below
-    public float cloud_scale = 0.05286196f; // these variables are not useable in functions below for some weird reason?? "We're done" - Peru & Nitz
+    public float size = 0.1f; // see comment below
 
-    private GameObject cloudParent;
+    private GameObject cloudParent = null;
 
     private bool hasChanged = false;
+
+    private LampSensor_ROSSensorConnection.PointCloudLevel pointCloudLevel = LampSensor_ROSSensorConnection.PointCloudLevel.WHITE;
+
+    public LampSensor_ROSSensorConnection.PointCloudLevel PointCloudLevel
+    {
+        get
+        {
+            return pointCloudLevel;
+        }
+
+        set
+        {
+            pointCloudLevel = value;
+        }
+    }
 
     // Use this for initialization
     void Start()
     {
-        cloudParent = new GameObject("Initial");
+        if (cloudParent == null)
+        {
+            cloudParent = new GameObject("Initial");
+        }
+        pointObject = Resources.Load("RadVoxel") as GameObject;
         // configure the pointObject here.
         //pointObject.transform.localScale = new Vector3(size, size, size);
     }
@@ -52,21 +70,42 @@ public class PointCloudVisualizer : MonoBehaviour
     }
 
     /// <summary>
+    /// Set the parent of this visualizer to the sensor.
+    /// </summary>
+    /// <param name="parent"></param>
+    public void SetParentTransform(Transform parent)
+    {
+        if (cloudParent == null)
+        {
+            cloudParent = new GameObject("Initial");
+        }
+        cloudParent.transform.parent = parent;
+    }
+
+    /// <summary>
     /// Replace the current point cloud with a new point cloud.
     /// </summary>
     /// <param name="newCloud"></param>
     public void SetPointCloud(PointCloud<PointXYZRGBAIntensity> newCloud)
     {
         Debug.Log("Setting point cloud XYZ RGBA Intensity");
+        Transform parent = cloudParent.transform.parent;
         Destroy(cloudParent);
         // Insert timestamp here maybe?
         cloudParent = new GameObject("PointCloud");
+        cloudParent.transform.parent = parent;
+
+        //TODO fixme
+
         //GameObject world = GameObject.FindGameObjectWithTag("World");
         //cloudParent.transform.parent = world.transform;
         cloudParent.transform.position = new Vector3(0.242f, 2.082f, -0.742f);
         cloudParent.transform.localScale = new Vector3(0.05286196f, 0.05286196f, 0.05286196f);
         //cloudParent.transform.Rotate(0.0f, 163.152f, 0.0f, Space.World);
         cloudParent.transform.Rotate(0.0f, 128.382f, 0.0f, Space.World);
+
+        // END TODO
+
         bool printOnce = false;
         int cloudLength = newCloud.Points.Count;
         double discard = System.Math.Max(0, 1 - 10000.0 / cloudLength);
@@ -87,10 +126,10 @@ public class PointCloudVisualizer : MonoBehaviour
             //Debug.Log("X:" + pointPosition.x + "\tZ:" + pointPosition.z + "\tY" + pointPosition.y);
             
             
-            if (pointPosition.x > 14 || pointPosition.z > -10 || pointPosition.x < -14 || pointPosition.z < -30 || pointPosition.y < -0.03 || pointPosition.y > 5.2)
-            {
-                continue;
-            }
+            //if (pointPosition.x > 14 || pointPosition.z > -10 || pointPosition.x < -14 || pointPosition.z < -30 || pointPosition.y < -0.03 || pointPosition.y > 5.2)
+            //{
+            //    continue;
+            //}
             
             
             //if(pointPosition - )
@@ -106,14 +145,11 @@ public class PointCloudVisualizer : MonoBehaviour
             childPoint.transform.localScale = new Vector3(size, size, size); // size of each point
             //Debug.Log("X:" + childPoint.transform.localPosition.x + "\tZ:" + childPoint.transform.localPosition.z + "\tY" + childPoint.transform.localPosition.y);
 
-            int pointCloudLevel = WorldProperties.worldObject.GetComponent<ROSDroneConnection>().pointCloudLevel;
-
-
             if (!printOnce)
             {
                 printOnce = true;
                 Debug.Log("R:" + point.R + "\tG:" + point.G + "\tB" + point.B + "\tA" + point.A);
-                Debug.Log("Point Cloud Level: " + pointCloudLevel);
+                Debug.Log("Point Cloud Level: " + PointCloudLevel);
 
             }
             Color color = new Color((float)point.R / 255.0f, (float)point.G / 255.0f, (float)point.B / 255.0f, (float)point.A / 255.0f);
@@ -124,28 +160,28 @@ public class PointCloudVisualizer : MonoBehaviour
             // Peru: 5/26/20 : New color scheme
 
             
-            if (pointCloudLevel == 0)
+            if (PointCloudLevel == LampSensor_ROSSensorConnection.PointCloudLevel.RED)
             {
                 color = red;
             }
-            else if (pointCloudLevel == 1)
+            else if (PointCloudLevel == LampSensor_ROSSensorConnection.PointCloudLevel.ORANGE)
             {
                 color = orange;
                 
             }
-            else if (pointCloudLevel == 2)
+            else if (PointCloudLevel == LampSensor_ROSSensorConnection.PointCloudLevel.YELLOW)
             {
                 color = yellow;
             }
-            else if (pointCloudLevel == 3)
+            else if (PointCloudLevel == LampSensor_ROSSensorConnection.PointCloudLevel.GREEN)
             {
                 color = green;
             }
-            else if (pointCloudLevel == 4)
+            else if (PointCloudLevel == LampSensor_ROSSensorConnection.PointCloudLevel.BLUE)
             {
                 color = blue;
             }
-            else if (pointCloudLevel == 5)
+            else if (PointCloudLevel == LampSensor_ROSSensorConnection.PointCloudLevel.LIGHT_BLUE)
             {
                 color = light_blue;
             }
