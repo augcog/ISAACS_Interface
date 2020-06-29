@@ -65,10 +65,10 @@ public class PCFaceVisualizer : MonoBehaviour
         float[] x = meshMsg.Vert_x;
         float[] y = meshMsg.Vert_y;
         float[] z = meshMsg.Vert_z;
-        byte[] r = meshMsg.Color_r;
-        byte[] g = meshMsg.Color_g;
-        byte[] b = meshMsg.Color_b;
-        byte[] a = meshMsg.Color_a;
+//        byte[] r = meshMsg.Color_r;
+//        byte[] g = meshMsg.Color_g;
+//        byte[] b = meshMsg.Color_b;
+//        byte[] a = meshMsg.Color_a;
         ushort[] face_0 = meshMsg.Face_0;
         ushort[] face_1 = meshMsg.Face_1;
         ushort[] face_2 = meshMsg.Face_2;
@@ -83,7 +83,8 @@ public class PCFaceVisualizer : MonoBehaviour
             {
                 newVertices.Add(new Vector3(x[j], y[j], z[j]));
             }
-            newColors.Add(new Color(r[j], g[j], b[j], a[j]));
+            //newColors.Add(new Color(r[j], g[j], b[j], a[j]));
+            newColors.Add(Color.red);
         }        
         Vector3[] vertices = newVertices.ToArray();
         Color[] colors = newColors.ToArray();

@@ -19,16 +19,21 @@ public class PlaceHardcodedWaypoint : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        
+        /*
+        TODO: Port Logic over to M210_Flight_Test_Manager
+        
         if (DebuggingManager.droneInitialPositionSet)
         {
            Vector3 changePos = new Vector3(
                    ((float) (WorldProperties.LatDiffMeters(DebuggingManager.droneHomeLat, waypointLatitude)) / WorldProperties.Unity_X_To_Lat_Scale),
-                   ((float) (waypointAltitude /*- WorldProperties.droneHomeAlt*/) / WorldProperties.Unity_Y_To_Alt_Scale),
+                   ((float) (waypointAltitude /WorldProperties.droneHomeAlt/) / WorldProperties.Unity_Y_To_Alt_Scale),
                    ((float) (WorldProperties.LongDiffMeters(DebuggingManager.droneHomeLong, waypointLongitude, waypointLatitude) / WorldProperties.Unity_Z_To_Long_Scale))
                  );
             initialLat = DebuggingManager.droneHomeLat;
             this.transform.localPosition = changePos;
         }
+        */
 		
 	}
 }

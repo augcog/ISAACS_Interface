@@ -21,7 +21,7 @@ public class ROSManager : MonoBehaviour {
     /// <summary>
     /// Drone Subscribers supported by ISAACS System
     /// </summary>
-    public enum DroneSubscribers { attitude, battery_state, flight_status, gimbal_angle, gps_health, gps_position, imu, rc, velocity, height_above_takeoff, local_position };
+    public enum DroneSubscribers { attitude, battery_state, flight_status, gimbal_angle, gps_health, gps_position, rtk_position, imu, rc, velocity, height_above_takeoff, local_position };
 
     /// <summary>
     /// Sensor types supported by ISAACS System

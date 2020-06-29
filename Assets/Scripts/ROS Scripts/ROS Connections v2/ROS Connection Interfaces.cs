@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using ISAACS;
@@ -139,7 +139,24 @@ public interface ROSSensorConnectionInterface
     /// <param name="subscriberID"></param>
     void Subscribe(string subscriberTopic);
 
+    /// <summary>
+    /// Sets the local orientation of the sensor.
+    /// </summary>
+    /// <param name="quaternion">Orientation to apply the the sensor, usually the quaternion from ENU to FLU.</param>
+    void SetLocalOrientation(Quaternion quaternion);
 
+    /// <summary>
+    /// Sets the local position of the sensor.
+    /// </summary>
+    /// <param name="position">Position of the sensor. Usually the position of its drone in Unity.</param>
+    void SetLocalPosition(Vector3 position);
+
+    /// <summary>
+    /// Sets the local scale of the sensor.
+    /// </summary>
+    /// <param name="scale">Scale of the sensor. Usually 1.</param>
+    void SetLocalScale(Vector3 scale);
+  
     // Anything else common across sensors?
 
 }
