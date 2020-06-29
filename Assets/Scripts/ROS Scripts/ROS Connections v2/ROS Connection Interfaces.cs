@@ -122,6 +122,24 @@ public interface ROSSensorConnectionInterface
     void DisconnectROSConnection();
 
     /// <summary>
+    /// Returns a list of connected subscriber topics (which are unique identifiers).
+    /// </summary>
+    /// <returns></returns>
+    List<string> GetSensorSubscribers();
+
+    /// <summary>
+    /// Function to disconnect a specific subscriber
+    /// </summary>
+    /// <param name="subscriberID"></param>
+    void Unsubscribe(string subscriberTopic);
+
+    /// <summary>
+    /// Function to connect a specific subscriber
+    /// </summary>
+    /// <param name="subscriberID"></param>
+    void Subscribe(string subscriberTopic);
+
+    /// <summary>
     /// Sets the local orientation of the sensor.
     /// </summary>
     /// <param name="quaternion">Orientation to apply the the sensor, usually the quaternion from ENU to FLU.</param>
@@ -138,6 +156,7 @@ public interface ROSSensorConnectionInterface
     /// </summary>
     /// <param name="scale">Scale of the sensor. Usually 1.</param>
     void SetLocalScale(Vector3 scale);
+  
     // Anything else common across sensors?
 
 }

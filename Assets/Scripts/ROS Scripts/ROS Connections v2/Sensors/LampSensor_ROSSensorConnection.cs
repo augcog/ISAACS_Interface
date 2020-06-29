@@ -33,7 +33,8 @@ public class LampSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
 
     // Private connection variables
     private ROSBridgeWebSocketConnection ros = null;
-    public string client_id;
+    private string client_id;
+    private List<string> sensorSubscriberTopics = new List<string>();
 
     // Initilize the sensor
     public void InitilizeSensor(int uniqueID, string sensorIP, int sensorPort, List<string> sensorSubscribers)
@@ -57,6 +58,7 @@ public class LampSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
                     break;
             }
             Debug.Log(" LAMP Subscribing to : " + subscriberTopic);
+            sensorSubscriberTopics.Add(subscriberTopic);
             ros.AddSubscriber(subscriberTopic, this);
         }
 
@@ -69,6 +71,49 @@ public class LampSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
         if (ros != null)
         {
             ros.Render();
+        }
+    }
+
+    /// <summary>
+    /// Returns a list of connected subscriber topics (which are unique identifiers).
+    /// </summary>
+    /// <returns></returns>
+    public List<string> GetSensorSubscribers()
+    {
+        return sensorSubscriberTopics;
+    }
+
+    /// <summary>
+    /// Function to disconnect a specific subscriber
+    /// </summary>
+    /// <param name="subscriberID"></param>
+    public void Unsubscribe(string subscriberTopic)
+    {
+        if (sensorSubscriberTopics.Contains(subscriberTopic))
+        {
+            sensorSubscriberTopics.Remove(subscriberTopic);
+            ros.RemoveSubscriber(subscriberTopic);
+        }
+        else
+        {
+            Debug.Log("No such subscriber exists: " + subscriberTopic);
+        }
+
+    }
+
+    /// <summary>
+    /// Function to connect a specific subscriber
+    /// </summary>
+    /// <param name="subscriberID"></param>
+    public void Subscribe(string subscriberTopic)
+    {
+        if (sensorSubscriberTopics.Contains(subscriberTopic) == false)
+        {
+            ros.AddSubscriber(subscriberTopic, this);
+        }
+        else
+        {
+            Debug.Log("Subscriber already registered: " + subscriberTopic);
         }
     }
 
