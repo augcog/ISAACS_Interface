@@ -517,34 +517,6 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
             case "/dji_sdk/gps_health":
                 gps_health = (parsed == null) ? (new UInt8Msg(raw_msg)).GetData() : ((UInt8Msg)parsed).GetData();
                 break;
-            case "/dji_sdk/gps_position":
-                gps_position = (parsed == null) ? new NavSatFixMsg(raw_msg) : (NavSatFixMsg)parsed;
-                result = gps_position;
-
-                if (gps_position.GetLatitude() == 0.0f && gps_position.GetLongitude() == 0.0f)
-                {
-                    break;
-                }
-
-                // TODO: Test that setting drone home latitude and longitutde as first message from drone gps position works.
-                if (home_position_set == false)
-                {
-                    home_position = gps_position;
-                    home_position_set = true;
-
-                    if (home_attitude_set)
-                    {
-                        LocalizeSensors();
-                    }
-                }
-
-                // TODO: Complete function in World properties.
-                if (home_position_set)
-                {
-                    this.transform.localPosition = WorldProperties.ROSCoordToUnityCoord(gps_position);
-                }
-
-                break;
             case "/dji_sdk/imu":
                 imu = (parsed == null) ? new IMUMsg(raw_msg) : (IMUMsg)parsed;
                 result = imu;
@@ -567,6 +539,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
                 result = pointMsg;
                 Debug.Log(result);
                 break;
+            case "/dji_sdk/gps_position":
             case "dji_sdk/rtk_position":
                 gps_position = (parsed == null) ? new NavSatFixMsg(raw_msg) : (NavSatFixMsg)parsed;
                 result = gps_position;
