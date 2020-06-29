@@ -11,6 +11,8 @@
     /// </summary>
     public class WaypointProperties : MonoBehaviour
     {
+        private GameObject controller; // TODO: hardcoded, remove.
+
         public Waypoint classPointer;
         public Drone referenceDrone;
         public GameObject referenceDroneGameObject;
@@ -45,6 +47,7 @@
 
         void Start()
         {
+            controller = GameObject.Find("Controller");
             passed = false;
 
             referenceDrone = classPointer.referenceDrone;
@@ -144,9 +147,14 @@
                 endpoint = prevPoint.transform.position;
                 LineProperties.SetPosition(1, endpoint);
 
+                // Code in WaypointSystemUpgrade
                 ComputeWorldScaleActual();
                 LineProperties.startWidth = WorldScaleActual.y / 200;
                 LineProperties.endWidth = WorldScaleActual.y / 200;
+
+                // Code in master
+                // LineProperties.startWidth = controller.GetComponent<MapInteractions>().actualScale.y / 200;
+                // LineProperties.endWidth = controller.GetComponent<MapInteractions>().actualScale.y / 200;
             }
         }
         
@@ -158,7 +166,13 @@
             ComputeWorldScaleActual();
 
             lineCollider.transform.parent = LineProperties.transform;
+            
+            // Code in WaypointSystemUpgrade
             lineCollider.radius = WorldScaleActual.y / 50;
+
+            // Code in Master
+            // lineCollider.radius = controller.GetComponent<MapInteractions>().actualScale.y / 50;
+
             lineCollider.center = Vector3.zero;
             lineCollider.transform.position = (endpoint + this.gameObject.transform.position) / 2;
             lineCollider.direction = 2;
@@ -187,8 +201,15 @@
             ComputeWorldScaleActual();
             
             thisGroundpoint = Instantiate(modelGroundpoint, groundpoint, Quaternion.identity);
+            
+            // Code in WaypointSystemUpgrade
             thisGroundpoint.transform.localScale = WorldScaleActual / 100;
             thisGroundpoint.transform.parent = World.transform;
+
+            // Code in master
+            // thisGroundpoint.transform.localScale = controller.GetComponent<MapInteractions>().actualScale / 100;
+            // thisGroundpoint.transform.parent = world.transform;
+
             groundpointLine = thisGroundpoint.GetComponent<LineRenderer>();
         }
 
@@ -199,8 +220,15 @@
 
             groundpointLine.SetPosition(0, thisGroundpoint.transform.position);
             groundpointLine.SetPosition(1, this.transform.position);
+
+            // Code in WaypointSystemUpgrade
             groundpointLine.startWidth = WorldScaleActual.y / 400;
             groundpointLine.endWidth = WorldScaleActual.y / 400;
+
+            // Code in master
+            // groundpointLine.startWidth = controller.GetComponent<MapInteractions>().actualScale.y / 400;
+            // groundpointLine.endWidth = controller.GetComponent<MapInteractions>().actualScale.y / 400;
+
             if (referenceDrone.selected)
             {
                 groundpointLine.material = selectedGroundpointLine;

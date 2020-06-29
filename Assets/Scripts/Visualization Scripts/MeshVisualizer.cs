@@ -6,7 +6,7 @@ using ROSBridgeLib.voxblox_msgs;
 public class MeshVisualizer : MonoBehaviour
 {
     /// <value> Attach DataServer object. If nonexistant, create an empty GameObject and attach the script `DataServer.cs`.</value>
-    public bool flipYZ = false;
+    public bool flipYZ = true;
 
     /// <summary>
     /// Object that holds all the individual mesh blocks.
@@ -29,28 +29,52 @@ public class MeshVisualizer : MonoBehaviour
     public float distThreshold = 10.0f;
 
     /// <summary>
-    /// Dictionary of meshes for each index.
+    /// Alpha value for individual vertex colorings.
     /// </summary>
-    private Dictionary<Int64[], MeshFilter> mesh_dict;    // Use this for initialization
+    public byte alpha = 60;
+
+    private Material material;
+
+    /// <summary>
+    /// Dictionary of gameobjects for each index.
+    /// </summary>
+    private Dictionary<Int64[], GameObject> gameobject_dict;    // Use this for initialization
 
     /// <summary>
     /// Dictionary of last update times for each index.
     /// </summary>
     private Dictionary<Int64[], float> last_update;
+
+    /// <summary>
+    /// Shader to use to render meshes.
+    /// </summary>
+    public Shader shader;
+    /// <summary>
+    /// Color to render the meshes.
+    /// </summary>
+    public Color color = new Color32(255, 255, 255, 100);
+
     void Start()
     {
-        mesh_dict = new Dictionary<long[], MeshFilter>(new LongArrayEqualityComparer());
-        last_update = new Dictionary<long[], float>(new LongArrayEqualityComparer());
-        meshParent = new GameObject("Mesh");
+        shader = Shader.Find("Mobile/Particles/Alpha Blended");
+        material = new Material(shader);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (hasChanged)
-        {
-            // Do stuff maybe?
-        }
+        SetShader(shader);
+        SetColor(color);
+    }
+
+    /// <summary>
+    /// Instantiate required components for the Mesh and make child of Mesh Sensor
+    /// </summary>
+    public void CreateMeshVisualizer()
+    {
+        gameobject_dict = new Dictionary<long[], GameObject>(new LongArrayEqualityComparer());
+        last_update = new Dictionary<long[], float>(new LongArrayEqualityComparer());
+        meshParent = this.gameObject;
     }
 
     /// <summary>
@@ -81,44 +105,30 @@ public class MeshVisualizer : MonoBehaviour
     }
 
     /// <summary>
-    /// Update the mesh with the new mesh.
+    /// Generates a dictionary of MeshArrays specified by the message.
     /// </summary>
-    /// <param name="meshMsg">ROSBridge Voxblox Mesh Message</param>
-    public void SetMesh(MeshMsg meshMsg)
+    /// <param name="meshMsg">Voxblox Mesh message to generate Meshes with.</param>
+    /// <returns>A dictionary of MeshArrays.</returns>
+    public Dictionary<long[], MeshArray> generateMesh(MeshMsg meshMsg)
     {
-        Debug.Log("Setting New Mesh");
+        Dictionary<Int64[], MeshArray> generated_mesh_dict = new Dictionary<long[], MeshArray>(new LongArrayEqualityComparer());
         /// The length of one block. Also the scaling factor of the coordinates.
         float scale_factor = meshMsg.GetBlockEdgeLength();
         /// List of all the mesh blocks.
         MeshBlockMsg[] mesh_blocks = meshMsg.GetMeshBlocks();
-        Debug.Log(mesh_blocks.Length);
         /// Iterate through each mesh block generating and updating meshes for each.
         for (int i = 0; i < mesh_blocks.Length; i++)
         {
             /// index of the mesh block.
             Int64[] index = mesh_blocks[i].GetIndex();
-            
-            if (!shouldUpdate(index))
-            {
-                Debug.Log("Delay Update");
-                continue;
-            }
+
+            ushort[] x = mesh_blocks[i].GetX();
+            ushort[] y = mesh_blocks[i].GetY();
+            ushort[] z = mesh_blocks[i].GetZ();
 
             // Create a list of vertices and their corresponding colors.
             List<Vector3> newVertices = new List<Vector3>();
             List<Color> newColors = new List<Color>();
-        
-            UInt16[] x = mesh_blocks[i].GetX();
-
-            // only render meshes with enough faces to make it worth the resources of an extra game object
-            if (x.Length < faceThreshold)
-            {
-                Debug.Log("Not enough faces");
-                continue;
-            }
-
-            UInt16[] y = mesh_blocks[i].GetY();
-            UInt16[] z = mesh_blocks[i].GetZ();
 
             // update indicies, converting from block index to global position transforms.
             for (int j = 0; j < x.Length; j++)
@@ -129,7 +139,7 @@ public class MeshVisualizer : MonoBehaviour
                 if (flipYZ)
                 {
                     newVertices.Add(new Vector3(xv, zv, yv));
-                } 
+                }
                 else
                 {
                     newVertices.Add(new Vector3(xv, yv, zv));
@@ -142,7 +152,7 @@ public class MeshVisualizer : MonoBehaviour
 
             for (int j = 0; j < r.Length; j++)
             {
-                newColors.Add(new Color32(r[j], g[j], b[j], 51));
+                newColors.Add(new Color32(r[j], g[j], b[j], alpha));
             }
 
             // Vertices come in triples each corresponding to one face.
@@ -152,35 +162,56 @@ public class MeshVisualizer : MonoBehaviour
                 newTriangles[j] = j;
             }
 
-            Mesh mesh = new Mesh();
-            // If there is no existing game object for the block, create one.
-            if (!mesh_dict.ContainsKey(index))
-            {
-                GameObject meshObject = new GameObject(index.ToString());
-                meshObject.transform.parent = meshParent.transform;
-                MeshFilter meshFilter = meshObject.AddComponent<MeshFilter>();
-                MeshRenderer meshRenderer = meshObject.AddComponent<MeshRenderer>();
-                meshRenderer.sharedMaterial = new Material(Shader.Find("Particles/Standard Unlit"));
-                //meshRenderer.sharedMaterial = new Material(Shader.Find("Standard"));
-                mesh_dict.Add(index, meshFilter);
-            }
-            else
-            {
-                Debug.Log("Reusing GameObject");
-            }
-
             // correct for inverted mesh. By reversing the lists, the normal vectors point the right direction.
             newVertices.Reverse();
             newColors.Reverse();
 
-            mesh.vertices = newVertices.ToArray();
-            //mesh.uv = newUV;
-            mesh.triangles = newTriangles;
-            mesh.colors = newColors.ToArray();
-            mesh_dict[index].mesh = mesh;
-            last_update[index] = Time.time;
+            generated_mesh_dict[index] = new MeshArray(newVertices.ToArray(), newTriangles, newColors.ToArray());
         }
-        hasChanged = true;
+        return generated_mesh_dict;
+    }
+
+    public void SetMesh(Dictionary<long[], MeshArray> mesh_dict)
+    {
+        foreach(KeyValuePair<long[], MeshArray> entry in mesh_dict)
+        {
+            long[] index = entry.Key;
+            MeshArray meshArray = entry.Value;
+            Mesh mesh = meshArray.GetMesh();
+            // If there is no existing game object for the block, create one.
+            if (!gameobject_dict.ContainsKey(index))
+            {
+                GameObject meshObject = new GameObject(index.ToString());
+                meshObject.transform.parent = meshParent.transform;
+                meshObject.transform.localPosition = new Vector3(0, 0, 0);
+                meshObject.transform.localEulerAngles = new Vector3(0, 0, 0);
+                meshObject.transform.localScale = new Vector3(1, 1, 1);
+                MeshFilter meshFilter = meshObject.AddComponent<MeshFilter>();
+                MeshRenderer meshRenderer = meshObject.AddComponent<MeshRenderer>();
+                //meshRenderer.sharedMaterial = new Material(Shader.Find("Particles/Standard Unlit"));
+                meshRenderer.sharedMaterial = material;
+                gameobject_dict.Add(index, meshObject);
+            }
+            gameobject_dict[index].GetComponent<MeshFilter>().mesh = mesh;
+        }
+    }
+
+    /// <summary>
+    /// Sets the shader.
+    /// </summary>
+    /// <param name="shader"></param>
+    public void SetShader(Shader shader)
+    {
+        material.shader = shader;
+    }
+
+    /// <summary>
+    /// Sets the Color.
+    /// </summary>
+    /// <param name="color"></param>
+    public void SetColor(Color color)
+    {
+        material.color = color;
     }
 }
 
@@ -216,5 +247,50 @@ public class LongArrayEqualityComparer : IEqualityComparer<long[]>
             }
         }
         return result;
+    }
+}
+
+/// <summary>
+/// A Struct of Arrays necessary to create a Mesh.
+/// </summary>
+public struct MeshArray
+{
+    /// <summary>
+    /// Create a new Mesh struct.
+    /// </summary>
+    /// <param name="vertices">Vertices of the mesh (their positions)</param>
+    /// <param name="triangles">Triangles each vertex corresponds to</param>
+    /// <param name="colors">Colors of each vertex</param>
+    public MeshArray(Vector3[] vertices, int[] triangles, Color[] colors)
+    {
+        Vertices = vertices;
+        Triangles = triangles;
+        Colors = colors;
+    }
+
+    /// <summary>
+    /// Vertices of the Mesh.
+    /// </summary>
+    public Vector3[] Vertices { get; }
+    /// <summary>
+    /// Triangles each vertex correspond to.
+    /// </summary>
+    public int[] Triangles { get; }
+    /// <summary>
+    /// Color of each vertex.
+    /// </summary>
+    public Color[] Colors { get; }
+
+    /// <summary>
+    /// Generate a Mesh using the arrays of this struct. Must be called in the Main thread.
+    /// </summary>
+    /// <returns>A new mesh</returns>
+    public Mesh GetMesh()
+    {
+        Mesh mesh = new Mesh();
+        mesh.vertices = Vertices;
+        mesh.triangles = Triangles;
+        mesh.colors = Colors;
+        return mesh;
     }
 }

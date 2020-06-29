@@ -20,7 +20,6 @@ public class DroneSimulationManager : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-
         if (flying)
         {
             if (fraction < 1)
@@ -42,17 +41,18 @@ public class DroneSimulationManager : MonoBehaviour {
 
     }
 
-    public void InitDroneSim(Drone drone)
+    public void InitDroneSim(Drone droneInit)
     {
         Debug.Log("Drone Flight Sim initilized");
-        this.drone = drone;
+        drone = droneInit;
         home = drone.gameObjectPointer.transform.localPosition;
-
+        Debug.Log("The selected drone is: " + drone.gameObjectPointer.name);
     }
 
     public void FlyNextWaypoint(bool restart = false)
     {
-        ArrayList waypoints = drone.waypoints;
+        // TODO: debug drone variable osciallting
+        ArrayList waypoints = WorldProperties.GetSelectedDrone().waypoints;
 
         if (restart)
         {
