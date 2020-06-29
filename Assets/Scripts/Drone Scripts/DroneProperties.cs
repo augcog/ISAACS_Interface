@@ -40,5 +40,17 @@
             this.droneClassPointer.selected = false;
         }
 
+        /// <summary>
+        /// Localize all attached sensors to given position and orientation
+        /// </summary>
+        public void LocalizeSensors(Vector3 home_position, Quaternion home_oritentation)
+        {
+            foreach (ROSSensorConnectionInterface sensor in droneClassPointer.attachedSensors)
+            {
+                sensor.SetLocalOrientation(home_oritentation);
+                sensor.SetLocalPosition(home_position);
+            }
+        }
+
     }
 }

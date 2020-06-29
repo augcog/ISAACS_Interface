@@ -23,6 +23,7 @@
 
         public int nextWaypointId; // Incrementing counter to give all waypoints a unique ID when combined with the Drone ID
         public Dictionary<string, Waypoint> waypointsDict; // Collection of the waypoints in this drone's path
+        public List<ROSSensorConnectionInterface> attachedSensors; // List of attached sensor gameobjects
 
         /// <summary>
         /// Constructor method for Drone class objects
@@ -60,6 +61,11 @@
             WorldProperties.IncrementDroneID();
 
             Debug.Log("Created new drone with id: " + id);
+
+            // Initilize the sensor list
+            // @Jasmine: this is populated by ROS Manager when initilzing the drone and can be used for the UI
+            // @Jasmine: feel free to add/remove functionality as needed, it's a very rough structure right now
+            attachedSensors = new List<ROSSensorConnectionInterface>();
 
             // Init as unselected
             gameObjectPointer.transform.Find("group3/Outline").GetComponent<MeshRenderer>().material = droneProperties.deselectedMaterial;
@@ -219,6 +225,16 @@
                     this.DeleteWaypoint((Waypoint)this.waypoints[this.waypoints.Count - 1]);
                 }
             }
+
+
+            // TODO: Peru, Jasmine: Update SensorUI in this function.
+            // Find the Sensor UI Gameobject: can be stored as a variable in world properties.
+            // attachedSensors is the list of ROSSensorInterface in this class that can be send acorss.
+
+            // init the sensor with the following:
+            // Create a list of sensor UI's based on attachedSensors.
+            // For each sensor UI: have the number of buttons/obtions be no. of subscribers & map every button to a subscriber id.
+            // On click: call sensor function to switch ros subscriber on/off
         }
 
         public int GetWaypointsCount() /// helper
