@@ -1,4 +1,5 @@
-﻿namespace ISAACS_ControllerInput {
+﻿using System.Xml.Schema;
+namespace ISAACS_ControllerInput {
 
     using System.Collections;
     using System.Collections.Generic;
@@ -72,7 +73,7 @@
 		void FixedUpdate()
 		{
 			// These variables store the controller state, which can be queried for input information.
-            var left = LeftController.GetComponent<VRTK_ControllerEvents>();
+			var left = LeftController.GetComponent<VRTK_ControllerEvents>();
 			var leftInteractGrab = LeftController.GetComponent<VRTK_InteractGrab>();
 			var right = RightController.GetComponent<VRTK_ControllerEvents>();
 			var rightInteractGrab = RightController.GetComponent<VRTK_InteractGrab>();

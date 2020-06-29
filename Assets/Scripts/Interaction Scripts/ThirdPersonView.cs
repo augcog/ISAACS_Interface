@@ -27,10 +27,10 @@
 
         private enum ControllerState { IDLE, SCALING, AIMING_SELECTOR, SETTING_WAYPOINT_HEIGHT, PLACING_WAYPOINT, MOVING_WAYPOINT, UNDOING, REDOING }
         private ControllerState controllerState;
-        
+
         public GameObject Pivot; /// pivot is the center of the table
         public GameObject World; /// The World GameObject. All its children will be scaled, rotate and move with it.
-        
+
         private Vector3 WorldScaleInitial; ///originalScale is the original localScale of the world
         private Vector3 WorldScaleMin; /// This is the TODO of the originalScale of the world
         private Vector3 WorldScaleMax; /// This is the TODO times the originalScale of the world
@@ -316,7 +316,7 @@
             // Without occlusion this looks mediocre because it seems like the map is being moved in the wrong direction.
             float moveX = controllerInput.GetLeftThumbDelta().x;
             float moveZ = controllerInput.GetLeftThumbDelta().y;
-            
+
             // update map position based on input
             Vector3 position = World.transform.position;
 
