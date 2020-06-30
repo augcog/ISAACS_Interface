@@ -888,6 +888,7 @@ GameObject:
   - component: {fileID: 114654833738737616}
   - component: {fileID: 54791174084844380}
   - component: {fileID: 135519695496822468}
+  - component: {fileID: 114986770307215778}
   m_Layer: 0
   m_Name: drone_obj
   m_TagString: Finish
@@ -2076,7 +2077,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1497704686498948}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.0331421, y: 2, z: 2.6239014}
+  m_LocalPosition: {x: -3.0014954, y: -0.1, z: 0.40371704}
   m_LocalScale: {x: 2.4748437, y: 2.474846, z: 2.474846}
   m_Children:
   - {fileID: 4095683193172102}
@@ -7707,6 +7708,7 @@ MonoBehaviour:
   selectedMaterial: {fileID: 2100000, guid: 97c9345d2c577e543b55b547a33c4858, type: 2}
   deselectedMaterial: {fileID: 2100000, guid: 1fe7c2dc0eb2fb34b989fb4e05287a4d, type: 2}
   droneSimulationManager: {fileID: 0}
+  droneMenu: {fileID: 0}
 --- !u!114 &114654833738737616
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -7821,6 +7823,21 @@ MonoBehaviour:
     m_VerticalOverflow: 1
     m_LineSpacing: 1
   m_Text: <Has_Authority>
+--- !u!114 &114986770307215778
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1497704686498948}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 775510a03a50c5a46a12545054fb4409, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dronePosText: {fileID: 0}
+  droneNameText: {fileID: 0}
+  droneAuthorityText: {fileID: 0}
+  menuCanvas: {fileID: 1479252145062286}
 --- !u!135 &135519695496822468
 SphereCollider:
   m_ObjectHideFlags: 1
