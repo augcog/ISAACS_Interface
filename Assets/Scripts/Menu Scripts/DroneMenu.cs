@@ -16,6 +16,18 @@ public class DroneMenu : MonoBehaviour {
     double homeLong;
     bool hasAuthority;
 
+    private ROSDroneConnectionInterface droneROSConnection;
+    private List<string> droneSubscriberTopics;
+
+
+    public void InitDroneMenu(ROSDroneConnectionInterface rosDroneConnection, List<string> droneSubscribers)
+    {
+        droneROSConnection = rosDroneConnection;
+        droneSubscriberTopics = droneSubscribers;
+
+        // TODO: Populate UI and start updating it using update/coroutines
+    }
+
     // Use this for initialization
     void Start () {
         //f = GameObject.Find("DronePos");

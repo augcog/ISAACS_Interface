@@ -333,6 +333,45 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
     /// The Informative UI should only query these methods
     /// </para>
 
+
+    /// <summary>
+    /// Get the value of a certain topic.
+    /// To be used by the UI for further abstraction
+    /// </summary>
+    /// <param name="topic"></param>
+    /// <returns> requested value as string </returns>
+    public string GetValueByTopic(string topic)
+    {
+        switch (topic)
+        {
+            case "/dji_sdk/attitude":
+                return attitude.ToString();
+            case "/dji_sdk/battery_state":
+                return battery_state.ToString();
+            case "/dji_sdk/flight_status":
+                return flight_status.ToString();
+            case "/dji_sdk/gimbal_angle":
+                return gimbal_joint_angles.ToString();
+            case "/dji_sdk/gps_health":
+                return gps_health.ToString();
+            case "/dji_sdk/gps_position":
+                return gps_position.ToString();
+            case "/dji_sdk/imu":
+                return imu.ToString();
+            case "/dji_sdk/rc":
+                return remote_controller_msg.ToString();
+            case "/dji_sdk/velocity":
+                return velocity.ToString();
+            case "/dji_sdk/height_above_takeoff":
+                return relative_altitude.ToString();
+            case "/dji_sdk/local_position":
+                return local_position.ToString();
+        }
+        Debug.LogError("Topic " + topic + " not registered.");
+        return "";
+    }
+
+
     /// <summary>
     /// State of control authority Unity interface has over drone
     /// </summary>
