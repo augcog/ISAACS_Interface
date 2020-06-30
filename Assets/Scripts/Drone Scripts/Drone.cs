@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using UnityEngine;
     using ROSBridgeLib.interface_msgs;
+    using UnityEngine.UI;
 
     public class Drone
     {
@@ -192,7 +193,7 @@
             {
                 if (otherDrone != this)
                 {
-                    otherDrone.gameObjectPointer.transform.Find("group3").Find("Outline").GetComponent<MeshRenderer>().material = 
+                    otherDrone.gameObjectPointer.transform.Find("group3").Find("Outline").GetComponent<MeshRenderer>().material =
                         this.gameObjectPointer.GetComponent<DroneProperties>().deselectedMaterial;
                     otherDrone.selected = false;
                 }
@@ -207,6 +208,26 @@
             // Create a list of sensor UI's based on attachedSensors.
             // For each sensor UI: have the number of buttons/obtions be no. of subscribers & map every button to a subscriber id.
             // On click: call sensor function to switch ros subscriber on/off
+
+            //need, sensor list for THIS ddrone
+
+            //Instantiating for sensor UI
+            GameObject activeSensorList;
+            Text senseTextComp;
+            string senseText;
+
+            activeSensorList = GameObject.FindGameObjectWithTag("SENSORUI");
+            senseTextComp = activeSensorList.GetComponent<Text>();
+
+            // foreach (ROSSensorConnection in WorldProperties.sensorlist)
+            {
+
+            }
+                
+            senseText = senseTextComp.text;
+
+            Debug.Log("Sensor text currently is: " + senseText);
+           
         }
     }
 }
