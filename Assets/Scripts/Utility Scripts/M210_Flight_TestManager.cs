@@ -9,7 +9,8 @@ using System.IO;
 using ISAACS;
 using ROSBridgeLib.sensor_msgs;
 
-public class M210_Flight_TestManager : MonoBehaviour {
+public class M210_Flight_TestManager : MonoBehaviour
+{
 
     /// <summary>
     /// This script is for all debugging using keyboard triggers. 
@@ -35,7 +36,7 @@ public class M210_Flight_TestManager : MonoBehaviour {
     public string stopMotors = "u";
 
     [Header("Takeoff/Land Tests")]
-    public string takeoffDrone= "i";
+    public string takeoffDrone = "i";
     public string landDrone = "o";
 
     [Header("Safe Mission Test (Hardcoded)")]
@@ -59,7 +60,8 @@ public class M210_Flight_TestManager : MonoBehaviour {
     public Matrice_ROSDroneConnection rosDroneConnection;
 
     // Update is called once per frame
-    void Update () {
+    void Update()
+    {
 
         if (Input.GetKeyDown(init))
         {
@@ -68,8 +70,8 @@ public class M210_Flight_TestManager : MonoBehaviour {
 
         if (Input.GetKeyDown(viewHomeLat))
         {
-            double homeLat = rosDroneConnection.GetHomeLat(); 
-            Debug.LogFormat("Home Latitute set to {0}",homeLat);
+            double homeLat = rosDroneConnection.GetHomeLat();
+            Debug.LogFormat("Home Latitute set to {0}", homeLat);
         }
 
         if (Input.GetKeyDown(viewHomeLong))
@@ -114,7 +116,7 @@ public class M210_Flight_TestManager : MonoBehaviour {
         {
             rosDroneConnection.ChangeArmStatusTo(false);
         }
-        
+
         if (Input.GetKeyUp(takeoffDrone))
         {
             rosDroneConnection.ExecuteTask(Matrice_ROSDroneConnection.DroneTask.TAKEOFF);
@@ -160,7 +162,23 @@ public class M210_Flight_TestManager : MonoBehaviour {
 
         if (Input.GetKeyUp(viewSafeWaypointMission))
         {
-            //TODO: Port over hardcoded sphere logic
+            GameObject waypoint1 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            waypoint1.name = "Waypoint 1";
+            waypoint1.transform.parent = this.transform;
+            waypoint1.transform.localPosition = new Vector3(1.443817f, 2.1f, 0.4977149f);
+            waypoint1.transform.localScale = Vector3.one * (0.05f);
+
+            GameObject waypoint2 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            waypoint2.name = "Waypoint 2";
+            waypoint2.transform.parent = this.transform;
+            waypoint2.transform.localPosition = new Vector3(2.845169f, 2.1f, -0.6636199f);
+            waypoint2.transform.localScale = Vector3.one * (0.05f);
+
+            GameObject waypoint3 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            waypoint3.name = "Waypoint 3";
+            waypoint3.transform.parent = this.transform;
+            waypoint3.transform.localPosition = new Vector3(4.161591f, 2.1f, 0.9954298f);
+            waypoint3.transform.localScale = Vector3.one * (0.05f);
         }
 
         if (Input.GetKeyUp(uploadUserMission))

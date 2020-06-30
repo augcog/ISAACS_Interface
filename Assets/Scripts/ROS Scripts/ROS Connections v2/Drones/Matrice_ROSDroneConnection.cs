@@ -239,16 +239,10 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
 
         foreach (Waypoint waypoint in waypoints)
         {
-            float x = waypoint.gameObjectPointer.transform.localPosition.x;
-            float y = waypoint.gameObjectPointer.transform.localPosition.y;
-            float z = waypoint.gameObjectPointer.transform.localPosition.z;
+            Vector3 unityCoord = waypoint.gameObjectPointer.transform.localPosition;
+            GPSCoordinate rosCoord = WorldProperties.UnityCoordToROSCoord(unityCoord);
 
-            // TODO: Fix conversions
-            double ROS_lat = WorldProperties.UnityXToLat(this.home_position.GetLatitude(), x);
-            float ROS_alt = WorldProperties.UnityYtoAlt(y);
-            double ROS_long = WorldProperties.UnityZToLong(this.home_position.GetLongitude(), this.home_position.GetLatitude(), z);
-
-            MissionWaypointMsg new_waypoint = new MissionWaypointMsg(ROS_lat, ROS_long, ROS_alt, 3.0f, 0, 0, MissionWaypointMsg.TurnMode.CLOCKWISE, 0, 30, new MissionWaypointActionMsg(0, command_list, command_params));
+            MissionWaypointMsg new_waypoint = new MissionWaypointMsg(rosCoord.z, rosCoord.x, (float) rosCoord.y, 3.0f, 0, 0, MissionWaypointMsg.TurnMode.CLOCKWISE, 0, 30, new MissionWaypointActionMsg(0, command_list, command_params));
             Debug.Log("Adding waypoint at: " + new_waypoint);
             missionMsgList.Add(new_waypoint);
         }
