@@ -16,5 +16,17 @@
         public DroneSimulationManager droneSimulationManager;
         public DroneMenu droneMenu;
 
+        /// <summary>
+        /// Localize all attached sensors to given position and orientation
+        /// </summary>
+        public void LocalizeSensors(Vector3 home_position, Quaternion home_oritentation)
+        {
+            foreach (ROSSensorConnectionInterface sensor in classPointer.attachedSensors)
+            {
+                sensor.SetLocalOrientation(home_oritentation);
+                sensor.SetLocalPosition(home_position);
+            }
+        }
+
     }
 }

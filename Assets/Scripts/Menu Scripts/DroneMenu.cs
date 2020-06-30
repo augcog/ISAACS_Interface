@@ -18,7 +18,8 @@ public class DroneMenu : MonoBehaviour {
     Drone drone;
     private List<string> droneSubscribers;
     private bool initialized;
-    Matrice_ROSDroneConnection connection;
+    ROSDroneConnectionInterface connection;
+    // c# dictionary to hold list of text fields.
 
     // Use this for initialization
     //void Start () {
@@ -57,13 +58,15 @@ public class DroneMenu : MonoBehaviour {
             foreach (string subscriber in droneSubscribers)
             {
                 Text entry = menuCanvas.AddComponent<Text>();
-                entry.text = "BLAH"; // GetTopicValue(subscriber);
+                entry.text = connection.GetTopicValue(subscriber);
                 //entry.transform.position
             }
 
             //37.915345, -122.337932
-            double lat = WorldProperties.UnityXToLat(37.915345, dronePosition.x); // HARDCODED
-            double lon = WorldProperties.UnityZToLong(-122.337932, lat, dronePosition.z); // HARDCODED
+            //double lat = WorldProperties.UnityXToLat(37.915345, dronePosition.x); // HARDCODED
+            double lat = 0.0f;
+            double lon = 0.0f;
+            //double lon = WorldProperties.UnityZToLong(-122.337932, lat, dronePosition.z); // HARDCODED
             //double lat = WorldProperties.UnityXToLat(homeLat, dronePosition.x);
             //double lon = WorldProperties.UnityZToLong(homeLong, lat, dronePosition.z);
 
@@ -100,11 +103,11 @@ public class DroneMenu : MonoBehaviour {
         //Text myText = ngo.AddComponent<Text>();
         //myText.text = "Ta-dah!";
 
-        //connection = this.GetComponent<DroneProperties>().droneROSConnection;
+        connection = this.GetComponent<DroneProperties>().droneROSConnection;
 
-        homeLat = this.GetComponent<M210_ROSDroneConnection>().GetHomeLat(); // dronepropertieis.rosdroneconnection to allow 100/210/600
-        homeLong = this.GetComponent<M210_ROSDroneConnection>().GetHomeLong();
-        hasAuthority = this.GetComponent<M210_ROSDroneConnection>().HasAuthority();
+        homeLat = connection.GetHomeLat(); // dronepropertieis.rosdroneconnection to allow 100/210/600
+        homeLong = connection.GetHomeLong();
+        hasAuthority = connection.HasAuthority();
 
         initialized = true;
     }
