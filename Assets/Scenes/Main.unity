@@ -529,15 +529,9 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 78194253}
-<<<<<<< HEAD
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 2.600603, y: -0.015563183, z: 2.600604}
-=======
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: -0.0059844493, z: 1}
->>>>>>> master
   m_Children: []
   m_Father: {fileID: 267214439}
   m_RootOrder: 1
@@ -866,11 +860,7 @@ Transform:
   - {fileID: 79141382}
   - {fileID: 167235401}
   m_Father: {fileID: 0}
-<<<<<<< HEAD
   m_RootOrder: 4
-=======
-  m_RootOrder: 5
->>>>>>> master
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &146794964
 MonoBehaviour:
@@ -886,7 +876,7 @@ MonoBehaviour:
   init: 0
   viewHomeLat: q
   viewHomeLong: w
-  printLatLong: 1
+  printLatLong: 0
   printGPSHealth: 0
   getAuthority: e
   hasAuthority: r
@@ -919,9 +909,6 @@ MonoBehaviour:
     type: 2}
   waypointBaseObject: {fileID: 1161822125618724, guid: c209b41633a109640bb6a3527c86c801,
     type: 2}
-  missionCenterLat: 0
-  missionCenterLng: 0
-  missionCenterAltitude: 0
 --- !u!114 &146794968
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -942,7 +929,6 @@ MonoBehaviour:
     droneSubscribers: 0500000001000000
     simFlight: 1
     attachedSensors: []
-<<<<<<< HEAD
   - droneName: Apollo the Antelope
     droneTag: M210
     ipAddress: 75.25.126.85
@@ -951,8 +937,6 @@ MonoBehaviour:
     droneSubscribers: 0500000001000000
     simFlight: 1
     attachedSensors: []
-=======
->>>>>>> master
   success: 0
   uniqueID: 0
 --- !u!1 &161977055
@@ -1363,15 +1347,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1076179635}
-<<<<<<< HEAD
   - {fileID: 78194254}
   m_Father: {fileID: 0}
   m_RootOrder: 6
-=======
-  - {fileID: 899238562}
-  m_Father: {fileID: 0}
-  m_RootOrder: 7
->>>>>>> master
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &279732760
 GameObject:
@@ -1771,7 +1749,6 @@ Prefab:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
-<<<<<<< HEAD
     - target: {fileID: 6400034, guid: 804ac96ebacbb37488605e7a96725e34, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -2116,8 +2093,6 @@ Prefab:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
-=======
->>>>>>> master
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 804ac96ebacbb37488605e7a96725e34, type: 3}
   m_IsPrefabParent: 0
@@ -3061,23 +3036,6 @@ CanvasRenderer:
 Transform:
   m_PrefabParentObject: {fileID: 482130, guid: 126d619cf4daa52469682f85c1378b4a, type: 2}
   m_PrefabInternal: {fileID: 242895466}
-<<<<<<< HEAD
-=======
---- !u!4 &899238562
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 400002, guid: 0433faf8882fcc14f97be02d6656dbd9, type: 3}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1209669983}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2.600603, y: 2.600604, z: 2.600604}
-  m_Children:
-  - {fileID: 78194254}
-  m_Father: {fileID: 267214439}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
->>>>>>> master
 --- !u!1 &901874428
 GameObject:
   m_ObjectHideFlags: 0
@@ -4240,43 +4198,6 @@ CanvasRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1209136060}
-<<<<<<< HEAD
-=======
---- !u!1 &1209669983
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 100002, guid: 0433faf8882fcc14f97be02d6656dbd9, type: 3}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 899238562}
-  - component: {fileID: 1209669984}
-  m_Layer: 0
-  m_Name: MinimapParent
-  m_TagString: Table
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!95 &1209669984
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 9500000, guid: 0433faf8882fcc14f97be02d6656dbd9,
-    type: 3}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1209669983}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 0433faf8882fcc14f97be02d6656dbd9, type: 3}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
->>>>>>> master
 --- !u!1 &1236873334
 GameObject:
   m_ObjectHideFlags: 0
@@ -7061,11 +6982,7 @@ Transform:
   - {fileID: 1026087570}
   - {fileID: 1672332644}
   m_Father: {fileID: 0}
-<<<<<<< HEAD
   m_RootOrder: 5
-=======
-  m_RootOrder: 6
->>>>>>> master
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!1 &1866386692
 GameObject:
