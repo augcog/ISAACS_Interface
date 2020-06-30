@@ -3,6 +3,7 @@
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
+    using UnityEngine.UI;
     using ROSBridgeLib.interface_msgs;
 
     public class Drone
@@ -17,7 +18,9 @@
 
         public int nextWaypointId; // Incrementing counter to give all waypoints a unique ID when combined with the Drone ID
         public Dictionary<string, Waypoint> waypointsDict; // Collection of the waypoints in this drone's path
+
         public List<ROSSensorConnectionInterface> attachedSensors; // List of attached sensor gameobjects
+        public ROSSensorConnectionInterface selectedSensor;
 
         /// <summary>
         /// Constructor method for Drone class objects
@@ -207,6 +210,17 @@
             // Create a list of sensor UI's based on attachedSensors.
             // For each sensor UI: have the number of buttons/obtions be no. of subscribers & map every button to a subscriber id.
             // On click: call sensor function to switch ros subscriber on/off
+          
+            //Instantiating for sensor UI
+            GameObject activeSensorName;
+            Text senseTextComp;
+
+            activeSensorName = GameObject.FindGameObjectWithTag("SENSORUI");
+            senseTextComp = activeSensorName.GetComponent<Text>();
+
+          //first sensor is always set first selectedSensor = attachedSensors.
+        //check list of sensor SUBSCRIBERS, have true/false for each one based on ID?
+           //make new script for the TOGGLES (cause they aren't unity buttons, should be toggles)
         }
     }
 }

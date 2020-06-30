@@ -36,6 +36,7 @@ TagManager:
   - LAMP
   - MESH
   - PC
+  - SENSORUI
   layers:
   - Default
   - TransparentFX
