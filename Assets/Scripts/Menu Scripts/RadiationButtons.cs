@@ -30,7 +30,7 @@ public class RadiationButtons : MonoBehaviour {
             Debug.Log("Switching to surface point cloud");
             GameObject sensor = WorldProperties.GetSelectedSensor();
             LampSensor_ROSSensorConnection lampSensor_ROS = sensor.GetComponent<LampSensor_ROSSensorConnection>();
-            lampSensor_ROS.LampSubscribe_SurfacePointcloud();
+            //lampSensor_ROS.Unsubscribe();
         }
 
         if (Level_0)
@@ -38,7 +38,7 @@ public class RadiationButtons : MonoBehaviour {
             Debug.Log("Switching to Level 0");
             GameObject sensor = WorldProperties.GetSelectedSensor();
             LampSensor_ROSSensorConnection lampSensor_ROS = sensor.GetComponent<LampSensor_ROSSensorConnection>();
-            lampSensor_ROS.LampSubscribe_Colorized_0();
+            //lampSensor_ROS.Unsubscribe();
         }
 
         if (Level_1)
@@ -46,7 +46,7 @@ public class RadiationButtons : MonoBehaviour {
             Debug.Log("Switching to Level 1");
             GameObject sensor = WorldProperties.GetSelectedSensor();
             LampSensor_ROSSensorConnection lampSensor_ROS = sensor.GetComponent<LampSensor_ROSSensorConnection>();
-            lampSensor_ROS.LampSubscribe_Colorized_1();
+            //lampSensor_ROS.Unsubscribe();
         }
 
         if (Level_2)
@@ -54,7 +54,7 @@ public class RadiationButtons : MonoBehaviour {
             Debug.Log("Switching to Level 2");
             GameObject sensor = WorldProperties.GetSelectedSensor();
             LampSensor_ROSSensorConnection lampSensor_ROS = sensor.GetComponent<LampSensor_ROSSensorConnection>();
-            lampSensor_ROS.LampSubscribe_Colorized_2();
+            //lampSensor_ROS.Unsubscribe();
         }
 
 
@@ -63,7 +63,7 @@ public class RadiationButtons : MonoBehaviour {
             Debug.Log("Switching to Level 3");
             GameObject sensor = WorldProperties.GetSelectedSensor();
             LampSensor_ROSSensorConnection lampSensor_ROS = sensor.GetComponent<LampSensor_ROSSensorConnection>();
-            lampSensor_ROS.LampSubscribe_Colorized_3();
+            //lampSensor_ROS.Unsubscribe();
         }
 
         if (Level_4)
@@ -71,7 +71,7 @@ public class RadiationButtons : MonoBehaviour {
             Debug.Log("Switching to Level 4");
             GameObject sensor = WorldProperties.GetSelectedSensor();
             LampSensor_ROSSensorConnection lampSensor_ROS = sensor.GetComponent<LampSensor_ROSSensorConnection>();
-            lampSensor_ROS.LampSubscribe_Colorized_4();
+            //lampSensor_ROS.Unsubscribe();
         }
 
         if (Level_5)
@@ -79,7 +79,6 @@ public class RadiationButtons : MonoBehaviour {
             Debug.Log("Switching to Level 5");
             GameObject sensor = WorldProperties.GetSelectedSensor();
             LampSensor_ROSSensorConnection lampSensor_ROS = sensor.GetComponent<LampSensor_ROSSensorConnection>();
-            lampSensor_ROS.LampSubscribe_Colorized_5();
         }
 
     }
