@@ -218,6 +218,11 @@
             activeSensorName = GameObject.FindGameObjectWithTag("SENSORUI");
             senseTextComp = activeSensorName.GetComponent<Text>();
 
+            // We call a function on sensorUIManager -> Update UI (List<ROSSensorInterface>droneSensors)
+            // Then the sensors UI Manager can just display the first one
+            // Left and right can just be to traverse this list
+
+
           //first sensor is always set first selectedSensor = attachedSensors.
         //check list of sensor SUBSCRIBERS, have true/false for each one based on ID?
            //make new script for the TOGGLES (cause they aren't unity buttons, should be toggles)
