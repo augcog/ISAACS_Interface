@@ -16,6 +16,12 @@ public interface ROSDroneConnectionInterface
     // Query state variables for Informative UI and misc. info
 
     /// <summary>
+    /// Given a topic name, return the current value
+    /// </summary>
+    /// <returns></returns>
+    //string GetTopicValue(string topic);
+
+    /// <summary>
     /// State of Unity interface authority over controlling the drone
     /// </summary>
     /// <returns></returns>

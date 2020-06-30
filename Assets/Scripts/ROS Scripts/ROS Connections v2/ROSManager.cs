@@ -64,13 +64,13 @@ public class ROSManager : MonoBehaviour {
         public List<SensorSubscribers> sensorSubscribers;
     }
 
-    public List<ROSDroneConnectionInput> DronesList;
-    public List<ROSSensorConnectionInput> SensorsList;
+    public List<ROSDroneConnectionInput> dronesList;
+    public List<ROSSensorConnectionInput> sensorsList;
 
     private Dictionary<int, ROSDroneConnectionInterface> ROSDroneConnections = new Dictionary<int, ROSDroneConnectionInterface>();
     private Dictionary<int, ROSSensorConnectionInterface> ROSSensorConnections = new Dictionary<int, ROSSensorConnectionInterface>();
 
-    private DroneMenu droneMenu;
+    
 
     public bool success = false;
     public int uniqueID = 0;
@@ -80,12 +80,12 @@ public class ROSManager : MonoBehaviour {
     /// </summary>
     void Start ()
     {
-        foreach ( ROSDroneConnectionInput rosDroneConnectionInput in DronesList)
+        foreach ( ROSDroneConnectionInput rosDroneConnectionInput in dronesList)
         {
             InstantiateDrone(rosDroneConnectionInput);
         }
 
-        foreach (ROSSensorConnectionInput rosSensorConnectionInput in SensorsList)
+        foreach (ROSSensorConnectionInput rosSensorConnectionInput in sensorsList)
         {
             InstantiateSensor(rosSensorConnectionInput);
         }
@@ -118,12 +118,15 @@ public class ROSManager : MonoBehaviour {
 
         // Add DroneFlightSim
         // Peru 6:10:20
-        DroneSimulationManager droneSim = droneGameObject.AddComponent<DroneSimulationManager>();
-        droneGameObject.GetComponent<DroneProperties>().droneSimulationManager = droneSim;
+        DroneSimulationManager droneSim = droneGameObject.AddComponent<DroneSimulationManager>(); // @peru: make prefab
+        droneGameObject.GetComponent<DroneProperties>().droneSimulationManager = droneSim; // @peru: should DroneProp still include a droneSim?
         droneSim.InitDroneSim(droneInstance);
 
-        droneMenu = droneGameObject.AddComponent<DroneMenu>();
+        DroneMenu droneMenu = droneGameObject.GetComponent<DroneMenu>(); // copy line 123 style if need to pass in list of subscribers for that drone
+        droneGameObject.GetComponent<DroneProperties>().droneMenu = droneMenu;
+        droneMenu.InitDroneMenu(droneInstance, droneSubscribers);
 
+        //TODO: Make sure only sensors belonging to the drone are sent to the drone thru InitDroneMenu
 
 
         switch (droneType)

@@ -14,6 +14,7 @@
         // Assigned in ROS Manager during runtime
         public ROSDroneConnectionInterface droneROSConnection;
         public DroneSimulationManager droneSimulationManager;
+        public DroneMenu droneMenu;
 
     }
 }
