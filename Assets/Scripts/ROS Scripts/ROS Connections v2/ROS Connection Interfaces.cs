@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using ISAACS;
@@ -15,11 +15,12 @@ public interface ROSDroneConnectionInterface
 
     // Query state variables for Informative UI and misc. info
 
-    /// <summary>
-    /// Given a topic name, return the current value
+    /// Get the value of a certain topic.
+    /// To be used by the UI for further abstraction
     /// </summary>
+    /// <param name="topic"></param>
     /// <returns></returns>
-    //string GetTopicValue(string topic);
+    string GetValueByTopic(string topic);
 
     /// <summary>
     /// State of Unity interface authority over controlling the drone

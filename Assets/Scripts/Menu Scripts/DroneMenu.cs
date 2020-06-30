@@ -21,6 +21,18 @@ public class DroneMenu : MonoBehaviour {
     ROSDroneConnectionInterface connection;
     // c# dictionary to hold list of text fields.
 
+    private ROSDroneConnectionInterface droneROSConnection;
+    private List<string> droneSubscriberTopics;
+
+
+    public void InitDroneMenu(ROSDroneConnectionInterface rosDroneConnection, List<string> droneSubscribers)
+    {
+        droneROSConnection = rosDroneConnection;
+        droneSubscriberTopics = droneSubscribers;
+
+        // TODO: Populate UI and start updating it using update/coroutines
+    }
+
     // Use this for initialization
     //void Start () {
     //f = GameObject.Find("DronePos");
@@ -58,7 +70,7 @@ public class DroneMenu : MonoBehaviour {
             foreach (string subscriber in droneSubscribers)
             {
                 Text entry = menuCanvas.AddComponent<Text>();
-                entry.text = connection.GetTopicValue(subscriber);
+                entry.text = connection.GetValueByTopic(subscriber);
                 //entry.transform.position
             }
 
