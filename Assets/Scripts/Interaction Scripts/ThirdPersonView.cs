@@ -25,7 +25,7 @@
 
         public ControllerInput controllerInput; /// Initiate a singleton of the ControllerState class. Assign it to the Controller GameObject.
 
-        private enum ControllerState { IDLE, SCALING, AIMING_SELECTOR, SETTING_WAYPOINT_HEIGHT, PLACING_WAYPOINT, MOVING_WAYPOINT, UNDOING, REDOING }
+        private enum ControllerState { IDLE, SCALING, SELECTING_DRONE, SELECTING_SENSOR, AIMING_SELECTOR, SETTING_WAYPOINT_HEIGHT, PLACING_WAYPOINT, MOVING_WAYPOINT, UNDOING, REDOING }
         private ControllerState controllerState;
 
         public GameObject Pivot; /// pivot is the center of the table
@@ -138,12 +138,12 @@
 
                     if (controllerInput.GetLeftX()) /// Cycle through drones
                     {
-                        WorldProperties.SelectNextDrone();
+                        controllerState = ControllerState.SELECTING_DRONE; 
                     }
 
                     if (controllerInput.GetLeftY()) /// Cycle through sensors
                     {
-                        // @Jasmine: Make the connection to display the next sensor in the UI here
+                        controllerState = ControllerState.SELECTING_SENSOR; 
                     }
 
                     break;
@@ -161,6 +161,25 @@
                         RightUI.SetActive(true);
                         RightPointer.enabled = true;
                         RightPointerRenderer.enabled = true;
+                    }
+                    break;
+                }
+                case ControllerState.SELECTING_DRONE:
+                {
+                    if (!controllerInput.GetLeftX())
+                    {
+                        controllerState = ControllerState.IDLE;
+                        WorldProperties.SelectNextDrone();
+                    }
+                    break;
+                }
+
+                case ControllerState.SELECTING_SENSOR:
+                {
+                    if (!controllerInput.GetLeftY())
+                    {
+                        controllerState = ControllerState.IDLE;
+                        // @Jasmine: Make the connection to display the next sensor in the UI here
                     }
                     break;
                 }
@@ -239,6 +258,7 @@
                         /// TODO: make waypoint disappear
                         break;
                     }
+                    controllerState = ControllerState.IDLE;
                     break;
                 }
 
@@ -257,6 +277,7 @@
                         /// TODO: make waypoint disappear
                         break;
                     }
+                    controllerState = ControllerState.IDLE;
                     break;
                 }
 
