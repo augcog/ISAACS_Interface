@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using ROSBridgeLib;
 using ROSBridgeLib.std_msgs;
 using ROSBridgeLib.interface_msgs;
@@ -173,6 +174,20 @@ public class ROSManager : MonoBehaviour {
         int sensorPort = rosSensorConnectionInput.port;
         List<string> sensorSubscribers = new List<string>();
         ROSSensorConnectionInterface rosSensorConnection = null;
+
+        // @Jasmine: This code will be moved to Drone.cs -> SelectDrone() ?
+        /*
+        //Instantiating for sensor UI
+        GameObject activeSensorList;
+        Text senseTextComp;
+        string senseText;
+
+
+        activeSensorList = GameObject.FindGameObjectWithTag("SENSORUI");
+        senseTextComp = activeSensorList.GetComponent<Text>();
+        senseText = senseTextComp.text;
+        Debug.Log("Sensor text currently is: " + senseText);
+        */
 
         foreach (SensorSubscribers subscriber in rosSensorConnectionInput.sensorSubscribers)
         {

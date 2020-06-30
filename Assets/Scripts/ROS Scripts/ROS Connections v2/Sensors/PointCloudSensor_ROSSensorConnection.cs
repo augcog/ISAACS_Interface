@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using UnityEngine;
 using System.Collections.Generic;
 using SimpleJSON;
@@ -13,13 +13,12 @@ using ISAACS;
 
 public class PointCloudSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber, ROSSensorConnectionInterface
 {
-    // Visualizer variables
-    public static string rendererObjectName = "PlacementPlane"; // pick a center point of the map, ideally as part of rotating map
-
     // Private connection variables
     private ROSBridgeWebSocketConnection ros = null;
     private string client_id;
     private List<string> sensorSubscriberTopics = new List<string>();
+
+    private Dictionary<string, PointCloudVisualizer> pcVisualizers = new Dictionary<string, PointCloudVisualizer>();
 
     // Initilize the sensor
     public void InitilizeSensor(int uniqueID, string sensorIP, int sensorPort, List<string> sensorSubscribers)
@@ -29,13 +28,16 @@ public class PointCloudSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubsc
 
         foreach (string subscriber in sensorSubscribers)
         {
-            Debug.Log(" Point cloud Subscribing to : " + subscriber);
-            string subscriberTopic = "/voxblox_node/" + subscriber;
-            ros.AddSubscriber(subscriberTopic, this);
-            sensorSubscriberTopics.Add(subscriberTopic);
+            string subscriberTopic = "";
+
+            subscriberTopic = "/voxblox_node/" + subscriber;
+            PointCloudVisualizer pcVisualizer = gameObject.AddComponent<PointCloudVisualizer>();
+            pcVisualizer.SetParentTransform(this.transform);
+            pcVisualizers.Add(subscriberTopic, pcVisualizer);
+            Debug.Log("Point Cloud subscribing to: " + subscriberTopic);
+            ros.AddSubscriber("/voxblox_node/" + subscriber, this);
         }
         ros.Connect();
-
     }
 
     // Update is called once per frame in Unity
@@ -106,7 +108,8 @@ public class PointCloudSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubsc
         {
             case "/voxblox_node/surface_pointcloud":
                 PointCloud2Msg pointCloudMsg = new PointCloud2Msg(raw_msg);
-                PointCloudVisualizer(pointCloudMsg);
+                this.pcVisualizers[topic].SetPointCloud(pointCloudMsg.GetCloud());
+                Debug.Log("Updated Point Cloud");
                 break;
             default:
                 Debug.LogError("Topic not implemented: " + topic);
@@ -117,16 +120,7 @@ public class PointCloudSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubsc
     public string GetMessageType(string topic)
     {
         Debug.Log("Point Cloud message type is returned as sensor_msg/PointCloud2 by deafault");
-        return "sensor_msg/PointCloud2";
-    }
-
-    // Visualizer helper scripts
-    private void PointCloudVisualizer( PointCloud2Msg pointCloudMsg)
-    {
-        // Idea: We could have each sesnor have a PointCloudVisualizer attached to it and use that one.
-        PointCloudVisualizer visualizer = GameObject.Find(rendererObjectName).GetComponent<PointCloudVisualizer>();
-        visualizer.SetPointCloud(pointCloudMsg.GetCloud());
-        Debug.Log("Updated Point Cloud");
+        return "sensor_msgs/PointCloud2";
     }
 
     public void DisconnectROSConnection()
@@ -148,5 +142,4 @@ public class PointCloudSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubsc
     {
         this.transform.localScale = scale;
     }
-
 }

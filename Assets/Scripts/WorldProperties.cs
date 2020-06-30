@@ -12,6 +12,7 @@
     using Mapbox.Unity.Map;
     using Mapbox.Utils;
     using ROSBridgeLib.sensor_msgs;
+    using JetBrains.Annotations;
 
     // TODO: we might want to lock FPS!
     /// <summary>
@@ -41,12 +42,24 @@
 
         public static Shader clipShader;
 
-        [Header("Unity-ROS Conversion Variables")]
+        [Header("Mission Center Coordinates")]
         // ROS-Unity conversion variables
-        public static float earth_radius = 6378137;
-        public static Vector3 initial_DroneROS_Position = Vector3.zero;
-        public static Vector3 initial_DroneUnity_Position = Vector3.zero;
-        public static float ROS_to_Unity_Scale = 0.0f;
+        public double MCLatitude;
+        public double MCLongitude;
+        // Relative to the surface of the WGS 84 Ellipsoid
+        public double MCAltitude;
+
+        private static double Lat0;
+        private static double Lng0;
+        private static double Alt0;
+        /// <summary>
+        /// Cosine of missionCenterLat. This correction is applied to the longitude calculations.
+        /// </summary>
+        private static double lngCorrection;
+        /// <summary>
+        /// Radius of the Earth in meters.
+        /// </summary>
+        private const double EARTH_RADIUS = 6378137;
 
         //Unity to lat --> multiply by scale; lat to Unity --> divide by scale
         public static float Unity_X_To_Lat_Scale = 10.0f;
@@ -71,6 +84,10 @@
             actualScale = new Vector3(1, 1, 1);
             currentScale = new Vector3(1, 1, 1);
 
+            Lat0 = MCLatitude;
+            Lng0 = MCLongitude;
+            Alt0 = MCAltitude;
+            lngCorrection = Math.Cos(MCLatitude / 180.0 * Math.PI);
             clipShader = GameObject.FindWithTag("Ground").GetComponent<Renderer>().material.shader;
         }
 
@@ -92,16 +109,29 @@
         }
 
 
-        // TODO: Complete these functions
-
         /// <summary>
-        /// Convert the Given ROS NavSatFixMsg to Unity XYZ space.
+        /// Convert the given ROS NavSatFixMsg to Unity XYZ space.
         /// To Be used to convert drone coordinates to unity space
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Unity position vector to use within World GameObject</returns>
         public static Vector3 ROSCoordToUnityCoord(NavSatFixMsg gpsPosition)
         {
-            return Vector3.zero;
+            return ROSCoordToUnityCoord(new GPSCoordinate(gpsPosition.GetLongitude(), gpsPosition.GetLatitude(), gpsPosition.GetAltitude()));
+        }
+
+        /// <summary>
+        /// Convert the given GPSCoordinate to Unity XYZ space.
+        /// </summary>
+        /// <param name="gpsPosition"></param>
+        /// <returns></returns>
+        public static Vector3 ROSCoordToUnityCoord(GPSCoordinate gpsPosition)
+        {
+            Vector3 unityCoord = Vector3.zero;
+            unityCoord.z = (float)((gpsPosition.Lat - Lat0) * EARTH_RADIUS);
+            unityCoord.x = (float)((gpsPosition.Lng - Lng0) * EARTH_RADIUS * lngCorrection);
+            unityCoord.y = (float)(gpsPosition.Alt - Alt0);
+
+            return unityCoord;
         }
 
         /// <summary>
@@ -109,13 +139,17 @@
         /// To be used to convert waypint unity coordinates to world lat.long.alt
         /// </summary>
         /// <param name="unityPosition"></param>
-        /// <returns></returns>
-        public static NavSatFixMsg UnityCoordToROSCoord(Vector3 unityPosition)
+        /// <returns>GPSCoordinates</returns>
+        public static GPSCoordinate UnityCoordToROSCoord(Vector3 unityPosition)
         {
-            return null;
+            GPSCoordinate gpsCoord = new GPSCoordinate();
+            gpsCoord.x = (float)((unityPosition.x / (EARTH_RADIUS * lngCorrection)) + Lng0);
+            gpsCoord.z = (float)((unityPosition.z / EARTH_RADIUS) + Lat0);
+            gpsCoord.y = (float)((unityPosition.y) + Alt0);
+            return gpsCoord;
         }
 
-
+        /*
         /// <summary>
         ///     Converts the difference between two latitude values to a difference in meters.
         /// </summary>
@@ -173,7 +207,8 @@
             return delLong;
         }
 
-        // Old logic to calculate new position of the drone, will implement in after merge.
+        */
+        // Old logic to calculate new position of the drone and for waypoints.
         /// Calculates the 3D displacement of the drone from it's initial position, to its current position, in Unity coordinates.
         /*
         changePos = new Vector3(
@@ -185,5 +220,66 @@
         // Peru 6/9/20: Phasing out World Properties variables used in depreciated script
         // drone.transform.localPosition = WorldProperties.selectedDroneStartPos + offsetPos + changePos;
         */
+    }
+
+    /// <summary>
+    /// GPSCoordinates
+    /// </summary>
+    public struct GPSCoordinate
+    {
+        /// <summary>
+        /// Create a GPS Coordinate
+        /// </summary>
+        /// <param name="lat">Latitude</param>
+        /// <param name="lng">Longitude</param>
+        /// <param name="alt">Altitude</param>
+        public GPSCoordinate(double lat, double lng, double alt)
+        {
+            Lat = lat;
+            Lng = lng;
+            Alt = alt;
+        }
+
+        /// <summary>
+        /// Latitude in Decimal Degrees.
+        /// </summary>
+        public double Lat { get; set; }
+
+        /// <summary>
+        /// Longitude in Decimal Degrees.
+        /// </summary>
+        public double Lng { get; set; }
+        
+        /// <summary>
+        /// Altitude in meters.
+        /// </summary>
+        public double Alt { get; set; }
+        
+        /// <summary>
+        /// Longitude in Decimal Degrees.
+        /// </summary>
+        public double x 
+        { 
+            get { return Lng; }
+            set { Lng = value; }
+        }
+        
+        /// <summary>
+        /// Latitude in Decimal Degrees.
+        /// </summary>
+        public double y
+        {
+            get { return Lat; }
+            set { Lat = value; }
+        }
+        
+        /// <summary>
+        /// Altitude in meters.
+        /// </summary>
+        public double z
+        {
+            get { return Alt; }
+            set { Alt = value; }
+        }
     }
 }
