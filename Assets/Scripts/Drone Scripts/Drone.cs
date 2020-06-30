@@ -15,9 +15,7 @@
         public bool selected;
 
         public ArrayList waypoints; // All waypoints held by the drone
-        public ArrayList waypointsOrder; // Keeps track of the order in which waypoints were created for the undo function
         private ArrayList deletedWaypoints; // All waypoints that were deleted, in case the player wants to redo them
-        private ArrayList deletedWaypointsOrder; // The deleted waypoints order
 
         private float consecutiveWaypointDeletionsCount;
 
@@ -49,7 +47,6 @@
 
             // Initialize path and placement order lists
             waypoints = new ArrayList(0);
-            waypointsOrder = new ArrayList(0);
 
             // Add waypoints container
             nextWaypointId = 0;
@@ -103,7 +100,6 @@
                 // Adding to dictionary, order, and path list
                 waypointsDict.Add(startWaypoint.id, startWaypoint);
                 waypoints.Add(startWaypoint);
-                waypointsOrder.Add(startWaypoint);
 
             } else
             {
@@ -118,7 +114,6 @@
                 // Adding to dictionary, order, and path list
                 waypointsDict.Add(newWaypoint.id, newWaypoint);
                 waypoints.Add(newWaypoint);
-                waypointsOrder.Add(newWaypoint);
             }
 
             // Send a generic ROS ADD Update only if this is not the initial waypoint
@@ -137,7 +132,6 @@
         {
             // Adding the new waypoint to the dictionary and placement order
             waypointsDict.Add(newWaypoint.id, newWaypoint);
-            waypointsOrder.Add(newWaypoint);
 
             // Adding the waypoint to the array
             int previousIndex = Mathf.Max(0, waypoints.IndexOf(prevWaypoint));
@@ -161,7 +155,6 @@
             // Removing the new waypoint from the dictionary, waypoints array and placement order
             waypointsDict.Remove(deletedWaypoint.id);
             waypoints.Remove(deletedWaypoint);
-            waypointsOrder.Remove(deletedWaypoint);
             deletedWaypoints.Add(deletedWaypoint);
 
             // Removing from the path linked list by adjusting the next and previous pointers of the surrounding waypoints. Check if first waypoint in the list.
@@ -225,16 +218,6 @@
                     this.DeleteWaypoint((Waypoint)this.waypoints[this.waypoints.Count - 1]);
                 }
             }
-
-
-            // TODO: Peru, Jasmine: Update SensorUI in this function.
-            // Find the Sensor UI Gameobject: can be stored as a variable in world properties.
-            // attachedSensors is the list of ROSSensorInterface in this class that can be send acorss.
-
-            // init the sensor with the following:
-            // Create a list of sensor UI's based on attachedSensors.
-            // For each sensor UI: have the number of buttons/obtions be no. of subscribers & map every button to a subscriber id.
-            // On click: call sensor function to switch ros subscriber on/off
         }
 
         public int GetWaypointsCount() /// helper

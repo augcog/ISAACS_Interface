@@ -535,7 +535,8 @@
                     // Otherwise we default to removing the last waypoint (UNDO)
                     Debug.Log("Removing most recently placed waypoint");
 
-                    Waypoint lastWaypoint = (Waypoint)currentlySelectedDrone.waypointsOrder[currentlySelectedDrone.waypointsOrder.Count - 1];
+                    //Waypoint lastWaypoint = (Waypoint)currentlySelectedDrone.waypointsOrder[currentlySelectedDrone.waypointsOrder.Count - 1];
+                    Waypoint lastWaypoint = null;
 
                     // Remove from collisions list
                     currentCollisions.RemoveAll(collision => collision.waypoint == lastWaypoint &&
