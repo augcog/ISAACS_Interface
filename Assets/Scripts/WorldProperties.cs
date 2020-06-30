@@ -29,11 +29,11 @@
         public static char nextDroneId;
         public static Dictionary<char, Drone> dronesDict;
 
-        [Header("Sensor vairables")]
+        [Header("Sensor variables")]
         public static GameObject selectedSensor;
         public static Dictionary<int, GameObject> sensorDict;
 
-        [Header(" Misc. State variables")]
+        [Header("Misc. State variables")]
         public static GameObject worldObject;
         public static GameObject placementPlane;
 
