@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using UnityEngine;
     using UnityEngine.UI;
-    using ROSBridgeLib.interface_msgs;
+    using ROSBridgeLib.interface_msgs; //what is this for?
 
     public class Drone
     {
@@ -20,7 +20,7 @@
         public Dictionary<string, Waypoint> waypointsDict; // Collection of the waypoints in this drone's path
 
         public List<ROSSensorConnectionInterface> attachedSensors; // List of attached sensor gameobjects
-        public ROSSensorConnectionInterface selectedSensor;
+        public ROSSensorConnectionInterface selectedSensor; //Might not be necessary anymore
 
         /// <summary>
         /// Constructor method for Drone class objects
@@ -212,20 +212,17 @@
             // On click: call sensor function to switch ros subscriber on/off
           
             //Instantiating for sensor UI
-            GameObject activeSensorName;
-            Text senseTextComp;
+            //GameObject activeSensorName;
+            //Text senseTextComp;
 
-            activeSensorName = GameObject.FindGameObjectWithTag("SENSORUI");
-            senseTextComp = activeSensorName.GetComponent<Text>();
+            //activeSensorName = GameObject.FindGameObjectWithTag("SENSORUI");
+            //senseTextComp = activeSensorName.GetComponent<Text>();
 
             // We call a function on sensorUIManager -> Update UI (List<ROSSensorInterface>droneSensors)
-            // Then the sensors UI Manager can just display the first one
-            // Left and right can just be to traverse this list
 
+            SensorManager senseManage = new SensorManager();
+            senseManage.initializeSensorUI(attachedSensors);
 
-          //first sensor is always set first selectedSensor = attachedSensors.
-        //check list of sensor SUBSCRIBERS, have true/false for each one based on ID?
-           //make new script for the TOGGLES (cause they aren't unity buttons, should be toggles)
         }
     }
 }
