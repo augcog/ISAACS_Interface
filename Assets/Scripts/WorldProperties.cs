@@ -32,6 +32,8 @@
         [Header("Sensor variables")]
         public static GameObject selectedSensor;
         public static Dictionary<int, GameObject> sensorDict;
+        public static GameObject sensorManager;
+
 
         [Header("Misc. State variables")]
         public static GameObject worldObject;

@@ -210,18 +210,10 @@
             // Create a list of sensor UI's based on attachedSensors.
             // For each sensor UI: have the number of buttons/obtions be no. of subscribers & map every button to a subscriber id.
             // On click: call sensor function to switch ros subscriber on/off
-          
-            //Instantiating for sensor UI
-            //GameObject activeSensorName;
-            //Text senseTextComp;
-
-            //activeSensorName = GameObject.FindGameObjectWithTag("SENSORUI");
-            //senseTextComp = activeSensorName.GetComponent<Text>();
 
             // We call a function on sensorUIManager -> Update UI (List<ROSSensorInterface>droneSensors)
 
-            SensorManager senseManage = new SensorManager();
-            senseManage.initializeSensorUI(attachedSensors);
+            WorldProperties.sensorManager.GetComponent<SensorManager>().initializeSensorUI(attachedSensors);
 
         }
     }

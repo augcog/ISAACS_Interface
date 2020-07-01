@@ -6,49 +6,55 @@ using ISAACS;
 
 public class SensorManager : MonoBehaviour {
 
-    Button thisButton;
-    Toggle thisToggle;
-    Text thisSensorText;
+    public Button leftButton;
+    public Button rightButton;
+    public Text thisSensorText;
 
     List<ROSSensorConnectionInterface> sensorList = new List<ROSSensorConnectionInterface>();
     List<string> subscriberList;
     ROSSensorConnectionInterface selectedSensor;
+    Toggle thisToggle;
+    List<>
 
-    public bool leftArrow = false;
-    public bool rightArrow = false;
-    public bool displaySensorText = false;
+    //public bool leftArrow = false;
+    //public bool rightArrow = false;
+    //public bool displaySensorText = false;
     //any other buttons can be added here
 
     void Awake()
     {
-        //Adds listener to the button, if component is button
-        if (GetComponent<Button>() != null) {
-            thisButton = GetComponent<Button>();
-            thisButton.onClick.AddListener(() => { OnClickEvent(); });
-        }
+        leftButton.onClick.AddListener(() => { OnClickEvent(); });
+        rightButton.onClick.AddListener(() => { OnClickEvent(); });
 
-        //Adds listener to toggle, if component is toggle
-        else if (GetComponent<Toggle>() != null)
-        {
-           thisToggle = GetComponent<Toggle>();
-           thisToggle.onValueChanged.AddListener(delegate { ToggleValueChanged(thisToggle); });
-        }
+        ////Adds listener to the button, if component is button
+        //if (GetComponent<Button>() != null)
+        //{
+        //    thisButton = GetComponent<Button>();
+        //    thisButton.onClick.AddListener(() => { OnClickEvent(); });
+        //}
 
-        else
-        {
-            thisSensorText = GetComponent<Text>();
-        }
+        ////Adds listener to toggle, if component is toggle
+        //else if (GetComponent<Toggle>() != null)
+        //{
+        //    thisToggle = GetComponent<Toggle>();
+        //    thisToggle.onValueChanged.AddListener(delegate { ToggleValueChanged(thisToggle); });
+        //}
+
+        //else
+        //{
+        //    thisSensorText = GetComponent<Text>();
+        //}
     }
 
 
     void OnClickEvent()
     {
-        if (leftArrow)
+        if (leftButton)
         {
             showPreviousSensor();
         }
 
-        if (rightArrow)
+        if (rightButton)
         {
             showNextSensor();
         }
@@ -65,6 +71,7 @@ public class SensorManager : MonoBehaviour {
 
     public void initializeSensorUI(List<ROSSensorConnectionInterface> allSensors)
     {
+        sensorList.Clear();
         sensorList.AddRange(allSensors);
         selectedSensor = sensorList[0];
 
@@ -88,8 +95,6 @@ public class SensorManager : MonoBehaviour {
         foreach (string subscriber in subscriberList)
         {
             //generate toggle, spaced right below each other
-            //attach sensormanager to each one, script will see that it is a toggle
-
         }
     }
 
