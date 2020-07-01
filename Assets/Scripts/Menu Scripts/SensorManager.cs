@@ -9,6 +9,7 @@ public class SensorManager : MonoBehaviour {
     Button thisButton;
     Toggle thisToggle;
     Text thisSensorText;
+
     List<ROSSensorConnectionInterface> sensorList = new List<ROSSensorConnectionInterface>();
     List<string> subscriberList;
     ROSSensorConnectionInterface selectedSensor;
@@ -81,7 +82,7 @@ public class SensorManager : MonoBehaviour {
     public void updateSensorUI(ROSSensorConnectionInterface inputSensor)
     {
 
-        thisSensorText.text = inputSensor.ToString(); //where do we get the name of the sensor?
+        thisSensorText.text = inputSensor.GetSensorName(); 
         subscriberList = selectedSensor.GetSensorSubscribers();
 
         foreach (string subscriber in subscriberList)

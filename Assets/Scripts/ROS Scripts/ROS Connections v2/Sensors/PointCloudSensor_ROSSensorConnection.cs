@@ -15,6 +15,7 @@ public class PointCloudSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubsc
 {
     // Private connection variables
     private ROSBridgeWebSocketConnection ros = null;
+    private string sensorName;
     private string client_id;
     private List<string> sensorSubscriberTopics = new List<string>();
 
@@ -25,6 +26,7 @@ public class PointCloudSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubsc
     {
         ros = new ROSBridgeWebSocketConnection("ws://" + sensorIP, sensorPort);
         client_id = uniqueID.ToString();
+        sensorName = this.gameObject.name;
 
         foreach (string subscriber in sensorSubscribers)
         {
@@ -49,6 +51,11 @@ public class PointCloudSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubsc
         }
     }
 
+
+    public string GetSensorName()
+    {
+        return sensorName;
+    }
 
     /// <summary>
     /// Returns a list of connected subscriber topics (which are unique identifiers).
