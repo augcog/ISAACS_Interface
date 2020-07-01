@@ -23,6 +23,8 @@
         [Header("Required Prefabs")]
         public GameObject droneBaseObject;
         public GameObject waypointBaseObject;
+        // Can be assigned in the Editor
+        public SensorManager sensorManagerBaseObject;
 
         [Header("Drone variables")]
         public static Drone selectedDrone;
@@ -32,7 +34,9 @@
         [Header("Sensor variables")]
         public static GameObject selectedSensor;
         public static Dictionary<int, GameObject> sensorDict;
-        public static GameObject sensorManager;
+        // Can be used in other scripts
+        // Is assigned in the start function
+        public static SensorManager sensorManager;
 
 
         [Header("Misc. State variables")]
@@ -80,6 +84,7 @@
             nextDroneId = 'A'; // Used as an incrementing key for the dronesDict and for a piece of the communication about waypoints across the ROSBridge
 
             worldObject = gameObject;
+            sensorManager = sensorManagerBaseObject;
 
             placementPlane = GameObject.FindWithTag("Ground");
 
