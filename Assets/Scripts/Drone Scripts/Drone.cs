@@ -11,7 +11,7 @@
 
         public GameObject gameObjectPointer; // This is the related game object
         public DroneProperties droneProperties;
-        public char id; // This is the identifier of the drone in the dronesDict and across the ROSBridge
+        public int id; // This is the identifier of the drone in the dronesDict and across the ROSBridge
         public bool selected;
 
         public ArrayList waypoints; // All waypoints held by the drone
@@ -27,7 +27,7 @@
         /// Constructor method for Drone class objects
         /// </summary>
         /// <param name="drone_obj"> We pass in a Gameobject for the drone -- this will be phased out and the new drone_obj gameObject will be instantiated in this method </param>
-        public Drone(Vector3 position)
+        public Drone(Vector3 position, int uniqueID)
         {
             // Create gameObject at position
             GameObject baseObject = (GameObject)WorldProperties.worldObject.GetComponent<WorldProperties>().droneBaseObject;
@@ -37,6 +37,7 @@
             droneProperties = gameObjectPointer.GetComponent<DroneProperties>();
             droneProperties.enabled = true;
             droneProperties.droneClassPointer = this; // Connect the gameObject back to the classObject
+            droneProperties.selectedMeshRenderer = gameObjectPointer.transform.Find("group3/Outline").GetComponent<MeshRenderer>();
 
             gameObjectPointer.tag = "Drone";
             gameObjectPointer.name = baseObject.name;
@@ -53,9 +54,8 @@
             waypointsDict = new Dictionary<string, Waypoint>();
 
             // Updating the world properties to reflect a new drone being added
-            id = WorldProperties.GetNextDroneID();
-            WorldProperties.AddDrone(id, this);
-            WorldProperties.IncrementDroneID();
+            id = uniqueID;
+            WorldProperties.AddDrone(this);
 
             Debug.Log("Created new drone with id: " + id);
 

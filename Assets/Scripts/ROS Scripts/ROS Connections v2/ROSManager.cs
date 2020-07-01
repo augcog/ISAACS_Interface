@@ -98,13 +98,14 @@ public class ROSManager : MonoBehaviour {
         int dronePort = rosDroneConnectionInput.port;
         bool simFlight = rosDroneConnectionInput.simFlight;
         List<string> droneSubscribers = new List<string>();
+
         foreach (DroneSubscribers subscriber in rosDroneConnectionInput.droneSubscribers)
         {
             droneSubscribers.Add(subscriber.ToString());
         }
 
         // Create a new drone
-        Drone droneInstance = new Drone(WorldProperties.worldObject.transform.position);
+        Drone droneInstance = new Drone(WorldProperties.worldObject.transform.position, uniqueID);
         GameObject droneGameObject = droneInstance.gameObjectPointer;
         droneGameObject.tag = rosDroneConnectionInput.droneTag;
         droneGameObject.name = rosDroneConnectionInput.droneName;

@@ -11,11 +11,10 @@
 
         // Assigned in Drone constructor
         public Drone droneClassPointer;
+        public MeshRenderer selectedMeshRenderer;
         public Material selectedMaterial;
         public Material deselectedMaterial;
 
-        // TODO: Move drone selected to DroneProperties from Drone
-        // public bool selected;
 
         // Assigned in ROS Manager during runtime
         public ROSDroneConnectionInterface droneROSConnection;
@@ -34,7 +33,7 @@
             Debug.Log("Drone selected");
 
             // Changes the color of the drone to indicate that it has been selected
-            this.transform.Find("group3/Outline").GetComponent<MeshRenderer>().material = selectedMaterial;
+            this.selectedMeshRenderer.material = selectedMaterial;
 
             WorldProperties.UpdateSelectedDrone(droneClassPointer);
             this.droneClassPointer.selected = true;
@@ -44,7 +43,7 @@
         {
             Debug.Log("Drone deselected");
             // Changes the color of the drone to indicate that it has been deselected
-            this.transform.Find("group3/Outline").GetComponent<MeshRenderer>().material = deselectedMaterial;
+            this.selectedMeshRenderer.material = deselectedMaterial;
             this.droneClassPointer.selected = false;
         }
 

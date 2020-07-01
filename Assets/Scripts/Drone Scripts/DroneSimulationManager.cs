@@ -11,21 +11,33 @@ public class DroneSimulationManager : MonoBehaviour {
 
     private int nextWaypointID = 0;
     private bool flying = false;
+
+    private float startTime;
+    private float journeyLength;
     private Vector3 origin;
     private Vector3 destination;
+
     private Vector3 home;
+
     private bool endFlight = false;
-    private float fraction = 0;
+
+
+    private float fractionOfDistanceCovered = 0;
 
     // Update is called once per frame
     void Update()
     {
         if (flying)
         {
-            if (fraction < 1)
+            if (fractionOfDistanceCovered < 1)
             {
-                fraction += Time.deltaTime * speed / 5.0f;
-                Vector3 new_position = Vector3.Lerp(origin, destination, fraction);
+                // Distance moved equals elapsed time times speed..
+                float distCovered = (Time.time - startTime) * speed;
+
+                // Fraction of journey completed equals current distance divided by total distance.
+                float fractionOfJourney = distCovered / journeyLength;
+
+                Vector3 new_position = Vector3.Lerp(origin, destination, fractionOfJourney);
                 drone.gameObjectPointer.transform.localPosition = new_position;
             }
             else
@@ -70,12 +82,17 @@ public class DroneSimulationManager : MonoBehaviour {
         }
 
         Waypoint waypoint = (Waypoint)waypoints[nextWaypointID];
+
+        startTime = Time.time;
         origin = drone.gameObjectPointer.transform.localPosition;
         destination = waypoint.gameObjectPointer.transform.localPosition;
+        journeyLength = Vector3.Distance(origin, destination);
+
         flying = true;
+
         nextWaypointID += 1;
-        fraction = 0.0f;
-        Debug.Log(nextWaypointID);
+        fractionOfDistanceCovered = 0.0f;
+
     }
 
     public void FlyNextWaypoint(Vector3 waypoint)
