@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.17302455, g: 0.2162439, b: 0.2982352, a: 1}
+  m_IndirectSpecularColor: {r: 0.17302507, g: 0.21624431, b: 0.298236, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -860,7 +860,7 @@ Transform:
   - {fileID: 79141382}
   - {fileID: 167235401}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &146794964
 MonoBehaviour:
@@ -876,8 +876,8 @@ MonoBehaviour:
   init: 0
   viewHomeLat: q
   viewHomeLong: w
-  printLatLong: 1
-  printGPSHealth: 1
+  printLatLong: 0
+  printGPSHealth: 0
   getAuthority: e
   hasAuthority: r
   killSwitch: SPACE
@@ -892,9 +892,9 @@ MonoBehaviour:
   uploadUserMission: f
   pauseMission: g
   resumeMission: h
-  cycleDrone: d
-  cycleSensor: c
-  stopMission: j
+  cycleDrone: j
+  cycleSensor: k
+  stopMission: l
   rosDroneConnection: {fileID: 0}
 --- !u!114 &146794967
 MonoBehaviour:
@@ -934,7 +934,39 @@ MonoBehaviour:
     droneType: 1
     droneSubscribers: 0500000001000000
     simFlight: 1
-    attachedSensors: []
+    attachedSensors:
+    - sensorName: Perry_Rad_Meshs
+      sensorTag: Mesh
+      ipAddress: 12
+      port: 12
+      sensorType: 3
+      sensorSubscribers: 090000000b0000000c000000
+    - sensorName: Perry_Lidar_mesh
+      sensorTag: Mesh
+      ipAddress: 13
+      port: 23
+      sensorType: 1
+      sensorSubscribers: 01000000
+  - droneName: Someone Jazzy
+    droneTag: M210
+    ipAddress: 75.25.126.85
+    port: 9090
+    droneType: 1
+    droneSubscribers: 0500000001000000
+    simFlight: 1
+    attachedSensors:
+    - sensorName: Jazzy_Nuclear_Meshs
+      sensorTag: Mesh
+      ipAddress: 12
+      port: 12
+      sensorType: 3
+      sensorSubscribers: 0b0000000c0000000d000000
+    - sensorName: Jazzy_Environment_mesh
+      sensorTag: Mesh
+      ipAddress: 13
+      port: 23
+      sensorType: 1
+      sensorSubscribers: 01000000
   success: 0
   uniqueID: 0
 --- !u!1 &161977055
@@ -1331,7 +1363,7 @@ Transform:
   - {fileID: 1076179635}
   - {fileID: 899238562}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &279732760
 GameObject:
@@ -1766,7 +1798,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400172, guid: 804ac96ebacbb37488605e7a96725e34, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 400172, guid: 804ac96ebacbb37488605e7a96725e34, type: 3}
       propertyPath: m_LocalScale.x
@@ -2270,18 +2302,18 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 491234449}
   m_LocalRotation: {x: 0.26782498, y: -0.26191968, z: -0.112700574, w: 0.9203079}
-  m_LocalPosition: {x: 0, y: 0, z: 0.215}
-  m_LocalScale: {x: 0.0004441962, y: 0.00044419567, z: 0.00044419826}
+  m_LocalPosition: {x: 0, y: 0, z: -0.8349999}
+  m_LocalScale: {x: 0.00044419625, y: 0.0004441957, z: 0.00044419838}
   m_Children:
   - {fileID: 1389480805}
   - {fileID: 1953593574}
   - {fileID: 467194004}
-  m_Father: {fileID: 731156519}
-  m_RootOrder: 0
+  m_Father: {fileID: 0}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 25.717001, y: -37.02, z: -22.704}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -0.0762, y: 0.0351}
+  m_AnchoredPosition: {x: 0.48479998, y: 2.8751}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &491234454
@@ -2519,7 +2551,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &616584609
 GameObject:
@@ -2864,7 +2896,7 @@ Transform:
   m_LocalScale: {x: 0.1, y: 0.100000024, z: 0.1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 83.595, y: 0, z: 0}
 --- !u!1 &716024044
 GameObject:
@@ -3003,10 +3035,6 @@ CanvasRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 716024044}
---- !u!4 &731156519 stripped
-Transform:
-  m_PrefabParentObject: {fileID: 482130, guid: 126d619cf4daa52469682f85c1378b4a, type: 2}
-  m_PrefabInternal: {fileID: 242895466}
 --- !u!4 &899238562
 Transform:
   m_ObjectHideFlags: 0
@@ -3036,7 +3064,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &901874429
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3049,12 +3077,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoPopulateObjectReferences: 1
-  actualBoundaries: {fileID: 0}
-  actualHeadset: {fileID: 0}
-  actualLeftController: {fileID: 0}
-  actualRightController: {fileID: 0}
-  modelAliasLeftController: {fileID: 0}
-  modelAliasRightController: {fileID: 0}
+  actualBoundaries: {fileID: 1578342133}
+  actualHeadset: {fileID: 1926808279}
+  actualLeftController: {fileID: 2039260281}
+  actualRightController: {fileID: 1046087206}
+  modelAliasLeftController: {fileID: 283578732}
+  modelAliasRightController: {fileID: 665289476}
   cachedSystemSDKInfo:
     baseTypeName: VRTK.SDK_BaseSystem
     fallbackTypeName: VRTK.SDK_FallbackSystem
@@ -3384,6 +3412,10 @@ Transform:
   m_Father: {fileID: 1843436373}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1046087206 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 113768, guid: 126d619cf4daa52469682f85c1378b4a, type: 2}
+  m_PrefabInternal: {fileID: 242895466}
 --- !u!1 &1046134702
 GameObject:
   m_ObjectHideFlags: 0
@@ -4814,8 +4846,7 @@ MonoBehaviour:
   leftButton: {fileID: 1521159992}
   rightButton: {fileID: 430543522}
   sensorText: {fileID: 1761053837}
-  togglePrefab: {fileID: 1525992424816776, guid: cfc87a144fe624883b688a2af3312bcb,
-    type: 2}
+  togglePrefab: {fileID: 0}
 --- !u!1 &1409379668
 GameObject:
   m_ObjectHideFlags: 0
@@ -5986,7 +6017,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1526639726
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6222,7 +6253,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1668557240
 GameObject:
@@ -6618,7 +6649,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1699223318
 Transform:
   m_ObjectHideFlags: 0
@@ -7185,7 +7216,7 @@ Transform:
   - {fileID: 1026087570}
   - {fileID: 1672332644}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!1 &1866386692
 GameObject:
@@ -7575,6 +7606,10 @@ CanvasRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1921522138}
+--- !u!1 &1926808279 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 100002, guid: 126d619cf4daa52469682f85c1378b4a, type: 2}
+  m_PrefabInternal: {fileID: 242895466}
 --- !u!1 &1953593573
 GameObject:
   m_ObjectHideFlags: 0
@@ -7724,6 +7759,10 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2009876116}
+--- !u!1 &2039260281 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 109308, guid: 126d619cf4daa52469682f85c1378b4a, type: 2}
+  m_PrefabInternal: {fileID: 242895466}
 --- !u!1 &2053542333
 GameObject:
   m_ObjectHideFlags: 0

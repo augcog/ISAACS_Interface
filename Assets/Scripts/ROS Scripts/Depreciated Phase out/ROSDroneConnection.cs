@@ -292,7 +292,7 @@ public class ROSDroneConnection : MonoBehaviour
 
         bool skip = true;
 
-        foreach (Waypoint waypoint in WorldProperties.selectedDrone.waypoints)
+        foreach (Waypoint waypoint in WorldProperties.GetSelectedDrone().waypoints)
         {
             if (skip)
             {

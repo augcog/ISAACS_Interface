@@ -37,6 +37,7 @@ TagManager:
   - MESH
   - PC
   - SENSORUI
+  - Mesh
   layers:
   - Default
   - TransparentFX

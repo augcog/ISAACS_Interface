@@ -11,9 +11,10 @@ public class SensorManager : MonoBehaviour {
     public Text sensorText;
     public GameObject togglePrefab;
 
-    List<ROSSensorConnectionInterface> sensorList = new List<ROSSensorConnectionInterface>();
-    List<string> subscriberList;
-    ROSSensorConnectionInterface selectedSensor;
+    private List<ROSSensorConnectionInterface> sensorList = new List<ROSSensorConnectionInterface>();
+    private List<string> subscriberList = new List<string>();
+    private ROSSensorConnectionInterface selectedSensor;
+    private int selectedSensorPos;
 
     //public bool leftArrow = false;
     //public bool rightArrow = false;
@@ -22,45 +23,9 @@ public class SensorManager : MonoBehaviour {
 
     void Awake()
     {
-        leftButton.onClick.AddListener(() => { OnClickEvent(); });
-        rightButton.onClick.AddListener(() => { OnClickEvent(); });
-       
-        ////Adds listener to the button, if component is button
-        //if (GetComponent<Button>() != null)
-        //{
-        //    thisButton = GetComponent<Button>();
-        //    thisButton.onClick.AddListener(() => { OnClickEvent(); });
-        //}
-
-        ////Adds listener to toggle, if component is toggle
-        //else if (GetComponent<Toggle>() != null)
-        //{
-        //    thisToggle = GetComponent<Toggle>();
-        //    thisToggle.onValueChanged.AddListener(delegate { ToggleValueChanged(thisToggle); });
-        //}
-
-        //else
-        //{
-        //    thisSensorText = GetComponent<Text>();
-        //}
+        leftButton.onClick.AddListener(() => { ShowNextSensor(); });
+        rightButton.onClick.AddListener(() => { ShowPreviousSensor(); });
     }
-
-
-    void OnClickEvent()
-    {
-        if (leftButton)
-        {
-            showPreviousSensor();
-        }
-
-        if (rightButton)
-        {
-            showNextSensor();
-        }
-
-        //any other buttons can be added here, if needed
-    }
-
 
     // function 1: new drone selected: update all the sensors
     // UpdateUI function: paramaters: List of Sensors
@@ -71,10 +36,18 @@ public class SensorManager : MonoBehaviour {
     public void initializeSensorUI(List<ROSSensorConnectionInterface> allSensors)
     {
         sensorList.Clear();
-        sensorList.AddRange(allSensors);
-        selectedSensor = sensorList[0];
 
-        Debug.Log("The sensor's subscribers are: " + subscriberList.ToString());
+        foreach (ROSSensorConnectionInterface sensor in allSensors)
+        {
+            Debug.Log("Adding sensor to UI: " + sensor.GetSensorName());
+            sensorList.Add(sensor);
+        }
+        
+        Debug.Log("Selecting sensor: " + sensorList[0].GetSensorName());
+        selectedSensor = sensorList[0];
+        selectedSensorPos = 0;
+
+        Debug.Log("The sensor's subscribers are: " + sensorList.ToString());
         updateSensorUI(selectedSensor);
 
     }
@@ -85,27 +58,32 @@ public class SensorManager : MonoBehaviour {
     // generate len(list) number of toggles  with the text of each being the subcsriber string
     // upper bound of 6 subscibers per sensor
 
+
+    // tried: GUI.toggle, instantiate prefab, default controls api, new gameobject.
+
     public void updateSensorUI(ROSSensorConnectionInterface inputSensor)
     {
 
-        sensorText.text = inputSensor.GetSensorName(); 
-        subscriberList = selectedSensor.GetSensorSubscribers();
+        sensorText.text = inputSensor.GetSensorName();
+        subscriberList = new List<string>(inputSensor.GetSensorSubscribers());
 
         foreach (string subscriber in subscriberList)
         {
+            Debug.Log("Creating button for :" + subscriber);
+            
+            /*
             GameObject toggleUI = Instantiate(togglePrefab, new Vector3(0, 0, 0), Quaternion.identity);
-            Debug.Log(toggleUI.name);
             Toggle thisToggle = toggleUI.GetComponent<Toggle>();
             Text toggleName = toggleUI.GetComponentInChildren<Text>();
             toggleName.text = subscriber;
             thisToggle.onValueChanged.AddListener(delegate { ToggleValueChanged(thisToggle); });
+            */
         }
     }
 
     // function 3: toggles pressed
     // when a toggle is switched off for subscriber "s" : sensor.Unsubscribe(string s);
     // when a toggle is switched on for subscriber "s" : sensor.Subscribe(string s);
-
     void ToggleValueChanged(Toggle thisToggle)
     {
         Text selectedSubscriberName = thisToggle.GetComponentInChildren<Text>();
@@ -129,28 +107,34 @@ public class SensorManager : MonoBehaviour {
 
     //these are seperated so that if later implementations where we want to switch sensors using VRTK buttons, we can
 
-    public void showNextSensor()
+    public void ShowNextSensor()
     {
-        if (selectedSensor == sensorList[sensorList.Count])
+        if (selectedSensorPos == sensorList.Count-1)
         {
-            updateSensorUI(sensorList[0]);
+            selectedSensorPos = 0;
         }
         else
         {
-            //updateSensorUI( next one thru a queue)
+            selectedSensorPos += 1 ;
         }
+
+        selectedSensor = sensorList[selectedSensorPos];
+        updateSensorUI(selectedSensor);
     }
 
-    public void showPreviousSensor()
+    public void ShowPreviousSensor()
     {
-        if (selectedSensor == sensorList[0])
+        if (selectedSensorPos == 0)
         {
-            updateSensorUI(sensorList[sensorList.Count]);
+            selectedSensorPos = sensorList.Count - 1;
         }
         else
         {
-            //updateSensorUI( previous one)
+            selectedSensorPos -= 1;
         }
+
+        selectedSensor = sensorList[selectedSensorPos];
+        updateSensorUI(selectedSensor);
     }
 
 }

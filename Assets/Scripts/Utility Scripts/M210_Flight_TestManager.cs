@@ -53,12 +53,12 @@ public class M210_Flight_TestManager : MonoBehaviour
     public string resumeMission = "h";
 
     [Header("Drone/Sensor Selection Tests")]
-    public string cycleDrone = "d";
-    public string cycleSensor = "c";
+    public string cycleDrone = "j";
+    public string cycleSensor = "k";
 
     [Header("Dyanmic waypoint system Tests")]
     // TODO: Ensure waypoint array removes past waypoints.
-    public string stopMission = "j";
+    public string stopMission = "l";
 
     [Header("Drone Variable")]
     public Matrice_ROSDroneConnection rosDroneConnection;
@@ -69,16 +69,7 @@ public class M210_Flight_TestManager : MonoBehaviour
 
         if (Input.GetKeyDown(init))
         {
-            /*
-            if (WorldProperties.GetSelectedDrone() == null)
-            {
-                WorldProperties.SelectNextDrone();
-            }
-
             rosDroneConnection = (Matrice_ROSDroneConnection)WorldProperties.GetSelectedDrone().gameObjectPointer.GetComponent<DroneProperties>().droneROSConnection;
-            */
-            rosDroneConnection = (Matrice_ROSDroneConnection)WorldProperties.selectedDrone.gameObjectPointer.GetComponent<DroneProperties>().droneROSConnection;
-
         }
 
         if (Input.GetKeyDown(viewHomeLat))
@@ -217,7 +208,13 @@ public class M210_Flight_TestManager : MonoBehaviour
 
         if (Input.GetKeyUp(cycleDrone))
         {
-            //do the switchnextdrone function
+            WorldProperties.SelectNextDrone();
+            rosDroneConnection = (Matrice_ROSDroneConnection)WorldProperties.GetSelectedDrone().gameObjectPointer.GetComponent<DroneProperties>().droneROSConnection;
+        }
+
+        if (Input.GetKeyDown(cycleSensor))
+        {
+            WorldProperties.sensorManager.ShowNextSensor();
         }
     }
 }

@@ -103,7 +103,7 @@ public class ROSManager : MonoBehaviour {
         }
 
         // Create a new drone
-        Drone droneInstance = new Drone(WorldProperties.worldObject.transform.position);
+        Drone droneInstance = new Drone(WorldProperties.worldObject.transform.position, uniqueID);
         GameObject droneGameObject = droneInstance.gameObjectPointer;
         droneGameObject.tag = rosDroneConnectionInput.droneTag;
         droneGameObject.name = rosDroneConnectionInput.droneName;
@@ -156,7 +156,7 @@ public class ROSManager : MonoBehaviour {
         {
             // @Jasmine: We might need a sensor properties type script to connect a sensor back to the drone?
             ROSSensorConnectionInterface sensor = InstantiateSensor(rosSensorInput);
-            droneInstance.attachedSensors.Add(sensor);
+            droneInstance.AddSensor(sensor);
         }
 
         uniqueID ++;
