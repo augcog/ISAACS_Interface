@@ -17,7 +17,7 @@ public class M210_Flight_TestManager : MonoBehaviour
     /// Each string maps a key to the required function used for debugging.
     /// </summary>
 
-    [Header("Initilize")]
+    [Header("Initialize")]
     public string init = "0";
 
     [Header("Subscriber Tests")]
@@ -51,6 +51,10 @@ public class M210_Flight_TestManager : MonoBehaviour
     [Header("Pause/Resume Mission Tests")]
     public string pauseMission = "g";
     public string resumeMission = "h";
+
+    [Header("Drone/Sensor Selection Tests")]
+    public string cycleDrone = "d";
+    public string cycleSensor = "c";
 
     [Header("Dyanmic waypoint system Tests")]
     // TODO: Ensure waypoint array removes past waypoints.
@@ -209,6 +213,11 @@ public class M210_Flight_TestManager : MonoBehaviour
         if (Input.GetKeyDown(stopMission))
         {
             rosDroneConnection.SendWaypointAction(Matrice_ROSDroneConnection.WaypointMissionAction.STOP);
+        }
+
+        if (Input.GetKeyUp(cycleDrone))
+        {
+            //do the switchnextdrone function
         }
     }
 }

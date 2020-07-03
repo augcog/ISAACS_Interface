@@ -8,13 +8,12 @@ public class SensorManager : MonoBehaviour {
 
     public Button leftButton;
     public Button rightButton;
-    public Text thisSensorText;
+    public Text sensorText;
+    public GameObject togglePrefab;
 
     List<ROSSensorConnectionInterface> sensorList = new List<ROSSensorConnectionInterface>();
     List<string> subscriberList;
     ROSSensorConnectionInterface selectedSensor;
-    Toggle thisToggle;
-    List<>
 
     //public bool leftArrow = false;
     //public bool rightArrow = false;
@@ -25,7 +24,7 @@ public class SensorManager : MonoBehaviour {
     {
         leftButton.onClick.AddListener(() => { OnClickEvent(); });
         rightButton.onClick.AddListener(() => { OnClickEvent(); });
-
+       
         ////Adds listener to the button, if component is button
         //if (GetComponent<Button>() != null)
         //{
@@ -89,12 +88,17 @@ public class SensorManager : MonoBehaviour {
     public void updateSensorUI(ROSSensorConnectionInterface inputSensor)
     {
 
-        thisSensorText.text = inputSensor.GetSensorName(); 
+        sensorText.text = inputSensor.GetSensorName(); 
         subscriberList = selectedSensor.GetSensorSubscribers();
 
         foreach (string subscriber in subscriberList)
         {
-            //generate toggle, spaced right below each other
+            GameObject toggleUI = Instantiate(togglePrefab, new Vector3(0, 0, 0), Quaternion.identity);
+            Debug.Log(toggleUI.name);
+            Toggle thisToggle = toggleUI.GetComponent<Toggle>();
+            Text toggleName = toggleUI.GetComponentInChildren<Text>();
+            toggleName.text = subscriber;
+            thisToggle.onValueChanged.AddListener(delegate { ToggleValueChanged(thisToggle); });
         }
     }
 
