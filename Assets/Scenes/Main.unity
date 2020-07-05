@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.17302507, g: 0.21624431, b: 0.298236, a: 1}
+  m_IndirectSpecularColor: {r: 0.17302455, g: 0.2162439, b: 0.2982352, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -4846,7 +4846,8 @@ MonoBehaviour:
   leftButton: {fileID: 1521159992}
   rightButton: {fileID: 430543522}
   sensorText: {fileID: 1761053837}
-  togglePrefab: {fileID: 0}
+  togglePrefab: {fileID: 1065003490303774, guid: cfc87a144fe624883b688a2af3312bcb,
+    type: 2}
 --- !u!1 &1409379668
 GameObject:
   m_ObjectHideFlags: 0

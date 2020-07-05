@@ -16,11 +16,6 @@ public class SensorManager : MonoBehaviour {
     private ROSSensorConnectionInterface selectedSensor;
     private int selectedSensorPos;
 
-    //public bool leftArrow = false;
-    //public bool rightArrow = false;
-    //public bool displaySensorText = false;
-    //any other buttons can be added here
-
     void Awake()
     {
         leftButton.onClick.AddListener(() => { ShowNextSensor(); });
@@ -36,6 +31,7 @@ public class SensorManager : MonoBehaviour {
     public void initializeSensorUI(List<ROSSensorConnectionInterface> allSensors)
     {
         sensorList.Clear();
+        deleteOldSensors();
 
         foreach (ROSSensorConnectionInterface sensor in allSensors)
         {
@@ -52,6 +48,17 @@ public class SensorManager : MonoBehaviour {
 
     }
 
+    public void deleteOldSensors()
+    {
+        GameObject[] previousSensors = GameObject.FindGameObjectsWithTag("TOGGLESENSORS");
+        foreach (GameObject prev in previousSensors)
+        {
+            Debug.Log("Deleting " + prev.name);
+            Destroy(prev);
+        }
+        previousSensors = null;
+    }
+
     // function 2: update the ui with the current selected sensor
     // we get the list of subscribers: sensor.GetSensorSubscribers()
     // this list of subscribers: eg: mesh, rad_level_1, rad_level3
@@ -63,27 +70,36 @@ public class SensorManager : MonoBehaviour {
 
     public void updateSensorUI(ROSSensorConnectionInterface inputSensor)
     {
-
+        //clear all previous toggle (name should be "SubscriberToggle(clone)" HERE
+   
         sensorText.text = inputSensor.GetSensorName();
         subscriberList = new List<string>(inputSensor.GetSensorSubscribers());
-
+        int subscribercount = 0;
         foreach (string subscriber in subscriberList)
         {
             Debug.Log("Creating button for :" + subscriber);
-            
-            /*
+
+            //Instantiating and positioning toggles
+            float ypos = 40 - (subscribercount * 25);
+            var position = new Vector3(-19, ypos, -14);
             GameObject toggleUI = Instantiate(togglePrefab, new Vector3(0, 0, 0), Quaternion.identity);
+            toggleUI.transform.parent = GameObject.Find("Sensor Menu").transform;
+            toggleUI.transform.localPosition = position;
+            toggleUI.transform.localScale = Vector3.one;
+            toggleUI.transform.localRotation = Quaternion.identity;
+            toggleUI.tag = "TOGGLESENSORS";
+
+            //making toggles w/ correct labels and subscribers
             Toggle thisToggle = toggleUI.GetComponent<Toggle>();
             Text toggleName = toggleUI.GetComponentInChildren<Text>();
             toggleName.text = subscriber;
             thisToggle.onValueChanged.AddListener(delegate { ToggleValueChanged(thisToggle); });
-            */
+            subscribercount++;
+            
         }
     }
 
     // function 3: toggles pressed
-    // when a toggle is switched off for subscriber "s" : sensor.Unsubscribe(string s);
-    // when a toggle is switched on for subscriber "s" : sensor.Subscribe(string s);
     void ToggleValueChanged(Toggle thisToggle)
     {
         Text selectedSubscriberName = thisToggle.GetComponentInChildren<Text>();
@@ -91,11 +107,13 @@ public class SensorManager : MonoBehaviour {
         if (thisToggle.isOn)
         {
             selectedSensor.Subscribe(selectedSubscriberName.text);
+            Debug.Log("Subscribing: " + thisToggle.GetComponentInChildren<Text>().text);
         }
 
         else
         {
             selectedSensor.Unsubscribe(selectedSubscriberName.text);
+            Debug.Log("Unsubscribing: " + thisToggle.GetComponentInChildren<Text>().text);
         }
     }
 

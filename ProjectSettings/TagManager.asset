@@ -38,6 +38,7 @@ TagManager:
   - PC
   - SENSORUI
   - Mesh
+  - TOGGLESENSORS
   layers:
   - Default
   - TransparentFX
