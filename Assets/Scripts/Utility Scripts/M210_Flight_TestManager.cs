@@ -55,6 +55,7 @@ public class M210_Flight_TestManager : MonoBehaviour
     [Header("Drone/Sensor Selection Tests")]
     public string cycleDrone = "j";
     public string cycleSensor = "k";
+    public string unsubscribe = "z";
 
     [Header("Dyanmic waypoint system Tests")]
     // TODO: Ensure waypoint array removes past waypoints.
@@ -215,6 +216,13 @@ public class M210_Flight_TestManager : MonoBehaviour
         if (Input.GetKeyDown(cycleSensor))
         {
             WorldProperties.sensorManager.ShowNextSensor();
+        }
+
+        if (Input.GetKeyDown(unsubscribe))
+        {
+            ROSSensorConnectionInterface sensor = WorldProperties.sensorManager.getSelectedSensor();
+            List<string> subscriberList = WorldProperties.sensorManager.getSubscriberList();
+            sensor.Unsubscribe(subscriberList[0]);
         }
     }
 }

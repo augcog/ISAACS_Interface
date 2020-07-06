@@ -894,6 +894,7 @@ MonoBehaviour:
   resumeMission: h
   cycleDrone: j
   cycleSensor: k
+  unsubscribe: z
   stopMission: l
   rosDroneConnection: {fileID: 0}
 --- !u!114 &146794967
@@ -937,14 +938,14 @@ MonoBehaviour:
     attachedSensors:
     - sensorName: Perry_Rad_Meshs
       sensorTag: Mesh
-      ipAddress: 12
-      port: 12
+      ipAddress: 75.25.126.85
+      port: 9090
       sensorType: 3
       sensorSubscribers: 090000000b0000000c000000
     - sensorName: Perry_Lidar_mesh
       sensorTag: Mesh
-      ipAddress: 13
-      port: 23
+      ipAddress: 75.25.126.85
+      port: 9090
       sensorType: 1
       sensorSubscribers: 01000000
   - droneName: Someone Jazzy

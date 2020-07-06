@@ -155,4 +155,13 @@ public class SensorManager : MonoBehaviour {
         updateSensorUI(selectedSensor);
     }
 
+    public ROSSensorConnectionInterface getSelectedSensor()
+    {
+        return selectedSensor;
+    }
+
+    public List<string> getSubscriberList()
+    {
+        return subscriberList;
+    }
 }
