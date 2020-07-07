@@ -14,62 +14,81 @@
 
 	public class ControllerInput : MonoBehaviour
 	{
-		// TODO.
+		/// <summary>
+		/// The left controller GameObject, where VRTK scripts are attached.
+		/// </summary>
 		public GameObject LeftController;
+		/// <summary>
+		/// The right controller GameObject, where VRTK scripts are attached.
+		/// </summary>
 		public GameObject RightController;
 
+
+
+
+		/************************************/
+		//  LEFT CONTROLLER GETTER METHODS  //
+		/************************************/
+
 		/// <summary>
-		/// True if left hand is grabbing an object.
+		/// Whether the left hand is currently grabbing an object.
 		/// </summary>
-		public bool GetLeftIsGrabbing()
+        /// <returns>True if the left hand is currently grabbing an object.</returns>
+		public bool LeftIsGrabbing()
 		{
 			return (LeftController.GetComponent<VRTK_InteractGrab>().GetGrabbedObject()) ? true : false;
 		}
 
 		/// <summary>
-		/// True if the left index trigger is being pressed.
+		/// Whether the left trigger (index finger) is held down. 
 		/// </summary>
-		public bool GetLeftIndex()
+		/// <returns>True if the left trigger is held down.</returns>
+		public bool LeftTrigger()
 		{
 			return LeftController.GetComponent<VRTK_ControllerEvents>().IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.TriggerPress);
 		}
 
 		/// <summary>
-		/// True if the left middle trigger is being pressed.
+		/// Whether the left grip (middle finger) is held down. 
 		/// </summary>
-		public bool GetLeftMiddle()
+		/// <returns>True if the left grip is held down.</returns>
+		public bool LeftGrip()
 		{
 			return LeftController.GetComponent<VRTK_ControllerEvents>().IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.GripPress);
 		}
 
 		/// <summary>
-		/// True if the left X button is being pressed.
+		/// Whether the left X button is held down.
 		/// </summary>
-		public bool GetLeftX()
+		/// <returns>True if the left X button is held down.</returns>
+		public bool LeftX()
 		{
 			return LeftController.GetComponent<VRTK_ControllerEvents>().IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.ButtonOnePress);
 		}
 
 		/// <summary>
-		/// True if the left Y button is being pressed.
+		/// Whether the left Y button is held down.
 		/// </summary>
-		public bool GetLeftY()
+		/// <returns>True if the left Y button is held down.</returns>
+		public bool LeftY()
 		{
 			return LeftController.GetComponent<VRTK_ControllerEvents>().IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.ButtonTwoPress);
 		}
 
 		/// <summary>
-		/// True if the left thumbstick is being pressed.
+		/// Whether the left thumbstick is held down (that is pressed, but not necessarily rotated around).
 		/// </summary>
-		public bool GetLeftThumb()
+		/// <returns>True if the left thumbstick is held down.</returns>
+		public bool LeftStick()
 		{
 			return LeftController.GetComponent<VRTK_ControllerEvents>().IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.TouchpadPress);
 		}
 
 		/// <summary>
-		/// The distance by which the left thumbstick has been moved in the X-axis and Y-axis.
+		/// The distance by which the left thumbstick has been moved in the x and y axes.
 		/// </summary>
-		public Vector2 GetLeftThumbDelta()
+		/// <returns>A 2-dimensional vector, equal to the thumbstick's displacement in the [0] x direction (float), and [1] y direction (float).</returns>
+		public Vector2 LeftStickDelta()
 		{
 			return LeftController.GetComponent<VRTK_ControllerEvents>().GetAxis(VRTK_ControllerEvents.Vector2AxisAlias.Touchpad);
 		}
@@ -77,56 +96,70 @@
 		/// <summary>
 		/// The angle of rotation of the left thumbstick.
 		/// </summary>
-		public float GetLeftThumbAngle()
+		/// <returns>A float equal to the left thumbstick's conterclockwise angular diplacement in degrees.</returns>
+		public float LeftStickAngle()
 		{
 			return LeftController.GetComponent<VRTK_ControllerEvents>().GetAxisAngle(VRTK_ControllerEvents.Vector2AxisAlias.Touchpad);
 		}
 
 		/// <summary>
-		/// True if LeftThumbDelta{.x|.y} != 0.0f or LeftThumbAngle != 0.0f, meaning that the left thumbstick has been moved.
+		/// Whether the left sthumbstick has been moved from its origin.
 		/// </summary>
-		public bool GetLeftThumbMoved()
+		/// <returns>True if the left thumbstick has been moved from its origin.</returns>
+		public bool LeftStickMoved()
 		{
-			return LeftController.GetComponent<VRTK_ControllerEvents>().GetAxis(VRTK_ControllerEvents.Vector2AxisAlias.Touchpad).x != 0.0f 
-			    || LeftController.GetComponent<VRTK_ControllerEvents>().GetAxis(VRTK_ControllerEvents.Vector2AxisAlias.Touchpad).y != 0.0f;
+			if (LeftController.GetComponent<VRTK_ControllerEvents>().GetAxis(VRTK_ControllerEvents.Vector2AxisAlias.Touchpad).x != 0.0f)
+			{
+				return true;
+			}
+			else if (LeftController.GetComponent<VRTK_ControllerEvents>().GetAxis(VRTK_ControllerEvents.Vector2AxisAlias.Touchpad).y != 0.0f)
+			{
+				return true;
+			}
+			return false;	
 		}
 
 		/// <summary>
 		/// The transform (position, rotation, scale) of the left controller.
 		/// </summary>
-		public Transform GetLeftTransform()
+		/// <returns>The transform component of the left controller.</returns>
+		public Transform LeftTransform()
 		{
 			return VRTK_DeviceFinder.DeviceTransform(VRTK_DeviceFinder.Devices.LeftController);
 		}
 
 		/// <summary>
- 		/// The position of the left controller.
+ 		/// The position of the left controller in space.
 		/// </summary>
-		public Vector3 GetLeftPosition()
+ 		/// <returns>A 3-dimensional vector, equal to the left controller's displacement in the [0] x direction (float), [1] y direction (float), and [2] z direction (float).</returns>
+		public Vector3 LeftPosition()
 		{
 			return VRTK_DeviceFinder.DeviceTransform(VRTK_DeviceFinder.Devices.LeftController).position;
 		}
 
 		/// <summary>
- 		/// The relative position of the left controller.
+ 		/// The relative position of the left controller in space.
 		/// </summary>
-		public Vector3 GetLeftLocalPosition()
+ 		/// <returns>A 3-dimensional vector, equal to the left controller's relative displacement in the [0] x direction (float), [1] y direction (float), and [2] z direction (float).</returns>
+		public Vector3 LeftLocalPosition()
 		{
 			return VRTK_DeviceFinder.DeviceTransform(VRTK_DeviceFinder.Devices.LeftController).localPosition;
 		}
 
 		/// <summary>
- 		/// The rotation of the left controller. Can be queried for its normalized value, eulerAngles, and w, x, y, and z components.
+ 		/// The rotation of the left controller in space. Can be queried for its normalized value, eulerAngles, and w, x, y, and z components.
 		/// </summary>
-		public Quaternion GetLeftRotation()
+ 		/// <returns>A quaternion representing the left controller's conterclockwise angular displacement.</returns>
+		public Quaternion LeftRotation()
 		{
 			return VRTK_DeviceFinder.DeviceTransform(VRTK_DeviceFinder.Devices.LeftController).rotation;
 		}
 
 		/// <summary>
- 		/// The relative rotation of the left controller. Can be queried for its normalized value, eulerAngles, and w, x, y, and z components.
+ 		/// The relative rotation of the left controller in space. Can be queried for its normalized value, eulerAngles, and w, x, y, and z components.
 		/// </summary>
-		public Quaternion GetLeftLocalRotation()
+ 		/// <returns>A quaternion representing the left controller's relative conterclockwise angular displacement.</returns>
+		public Quaternion LeftLocalRotation()
 		{
 			return VRTK_DeviceFinder.DeviceTransform(VRTK_DeviceFinder.Devices.LeftController).localRotation;
 		}
@@ -134,7 +167,8 @@
 		/// <summary>
  		/// How fast the left controller is moving in space.
 		/// </summary>
-		public Vector3 GetLeftVelocity()
+ 		/// <returns>A 3-dimensional vector, equal to the left controller's velocity in the [0] x direction (float), [1] y direction (float), and [2] z direction (float).</returns>
+		public Vector3 LeftVelocity()
 		{
 			return VRTK_DeviceFinder.GetControllerVelocity(VRTK_DeviceFinder.GetControllerReferenceLeftHand());
 		}
@@ -142,7 +176,8 @@
 		/// <summary>
  		/// How fast the left controller is rotating in space.
 		/// </summary>
-		public Vector3 GetLeftAngularVelocity()
+ 		/// <returns>A 3-dimensional vector, equal to the left controller's counterclockwise angular velocity in the [0] x direction (float), [1] y direction (float), and [2] z direction (float).</returns>
+		public Vector3 LeftAngularVelocity()
 		{
 			return VRTK_DeviceFinder.GetControllerAngularVelocity(VRTK_DeviceFinder.GetControllerReferenceLeftHand());
 		}
@@ -150,116 +185,141 @@
 
 
 
-		// Getter methods, right controller. TODO: correct comment style?
-
+		/*************************************/
+		//  RIGHT CONTROLLER GETTER METHODS  //
+		/*************************************/
+		
 		/// <summary>
- 		/// True if the right hand is grabbing an object.
+		/// Whether the right hand is currently grabbing an object.
 		/// </summary>
-		public bool GetRightIsGrabbing()
+        /// <returns>True if the right hand is currently grabbing an object.</returns>
+		public bool RightIsGrabbing()
 		{
 			return (RightController.GetComponent<VRTK_InteractGrab>().GetGrabbedObject()) ? true : false;;
 		}
 
 		/// <summary>
- 		/// True if the right index trigger is being pressed.
+		/// Whether the right trigger (index finger) is held down. 
 		/// </summary>
-		public bool GetRightIndex()
+		/// <returns>True if the right trigger is held down.</returns>
+		public bool RightTrigger()
 		{
 			return RightController.GetComponent<VRTK_ControllerEvents>().IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.TriggerPress);
 		}
 
 		/// <summary>
- 		/// True if the right middle trigger is being pressed.
+		/// Whether the right grip (middle finger) is held down. 
 		/// </summary>
-		public bool GetRightMiddle()
+		/// <returns>True if the right grip is held down.</returns>
+		public bool RightGrip()
 		{
 			return RightController.GetComponent<VRTK_ControllerEvents>().IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.GripPress);
 		}
 
 		/// <summary>
- 		/// True if the right A button is being pressed.
+		/// Whether the right A button is held down.
 		/// </summary>
-		public bool GetRightA()
+		/// <returns>True if the right A button is held down.</returns>
+		public bool RightA()
 		{
 			return RightController.GetComponent<VRTK_ControllerEvents>().IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.ButtonOnePress);
 		}
 
 		/// <summary>
- 		/// True if the right B button is being pressed.
+		/// Whether the right B button is held down.
 		/// </summary>
-		public bool GetRightB()
+		/// <returns>True if the right B button is held down.</returns>
+		public bool RightB()
 		{
 			return RightController.GetComponent<VRTK_ControllerEvents>().IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.ButtonTwoPress);
 		}
 
 		/// <summary>
- 		/// True if the right thumbstick is being pressed.
+		/// Whether the right thumbstick is held down (that is pressed, but not necessarily rotated around).
 		/// </summary>
-		public bool GetRightThumb()
+		/// <returns>True if the right thumbstick is held down.</returns>
+		public bool RightStick()
 		{
 			return RightController.GetComponent<VRTK_ControllerEvents>().IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.TouchpadPress);
 		}
 
 		/// <summary>
- 		/// The distance by which the right thumbstick has been moved in the X-axis and Y-axis.
+		/// The distance by which the right thumbstick has been moved in the x and y axes.
 		/// </summary>
-		public Vector2 GetRightThumbDelta()
+		/// <returns>A 2-dimensional vector, equal to the thumbstick's displacement in the [0] x direction (float), and [1] y direction (float).</returns>
+		public Vector2 RightStickDelta()
 		{
 			return RightController.GetComponent<VRTK_ControllerEvents>().GetAxis(VRTK_ControllerEvents.Vector2AxisAlias.Touchpad);
 		}
 
 		/// <summary>
- 		/// The angle of rotation of the right thumbstick.
+		/// The angle of rotation of the right thumbstick.
 		/// </summary>
-		public float GetRightThumbAngle()
+		/// <returns>A float equal to the right thumbstick's conterclockwise angular diplacement in degrees.</returns>
+		public float RightStickAngle()
 		{
 			return RightController.GetComponent<VRTK_ControllerEvents>().GetAxisAngle(VRTK_ControllerEvents.Vector2AxisAlias.Touchpad);
 		}
 
 		/// <summary>
- 		/// True if RightThumbDelta{.x|.y} != 0.0f or RightThumbAngle != 0.0f, meaning that the right thumbstick has been moved.
+		/// Whether the right sthumbstick has been moved from its origin.
 		/// </summary>
-		public bool GetRightThumbMoved()
+		/// <returns>True if the right thumbstick has been moved from its origin.</returns>
+		public bool RightStickMoved()
 		{
-			return RightController.GetComponent<VRTK_ControllerEvents>().GetAxis(VRTK_ControllerEvents.Vector2AxisAlias.Touchpad).x != 0.0f || RightController.GetComponent<VRTK_ControllerEvents>().GetAxis(VRTK_ControllerEvents.Vector2AxisAlias.Touchpad).y != 0.0f;
+			if (RightController.GetComponent<VRTK_ControllerEvents>().GetAxis(VRTK_ControllerEvents.Vector2AxisAlias.Touchpad).x != 0.0f || RightController.GetComponent<VRTK_ControllerEvents>().GetAxis(VRTK_ControllerEvents.Vector2AxisAlias.Touchpad).x != 0.0f)
+			{
+				return true;
+			}
+			else if (RightController.GetComponent<VRTK_ControllerEvents>().GetAxis(VRTK_ControllerEvents.Vector2AxisAlias.Touchpad).x != 0.0f || RightController.GetComponent<VRTK_ControllerEvents>().GetAxis(VRTK_ControllerEvents.Vector2AxisAlias.Touchpad).y != 0.0f)
+			{
+				return true;
+			}
+			return false;	
 		}
 
 		/// <summary>
- 		/// The transform (position, rotation, scale) of the right controller.
+		/// The transform (position, rotation, scale) of the right controller.
 		/// </summary>
-		public Transform GetRightTransform()
+		/// <returns>The transform component of the right controller.</returns>
+		public Transform RightTransform()
 		{
 			return VRTK_DeviceFinder.DeviceTransform(VRTK_DeviceFinder.Devices.RightController);
 		}
 
 		/// <summary>
- 		/// The position of the right controller.
+ 		/// The position of the right controller in space.
 		/// </summary>
-		public Vector3 GetRightPosition()
+ 		/// <returns>A 3-dimensional vector, equal to the right controller's displacement in the [0] x direction (float), [1] y direction (float), and [2] z direction (float).</returns>
+		public Vector3 RightPosition()
 		{
 			return VRTK_DeviceFinder.DeviceTransform(VRTK_DeviceFinder.Devices.RightController).position;
 		}
 
 		/// <summary>
- 		/// The relative position of the right controller.
+ 		/// The relative position of the right controller in space.
 		/// </summary>
-		public Vector3 GetRightLocalPosition()
+ 		/// <returns>A 3-dimensional vector, equal to the right controller's relative displacement in the [0] x direction (float), [1] y direction (float), and [2] z direction (float).</returns>
+		public Vector3 RightLocalPosition()
+		
 		{
 			return VRTK_DeviceFinder.DeviceTransform(VRTK_DeviceFinder.Devices.RightController).localPosition;
 		}
 
 		/// <summary>
- 		/// The rotation of the right controller. Can be queried for its normalized value, eulerAngles, and w, x, y, and z components.
+ 		/// The rotation of the right controller in space. Can be queried for its normalized value, eulerAngles, and w, x, y, and z components.
 		/// </summary>
-		public Quaternion GetRightRotation()
+ 		/// <returns>A quaternion representing the right controller's conterclockwise angular displacement.</returns>
+		public Quaternion RightRotation()
 		{
 			return VRTK_DeviceFinder.DeviceTransform(VRTK_DeviceFinder.Devices.RightController).rotation;
 		}
 
 		/// <summary>
-		/// The relative rotation of the right controller. Can be queried for its normalized value, eulerAngles, and w, x, y, and z components.
+ 		/// The relative rotation of the right controller in space. Can be queried for its normalized value, eulerAngles, and w, x, y, and z components.
 		/// </summary>
-		public Quaternion GetRightLocalRotation()
+ 		/// <returns>A quaternion representing the right controller's relative conterclockwise angular displacement.</returns>
+		public Quaternion RightLocalRotation()
 		{
 			return VRTK_DeviceFinder.DeviceTransform(VRTK_DeviceFinder.Devices.RightController).localRotation;
 		}
@@ -267,7 +327,8 @@
 		/// <summary>
  		/// How fast the right controller is moving in space.
 		/// </summary>
-		public Vector3 GetRightVelocity()
+ 		/// <returns>A 3-dimensional vector, equal to the right controller's velocity in the [0] x direction (float), [1] y direction (float), and [2] z direction (float).</returns>
+		public Vector3 RightVelocity()
 		{
 			return VRTK_DeviceFinder.GetControllerVelocity(VRTK_DeviceFinder.GetControllerReferenceRightHand());
 		}
@@ -275,7 +336,8 @@
 		/// <summary>
  		/// How fast the right controller is rotating in space.
 		/// </summary>
-		public Vector3 GetRightAngularVelocity()
+ 		/// <returns>A 3-dimensional vector, equal to the right controller's counterclockwise angular velocity in the [0] x direction (float), [1] y direction (float), and [2] z direction (float).</returns>
+		public Vector3 RightAngularVelocity()
 		{
 			return VRTK_DeviceFinder.GetControllerAngularVelocity(VRTK_DeviceFinder.GetControllerReferenceRightHand());
 		}
@@ -283,65 +345,92 @@
 
 
 
-		// Getter methods, both controllers. TODO
+		/******************************/
+		//  COMPOSITE GETTER METHODS  //
+		/******************************/
 
 		/// <summary>
- 		/// True if both the right and the left middle triggers are being pressed.
+ 		/// Whether both the right grip and the left grip are held down together (commonly used as scaling control).
 		/// </summary>
-		public bool GetBothMiddle()
+ 		/// <returns>True if both the right grip and the left grip are held down together.</returns>
+		public bool BothGrip()
 		{
 			return LeftController.GetComponent<VRTK_ControllerEvents>().IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.GripPress) && RightController.GetComponent<VRTK_ControllerEvents>().IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.GripPress);
 		}
 
 		/// <summary>
- 		/// The absolute distance between the two controllers.
+ 		/// The absolute distance between the two controllers in space.
 		/// </summary>
-		public Vector3 GetDistance()
+		/// <returns>A 3-dimensional vector, equal to the absolute distance between the controller's [0] x positions, [1] y positions (float), and [2] z positions (float).</returns>	
+		public Vector3 Distance()
 		{
-			return VRTK_DeviceFinder.DeviceTransform(VRTK_DeviceFinder.Devices.LeftController).position - VRTK_DeviceFinder.DeviceTransform(VRTK_DeviceFinder.Devices.RightController).position;
+			Vector3 LeftPosition = VRTK_DeviceFinder.DeviceTransform(VRTK_DeviceFinder.Devices.LeftController).position;
+			Vector3 RightPosition = VRTK_DeviceFinder.DeviceTransform(VRTK_DeviceFinder.Devices.RightController).position;
+			return LeftPosition - RightPosition;
 		}
 
 		/// <summary>
  		/// The relative distance between the two controller. Unless the local scale is different from the absolute scale, LocalDistance == Distance.
 		/// </summary>
-		public Vector3 GetLocalDistance()
+		/// <returns>A 3-dimensional vector, equal to the relative distance between the controller's [0] x positions, [1] y positions (float), and [2] z positions (float).</returns>	
+		public Vector3 LocalDistance()
 		{
-			return VRTK_DeviceFinder.DeviceTransform(VRTK_DeviceFinder.Devices.LeftController).localPosition - VRTK_DeviceFinder.DeviceTransform(VRTK_DeviceFinder.Devices.RightController).localPosition;
+			Vector3 LeftLocalPosition = VRTK_DeviceFinder.DeviceTransform(VRTK_DeviceFinder.Devices.LeftController).localPosition;
+			Vector3 RightLocalPosition = VRTK_DeviceFinder.DeviceTransform(VRTK_DeviceFinder.Devices.RightController).localPosition;
+			return LeftLocalPosition - RightLocalPosition;
 		}
 
 		/// <summary>
  		/// The difference in velocity of the two controllers.
 		/// </summary>
-		public Vector3 GetVelocityDelta()
+		/// <returns>A 3-dimensional vector, equal to the difference between the controller's [0] velocities in the x direction, [1] velocities in the y direction (float), and [2] velocities in the z direction (float).</returns>	
+		public Vector3 VelocityDelta()
 		{
-			return VRTK_DeviceFinder.GetControllerVelocity(VRTK_DeviceFinder.GetControllerReferenceLeftHand()) - VRTK_DeviceFinder.GetControllerVelocity(VRTK_DeviceFinder.GetControllerReferenceRightHand());
+			Vector3 LeftVelocity = VRTK_DeviceFinder.GetControllerVelocity(VRTK_DeviceFinder.GetControllerReferenceLeftHand());
+			Vector3 RightVelocity = VRTK_DeviceFinder.GetControllerVelocity(VRTK_DeviceFinder.GetControllerReferenceRightHand());
+			return LeftVelocity - RightVelocity;	
 		}
 
 		/// <summary>
  		/// The difference in angular velocity of the two controllers.
 		/// </summary>
-		public Vector3 GetAngularVelocityDelta()
+		/// <returns>A 3-dimensional vector, equal to the difference between the controller's [0] angular velocities in the x direction, [1] angular velocities in the y direction (float), and [2] angular velocities in the z direction (float).</returns>	
+		public Vector3 AngularVelocityDelta()
 		{
-			return VRTK_DeviceFinder.GetControllerAngularVelocity(VRTK_DeviceFinder.GetControllerReferenceLeftHand()) - VRTK_DeviceFinder.GetControllerAngularVelocity(VRTK_DeviceFinder.GetControllerReferenceRightHand());
+			Vector3 LeftAngularVelocity = VRTK_DeviceFinder.GetControllerAngularVelocity(VRTK_DeviceFinder.GetControllerReferenceLeftHand());	
+			Vector3 RightAngularVelocity = VRTK_DeviceFinder.GetControllerAngularVelocity(VRTK_DeviceFinder.GetControllerReferenceRightHand());
+			return LeftAngularVelocity - RightAngularVelocity;	
 		}
 
 		/// <summary>
- 		/// The dot product of VelocityDelta with Distance, indicating the absolute cartesian scaling factor.
+ 		/// The dot product of VelocityDelta with Distance, indicating the absolute scaling factor (for cartesian coordinates).
 		/// </summary>
-		public float GetScalingFactor()
+		public float ScalingFactor()
 		{
-			Vector3 VelocityDelta = VRTK_DeviceFinder.GetControllerVelocity(VRTK_DeviceFinder.GetControllerReferenceLeftHand()) - VRTK_DeviceFinder.GetControllerVelocity(VRTK_DeviceFinder.GetControllerReferenceRightHand());
-			Vector3 Distance = VRTK_DeviceFinder.DeviceTransform(VRTK_DeviceFinder.Devices.LeftController).position - VRTK_DeviceFinder.DeviceTransform(VRTK_DeviceFinder.Devices.RightController).position;
+			Vector3 LeftVelocity = VRTK_DeviceFinder.GetControllerVelocity(VRTK_DeviceFinder.GetControllerReferenceLeftHand());
+			Vector3 RightVelocity = VRTK_DeviceFinder.GetControllerVelocity(VRTK_DeviceFinder.GetControllerReferenceRightHand());
+			Vector3 VelocityDelta = LeftVelocity - RightVelocity; 
+
+			Vector3 LeftPosition = VRTK_DeviceFinder.DeviceTransform(VRTK_DeviceFinder.Devices.LeftController).position;
+			Vector3 RightPosition = VRTK_DeviceFinder.DeviceTransform(VRTK_DeviceFinder.Devices.RightController).position;
+			Vector3 Distance = LeftPosition - RightPosition;
+
 			return Vector3.Dot(VelocityDelta, Distance);
 		}
 
 		/// <summary>
  		/// The dot product of elocityDelta with LocalDistance, indicating the relative cartesian scaling factor.
 		/// </summary>
-		public float GetLocalScalingFactor()
+		public float LocalScalingFactor()
 		{
-			Vector3 VelocityDelta = VRTK_DeviceFinder.GetControllerVelocity(VRTK_DeviceFinder.GetControllerReferenceLeftHand()) - VRTK_DeviceFinder.GetControllerVelocity(VRTK_DeviceFinder.GetControllerReferenceRightHand());
-			Vector3 localDistance = VRTK_DeviceFinder.DeviceTransform(VRTK_DeviceFinder.Devices.LeftController).localPosition - VRTK_DeviceFinder.DeviceTransform(VRTK_DeviceFinder.Devices.RightController).localPosition;
+			Vector3 LeftVelocity = VRTK_DeviceFinder.GetControllerVelocity(VRTK_DeviceFinder.GetControllerReferenceLeftHand());
+			Vector3 RightVelocity = VRTK_DeviceFinder.GetControllerVelocity(VRTK_DeviceFinder.GetControllerReferenceRightHand());
+			Vector3 VelocityDelta = LeftVelocity - RightVelocity; 
+
+			Vector3 LeftLocalPosition = VRTK_DeviceFinder.DeviceTransform(VRTK_DeviceFinder.Devices.LeftController).localPosition;
+			Vector3 RightLocalPosition = VRTK_DeviceFinder.DeviceTransform(VRTK_DeviceFinder.Devices.RightController).localPosition;
+			Vector3 localDistance = LeftPosition - RightPosition;
+
 			return Vector3.Dot(VelocityDelta, localDistance);
 		}
 
