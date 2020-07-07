@@ -46,6 +46,8 @@
         public enum RotationalDirection { REGULAR, INVERSE }
         public RotationalDirection rotationalDirection = RotationalDirection.REGULAR;
 
+
+
         //private enum CollisionType { NOTHING, WAYPOINT, OTHER }; // These are the possible values for objects we could be colliding with
         //private CollisionPair mostRecentCollision;
         //private List<CollisionPair> currentCollisions;
@@ -67,6 +69,7 @@
 
             LeftPointerRenderer.enabled = false;
             LeftPointer.enabled = false;
+
         }
 
         void FixedUpdate()

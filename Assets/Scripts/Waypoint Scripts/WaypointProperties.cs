@@ -252,12 +252,12 @@
                 {
                     LineProperties.material = unselectedPassedLine;
                 }
-            } else if (( controller_right.GetComponent<ControllerInteractions>().mostRecentCollision.waypoint != null && 
+            } /*else if (( controller_right.GetComponent<ControllerInteractions>().mostRecentCollision.waypoint != null && 
                 controller_right.GetComponent<ControllerInteractions>().mostRecentCollision.waypoint.gameObjectPointer == this.gameObject) && 
                 referenceDrone.selected)
             {
                 LineProperties.material = unpassedWaypoint;
-            } else
+            } */ else
             {
                 this.GetComponent<MeshRenderer>().material = unpassedWaypoint;
                 if (referenceDrone.selected)

@@ -15,21 +15,48 @@
 
 	public class ControllerInput : MonoBehaviour
 	{
-		/// <summary>
-		/// The left controller GameObject, where VRTK scripts are attached.
-		/// </summary>
+		[Header("Left Hand")]
+
+		[Tooltip("The left controller GameObject, where VRTK scripts are attached. By default at 'Controller/LeftController'.")]
 		public GameObject LeftController;
-		/// <summary>
-		/// The right controller GameObject, where VRTK scripts are attached.
-		/// </summary>
+		[Tooltip("The UI attached to the left hand. By default at 'VRTK SDK Manager/Oculus SDK/Tracking Space/LeftHandAnchor/Left UI Panel'.")]
+		public GameObject LeftUI;
+
+
+		[Header("Right Hand")]
+
+		[Tooltip("The right controller GameObject, where VRTK scripts are attached. By default at 'Controller/RightController'.")]
 		public GameObject RightController;
+		[Tooltip("The UI attached to the right hand. By default at 'VRTK SDK Manager/Oculus SDK/Tracking Space/RightHandAnchor/Right UI Sphere'.")]
+		public GameObject RightUI;
+
+
+		private GameObject LeftPointer; // The VRTK Pointer Component of the left controller.
+		private GameObject LeftPointerRenderer; // The VRTK Pointer Renderer Component of the left controller.
+		private GameObject RightPointer; // The VRTK Pointer Component of the right controller.
+		private GameObject RightPointerRenderer; // The VRTK Pointer Renderer Component of the right controller.
+		private GameObject RightUIPointer; // The VRTK UI Pointer Component of the right controller.
+
+		private bool LeftPointerEnabled = true;
+		private bool LeftUIEnabled = true;	
+		private bool RightPointerEnabled = true;
+		private bool RightUIEnabled = true;	
+
+		void Start()
+		{
+            LeftPointer = LeftController.GetComponent<VRTK_Pointer>();
+            LeftPointerRenderer = LeftController.GetComponent<VRTK_BezierPointerRenderer>();
+            RightPointer = RightController.GetComponent<VRTK_Pointer>();
+            RightPointerRenderer = RightController.GetComponent<VRTK_StraightPointerRenderer>();
+            RightUIPointer = RightController.GetComponent<VRTK_UIPointer>();
+		}
 
 
 
 
-		/************************************/
-		//  LEFT CONTROLLER GETTER METHODS  //
-		/************************************/
+		/******************************/
+		//  LEFT HAND GETTER METHODS  //
+		/******************************/
 
 		/// <summary>
 		/// Whether the left hand is currently grabbing an object.
@@ -183,12 +210,22 @@
 			return VRTK_DeviceFinder.GetControllerAngularVelocity(VRTK_DeviceFinder.GetControllerReferenceLeftHand());
 		}
 
+		//TODO
+		public bool LeftPointerEnabled()
+		{
+			return LeftPointerEnabled;
+		}
+		//TODO
+		public bool LeftUIEnabled()
+		{
+			return LeftUIEnabled;
+		}
 
 
 
-		/*************************************/
-		//  RIGHT CONTROLLER GETTER METHODS  //
-		/*************************************/
+		/*******************************/
+		//  RIGHT HAND GETTER METHODS  //
+		/*******************************/
 		
 		/// <summary>
 		/// Whether the right hand is currently grabbing an object.
@@ -343,6 +380,16 @@
 			return VRTK_DeviceFinder.GetControllerAngularVelocity(VRTK_DeviceFinder.GetControllerReferenceRightHand());
 		}
 
+		//TODO
+		public bool RightPointerEnabled()
+		{
+			return RightPointerEnabled;
+		}
+		//TODO
+		public bool RightUIEnabled()
+		{
+			return RightUIEnabled;
+		}
 
 
 
@@ -404,8 +451,9 @@
 		}
 
 		/// <summary>
- 		/// The dot product of VelocityDelta with Distance, indicating the absolute scaling factor (for cartesian coordinates).
+ 		/// The dot product of the difference in velocity between the two controllers and their distance. Can be used as a world scaling factor.
 		/// </summary>
+		/// <returns>A float that approximates a reasonable (neither too fast, nor too slow) world scaling factor.</returns>	
 		public float ScalingFactor()
 		{
 			Vector3 LeftVelocity = VRTK_DeviceFinder.GetControllerVelocity(VRTK_DeviceFinder.GetControllerReferenceLeftHand());
@@ -420,8 +468,9 @@
 		}
 
 		/// <summary>
- 		/// The dot product of elocityDelta with LocalDistance, indicating the relative cartesian scaling factor.
+ 		/// The dot product of the difference in velocity between the two controllers and their local distance. Can be used as a local scaling factor.
 		/// </summary>
+		/// <returns>A float that approximates a reasonable (neither too fast, nor too slow) local scaling factor.</returns>	
 		public float LocalScalingFactor()
 		{
 			Vector3 LeftVelocity = VRTK_DeviceFinder.GetControllerVelocity(VRTK_DeviceFinder.GetControllerReferenceLeftHand());
@@ -434,6 +483,87 @@
 
 			return Vector3.Dot(VelocityDelta, localDistance);
 		}
+
+
+
+
+		/******************************/
+		//  LEFT HAND SETTER METHODS  //
+		/******************************/
+
+		/// <summary>
+ 		/// TODO
+		/// </summary>
+		/// <returns>TODO</returns>	
+		public void EnableLeftPointer()
+		{
+            LeftPointerRenderer.enabled = true;
+            LeftPointer.enabled = true;
+			// Also update the variable keeping track of whether this pointer is enabled or disabled (returned by getter methods).
+			LeftPointerEnabled = true;
+		}
+
+		public void EnableLeftUI()
+		{
+			LeftUI.SetActive(true);
+			// Also update the variable keeping track of whether left hand UI is enabled or disabled (returned by getter methods).
+			LeftUIEnabled = true;
+		}
+
+		public void DisableLeftPointer()
+		{
+            LeftPointerRenderer.enabled = false;
+            LeftPointer.enabled = false;
+			// Also update the variable keeping track of whether this pointer is enabled or disabled (returned by getter methods).
+			LeftPointerEnabled = false;
+		}
+
+		public void DisableLeftUI()
+		{
+			LeftUI.SetActive(false);
+			// Also update the variable keeping track of whether the left hand UI is enabled or disabled (returned by getter methods).
+			LeftUIEnabled = false;
+		}
+
+
+
+
+		/******************************/
+		//  RIGHT HAND SETTER METHODS  //
+		/******************************/
+
+		public void EnableRightPointer()
+		{
+            RightUIPointer.enabled = true;
+            RightPointerRenderer.enabled = true;
+            RightPointer.enabled = true;
+			// Also update the variable keeping track of whether this pointer is enabled or disabled (returned by the getter methods).
+			RightPointerEnabled = true;	
+		}
+
+		public void EnableRightUI()
+		{
+			RightUI.SetActive(true);
+			// Also update the variable keeping track of whether the right hand UI is enabled or disabled (returned by getter methods).
+			RightUIEnabled = true;
+		}
+
+		public void DisableRightPointer()
+		{
+            RightUIPointer.enabled = false;
+            RightPointerRenderer.enabled = false;
+            RightPointer.enabled = false;
+			// Also update the variable keeping track of whether this pointer is enabled or disabled (returned by the getter methods).
+			RightPointerEnabled = true;	
+		}
+
+		public void DisableRightUI()
+		{
+			RightUI.SetActive(false);
+			// Also update the variable keeping track of whether the right hand UI is enabled or disabled (returned by getter methods).
+			RightUIEnabled = false;
+		}
+		// TODO: composite setter method
 
 	}
 }

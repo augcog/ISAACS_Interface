@@ -100,7 +100,6 @@
                 // Adding to dictionary, order, and path list
                 waypointsDict.Add(startWaypoint.id, startWaypoint);
                 waypoints.Add(startWaypoint);
-
             } else
             {
                 // Otherwise we can add as normal
@@ -114,6 +113,9 @@
                 // Adding to dictionary, order, and path list
                 waypointsDict.Add(newWaypoint.id, newWaypoint);
                 waypoints.Add(newWaypoint);
+
+                // Make lines mesh appear. TODO: check coloring.
+                newWaypoint.gameObjectPointer.GetComponent<WaypointProperties>().UpdateGroundpointLine(); 
             }
 
             // Send a generic ROS ADD Update only if this is not the initial waypoint
@@ -211,13 +213,26 @@
         /// </summary>
         public void DeleteAllWaypoints()
         {
-            while (this.waypoints.Count > 1)
+            /*while (this.waypoints.Count > 1)
             {
                 if (((Waypoint)this.waypoints[this.waypoints.Count - 1]).prevPathPoint != null)
                 {
                     this.DeleteWaypoint((Waypoint)this.waypoints[this.waypoints.Count - 1]);
+                    Object.Destroy(deletedWaypoint.gameObjectPointer);
+                }
+            }*/
+
+            if (waypoints.Count > 0)
+            {
+                foreach (Waypoint waypoint in waypoints)
+                {
+                    deletedWaypoints.Add(waypoint);
+                    WaypointProperties tempProperties = waypoint.gameObjectPointer.GetComponent<WaypointProperties>();
+                    tempProperties.DeleteLineCollider();
+                    Object.Destroy(waypoint.gameObjectPointer);
                 }
             }
+            waypoints.Clear();
         }
 
         public int GetWaypointsCount() /// helper
