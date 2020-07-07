@@ -2077,7 +2077,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1497704686498948}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.0014954, y: -0.1, z: 0.40371704}
+  m_LocalPosition: {x: 1.2827454, y: -0.1, z: 0.49719238}
   m_LocalScale: {x: 2.4748437, y: 2.474846, z: 2.474846}
   m_Children:
   - {fileID: 4095683193172102}
@@ -7658,7 +7658,7 @@ MonoBehaviour:
     m_Alignment: 0
     m_AlignByGeometry: 1
     m_RichText: 1
-    m_HorizontalOverflow: 0
+    m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
   m_Text: <Position>
@@ -7786,7 +7786,7 @@ MonoBehaviour:
     m_Alignment: 4
     m_AlignByGeometry: 1
     m_RichText: 1
-    m_HorizontalOverflow: 0
+    m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
   m_Text: <Name:>
@@ -7819,7 +7819,7 @@ MonoBehaviour:
     m_Alignment: 4
     m_AlignByGeometry: 1
     m_RichText: 1
-    m_HorizontalOverflow: 0
+    m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
   m_Text: <Has_Authority>
@@ -7834,9 +7834,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 775510a03a50c5a46a12545054fb4409, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dronePosText: {fileID: 0}
-  droneNameText: {fileID: 0}
-  droneAuthorityText: {fileID: 0}
+  menuFont: {fileID: 12800000, guid: 7cb2912222469634ba17a77055919ea8, type: 3}
+  dronePosText: {fileID: 114069402062718426}
+  droneNameText: {fileID: 114772238858130042}
+  droneAuthorityText: {fileID: 114914900665587038}
   menuCanvas: {fileID: 1479252145062286}
 --- !u!135 &135519695496822468
 SphereCollider:
@@ -7960,9 +7961,9 @@ RectTransform:
   m_Father: {fileID: 224084490053086682}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 200}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: -62.5}
   m_SizeDelta: {x: 350, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224333641817703060
@@ -7978,9 +7979,9 @@ RectTransform:
   m_Father: {fileID: 224084490053086682}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -150}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: -450}
   m_SizeDelta: {x: 700, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224755141774178228
@@ -7996,8 +7997,8 @@ RectTransform:
   m_Father: {fileID: 224084490053086682}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 20}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: -242.5}
   m_SizeDelta: {x: 700, y: 180}
   m_Pivot: {x: 0.5, y: 0.5}

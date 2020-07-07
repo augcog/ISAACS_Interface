@@ -876,7 +876,7 @@ MonoBehaviour:
   init: 0
   viewHomeLat: q
   viewHomeLong: w
-  printLatLong: 1
+  printLatLong: 0
   printGPSHealth: 0
   getAuthority: e
   hasAuthority: r
@@ -924,20 +924,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DronesList:
-  - droneName: safasef
+  - droneName: Perry
     droneTag: M210
     ipAddress: 43
     port: 43
     droneType: 1
-    droneSubscribers: 0300000006000000
+    droneSubscribers: 010000000b0000000a00000006000000
     simFlight: 0
-    attachedSensors:
-    - sensorName: Surface
-      sensorTag: 
-      ipAddress: 
-      port: 0
-      sensorType: 0
-      sensorSubscribers: 00000000
+    attachedSensors: []
   success: 0
   uniqueID: 0
 --- !u!1 &161977055
@@ -6315,8 +6309,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f3c930cb716449459c64c5dcdf81bcc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LeftController: {fileID: 2053542333}
-  RightController: {fileID: 1347866310}
+  LeftController: {fileID: 0}
+  RightController: {fileID: 0}
 --- !u!114 &1699223320
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6328,13 +6322,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fce500faaffe7ac4a9135cb03c53891a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controllerState: {fileID: 1699223319}
-  World: {fileID: 146794962}
+  controllerState: {fileID: 0}
+  World: {fileID: 0}
   actualScale: {x: 0, y: 0, z: 0}
-  MinimumScale: 10
-  MaximumScale: 10
-  Speed: 3
-  RotationalSpeed: 1
+  MinimumScale: 0
+  MaximumScale: 0
+  Speed: 0
+  RotationalSpeed: 0
 --- !u!1 &1715641644
 GameObject:
   m_ObjectHideFlags: 0

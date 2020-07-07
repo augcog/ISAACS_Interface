@@ -371,9 +371,11 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
                 return relative_altitude.ToString();
             case "/dji_sdk/local_position":
                 return local_position.ToString();
+            default:
+                Debug.LogError("Topic " + topic + " not registered.");
+                return "NO DATA";
         }
-        Debug.LogError("Topic " + topic + " not registered.");
-        return "";
+        
     }
 
 

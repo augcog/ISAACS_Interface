@@ -144,8 +144,8 @@
         {
             GPSCoordinate gpsCoord = new GPSCoordinate();
             gpsCoord.x = (float)((unityPosition.x / (EARTH_RADIUS * lngCorrection)) + Lng0);
-            gpsCoord.z = (float)((unityPosition.z / EARTH_RADIUS) + Lat0);
-            gpsCoord.y = (float)((unityPosition.y) + Alt0);
+            gpsCoord.y = (float)((unityPosition.z / EARTH_RADIUS) + Lat0);
+            gpsCoord.z= (float)((unityPosition.y) + Alt0);
             return gpsCoord;
         }
 
