@@ -50,8 +50,7 @@
         //private CollisionPair mostRecentCollision;
         //private List<CollisionPair> currentCollisions;
 
-        // Use this for initialization
-        void Start()
+        void Awake()
         {
             //This provides us with basis to create bounds on scaling and something to return to
             WorldScaleInitial = World.transform.localScale;
@@ -66,10 +65,9 @@
             RightPointerRenderer = RightController.GetComponent<VRTK_StraightPointerRenderer>();
             RightUIPointer = RightController.GetComponent<VRTK_UIPointer>();
 
-            LeftPointer.enabled = false;
             LeftPointerRenderer.enabled = false;
+            LeftPointer.enabled = false;
         }
-
 
         void FixedUpdate()
         {
@@ -77,7 +75,7 @@
             {
                 case ControllerState.IDLE:
                 {
-                    if (controllerInput.GetBothMiddle())
+                    if (controllerInput.BothGrip())
                     {
                         controllerState = ControllerState.SCALING;
                         LeftUI.SetActive(false);
@@ -89,14 +87,14 @@
                         break;
                     }
 
-                    if (controllerInput.GetRightMiddle())
+                    if (controllerInput.RightGrip())
                     {
                         controllerState = ControllerState.AIMING_SELECTOR;
                         RightUI.SetActive(false);
                         break;
                     }
 
-                    if (controllerInput.GetRightIndex())
+                    if (controllerInput.RightTrigger())
                     {
                         controllerState = ControllerState.PLACING_WAYPOINT;
                         RightPointer.enabled = false;
@@ -106,7 +104,7 @@
                         break;
                     }
 
-                    if (controllerInput.GetRightA())
+                    if (controllerInput.RightA())
                     {
                         controllerState = ControllerState.UNDOING;
                         RightPointer.enabled = false;
@@ -116,7 +114,7 @@
                         break;
                     }
 
-                    if (controllerInput.GetRightB())
+                    if (controllerInput.RightB())
                     {
                         controllerState = ControllerState.REDOING;
                         RightPointer.enabled = false;
@@ -126,22 +124,22 @@
                         break;
                     }
 
-                    if (controllerInput.GetRightThumbMoved()) /// Rotate the world
+                    if (controllerInput.RightStickMoved()) /// Rotate the world
                     {
                         RotateWorld();
                     }
 
-                    if (controllerInput.GetLeftThumbMoved()) /// Move the world
+                    if (controllerInput.LeftStickMoved()) /// Move the world
                     {
                         MoveWorld();
                     }
 
-                    if (controllerInput.GetLeftX()) /// Cycle through drones
+                    if (controllerInput.LeftX()) /// Cycle through drones
                     {
                         controllerState = ControllerState.SELECTING_DRONE; 
                     }
 
-                    if (controllerInput.GetLeftY()) /// Cycle through sensors
+                    if (controllerInput.LeftY()) /// Cycle through sensors
                     {
                         controllerState = ControllerState.SELECTING_SENSOR; 
                     }
@@ -151,7 +149,7 @@
 
                 case ControllerState.SCALING:
                 {
-                    if (controllerInput.GetBothMiddle())
+                    if (controllerInput.BothGrip())
                     {
                         ScaleWorld();
                     }
@@ -166,7 +164,7 @@
                 }
                 case ControllerState.SELECTING_DRONE:
                 {
-                    if (!controllerInput.GetLeftX())
+                    if (!controllerInput.LeftX())
                     {
                         controllerState = ControllerState.IDLE;
                         WorldProperties.SelectNextDrone();
@@ -176,7 +174,7 @@
 
                 case ControllerState.SELECTING_SENSOR:
                 {
-                    if (!controllerInput.GetLeftY())
+                    if (!controllerInput.LeftY())
                     {
                         controllerState = ControllerState.IDLE;
                         // @Jasmine: Make the connection to display the next sensor in the UI here
@@ -187,7 +185,7 @@
                 case ControllerState.AIMING_SELECTOR:
                 {
                     /// TODO: set wp height if GetRightIndex()
-                    if (controllerInput.GetBothMiddle())
+                    if (controllerInput.BothGrip())
                     {
                         controllerState = ControllerState.SCALING;
                         LeftUI.SetActive(false);
@@ -197,7 +195,7 @@
                         ScaleWorld();
                         break;
                     }
-                    if (!controllerInput.GetRightMiddle())
+                    if (!controllerInput.RightGrip())
                     {
                         controllerState = ControllerState.IDLE;
                         RightUI.SetActive(true);
@@ -212,7 +210,7 @@
 
                 case ControllerState.PLACING_WAYPOINT:
                 {
-                    if (controllerInput.GetRightMiddle()) /// Cancel waypoint placement
+                    if (controllerInput.RightGrip()) /// Cancel waypoint placement
                     {
                         /// TODO: stop showing line
                         controllerState = ControllerState.IDLE;
@@ -221,7 +219,7 @@
                         break;
                     }
 
-                    if (!controllerInput.GetRightIndex())
+                    if (!controllerInput.RightTrigger())
                     {
                         controllerState = ControllerState.IDLE;
                         PlaceWaypoint(RightUI.transform.position);
@@ -244,12 +242,12 @@
 
                 case ControllerState.UNDOING:
                 {
-                    if (!controllerInput.GetRightA())
+                    if (!controllerInput.RightA())
                     {
                         Undo();
                         break;
                     }
-                    if (controllerInput.GetRightMiddle())
+                    if (controllerInput.RightGrip())
                     {
                         controllerState = ControllerState.IDLE;
                         RightPointer.enabled = true;
@@ -264,11 +262,11 @@
 
                 case ControllerState.REDOING:
                 {
-                    if (!controllerInput.GetRightB())
+                    if (!controllerInput.RightB())
                     {
                         Redo();
                     }
-                    if (controllerInput.GetRightMiddle())
+                    if (controllerInput.RightGrip())
                     {
                         controllerState = ControllerState.IDLE;
                         RightPointer.enabled = true;
@@ -289,7 +287,7 @@
         private void ScaleWorld()
         {
             // Get the scaling factor, and adjust its size.
-            float ScalingFactor = 1.0f + 0.2f * controllerInput.GetScalingFactor();
+            float ScalingFactor = 1.0f + 0.2f * controllerInput.ScalingFactor();
             Vector3 ScalingVector = Vector3.Scale(World.transform.localScale, new Vector3(ScalingFactor, ScalingFactor, ScalingFactor));
 
             //Checking Scaling Bounds
@@ -322,11 +320,11 @@
             float angle;
             if (direction == Direction.REGULAR)
             {
-                angle = -controllerInput.GetRightThumbDelta().x * rotationalSpeed * 360 * Time.fixedDeltaTime;
+                angle = -controllerInput.RightStickDelta().x * rotationalSpeed * 360 * Time.fixedDeltaTime;
             }
             else
             {
-                angle = controllerInput.GetRightThumbDelta().x * rotationalSpeed * 360 * Time.fixedDeltaTime;
+                angle = controllerInput.RightStickDelta().x * rotationalSpeed * 360 * Time.fixedDeltaTime;
             }
             World.transform.RotateAround(Pivot.transform.position, Vector3.up, angle);
 
@@ -345,8 +343,8 @@
         {
             // Negative values are here to make moving around look natural.
             // Without occlusion this looks mediocre because it seems like the map is being moved in the wrong direction.
-            float moveX = controllerInput.GetLeftThumbDelta().x;
-            float moveZ = controllerInput.GetLeftThumbDelta().y;
+            float moveX = controllerInput.LeftStickDelta().x;
+            float moveZ = controllerInput.LeftStickDelta().y;
 
             // update map position based on input
             Vector3 position = World.transform.position;

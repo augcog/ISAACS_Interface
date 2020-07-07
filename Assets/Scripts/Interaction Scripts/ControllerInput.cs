@@ -12,6 +12,7 @@
 	For further clarifications, ask Apollo.
 	*/
 
+
 	public class ControllerInput : MonoBehaviour
 	{
 		/// <summary>
@@ -429,7 +430,7 @@
 
 			Vector3 LeftLocalPosition = VRTK_DeviceFinder.DeviceTransform(VRTK_DeviceFinder.Devices.LeftController).localPosition;
 			Vector3 RightLocalPosition = VRTK_DeviceFinder.DeviceTransform(VRTK_DeviceFinder.Devices.RightController).localPosition;
-			Vector3 localDistance = LeftPosition - RightPosition;
+			Vector3 localDistance = LeftLocalPosition - RightLocalPosition;
 
 			return Vector3.Dot(VelocityDelta, localDistance);
 		}
