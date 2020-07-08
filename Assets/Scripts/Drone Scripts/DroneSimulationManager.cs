@@ -14,28 +14,26 @@ public class DroneSimulationManager : MonoBehaviour {
 
     private float startTime;
     private float journeyLength;
+
     private Vector3 origin;
     private Vector3 destination;
-
     private Vector3 home;
 
     private bool endFlight = false;
-
-
-    private float fractionOfDistanceCovered = 0;
+    private float fractionOfJourney = 0;
 
     // Update is called once per frame
     void Update()
     {
         if (flying)
         {
-            if (fractionOfDistanceCovered < 1)
+            if (fractionOfJourney < 1)
             {
                 // Distance moved equals elapsed time times speed..
                 float distCovered = (Time.time - startTime) * speed;
 
                 // Fraction of journey completed equals current distance divided by total distance.
-                float fractionOfJourney = distCovered / journeyLength;
+                fractionOfJourney = distCovered / journeyLength;
 
                 Vector3 new_position = Vector3.Lerp(origin, destination, fractionOfJourney);
                 drone.gameObjectPointer.transform.localPosition = new_position;
@@ -82,6 +80,7 @@ public class DroneSimulationManager : MonoBehaviour {
             Debug.Log("ALERT: All waypoints successfully send");
             Debug.Log("ALERT: Drone is send home by default");
             flying = false;
+            endFlight = true;
             return;
         }
 
@@ -91,11 +90,10 @@ public class DroneSimulationManager : MonoBehaviour {
         origin = drone.gameObjectPointer.transform.localPosition;
         destination = waypoint.gameObjectPointer.transform.localPosition;
         journeyLength = Vector3.Distance(origin, destination);
-
+        fractionOfJourney = 0.0f;
         flying = true;
 
         nextWaypointID += 1;
-        fractionOfDistanceCovered = 0.0f;
 
     }
 
