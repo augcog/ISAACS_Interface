@@ -113,6 +113,7 @@
 
                 Debug.Log("Added first two waypoints to the list:" + waypoints.ToString());
 
+                takeoffWaypoint.gameObjectPointer.GetComponent<LineRenderer>().enabled = false; // TODO: fix this jank.
                 newWaypoint.gameObjectPointer.GetComponent<WaypointProperties>().UpdateGroundpointLine(); // TODO: fix this jank.
                 return newWaypoint; 
             }

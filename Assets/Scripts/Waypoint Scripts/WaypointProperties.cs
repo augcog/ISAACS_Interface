@@ -293,7 +293,7 @@
 
         public void DeleteLineCollider()
         {
-            //Check if we're at the intial waypoing (no line)
+            //Check if we're at the intial waypoint (no line)
             if (this.lineCollider == null)
             {
                 return;
