@@ -9,9 +9,8 @@
 	/* This script is a wrapper around VRTK, to be used as a library for
 	higher-level scripts needing access to user input coming from a controller.
 	Initialize the ControllerState class as a singleton of the GameObject Controller.
-	For further clarifications, ask Apollo.
+	For further clarifications, please ask Apollo.
 	*/
-
 
 	public class ControllerInput : MonoBehaviour
 	{
@@ -31,17 +30,17 @@
 		public GameObject RightUI;
 
 
-		private GameObject LeftPointer; // The VRTK Pointer Component of the left controller.
-		private GameObject LeftPointerRenderer; // The VRTK Pointer Renderer Component of the left controller.
-		private GameObject RightPointer; // The VRTK Pointer Component of the right controller.
-		private GameObject RightPointerRenderer; // The VRTK Pointer Renderer Component of the right controller.
-		private GameObject RightUIPointer; // The VRTK UI Pointer Component of the right controller.
+		private VRTK_Pointer LeftPointer;                           // The VRTK Pointer Component (script) of the left controller.
+		private VRTK_BezierPointerRenderer LeftPointerRenderer;     // The VRTK Pointer Renderer Component (script) of the left controller.
+		private VRTK_Pointer RightPointer;                          // The VRTK Pointer Component (script) of the right controller.
+		private VRTK_StraightPointerRenderer RightPointerRenderer;  // The VRTK Pointer Renderer Component (script) of the right controller.
+		private VRTK_UIPointer RightUIPointer;                      // The VRTK UI Pointer Component (script) of the right controller.
 
-		private bool LeftPointerEnabled = true;
-		private bool LeftUIEnabled = true;	
-		private bool RightPointerEnabled = true;
-		private bool RightUIEnabled = true;	
+		private bool boolLeftPointerEnabled  = true;  // Whether the left controller's pointer is enabled or disabled.
+		private bool boolRightPointerEnabled = true;  // Whether the right controller's pointer is enabled or disabled.
 
+
+		// Start is called on the first frame, upon scene initialization.
 		void Start()
 		{
             LeftPointer = LeftController.GetComponent<VRTK_Pointer>();
@@ -50,7 +49,6 @@
             RightPointerRenderer = RightController.GetComponent<VRTK_StraightPointerRenderer>();
             RightUIPointer = RightController.GetComponent<VRTK_UIPointer>();
 		}
-
 
 
 
@@ -210,15 +208,22 @@
 			return VRTK_DeviceFinder.GetControllerAngularVelocity(VRTK_DeviceFinder.GetControllerReferenceLeftHand());
 		}
 
-		//TODO
+		/// <summary>
+		/// Whether the left controller's pointer is enabled or disabled.
+		/// </summary>
+		/// <returns>True if the left controller's pointer is enabled.</returns>
 		public bool LeftPointerEnabled()
 		{
-			return LeftPointerEnabled;
+			return boolLeftPointerEnabled;
 		}
-		//TODO
+
+		/// <summary>
+		/// Whether the UI attached to the left hand is enabled or disabled.
+		/// </summary>
+		/// <returns>True if the UI attached to the left hand is enabled.</returns>
 		public bool LeftUIEnabled()
 		{
-			return LeftUIEnabled;
+			return LeftUI.activeSelf;
 		}
 
 
@@ -305,11 +310,11 @@
 		/// <returns>True if the right thumbstick has been moved from its origin.</returns>
 		public bool RightStickMoved()
 		{
-			if (RightController.GetComponent<VRTK_ControllerEvents>().GetAxis(VRTK_ControllerEvents.Vector2AxisAlias.Touchpad).x != 0.0f || RightController.GetComponent<VRTK_ControllerEvents>().GetAxis(VRTK_ControllerEvents.Vector2AxisAlias.Touchpad).x != 0.0f)
+			if (RightController.GetComponent<VRTK_ControllerEvents>().GetAxis(VRTK_ControllerEvents.Vector2AxisAlias.Touchpad).x != 0.0f)
 			{
 				return true;
 			}
-			else if (RightController.GetComponent<VRTK_ControllerEvents>().GetAxis(VRTK_ControllerEvents.Vector2AxisAlias.Touchpad).x != 0.0f || RightController.GetComponent<VRTK_ControllerEvents>().GetAxis(VRTK_ControllerEvents.Vector2AxisAlias.Touchpad).y != 0.0f)
+			else if ( RightController.GetComponent<VRTK_ControllerEvents>().GetAxis(VRTK_ControllerEvents.Vector2AxisAlias.Touchpad).y != 0.0f)
 			{
 				return true;
 			}
@@ -380,15 +385,22 @@
 			return VRTK_DeviceFinder.GetControllerAngularVelocity(VRTK_DeviceFinder.GetControllerReferenceRightHand());
 		}
 
-		//TODO
+		/// <summary>
+		/// Whether the right controller's pointer is enabled or disabled.
+		/// </summary>
+		/// <returns>True if the right controller's pointer is enabled.</returns>
 		public bool RightPointerEnabled()
 		{
-			return RightPointerEnabled;
+			return boolRightPointerEnabled;
 		}
-		//TODO
+
+		/// <summary>
+		/// Whether the UI attached to the right hand is enabled or disabled.
+		/// </summary>
+		/// <returns>True if the UI attached to the right hand is enabled.</returns>
 		public bool RightUIEnabled()
 		{
-			return RightUIEnabled;
+			return RightUI.activeSelf;
 		}
 
 
@@ -403,7 +415,8 @@
  		/// <returns>True if both the right grip and the left grip are held down together.</returns>
 		public bool BothGrip()
 		{
-			return LeftController.GetComponent<VRTK_ControllerEvents>().IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.GripPress) && RightController.GetComponent<VRTK_ControllerEvents>().IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.GripPress);
+			return LeftController.GetComponent<VRTK_ControllerEvents>().IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.GripPress)
+			    && RightController.GetComponent<VRTK_ControllerEvents>().IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.GripPress);
 		}
 
 		/// <summary>
@@ -484,6 +497,23 @@
 			return Vector3.Dot(VelocityDelta, localDistance);
 		}
 
+		/// <summary>
+		/// Whether both controllers' pointers are enabled or disabled.
+		/// </summary>
+		/// <returns>True if both controllers' pointers are enabled.</returns>
+		public bool BothPointerEnabled()
+		{
+			return boolLeftPointerEnabled && boolRightPointerEnabled;
+		}
+
+		/// <summary>
+		/// Whether both UIs attached to the user's hands are enabled or disabled.
+		/// </summary>
+		/// <returns>True if both UIs attached to the user's hands are enabled.</returns>
+		public bool BothUIsEnabled()
+		{
+			return LeftUI.activeSelf && RightUI.activeSelf;
+		}
 
 
 
@@ -492,78 +522,192 @@
 		/******************************/
 
 		/// <summary>
- 		/// TODO
+ 		/// If not already enabled, enables the left controller's pointer.
 		/// </summary>
-		/// <returns>TODO</returns>	
 		public void EnableLeftPointer()
 		{
-            LeftPointerRenderer.enabled = true;
-            LeftPointer.enabled = true;
-			// Also update the variable keeping track of whether this pointer is enabled or disabled (returned by getter methods).
-			LeftPointerEnabled = true;
+			if (!boolLeftPointerEnabled)
+			{
+				LeftPointerRenderer.enabled = true;
+				LeftPointer.enabled = true;
+				boolLeftPointerEnabled = true;
+			}	
 		}
 
+		/// <summary>
+ 		/// If not already enabled, enables the UI attached to the left hand.
+		/// </summary>
 		public void EnableLeftUI()
 		{
-			LeftUI.SetActive(true);
-			// Also update the variable keeping track of whether left hand UI is enabled or disabled (returned by getter methods).
-			LeftUIEnabled = true;
+			if (!LeftUI.activeSelf)
+			{
+				LeftUI.SetActive(true);
+			}	
 		}
 
+		/// <summary>
+ 		/// If not already disabled, disables the left controller's pointer.
+		/// </summary>
 		public void DisableLeftPointer()
 		{
-            LeftPointerRenderer.enabled = false;
-            LeftPointer.enabled = false;
-			// Also update the variable keeping track of whether this pointer is enabled or disabled (returned by getter methods).
-			LeftPointerEnabled = false;
+			if (boolLeftPointerEnabled)
+			{
+				LeftPointerRenderer.enabled = false;
+				LeftPointer.enabled = false;
+				boolLeftPointerEnabled = false;
+			}	
 		}
 
+		/// <summary>
+ 		/// If not already disabled, disables the UI attached to the left hand.
+		/// </summary>
 		public void DisableLeftUI()
 		{
-			LeftUI.SetActive(false);
-			// Also update the variable keeping track of whether the left hand UI is enabled or disabled (returned by getter methods).
-			LeftUIEnabled = false;
+			if (LeftUI.activeSelf)
+			{
+				LeftUI.SetActive(false);
+			}	
 		}
 
 
 
-
-		/******************************/
+		/*******************************/
 		//  RIGHT HAND SETTER METHODS  //
-		/******************************/
+		/*******************************/
 
+		/// <summary>
+ 		/// If not already enabled, enables the right controller's pointer.
+		/// </summary>
 		public void EnableRightPointer()
 		{
-            RightUIPointer.enabled = true;
-            RightPointerRenderer.enabled = true;
-            RightPointer.enabled = true;
-			// Also update the variable keeping track of whether this pointer is enabled or disabled (returned by the getter methods).
-			RightPointerEnabled = true;	
+			if (!boolRightPointerEnabled)
+			{
+				RightUIPointer.enabled = true;
+				RightPointerRenderer.enabled = true;
+				RightPointer.enabled = true;
+				boolRightPointerEnabled = true;	
+			}	
 		}
 
+		/// <summary>
+ 		/// If not already enabled, enables the UI attached to the right hand.
+		/// </summary>
 		public void EnableRightUI()
 		{
-			RightUI.SetActive(true);
-			// Also update the variable keeping track of whether the right hand UI is enabled or disabled (returned by getter methods).
-			RightUIEnabled = true;
+			if (!RightUI.activeSelf)
+			{
+				RightUI.SetActive(true);
+			}	
 		}
 
+		/// <summary>
+ 		/// If not already disabled, disables the right controller's pointer.
+		/// </summary>
 		public void DisableRightPointer()
 		{
-            RightUIPointer.enabled = false;
-            RightPointerRenderer.enabled = false;
-            RightPointer.enabled = false;
-			// Also update the variable keeping track of whether this pointer is enabled or disabled (returned by the getter methods).
-			RightPointerEnabled = true;	
+			if (boolRightPointerEnabled)
+			{
+				RightUIPointer.enabled = false;
+				RightPointerRenderer.enabled = false;
+				RightPointer.enabled = false;
+				boolRightPointerEnabled = false;	
+			}	
 		}
 
+		/// <summary>
+ 		/// If not already disabled, disables the UI attached to the right hand.
+		/// </summary>
 		public void DisableRightUI()
 		{
-			RightUI.SetActive(false);
-			// Also update the variable keeping track of whether the right hand UI is enabled or disabled (returned by getter methods).
-			RightUIEnabled = false;
+			if (RightUI.activeSelf)
+			{
+				RightUI.SetActive(false);
+			}	
 		}
-		// TODO: composite setter method
+
+
+
+		/******************************/
+		//  COMPOSITE SETTER METHODS  //
+		/******************************/
+
+		/// <summary>
+ 		/// Checks the controllers' pointers one-by-one, and accordingly enables them.
+		/// </summary>
+		public void EnableBothPointers()
+		{
+			// If not already enabled, enables the left controller's pointer.
+			if (!boolLeftPointerEnabled)
+			{
+				LeftPointerRenderer.enabled = true;
+				LeftPointer.enabled = true;
+				boolLeftPointerEnabled = true;
+			}	
+			// If not already enabled, enables the right controller's pointer.
+			if (!boolRightPointerEnabled)
+			{
+				RightUIPointer.enabled = true;
+				RightPointerRenderer.enabled = true;
+				RightPointer.enabled = true;
+				boolRightPointerEnabled = true;	
+			}	
+		}
+
+		/// <summary>
+ 		/// Checks the UIs attached to the user's hands one-by-one, and accordingly enables them.
+		/// </summary>
+		public void EnableBothUIs()
+		{
+			// If not already enabled, enables the UI attached to the left hand.
+			if (!LeftUI.activeSelf)
+			{
+				LeftUI.SetActive(true);
+			}	
+			// If not already enabled, enables the UI attached to the right hand.
+			if (!RightUI.activeSelf)
+			{
+				RightUI.SetActive(true);
+			}	
+		}
+
+		/// <summary>
+ 		/// Checks the controllers' pointers one-by-one, and accordingly disables them.
+		/// </summary>
+		public void DisableBothPointers()
+		{
+			// If not already disabled, disables the left controller's pointer.
+			if (boolLeftPointerEnabled)
+			{
+				LeftPointerRenderer.enabled = false;
+				LeftPointer.enabled = false;
+				boolLeftPointerEnabled = false;
+			}	
+			// If not already disabled, disables the right controller's pointer.
+			if (boolRightPointerEnabled)
+			{
+				RightUIPointer.enabled = false;
+				RightPointerRenderer.enabled = false;
+				RightPointer.enabled = false;
+				boolRightPointerEnabled = false;	
+			}	
+		}
+
+		/// <summary>
+ 		/// Checks the UIs attached to the user's hands one-by-one, and accordingly disables them.
+		/// </summary>
+		public void DisableBothUIs()
+		{
+			// If not already disabled, disables the UI attached to the left hand.
+			if (LeftUI.activeSelf)
+			{
+				LeftUI.SetActive(false);
+			}	
+			// If not already disabled, disables the UI attached to the right hand.
+			if (RightUI.activeSelf)
+			{
+				RightUI.SetActive(false);
+			}	
+		}
 
 	}
 }
