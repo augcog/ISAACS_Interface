@@ -50,6 +50,11 @@ public class PointCloudSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubsc
     }
 
 
+    public string GetSensorName()
+    {
+        return this.gameObject.name;
+    }
+
     /// <summary>
     /// Returns a list of connected subscriber topics (which are unique identifiers).
     /// </summary>

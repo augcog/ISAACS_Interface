@@ -30,8 +30,10 @@
             this.selectedMeshRenderer.material = selectedMaterial;
 
             WorldProperties.UpdateSelectedDrone(droneClassPointer);
-
             this.droneClassPointer.selected = true;
+
+            // Update the sensor manager
+            WorldProperties.sensorManager.initializeSensorUI(droneClassPointer.attachedSensors);
         }
 
         /// <summary>

@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using ISAACS;
@@ -120,6 +120,12 @@ public interface ROSSensorConnectionInterface
     /// Disconnect the ROS connection
     /// </summary>    
     void DisconnectROSConnection();
+
+    /// <summary>
+    /// Get the name of the sensor
+    /// </summary>
+    /// <returns></returns>
+    string GetSensorName();
 
     /// <summary>
     /// Returns a list of connected subscriber topics (which are unique identifiers).

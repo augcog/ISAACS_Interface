@@ -70,7 +70,8 @@ public class M210_Flight_TestManager : MonoBehaviour
 
         if (Input.GetKeyDown(init))
         {
-            rosDroneConnection = (Matrice_ROSDroneConnection)WorldProperties.GetSelectedDrone().gameObjectPointer.GetComponent<DroneProperties>().droneROSConnection;
+            Drone drone = WorldProperties.SelectNextDrone();
+            rosDroneConnection = (Matrice_ROSDroneConnection)drone.droneProperties.droneROSConnection;
         }
 
         if (Input.GetKeyDown(viewHomeLat))
@@ -189,7 +190,7 @@ public class M210_Flight_TestManager : MonoBehaviour
         if (Input.GetKeyUp(uploadUserMission))
         {
             Debug.Log("Ensure Waypoint system is working. Currently code is commented out.");
-            rosDroneConnection.StartMission();
+            //rosDroneConnection.StartMission();
         }
 
         if (Input.GetKeyUp(pauseMission))
@@ -209,22 +210,20 @@ public class M210_Flight_TestManager : MonoBehaviour
 
         if (Input.GetKeyUp(cycleDrone))
         {
-            WorldProperties.SelectNextDrone();
-            rosDroneConnection = (Matrice_ROSDroneConnection)WorldProperties.GetSelectedDrone().gameObjectPointer.GetComponent<DroneProperties>().droneROSConnection;
+            Drone drone = WorldProperties.SelectNextDrone();
+            rosDroneConnection = (Matrice_ROSDroneConnection)drone.droneProperties.droneROSConnection;
         }
 
         if (Input.GetKeyDown(cycleSensor))
         {
-            Debug.Log("TODO: Merge Master");
-            //WorldProperties.sensorManager.ShowNextSensor();
+            WorldProperties.sensorManager.ShowNextSensor();
         }
 
         if (Input.GetKeyDown(unsubscribe))
         {
-            Debug.Log("TODO: Merge Master");
-            //ROSSensorConnectionInterface sensor = WorldProperties.sensorManager.getSelectedSensor();
-            //List<string> subscriberList = WorldProperties.sensorManager.getSubscriberList();
-            //sensor.Unsubscribe(subscriberList[0]);
+            ROSSensorConnectionInterface sensor = WorldProperties.sensorManager.getSelectedSensor();
+            List<string> subscriberList = WorldProperties.sensorManager.getSubscriberList();
+            sensor.Unsubscribe(subscriberList[0]);
         }
     }
 }

@@ -114,7 +114,11 @@ namespace ISAACS
             SelectionPointerChecks();
             Drone currentlySelectedDrone = WorldProperties.GetSelectedDrone();
 
+<<<<<<< HEAD
             if (currentlySelectedDrone != null)
+=======
+            if (WorldProperties.GetSelectedDrone() != null)
+>>>>>>> master
             {
                 // WAYPOINT GRABBING
                 GrabbingChecks();

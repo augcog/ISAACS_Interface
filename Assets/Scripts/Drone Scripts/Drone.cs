@@ -3,59 +3,29 @@
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
-    using UnityEngine.UI;
-    using ROSBridgeLib.interface_msgs;
 
     public class Drone
     {
         // This is the related game object
-        public GameObject gameObjectPointer 
-        {
-            get { return gameObjectPointer; }
-            private set { gameObjectPointer = value; }
-        }
+        public GameObject gameObjectPointer;
 
         // The attached drone properties component
-        public DroneProperties droneProperties
-        {
-            get { return droneProperties; }
-            private set { droneProperties = value; }
-        }
+        public DroneProperties droneProperties;
 
         // This is the identifier of the drone in the dronesDict and across the ROSBridge
-        public int id
-        {
-            get { return id; }
-            private set { id = value; }
-        }
+        public int id;
 
         // The current status of the drone
-        public bool selected
-        {
-            get { return selected; }
-            set { selected = value; }
-        }
+        public bool selected;
 
         // All waypoints held by the drone
-        public List<Waypoint> waypoints
-        {
-            get { return waypoints; }
-            private set { waypoints = value; }
-        }
+        public List<Waypoint> waypoints;
 
         // All waypoints that were deleted, in case the player wants to redo them.
-        public List<Waypoint> deletedWaypoints
-        {
-            get { return deletedWaypoints; }
-            private set { deletedWaypoints = value; }
-        }
+        public List<Waypoint> deletedWaypoints;
 
         // List of attached sensor gameobjects
-        public List<ROSSensorConnectionInterface> attachedSensors
-        {
-            get { return attachedSensors; }
-            private set { attachedSensors = value; }
-        }
+        public List<ROSSensorConnectionInterface> attachedSensors;
 
         /// <summary>
         /// Constructor method for Drone class objects
@@ -88,7 +58,6 @@
             // Updating the world properties to reflect a new drone being added
             id = uniqueID;
             WorldProperties.AddDrone(this);
-
             Debug.Log("Created new drone with id: " + id);
 
             // Initilize the sensor list
@@ -99,8 +68,20 @@
             // Init as unselected
             gameObjectPointer.transform.Find("group3/Outline").GetComponent<MeshRenderer>().material = droneProperties.deselectedMaterial;
             selected = false;
+
+            Debug.Log("Created new drone with id: " + id);
         }
         
+        /// <summary>
+        /// Add a sensor attached to this drone instance.
+        /// </summary>
+        /// <param name="sensor"></param>
+        public void AddSensor(ROSSensorConnectionInterface sensor)
+        {
+            Debug.Log("Adding sensor: " + sensor.GetSensorName());
+            attachedSensors.Add(sensor);
+        }
+
         /// <summary>
         /// Use this to add a new Waypoint to the end of the drone's path
         /// </summary>
@@ -307,6 +288,5 @@
                 return waypointList.Count == 0;
             }
         }
-
     }
 }

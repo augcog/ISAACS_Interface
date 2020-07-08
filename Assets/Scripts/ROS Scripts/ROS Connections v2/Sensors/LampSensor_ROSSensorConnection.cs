@@ -77,6 +77,11 @@ public class LampSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
         }
     }
 
+    public string GetSensorName()
+    {
+        return this.gameObject.name;
+    }
+
     /// <summary>
     /// Returns a list of connected subscriber topics (which are unique identifiers).
     /// </summary>

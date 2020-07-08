@@ -23,16 +23,18 @@
         [Header("Required Prefabs")]
         public GameObject droneBaseObject;
         public GameObject waypointBaseObject;
+        public SensorManager sensorManagerBaseObject;
 
         [Header("Drone variables")]
         private static Drone selectedDrone;
         private static Queue<Drone> dronesQueue;
 
         [Header("Sensor variables")]
-        private static GameObject selectedSensor;
-        private static Dictionary<int, GameObject> sensorDict;
+        public static GameObject selectedSensor;
+        public static Dictionary<int, GameObject> sensorDict;
+        public static SensorManager sensorManager;
 
-        [Header(" Misc. State variables")]
+        [Header("Misc. State variables")]
         public static GameObject worldObject;
         public static GameObject placementPlane;
 
@@ -64,12 +66,14 @@
         void Start()
         {
             selectedDrone = null;
+
             dronesQueue = new Queue<Drone>();
 
             selectedSensor = null;
             sensorDict = new Dictionary<int, GameObject>();
 
             worldObject = gameObject;
+            sensorManager = sensorManagerBaseObject;
 
             placementPlane = GameObject.FindWithTag("Ground");
 
@@ -86,7 +90,7 @@
         /// <summary>
         /// Cycle through the connected drones
         /// </summary>
-        public static void SelectNextDrone()
+        public static Drone SelectNextDrone()
         {
             Debug.Log("Selection next drone");
 
@@ -99,10 +103,12 @@
             {
                 Drone nextDrone = dronesQueue.Dequeue();
                 nextDrone.gameObjectPointer.GetComponent<DroneProperties>().SelectDrone();
+                return nextDrone;
             }
             else
             {
                 Debug.Log("No drones connected");
+                return null;
             }
 
         }
@@ -167,18 +173,17 @@
         /// </summary>
         /// <param name="parent">The topmost container of the objects which will have the shader added to them</param>
         public static void AddClipShader(Transform parent)
+    {
+        if (parent.GetComponent<Renderer>())
         {
-            if (parent.GetComponent<Renderer>())
-            {
-                parent.GetComponent<Renderer>().material.shader = clipShader;
-            }
-
-            foreach (Transform child in parent)
-            {
-                AddClipShader(child);
-            }
+            parent.GetComponent<Renderer>().material.shader = clipShader;
         }
 
+        foreach (Transform child in parent)
+        {
+            AddClipShader(child);
+        }
+    }
 
         /// <summary>
         /// Convert the given ROS NavSatFixMsg to Unity XYZ space.
@@ -218,8 +223,7 @@
             gpsCoord.z = (float)((unityPosition.z / EARTH_RADIUS) + Lat0);
             gpsCoord.y = (float)((unityPosition.y) + Alt0);
             return gpsCoord;
-        }   
-    
+        }
     }
 
     /// <summary>
