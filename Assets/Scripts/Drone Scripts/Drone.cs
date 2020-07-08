@@ -21,7 +21,14 @@
         // TODO: description. Helper method for waypoint arrays.
         private bool isEmptyWaypointList(List<Waypoint> waypointList)
         {
-            return waypointList != null && waypointList.Count > 0;
+            if (waypointList == null)
+            {
+                return true;
+            }
+            else
+            {
+                return waypointList.Count == 0;
+            }
         }
 
 
