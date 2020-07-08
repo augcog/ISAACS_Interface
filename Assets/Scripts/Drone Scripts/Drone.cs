@@ -78,15 +78,20 @@
         /// <returns>The waypoint which is to be added to the end of path.</returns>        
         public Waypoint AddWaypoint(Vector3 coordinates)
         {
+            Debug.Log("Adding waypoint at: " + coordinates.ToString());
+
             string prev_id;
             // The next waypoint, that the user placed.
             Waypoint newWaypoint = new Waypoint(this, coordinates);
+            Debug.Log("Created waypoint at: " + newWaypoint.ToString());
 
             // Check to see if we need to add the starter waypoint
             if (isEmptyWaypointList(waypoints))
             {
                 // Creating the starter waypoint.
                 Waypoint takeoffWaypoint = new Waypoint(this, new Vector3(0,1,0));
+
+                Debug.Log("Creating take off waypoint at: " + takeoffWaypoint.ToString());
 
                 // Otherwise, this is the first waypoint.
                 takeoffWaypoint.nextPathPoint = newWaypoint;
@@ -98,6 +103,8 @@
 
                 prev_id = null;
                 waypoints.Add(newWaypoint);
+
+                Debug.Log("Added first two waypoints to the list:" + waypoints.ToString());
 
                 newWaypoint.gameObjectPointer.GetComponent<WaypointProperties>().UpdateGroundpointLine(); // TODO: fix this jank.
                 return newWaypoint; 
@@ -114,6 +121,7 @@
 
                 // Adding to dictionary, order, and path list
                 waypoints.Add(newWaypoint);
+                Debug.Log("Added waypoint to the list:" + waypoints.ToString());
 
                 // Make lines mesh appear. TODO: check coloring.
                 newWaypoint.gameObjectPointer.GetComponent<WaypointProperties>().UpdateGroundpointLine(); // TODO: fix this jank.
