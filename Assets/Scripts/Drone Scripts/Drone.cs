@@ -3,26 +3,29 @@
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
-    using ROSBridgeLib.interface_msgs;
     using UnityEngine.UI;
+    using ROSBridgeLib.interface_msgs;
 
     public class Drone
     {
-
         public GameObject gameObjectPointer; // This is the related game object
-        public DroneProperties droneProperties;
+        public DroneProperties droneProperties; // TODO: remove
         public int id; // This is the identifier of the drone in the dronesDict and across the ROSBridge
         public bool selected;
 
-        public ArrayList waypoints; // All waypoints held by the drone
-        private ArrayList deletedWaypoints; // All waypoints that were deleted, in case the player wants to redo them
+        public List<Waypoint> waypoints; // All waypoints held by the drone
+        private List<Waypoint> deletedWaypoints; // All waypoints that were deleted, in case the player wants to redo them.
 
-        private float consecutiveWaypointDeletionsCount;
-
-        public int nextWaypointId; // Incrementing counter to give all waypoints a unique ID when combined with the Drone ID
-        public Dictionary<string, Waypoint> waypointsDict; // Collection of the waypoints in this drone's path
         public List<ROSSensorConnectionInterface> attachedSensors; // List of attached sensor gameobjects
 
+        // TODO: description. Helper method for waypoint arrays.
+        private bool isEmptyWaypointList(List<Waypoint> waypointList)
+        {
+            return waypointList != null && waypointList.Count > 0;
+        }
+
+
+    
         /// <summary>
         /// Constructor method for Drone class objects
         /// </summary>
@@ -47,11 +50,9 @@
             WorldProperties.AddClipShader(gameObjectPointer.transform);
 
             // Initialize path and placement order lists
-            waypoints = new ArrayList(0);
+            waypoints = new List<Waypoint>(); // All waypoints held by the drone
+            deletedWaypoints = new List<Waypoint>(); // All waypoints that were deleted, in case the player wants to redo them.
 
-            // Add waypoints container
-            nextWaypointId = 0;
-            waypointsDict = new Dictionary<string, Waypoint>();
 
             // Updating the world properties to reflect a new drone being added
             id = uniqueID;
@@ -67,63 +68,61 @@
             // Init as unselected
             gameObjectPointer.transform.Find("group3/Outline").GetComponent<MeshRenderer>().material = droneProperties.deselectedMaterial;
             selected = false;
-
-            consecutiveWaypointDeletionsCount = 0; /// Initialize the deletion count to 0
         }
+
 
         /// <summary>
         /// Use this to add a new Waypoint to the end of the drone's path
         /// </summary>
-        /// <param name="newWaypoint"> The Waypoint which is to be added to the end of path </param>        
-        public void AddWaypoint(Waypoint newWaypoint)
+        /// <param name="coordinates">The coordinates of the waypoint which is to be added to the end of path.</param>        
+        /// <returns>The waypoint which is to be added to the end of path.</returns>        
+        public Waypoint AddWaypoint(Vector3 coordinates)
         {
             string prev_id;
+            // The next waypoint, that the user placed.
+            Waypoint newWaypoint = new Waypoint(this, coordinates);
 
             // Check to see if we need to add the starter waypoint
-            if (waypoints.Count < 1)
+            if (isEmptyWaypointList(waypoints))
             {
-                //Creating the starter waypoint
-                Waypoint startWaypoint = new Waypoint(this, gameObjectPointer.transform.TransformPoint(new Vector3(0,1,0)));
+                // Creating the starter waypoint.
+                Waypoint takeoffWaypoint = new Waypoint(this, new Vector3(0,1,0));
 
                 // Otherwise, this is the first waypoint.
-                startWaypoint.prevPathPoint = null; // This means the previous point of the path is the Drone.
+                takeoffWaypoint.nextPathPoint = newWaypoint;
+                newWaypoint.prevPathPoint = takeoffWaypoint;
 
                 // Storing this for the ROS message
                 prev_id = "DRONE";
+                waypoints.Add(takeoffWaypoint);
 
-                // Swapping the ids so the order makes sense
-                string tempId = startWaypoint.id;
-                startWaypoint.id = newWaypoint.id;
-                Debug.Log(startWaypoint.id);
-                newWaypoint.id = tempId;
+                prev_id = null;
+                waypoints.Add(newWaypoint);
 
-                // Adding to dictionary, order, and path list
-                waypointsDict.Add(startWaypoint.id, startWaypoint);
-                waypoints.Add(startWaypoint);
-            } else
+                newWaypoint.gameObjectPointer.GetComponent<WaypointProperties>().UpdateGroundpointLine(); // TODO: fix this jank.
+                return newWaypoint; 
+            }
+            else
             {
+                // If we don't have a line selected, we default to placing the new waypoint at the end of the path
                 // Otherwise we can add as normal
                 Waypoint prevWaypoint = (Waypoint)waypoints[waypoints.Count - 1]; // Grabbing the waypoint at the end of our waypoints path
                 newWaypoint.prevPathPoint = prevWaypoint; // setting the previous of the new waypoint
                 prevWaypoint.nextPathPoint = newWaypoint; // setting the next of the previous waypoint
 
-                // Storing this for the ROS message
-                prev_id = prevWaypoint.id;
+                prev_id = null; // TODO: change variable name
 
                 // Adding to dictionary, order, and path list
-                waypointsDict.Add(newWaypoint.id, newWaypoint);
                 waypoints.Add(newWaypoint);
 
                 // Make lines mesh appear. TODO: check coloring.
-                newWaypoint.gameObjectPointer.GetComponent<WaypointProperties>().UpdateGroundpointLine(); 
-            }
-
-            // Send a generic ROS ADD Update only if this is not the initial waypoint
-            if (prev_id == "DRONE") {
-                // we have just set the starter waypoint and still need to create the real waypoint
-                this.AddWaypoint(newWaypoint);
+                newWaypoint.gameObjectPointer.GetComponent<WaypointProperties>().UpdateGroundpointLine(); // TODO: fix this jank.
+                return newWaypoint; 
             }
         }
+
+
+
 
         /// <summary>
         /// Use this to insert a new waypoint into the path (between two existing waypoints)
@@ -132,9 +131,6 @@
         /// <param name="prevWaypoint"> The existing Waypoint just before the one which is to be added to the path </param>
         public void InsertWaypoint(Waypoint newWaypoint, Waypoint prevWaypoint)
         {
-            // Adding the new waypoint to the dictionary and placement order
-            waypointsDict.Add(newWaypoint.id, newWaypoint);
-
             // Adding the waypoint to the array
             int previousIndex = Mathf.Max(0, waypoints.IndexOf(prevWaypoint));
             int newIndex = previousIndex + 1;
@@ -155,7 +151,6 @@
         public void DeleteWaypoint(Waypoint deletedWaypoint)
         {
             // Removing the new waypoint from the dictionary, waypoints array and placement order
-            waypointsDict.Remove(deletedWaypoint.id);
             waypoints.Remove(deletedWaypoint);
             deletedWaypoints.Add(deletedWaypoint);
 
@@ -177,12 +172,11 @@
 
             // Deleting the waypoint gameObject
             Object.Destroy(deletedWaypoint.gameObjectPointer);
-            consecutiveWaypointDeletionsCount++;
         }
 
         public Waypoint PopWaypoint()
         {
-            if (waypoints.Count > 1)
+            if (!isEmptyWaypointList(waypoints))
             {
                 Waypoint lastWaypoint = (Waypoint)waypoints[waypoints.Count - 1];
                 DeleteWaypoint(lastWaypoint);
@@ -198,19 +192,19 @@
 
         public void RestoreLastlyDeletedWaypoint()
         {
-            if (consecutiveWaypointDeletionsCount >= 1)
+            if (!isEmptyWaypointList(deletedWaypoints))
             {
                 Waypoint restoredWaypoint = (Waypoint)deletedWaypoints[0];
-                AddWaypoint(restoredWaypoint);
+                AddWaypoint(restoredWaypoint.gameObjectPointer.transform.position);
                 deletedWaypoints.Remove(restoredWaypoint);
-                consecutiveWaypointDeletionsCount--;
             }
         }
 
 
         /// <summary>
-        /// Delete all the waypoints
+        /// Removes all waypoints from this drone (including the first one).
         /// </summary>
+        // TODO: Fix 
         public void DeleteAllWaypoints()
         {
             /*while (this.waypoints.Count > 1)
@@ -222,7 +216,7 @@
                 }
             }*/
 
-            if (waypoints.Count > 0)
+            if (!isEmptyWaypointList(waypoints))
             {
                 foreach (Waypoint waypoint in waypoints)
                 {
@@ -231,17 +225,35 @@
                     tempProperties.DeleteLineCollider();
                     Object.Destroy(waypoint.gameObjectPointer);
                 }
+                waypoints.Clear();
             }
-            waypoints.Clear();
         }
 
-        public int GetWaypointsCount() /// helper
+
+
+
+		/******************************/
+		//  WAYPOINTS GETTER METHODS  //
+		/******************************/
+
+        // TODO: Description
+        public int WaypointsCount()
         {
-            if (waypoints != null)
+            if (isEmptyWaypointList(waypoints))
             {
                 return 0;
             }
             return waypoints.Count;
+        }
+
+        // TODO: Description
+        public int DeletedWaypointsCount()
+        {
+            if (isEmptyWaypointList(deletedWaypoints))
+            {
+                return 0;
+            }
+            return deletedWaypoints.Count;
         }
 
        

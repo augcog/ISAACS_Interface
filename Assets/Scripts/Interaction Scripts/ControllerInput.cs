@@ -30,24 +30,33 @@
 		public GameObject RightUI;
 
 
-		private VRTK_Pointer LeftPointer;                           // The VRTK Pointer Component (script) of the left controller.
-		private VRTK_BezierPointerRenderer LeftPointerRenderer;     // The VRTK Pointer Renderer Component (script) of the left controller.
-		private VRTK_Pointer RightPointer;                          // The VRTK Pointer Component (script) of the right controller.
-		private VRTK_StraightPointerRenderer RightPointerRenderer;  // The VRTK Pointer Renderer Component (script) of the right controller.
-		private VRTK_UIPointer RightUIPointer;                      // The VRTK UI Pointer Component (script) of the right controller.
+		private VRTK_Pointer LeftPointer;                          // The VRTK Pointer Component (script) of the left controller.
+		private VRTK_BezierPointerRenderer LeftPointerRenderer;    // The VRTK Pointer Renderer Component (script) of the left controller.
+		private VRTK_Pointer RightPointer;                         // The VRTK Pointer Component (script) of the right controller.
+		private VRTK_StraightPointerRenderer RightPointerRenderer; // The VRTK Pointer Renderer Component (script) of the right controller.
+		private VRTK_UIPointer RightUIPointer;                     // The VRTK UI Pointer Component (script) of the right controller.
 
-		private bool boolLeftPointerEnabled  = true;  // Whether the left controller's pointer is enabled or disabled.
-		private bool boolRightPointerEnabled = true;  // Whether the right controller's pointer is enabled or disabled.
+		private bool boolLeftPointerEnabled;  // Whether the left controller's pointer is enabled or disabled.
+		private bool boolRightPointerEnabled; // Whether the right controller's pointer is enabled or disabled.
 
 
-		// Start is called on the first frame, upon scene initialization.
-		void Start()
+		// Awake is called on initialization, BEFORE Start.
+		void Awake()
 		{
             LeftPointer = LeftController.GetComponent<VRTK_Pointer>();
             LeftPointerRenderer = LeftController.GetComponent<VRTK_BezierPointerRenderer>();
             RightPointer = RightController.GetComponent<VRTK_Pointer>();
             RightPointerRenderer = RightController.GetComponent<VRTK_StraightPointerRenderer>();
             RightUIPointer = RightController.GetComponent<VRTK_UIPointer>();
+
+			LeftPointerRenderer.enabled = false;
+			LeftPointer.enabled = false;
+			RightUIPointer.enabled = false;
+			RightPointerRenderer.enabled = false;
+			RightPointer.enabled = false;
+
+			LeftUI.SetActive(false);
+			RightUI.SetActive(false);
 		}
 
 
@@ -226,6 +235,22 @@
 			return LeftUI.activeSelf;
 		}
 
+		/// <summary>
+		/// The transform (position, rotation, scale) of the UI attached to the left hand.
+		/// </summary>
+		/// <returns>The transform component of the UI attached to the left hand.</returns>
+		public Transform LeftUITransform()
+		{
+			if (LeftUI.activeSelf)
+			{
+				return LeftUI.transform;
+			}
+			else
+			{
+				return null;
+			}
+		}
+
 
 
 		/*******************************/
@@ -401,6 +426,22 @@
 		public bool RightUIEnabled()
 		{
 			return RightUI.activeSelf;
+		}
+
+		/// <summary>
+		/// The transform (position, rotation, scale) of the UI attached to the right hand.
+		/// </summary>
+		/// <returns>The transform component of the UI attached to the right hand.</returns>
+		public Transform RightUITransform()
+		{
+			if (RightUI.activeSelf)
+			{
+				return RightUI.transform;
+			}
+			else
+			{
+				return null;
+			}
 		}
 
 

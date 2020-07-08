@@ -1,4 +1,5 @@
-﻿namespace ISAACS
+﻿/*
+namespace ISAACS
 {
     using System;
     using System.Linq;
@@ -107,7 +108,7 @@
                 Debug.Log(x.id + " : " + x.unityLocation);
             }
             Debug.Log("---");
-            **/
+            
 
             // SELECTION POINTER  
             SelectionPointerChecks();
@@ -146,7 +147,7 @@
                 //Debug.Log("getting here");
                 
                 Waypoint collidedWaypoint = currentCollider.gameObject.GetComponent<WaypointProperties>().classPointer;
-                if (collidedWaypoint.id == "A0")
+                /*if (collidedWaypoint.id == "A0")
                 {
                     Debug.Log("destroy");
                     Destroy(collidedWaypoint.gameObjectPointer.GetComponent<SphereCollider>());
@@ -559,6 +560,7 @@
             }
         }
 
+        /*
         /// <summary>
         /// Print statements to help debug the collisions logic.
         /// </summary>
@@ -620,3 +622,4 @@
         }
     }
 }
+*/

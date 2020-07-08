@@ -64,7 +64,7 @@ public class DroneSimulationManager : MonoBehaviour {
     public void FlyNextWaypoint(bool restart = false)
     {
         // TODO: debug drone variable osciallting
-        ArrayList waypoints = WorldProperties.GetSelectedDrone().waypoints;
+        List<Waypoint> waypoints = WorldProperties.GetSelectedDrone().waypoints;
 
         if (restart)
         {

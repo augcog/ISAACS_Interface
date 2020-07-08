@@ -9,9 +9,9 @@ namespace ISAACS
         public Material selectedPassedLine;
         public Material unselectedPassedLine;
 
-        public GameObject targetWaypoint;
+        public Waypoint targetWaypoint;
         public int currentWaypoint;
-        public GameObject prevPoint;
+        public Waypoint prevPoint;
 
         private int totalWaypoints;
         private LineRenderer line;
@@ -45,7 +45,7 @@ namespace ISAACS
             }
             else
             {
-                line.SetPosition(1, prevPoint.transform.position);
+                line.SetPosition(1, prevPoint.gameObjectPointer.transform.position);
             }
 
             if (thisDrone.selected)
@@ -64,21 +64,21 @@ namespace ISAACS
             {
                 if (totalWaypoints > currentWaypoint)
                 {
-                    targetWaypoint = ((Waypoint)thisDrone.waypoints[currentWaypoint + 1]).gameObjectPointer;
-                    if (this.transform.position == targetWaypoint.transform.position)
+                    targetWaypoint = (Waypoint)thisDrone.waypoints[currentWaypoint + 1];
+                    if (this.transform.position == targetWaypoint.gameObjectPointer.transform.position)
                     {
-                        prevPoint = (GameObject)thisDrone.waypoints[currentWaypoint + 1];
+                        prevPoint = (Waypoint)thisDrone.waypoints[currentWaypoint + 1];
                         currentWaypoint++;
                     }
                 }
                 else if (totalWaypoints < currentWaypoint)
                 {
                     currentWaypoint = totalWaypoints;
-                    prevPoint = (GameObject)thisDrone.waypoints[totalWaypoints];
+                    prevPoint = (Waypoint)thisDrone.waypoints[totalWaypoints];
                 }
                 else
                 {
-                    if (targetWaypoint != null && this.transform.position == targetWaypoint.transform.position)
+                    if (targetWaypoint != null && this.transform.position == targetWaypoint.gameObjectPointer.transform.position)
                     {
                         targetWaypoint = null;
                     }

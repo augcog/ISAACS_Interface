@@ -12,17 +12,6 @@
 
     public class ThirdPersonView : MonoBehaviour
     {
-        public GameObject LeftController;
-        public GameObject LeftUI;
-        public GameObject RightController;
-        public GameObject RightUI;
-
-        private VRTK_Pointer LeftPointer;
-        private VRTK_BezierPointerRenderer LeftPointerRenderer;
-        private VRTK_Pointer RightPointer;
-        private VRTK_StraightPointerRenderer RightPointerRenderer;
-        private VRTK_UIPointer RightUIPointer;
-
         public ControllerInput controllerInput; /// Initiate a singleton of the ControllerState class. Assign it to the Controller GameObject.
 
         private enum ControllerState { IDLE, SCALING, SELECTING_DRONE, SELECTING_SENSOR, AIMING_SELECTOR, SETTING_WAYPOINT_HEIGHT, PLACING_WAYPOINT, MOVING_WAYPOINT, UNDOING, REDOING }
@@ -52,40 +41,43 @@
         //private CollisionPair mostRecentCollision;
         //private List<CollisionPair> currentCollisions;
 
+
+		// Awake is called on initialization, BEFORE Start.
         void Awake()
         {
-            //This provides us with basis to create bounds on scaling and something to return to
+            // This provides us with basis to create bounds on scaling and something to return to.
             WorldScaleInitial = World.transform.localScale;
-
-            //These are the bounds on scaling
+            // These are the bounds on scaling.
             WorldScaleMin = Vector3.Scale(WorldScaleInitial, new Vector3(minScale, minScale, minScale));
             WorldScaleMax = Vector3.Scale(WorldScaleInitial, new Vector3(maxScale, maxScale, maxScale));
-
-            LeftPointer = LeftController.GetComponent<VRTK_Pointer>();
-            LeftPointerRenderer = LeftController.GetComponent<VRTK_BezierPointerRenderer>();
-            RightPointer = RightController.GetComponent<VRTK_Pointer>();
-            RightPointerRenderer = RightController.GetComponent<VRTK_StraightPointerRenderer>();
-            RightUIPointer = RightController.GetComponent<VRTK_UIPointer>();
-
-            LeftPointerRenderer.enabled = false;
-            LeftPointer.enabled = false;
-
         }
 
+
+		// Start is called on initialization, AFTER Awake.
+        void Start()
+        {
+            // Enable the required UI elements for this interaction mode.
+            controllerInput.EnableRightPointer();
+            controllerInput.EnableBothUIs();
+        }
+
+
+        // Fixed update is called n times per frame, where n is the physics step (and can be different from the progression of video frames).
         void FixedUpdate()
         {
+            // Query for the controller state, determined by user input.
             switch(controllerState)
             {
+                // If nothing is held down, default to the idle state. 
                 case ControllerState.IDLE:
                 {
                     if (controllerInput.BothGrip())
                     {
                         controllerState = ControllerState.SCALING;
-                        LeftUI.SetActive(false);
-                        RightUI.SetActive(false);
-                        RightPointer.enabled = false;
-                        RightPointerRenderer.enabled = false;
-                        RightUIPointer.enabled = false;
+
+                        controllerInput.DisableBothUIs();
+                        controllerInput.DisableRightPointer();
+
                         ScaleWorld();
                         break;
                     }
@@ -93,16 +85,14 @@
                     if (controllerInput.RightGrip())
                     {
                         controllerState = ControllerState.AIMING_SELECTOR;
-                        RightUI.SetActive(false);
+                        controllerInput.DisableRightUI();
                         break;
                     }
 
                     if (controllerInput.RightTrigger())
                     {
                         controllerState = ControllerState.PLACING_WAYPOINT;
-                        RightPointer.enabled = false;
-                        RightPointerRenderer.enabled = false;
-                        RightUIPointer.enabled = false;
+                        controllerInput.DisableRightPointer();
                         /// TODO: start linecollider
                         break;
                     }
@@ -110,9 +100,7 @@
                     if (controllerInput.RightA())
                     {
                         controllerState = ControllerState.UNDOING;
-                        RightPointer.enabled = false;
-                        RightPointerRenderer.enabled = false;
-                        RightUIPointer.enabled = false;
+                        controllerInput.DisableRightPointer();
                         /// TODO: make waypoint slightly fade
                         break;
                     }
@@ -120,9 +108,7 @@
                     if (controllerInput.RightB())
                     {
                         controllerState = ControllerState.REDOING;
-                        RightPointer.enabled = false;
-                        RightPointerRenderer.enabled = false;
-                        RightUIPointer.enabled = false;
+                        controllerInput.DisableRightPointer();
                         /// TODO: make waypoint slightly appear
                         break;
                     }
@@ -158,10 +144,8 @@
                     }
                     else {
                         controllerState = ControllerState.IDLE;
-                        LeftUI.SetActive(true);
-                        RightUI.SetActive(true);
-                        RightPointer.enabled = true;
-                        RightPointerRenderer.enabled = true;
+                        controllerInput.EnableBothUIs();
+                        controllerInput.EnableRightPointer();
                     }
                     break;
                 }
@@ -191,17 +175,15 @@
                     if (controllerInput.BothGrip())
                     {
                         controllerState = ControllerState.SCALING;
-                        LeftUI.SetActive(false);
-                        RightPointer.enabled = false;
-                        RightPointerRenderer.enabled = false;
-                        RightUIPointer.enabled = false;
+                        controllerInput.DisableBothUIs();
+                        controllerInput.DisableRightPointer();
                         ScaleWorld();
                         break;
                     }
                     if (!controllerInput.RightGrip())
                     {
                         controllerState = ControllerState.IDLE;
-                        RightUI.SetActive(true);
+                        controllerInput.EnableRightUI();
                     }
                     break;
                 }
@@ -217,18 +199,15 @@
                     {
                         /// TODO: stop showing line
                         controllerState = ControllerState.IDLE;
-                        RightPointer.enabled = true;
-                        RightPointerRenderer.enabled = true;
+                        controllerInput.EnableRightPointer();
                         break;
                     }
 
                     if (!controllerInput.RightTrigger())
                     {
                         controllerState = ControllerState.IDLE;
-                        PlaceWaypoint(RightUI.transform.position);
-                        RightPointer.enabled = true;
-                        RightPointerRenderer.enabled = true;
-                        RightUIPointer.enabled = true;
+                        PlaceWaypoint(controllerInput.RightUITransform().position);
+                        controllerInput.EnableRightPointer();
                     }
                     else
                     {
@@ -253,9 +232,7 @@
                     if (controllerInput.RightGrip())
                     {
                         controllerState = ControllerState.IDLE;
-                        RightPointer.enabled = true;
-                        RightPointerRenderer.enabled = true;
-                        RightUIPointer.enabled = true;
+                        controllerInput.EnableRightPointer();
                         /// TODO: make waypoint disappear
                         break;
                     }
@@ -272,9 +249,7 @@
                     if (controllerInput.RightGrip())
                     {
                         controllerState = ControllerState.IDLE;
-                        RightPointer.enabled = true;
-                        RightPointerRenderer.enabled = true;
-                        RightUIPointer.enabled = true;
+                        controllerInput.EnableRightPointer();
                         /// TODO: make waypoint disappear
                         break;
                     }
@@ -378,18 +353,14 @@
         /// </summary>
         /// <param name="groundPoint"> This is the location on the ground that the waypoint will be directly above. </param>
         /// <returns></returns>
-        private Waypoint PlaceWaypoint(Vector3 groundPoint)
+        private Waypoint PlaceWaypoint(Vector3 coordinates)
         {
             Drone currentlySelectedDrone = WorldProperties.GetSelectedDrone(); // Grabbing the drone that we are creating this waypoint for
             // Make sure our drone exists
             if (currentlySelectedDrone != null)
             {
-                // We will use the placePoint location.
-                Vector3 newLocation = new Vector3(groundPoint.x, groundPoint.y, groundPoint.z);
-                // If we don't have a line selected, we default to placing the new waypoint at the end of the path
-                Waypoint newWaypoint = new Waypoint(currentlySelectedDrone, newLocation);
                 // Add the new waypoint to the drone's path
-                currentlySelectedDrone.AddWaypoint(newWaypoint);
+                Waypoint newWaypoint = currentlySelectedDrone.AddWaypoint(coordinates);
                 // Return the waypoint to announce that we successfully placed one
                 return newWaypoint;
             }
@@ -414,7 +385,7 @@
 
             if (currentlySelectedDrone != null) {
                 // Make sure the currently selected drone has waypoints
-                if (currentlySelectedDrone.GetWaypointsCount() >= 1)
+                if (currentlySelectedDrone.WaypointsCount() >= 2)
                 {
                     // Otherwise we default to removing the last waypoint (UNDO)
                     Debug.Log("Removing most recently placed waypoint");
