@@ -4,6 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using ISAACS;
 
+/// <summary>
+/// A manager for all sensors that are present in the worldspace.
+/// </summary>
 public class SensorManager : MonoBehaviour {
 
     public Button leftButton;
@@ -59,19 +62,12 @@ public class SensorManager : MonoBehaviour {
         previousSensors = null;
     }
 
-    // function 2: update the ui with the current selected sensor
-    // we get the list of subscribers: sensor.GetSensorSubscribers()
-    // this list of subscribers: eg: mesh, rad_level_1, rad_level3
-    // generate len(list) number of toggles  with the text of each being the subcsriber string
-    // upper bound of 6 subscibers per sensor
-
-
-    // tried: GUI.toggle, instantiate prefab, default controls api, new gameobject.
-
+    /// <summary>
+    /// update the ui with the current selected sensor, upper bound of 6 subscribers per sensor
+    /// </summary>
     public void updateSensorUI(ROSSensorConnectionInterface inputSensor)
     {
-        //clear all previous toggle (name should be "SubscriberToggle(clone)" HERE
-   
+        //clear all previous toggles
         sensorText.text = inputSensor.GetSensorName();
         subscriberList = new List<string>(inputSensor.GetSensorSubscribers());
         int subscribercount = 0;
@@ -99,7 +95,9 @@ public class SensorManager : MonoBehaviour {
         }
     }
 
-    // function 3: toggles pressed
+    /// <summary>
+    /// Subscribes/unsubscribes sensor when toggle THISTOGGLE is pressed
+    /// </summary>
     void ToggleValueChanged(Toggle thisToggle)
     {
         Text selectedSubscriberName = thisToggle.GetComponentInChildren<Text>();
@@ -117,14 +115,9 @@ public class SensorManager : MonoBehaviour {
         }
     }
 
-    // function 4: cycle sensor/ display next sensor
-    // we can have a queue of all the sensors
-    // add the current sensor to the end
-    // make the current sensor the first element in the queue
-    // call function 2 to update the ui wuth current selected sensor
-
-    //these are seperated so that if later implementations where we want to switch sensors using VRTK buttons, we can
-
+    /// <summary>
+    /// Cycle sensor/ display next sensor
+    /// </summary>
     public void ShowNextSensor()
     {
         if (selectedSensorPos == sensorList.Count-1)

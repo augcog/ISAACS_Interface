@@ -3,8 +3,6 @@
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
-    using UnityEngine.UI;
-    using ROSBridgeLib.interface_msgs; //what is this for?
 
     public class Drone
     {
@@ -21,7 +19,7 @@
         public int nextWaypointId; // Incrementing counter to give all waypoints a unique ID when combined with the Drone ID
         public Dictionary<string, Waypoint> waypointsDict; // Collection of the waypoints in this drone's path
 
-        public List<ROSSensorConnectionInterface> attachedSensors; // List of attached sensor gameobjects
+        public List<ROSSensorConnectionInterface> attachedSensors; // List of attached sensors to this drone
 
         /// <summary>
         /// Constructor method for Drone class objects

@@ -17,7 +17,6 @@ public class PCFaceSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
 {
     // Private connection variables
     private ROSBridgeWebSocketConnection ros = null;
-    private string sensorName;
     private string client_id;
     private float alpha = 0.8f;
     private List<string> sensorSubscriberTopics = new List<string>();
@@ -32,7 +31,6 @@ public class PCFaceSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
 
         ros = new ROSBridgeWebSocketConnection("ws://" + sensorIP, sensorPort);
         client_id = uniqueID.ToString();
-        sensorName = this.gameObject.name;
 
         foreach (string subscriber in sensorSubscribers)
         {
@@ -72,7 +70,7 @@ public class PCFaceSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
 
     public string GetSensorName()
     {
-        return sensorName;
+        return this.gameObject.name;
     }
 
     /// <summary>

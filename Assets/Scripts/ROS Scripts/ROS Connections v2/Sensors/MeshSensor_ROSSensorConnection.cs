@@ -18,7 +18,6 @@ public class MeshSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
 
     // Private connection variables
     private ROSBridgeWebSocketConnection ros = null;
-    private string sensorName;
     public string client_id;
     private Thread rosMsgThread;
     private List<string> sensorSubscriberTopics = new List<string>();
@@ -81,7 +80,6 @@ public class MeshSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
 
         ros = new ROSBridgeWebSocketConnection("ws://" + sensorIP, sensorPort);
         client_id = uniqueID.ToString();
-        sensorName = this.gameObject.name;
 
         foreach (string subscriber in sensorSubscribers)
         {
@@ -152,7 +150,7 @@ public class MeshSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
 
     public string GetSensorName()
     {
-        return sensorName;
+        return this.gameObject.name;
     }
 
     /// <summary>
