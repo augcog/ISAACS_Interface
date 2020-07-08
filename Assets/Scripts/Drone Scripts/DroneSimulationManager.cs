@@ -56,6 +56,7 @@ public class DroneSimulationManager : MonoBehaviour {
     public void InitDroneSim(Drone droneInit)
     {
         Debug.Log("Drone Flight Sim initilized");
+        // TODO: This oscilates between null and selecting the correct drone.
         drone = droneInit;
         home = drone.gameObjectPointer.transform.localPosition;
         Debug.Log("The selected drone is: " + drone.gameObjectPointer.name);
@@ -64,7 +65,10 @@ public class DroneSimulationManager : MonoBehaviour {
     public void FlyNextWaypoint(bool restart = false)
     {
         // TODO: debug drone variable osciallting
-        List<Waypoint> waypoints = WorldProperties.GetSelectedDrone().waypoints;
+        drone = this.GetComponent<DroneProperties>().droneClassPointer;
+        Debug.Log("Simulating flight for drone: " + drone.gameObjectPointer.name);
+
+        List<Waypoint> waypoints = drone.waypoints;
 
         if (restart)
         {
