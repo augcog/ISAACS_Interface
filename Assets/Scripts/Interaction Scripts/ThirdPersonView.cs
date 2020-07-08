@@ -198,16 +198,17 @@
                     if (controllerInput.RightGrip()) /// Cancel waypoint placement
                     {
                         /// TODO: stop showing line
-                        controllerState = ControllerState.IDLE;
                         controllerInput.EnableRightPointer();
+                        controllerState = ControllerState.IDLE;
                         break;
                     }
 
                     if (!controllerInput.RightTrigger())
                     {
-                        controllerState = ControllerState.IDLE;
-                        PlaceWaypoint(controllerInput.RightUITransform().position);
+                        Drone currentlySelectedDrone = WorldProperties.GetSelectedDrone();
+                        currentlySelectedDrone.AddWaypoint(controllerInput.RightUITransform().position);
                         controllerInput.EnableRightPointer();
+                        controllerState = ControllerState.IDLE;
                     }
                     else
                     {
@@ -338,34 +339,12 @@
                 position.z = moveZ * speed * Time.deltaTime * 3.0f;
             }
 
-
             World.transform.position = position;
         }
 
         private void SetWaypointHeight()
         {
             // TODO
-        }
-
-        /// <summary>
-        /// Instantiates and returns a new waypoint at the placePoint position.
-        /// Modifies behavior to add or insert if we are currently colliding with a line
-        /// </summary>
-        /// <param name="groundPoint"> This is the location on the ground that the waypoint will be directly above. </param>
-        /// <returns></returns>
-        private Waypoint PlaceWaypoint(Vector3 coordinates)
-        {
-            Drone currentlySelectedDrone = WorldProperties.GetSelectedDrone(); // Grabbing the drone that we are creating this waypoint for
-            // Make sure our drone exists
-            if (currentlySelectedDrone != null)
-            {
-                // Add the new waypoint to the drone's path
-                Waypoint newWaypoint = currentlySelectedDrone.AddWaypoint(coordinates);
-                // Return the waypoint to announce that we successfully placed one
-                return newWaypoint;
-            }
-            // If we have not added or inserted a waypoint, we need to return null
-            return null;
         }
 
 
