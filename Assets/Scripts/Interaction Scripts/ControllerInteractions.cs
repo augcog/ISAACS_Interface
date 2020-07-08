@@ -110,7 +110,7 @@
             // SELECTION POINTER  
             SelectionPointerChecks();
 
-            if (WorldProperties.selectedDrone != null)
+            if (WorldProperties.GetSelectedDrone() != null)
             {
                 // WAYPOINT GRABBING
                 GrabbingChecks();
@@ -453,7 +453,7 @@
         {
             // We will use the placePoint location.
             Vector3 newLocation = new Vector3(groundPoint.x, placePoint.transform.position.y, groundPoint.z);
-            Drone currentlySelectedDrone = WorldProperties.selectedDrone; // Grabbing the drone that we are creating this waypoint for
+            Drone currentlySelectedDrone = WorldProperties.GetSelectedDrone(); // Grabbing the drone that we are creating this waypoint for
 
             // Make sure our drone exists
             if (currentlySelectedDrone != null)
@@ -500,7 +500,7 @@
         /// </summary>
         public void UndoAndDeleteWaypoints()
         {
-            Drone currentlySelectedDrone = WorldProperties.selectedDrone;
+            Drone currentlySelectedDrone = WorldProperties.GetSelectedDrone();
 
             // Make sure the currently selected drone has waypoints
             if (currentlySelectedDrone.waypoints != null && currentlySelectedDrone.waypoints.Count > 0)

@@ -23,17 +23,19 @@
         [Header("Required Prefabs")]
         public GameObject droneBaseObject;
         public GameObject waypointBaseObject;
+        public SensorManager sensorManagerBaseObject;
 
         [Header("Drone variables")]
-        public static Drone selectedDrone;
-        public static char nextDroneId;
-        public static Dictionary<char, Drone> dronesDict;
+        private static Drone selectedDrone;
+        private static Queue<Drone> dronesQueue;
 
-        [Header("Sensor vairables")]
+        [Header("Sensor variables")]
         public static GameObject selectedSensor;
         public static Dictionary<int, GameObject> sensorDict;
+        public static SensorManager sensorManager;
 
-        [Header(" Misc. State variables")]
+
+        [Header("Misc. State variables")]
         public static GameObject worldObject;
         public static GameObject placementPlane;
 
@@ -61,23 +63,19 @@
         /// </summary>
         private const double EARTH_RADIUS = 6378137;
 
-        //Unity to lat --> multiply by scale; lat to Unity --> divide by scale
-        public static float Unity_X_To_Lat_Scale = 10.0f;
-        public static float Unity_Y_To_Alt_Scale = 10.0f;
-        public static float Unity_Z_To_Long_Scale = 10.0f;
-
         // Use this for initialization
         void Start()
         {
             selectedDrone = null;
-            dronesDict = new Dictionary<char, Drone>(); // Collection of all the drone classObjects
+
+            selectedDrone = null;
+            dronesQueue = new Queue<Drone>();
 
             selectedSensor = null;
             sensorDict = new Dictionary<int, GameObject>();
 
-            nextDroneId = 'A'; // Used as an incrementing key for the dronesDict and for a piece of the communication about waypoints across the ROSBridge
-
             worldObject = gameObject;
+            sensorManager = sensorManagerBaseObject;
 
             placementPlane = GameObject.FindWithTag("Ground");
 
@@ -92,22 +90,100 @@
         }
 
         /// <summary>
+        /// Cycle through the connected drones
+        /// </summary>
+        public static void SelectNextDrone()
+        {
+            Debug.Log("Selection next drone");
+
+            if (selectedDrone != null)
+            {
+                dronesQueue.Enqueue(selectedDrone);
+            }
+
+            if (dronesQueue.Count > 0)
+            {
+                Drone nextDrone = dronesQueue.Dequeue();
+                nextDrone.gameObjectPointer.GetComponent<DroneProperties>().SelectDrone();
+            }
+            else
+            {
+                Debug.Log("No drones connected");
+            }
+
+        }
+
+        /// <summary>
+        /// Update the selected drone.
+        /// </summary>
+        public static void UpdateSelectedDrone(Drone newSelectedDrone)
+        {
+            if (selectedDrone != null)
+            {
+                selectedDrone.gameObjectPointer.GetComponent<DroneProperties>().DeselectDrone();
+            }
+            selectedDrone = newSelectedDrone;
+        }
+
+        /// <summary>
+        /// Get the selected drone
+        /// </summary>
+        public static Drone GetSelectedDrone()
+        {
+            return selectedDrone;
+        }
+
+        /// <summary>
+        /// Add a drone to the drones dictionary
+        /// </summary>
+        /// <param name="drone"></param>
+        public static void AddDrone(Drone drone)
+        {
+            dronesQueue.Enqueue(drone);
+        }
+
+        /// <summary>
+        /// Get selected sensor
+        /// </summary>
+        public static GameObject GetSelectedSensor()
+        {
+            return selectedSensor;
+        }
+
+        /// <summary>
+        /// Add a sensor to the sensor dictionary
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="sensor"></param>
+        public static void AddSensor(int id, GameObject sensor)
+        {
+            sensorDict.Add(id, sensor);
+        }
+
+        /// <summary>
+        /// Get list of all sensors
+        /// </summary>
+        public static Dictionary<int, GameObject> GetSensorDict()
+        {
+            return sensorDict;
+        }
+
+        /// <summary>
         /// Recursively adds the clipShader to the parent and all its children
         /// </summary>
         /// <param name="parent">The topmost container of the objects which will have the shader added to them</param>
         public static void AddClipShader(Transform parent)
+    {
+        if (parent.GetComponent<Renderer>())
         {
-            if (parent.GetComponent<Renderer>())
-            {
-                parent.GetComponent<Renderer>().material.shader = clipShader;
-            }
-
-            foreach (Transform child in parent)
-            {
-                AddClipShader(child);
-            }
+            parent.GetComponent<Renderer>().material.shader = clipShader;
         }
 
+        foreach (Transform child in parent)
+        {
+            AddClipShader(child);
+        }
+    }
 
         /// <summary>
         /// Convert the given ROS NavSatFixMsg to Unity XYZ space.
@@ -148,78 +224,6 @@
             gpsCoord.y = (float)((unityPosition.y) + Alt0);
             return gpsCoord;
         }
-
-        /*
-        /// <summary>
-        ///     Converts the difference between two latitude values to a difference in meters.
-        /// </summary>
-        /// <param name="lat1"></param>
-        /// <param name="lat2"></param>
-        /// <returns>double, difference in meters</returns>
-        public static double LatDiffMeters(double lat1, double lat2)
-        {
-            // assuming earth is a sphere with c = 40075km
-            // 1 degree of latitude is = 111.32 km
-            //slight inaccuracies
-            double delLat = (lat2 - lat1) * 111.32f * 1000;
-            //110994.04016313434
-            return delLat;
-        }
-
-        /// <summary>
-        ///     Converts the difference between two longitude values to a difference in meters.
-        /// </summary>
-        /// <param name="long1"></param>
-        /// <param name="long2"></param>
-        /// <param name="lat"></param>
-        /// <returns>double, distance in meters</returns>
-        public static double LongDiffMeters(double long1, double long2, double lat)
-        {
-            // 1 degree of longitude = 40075 km * cos (lat) / 360
-            // we use an arbitrary latitude for the conversion because the difference is minimal 
-            //slight inaccuracies
-            double delLong = (long2 - long1) * 40075 * (double)Math.Cos(lat) / 360 * 1000;
-            return delLong;
-        }
-
-        /// <summary>
-        ///     Converts the current unity x coordinate to the corresponding latitude for sending waypooints to the drone
-        /// </summary>
-        /// <param name="lat1"> the home latitude coordinate when the drone first connected to Unity</param>
-        /// <param name="unityXCoord">the unity x coordinate for conversion</param>
-        /// <returns></returns>
-        public static double UnityXToLat(double lat1, float unityXCoord)
-        {
-            double delLat = (unityXCoord / (1000 * 111.32f) * Unity_X_To_Lat_Scale) + lat1;
-            return delLat;
-        }
-
-        /// <summary>
-        ///     Converts the current unity z coordinate to the corresponding longitude for sending waypoints to the drone.
-        /// </summary>
-        /// <param name="long1">the home longitude coordinate when the drone first connected to Unity</param>
-        /// <param name="lat">the home latitude coordinate when the drone first connected to Unity</param>
-        /// <param name="unityZCoord">the unity z coordinate for conversion</param>
-        /// <returns></returns>
-        public static double UnityZToLong(double long1, double lat, float unityZCoord)
-        {
-            double delLong = (((unityZCoord * 360) / (1000 * 40075 * (double)Math.Cos(lat))) * Unity_Z_To_Long_Scale) + long1;
-            return delLong;
-        }
-
-        */
-        // Old logic to calculate new position of the drone and for waypoints.
-        /// Calculates the 3D displacement of the drone from it's initial position, to its current position, in Unity coordinates.
-        /*
-        changePos = new Vector3(
-            ((float) (WorldProperties.LatDiffMeters(InitialGPSLat, new_ROSPosition._lat)) / WorldProperties.Unity_X_To_Lat_Scale),
-                    ((new_ROSPosition._altitude - InitialGPSAlt) / WorldProperties.Unity_Y_To_Alt_Scale),
-                    ((float)(WorldProperties.LongDiffMeters(InitialGPSLong, new_ROSPosition._long, new_ROSPosition._lat) / WorldProperties.Unity_Z_To_Long_Scale))
-                  );
-        /// sets the drone Game Object's local position in the Unity world to be it's start position plus the newly calculated 3d displacement to the drone's current position.
-        // Peru 6/9/20: Phasing out World Properties variables used in depreciated script
-        // drone.transform.localPosition = WorldProperties.selectedDroneStartPos + offsetPos + changePos;
-        */
     }
 
     /// <summary>

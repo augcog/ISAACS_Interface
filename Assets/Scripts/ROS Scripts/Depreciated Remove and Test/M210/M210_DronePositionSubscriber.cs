@@ -58,7 +58,7 @@
         {
 
             // Get the Drone Gameobject
-            GameObject drone = WorldProperties.selectedDrone.gameObjectPointer;
+            GameObject drone = WorldProperties.GetSelectedDrone().gameObjectPointer;
 
             /// <summary>
             /// Upon first CallBack, save initial ROS and Unity positions.

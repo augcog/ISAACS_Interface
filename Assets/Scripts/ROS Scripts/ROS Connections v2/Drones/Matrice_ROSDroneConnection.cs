@@ -232,7 +232,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
             command_params[i] = 0;
         }
 
-        ArrayList waypoints = new ArrayList(this.GetComponent<DroneProperties>().classPointer.waypoints);
+        ArrayList waypoints = new ArrayList(this.GetComponent<DroneProperties>().droneClassPointer.waypoints);
 
         // Removing first waypoint set above the drone as takeoff is automatic.
         waypoints.RemoveAt(0);
