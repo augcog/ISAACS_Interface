@@ -19,25 +19,24 @@
         public ROSDroneConnectionInterface droneROSConnection;
         public DroneSimulationManager droneSimulationManager;
 
+        /// <summary>
+        /// Select this drone
+        /// </summary>
         public void SelectDrone()
         {
-            // TODO: Peru, Jasmine: Update SensorUI in this function.
-            // Find the Sensor UI Gameobject: can be stored as a variable in world properties.
-            // attachedSensors is the list of ROSSensorInterface in this class that can be send acorss.
-
-            // init the sensor with the following:
-            // Create a list of sensor UI's based on attachedSensors.
-            // For each sensor UI: have the number of buttons/obtions be no. of subscribers & map every button to a subscriber id.
-            // On click: call sensor function to switch ros subscriber on/off
             Debug.Log("Drone selected");
 
             // Changes the color of the drone to indicate that it has been selected
             this.selectedMeshRenderer.material = selectedMaterial;
 
             WorldProperties.UpdateSelectedDrone(droneClassPointer);
+
             this.droneClassPointer.selected = true;
         }
 
+        /// <summary>
+        /// Deselect the current drone
+        /// </summary>
         public void DeselectDrone()
         {
             Debug.Log("Drone deselected");

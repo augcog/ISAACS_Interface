@@ -8,15 +8,54 @@
 
     public class Drone
     {
-        public GameObject gameObjectPointer; // This is the related game object
-        public DroneProperties droneProperties; // TODO: remove
-        public int id; // This is the identifier of the drone in the dronesDict and across the ROSBridge
-        public bool selected;
+        // This is the related game object
+        public GameObject gameObjectPointer 
+        {
+            get { return gameObjectPointer; }
+            private set { gameObjectPointer = value; }
+        }
 
-        public List<Waypoint> waypoints; // All waypoints held by the drone
-        private List<Waypoint> deletedWaypoints; // All waypoints that were deleted, in case the player wants to redo them.
+        // The attached drone properties component
+        public DroneProperties droneProperties
+        {
+            get { return droneProperties; }
+            private set { droneProperties = value; }
+        }
 
-        public List<ROSSensorConnectionInterface> attachedSensors; // List of attached sensor gameobjects
+        // This is the identifier of the drone in the dronesDict and across the ROSBridge
+        public int id
+        {
+            get { return id; }
+            private set { id = value; }
+        }
+
+        // The current status of the drone
+        public bool selected
+        {
+            get { return selected; }
+            set { selected = value; }
+        }
+
+        // All waypoints held by the drone
+        public List<Waypoint> waypoints
+        {
+            get { return waypoints; }
+            private set { waypoints = value; }
+        }
+
+        // All waypoints that were deleted, in case the player wants to redo them.
+        public List<Waypoint> deletedWaypoints
+        {
+            get { return deletedWaypoints; }
+            private set { deletedWaypoints = value; }
+        }
+
+        // List of attached sensor gameobjects
+        public List<ROSSensorConnectionInterface> attachedSensors
+        {
+            get { return attachedSensors; }
+            private set { attachedSensors = value; }
+        }
 
         /// <summary>
         /// Constructor method for Drone class objects
@@ -61,8 +100,7 @@
             gameObjectPointer.transform.Find("group3/Outline").GetComponent<MeshRenderer>().material = droneProperties.deselectedMaterial;
             selected = false;
         }
-
-
+        
         /// <summary>
         /// Use this to add a new Waypoint to the end of the drone's path
         /// </summary>

@@ -51,6 +51,10 @@ public class DroneSimulationManager : MonoBehaviour {
 
     }
 
+    /// <summary>
+    /// Initilize the drone sim with the required references.
+    /// </summary>
+    /// <param name="droneInit"></param>
     public void InitDroneSim(Drone droneInit)
     {
         Debug.Log("Drone Flight Sim initilized");
@@ -60,6 +64,10 @@ public class DroneSimulationManager : MonoBehaviour {
         Debug.Log("The selected drone is: " + drone.gameObjectPointer.name);
     }
 
+    /// <summary>
+    /// Fly to the next waypoint in the list
+    /// </summary>
+    /// <param name="restart"></param>
     public void FlyNextWaypoint(bool restart = false)
     {
         // TODO: debug drone variable osciallting
@@ -97,6 +105,10 @@ public class DroneSimulationManager : MonoBehaviour {
 
     }
 
+    /// <summary>
+    /// Helper function if every needed for debugging to fly to a certain coordinate
+    /// </summary>
+    /// <param name="waypoint"></param>
     public void FlyNextWaypoint(Vector3 waypoint)
     {
         origin = drone.gameObjectPointer.transform.localPosition;
@@ -108,16 +120,25 @@ public class DroneSimulationManager : MonoBehaviour {
         flying = true;
     }
 
+    /// <summary>
+    /// Pause the flight
+    /// </summary>
     public void pauseFlight()
     {
         flying = false;
     }
 
+    /// <summary>
+    /// Resume a paused flight
+    /// </summary>
     public void resumeFlight()
     {
         flying = true;
     }
 
+    /// <summary>
+    /// The drone flies to the home point
+    /// </summary>
     public void flyHome()
     {
         endFlight = true;
