@@ -198,17 +198,17 @@
                     if (controllerInput.RightGrip()) /// Cancel waypoint placement
                     {
                         /// TODO: stop showing line
-                        controllerInput.EnableRightPointer();
                         controllerState = ControllerState.IDLE;
+                        controllerInput.EnableRightPointer();
                         break;
                     }
 
                     if (!controllerInput.RightTrigger())
                     {
+                        controllerState = ControllerState.IDLE;
                         Drone currentlySelectedDrone = WorldProperties.GetSelectedDrone();
                         currentlySelectedDrone.AddWaypoint(controllerInput.RightUITransform().position);
                         controllerInput.EnableRightPointer();
-                        controllerState = ControllerState.IDLE;
                     }
                     else
                     {
