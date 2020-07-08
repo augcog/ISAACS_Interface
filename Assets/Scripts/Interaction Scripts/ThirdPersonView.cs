@@ -393,7 +393,7 @@
             Drone currentlySelectedDrone = WorldProperties.GetSelectedDrone();
             if (currentlySelectedDrone != null)
             {
-                currentlySelectedDrone.RestoreLastlyDeletedWaypoint();
+                currentlySelectedDrone.RestoreLastDeletedWaypoint();
             }
         }
 

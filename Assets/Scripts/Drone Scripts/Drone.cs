@@ -18,21 +18,6 @@
 
         public List<ROSSensorConnectionInterface> attachedSensors; // List of attached sensor gameobjects
 
-        // TODO: description. Helper method for waypoint arrays.
-        private bool isEmptyWaypointList(List<Waypoint> waypointList)
-        {
-            if (waypointList == null)
-            {
-                return true;
-            }
-            else
-            {
-                return waypointList.Count == 0;
-            }
-        }
-
-
-    
         /// <summary>
         /// Constructor method for Drone class objects
         /// </summary>
@@ -137,9 +122,6 @@
             }
         }
 
-
-
-
         /// <summary>
         /// Use this to insert a new waypoint into the path (between two existing waypoints)
         /// </summary>
@@ -190,6 +172,10 @@
             Object.Destroy(deletedWaypoint.gameObjectPointer);
         }
 
+        /// <summary>
+        /// Return the last waypoint in the list if avilable
+        /// </summary>
+        /// <returns></returns>
         public Waypoint PopWaypoint()
         {
             if (!isEmptyWaypointList(waypoints))
@@ -205,8 +191,10 @@
 
         }
 
-
-        public void RestoreLastlyDeletedWaypoint()
+        /// <summary>
+        /// Restore the last deleted waypoint.
+        /// </summary>
+        public void RestoreLastDeletedWaypoint()
         {
             if (!isEmptyWaypointList(deletedWaypoints))
             {
@@ -215,23 +203,13 @@
                 deletedWaypoints.Remove(restoredWaypoint);
             }
         }
-
-
+        
         /// <summary>
         /// Removes all waypoints from this drone (including the first one).
         /// </summary>
-        // TODO: Fix 
+        // TODO: Fix @apollo do we still need to fix this?
         public void DeleteAllWaypoints()
         {
-            /*while (this.waypoints.Count > 1)
-            {
-                if (((Waypoint)this.waypoints[this.waypoints.Count - 1]).prevPathPoint != null)
-                {
-                    this.DeleteWaypoint((Waypoint)this.waypoints[this.waypoints.Count - 1]);
-                    Object.Destroy(deletedWaypoint.gameObjectPointer);
-                }
-            }*/
-
             if (!isEmptyWaypointList(waypoints))
             {
                 foreach (Waypoint waypoint in waypoints)
@@ -244,15 +222,15 @@
                 waypoints.Clear();
             }
         }
-
-
-
-
+        
 		/******************************/
 		//  WAYPOINTS GETTER METHODS  //
 		/******************************/
 
-        // TODO: Description
+        /// <summary>
+        /// Return the length of the waypoints list
+        /// </summary>
+        /// <returns></returns>
         public int WaypointsCount()
         {
             if (isEmptyWaypointList(waypoints))
@@ -262,7 +240,10 @@
             return waypoints.Count;
         }
 
-        // TODO: Description
+        /// <summary>
+        /// Return the number of deleted waypoints
+        /// </summary>
+        /// <returns></returns>
         public int DeletedWaypointsCount()
         {
             if (isEmptyWaypointList(deletedWaypoints))
@@ -272,6 +253,22 @@
             return deletedWaypoints.Count;
         }
 
-       
+        /// <summary>
+        /// Return true if waypoint list is empty and false if not
+        /// </summary>
+        /// <param name="waypointList"></param>
+        /// <returns></returns>
+        private bool isEmptyWaypointList(List<Waypoint> waypointList)
+        {
+            if (waypointList == null)
+            {
+                return true;
+            }
+            else
+            {
+                return waypointList.Count == 0;
+            }
+        }
+
     }
 }

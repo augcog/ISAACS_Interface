@@ -892,7 +892,10 @@ MonoBehaviour:
   uploadUserMission: f
   pauseMission: g
   resumeMission: h
-  stopMission: j
+  cycleDrone: j
+  cycleSensor: k
+  unsubscribe: z
+  stopMission: l
   rosDroneConnection: {fileID: 0}
 --- !u!114 &146794967
 MonoBehaviour:
@@ -909,6 +912,9 @@ MonoBehaviour:
     type: 2}
   waypointBaseObject: {fileID: 1161822125618724, guid: c209b41633a109640bb6a3527c86c801,
     type: 2}
+  MCLatitude: 0
+  MCLongitude: 0
+  MCAltitude: 0
 --- !u!114 &146794968
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -928,7 +934,19 @@ MonoBehaviour:
     droneType: 1
     droneSubscribers: 0500000001000000
     simFlight: 1
-    attachedSensors: []
+    attachedSensors:
+    - sensorName: Perry_Mesh
+      sensorTag: Mesh
+      ipAddress: 13
+      port: 13
+      sensorType: 1
+      sensorSubscribers: 01000000
+    - sensorName: Perry_Lidar
+      sensorTag: LIDAR
+      ipAddress: 14
+      port: 14
+      sensorType: 0
+      sensorSubscribers: 00000000
   - droneName: Apollo the Antelope
     droneTag: M210
     ipAddress: 75.25.126.85
@@ -936,7 +954,13 @@ MonoBehaviour:
     droneType: 1
     droneSubscribers: 0500000001000000
     simFlight: 1
-    attachedSensors: []
+    attachedSensors:
+    - sensorName: Apollo_PCFace
+      sensorTag: PCFace
+      ipAddress: 15
+      port: 15
+      sensorType: 3
+      sensorSubscribers: 090000000a0000000c0000000d000000
   success: 0
   uniqueID: 0
 --- !u!1 &161977055
@@ -6437,10 +6461,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c106c261bb66f544b5c69678c3581d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LeftController: {fileID: 2053542333}
-  LeftUI: {fileID: 491234449}
-  RightController: {fileID: 1347866310}
-  RightUI: {fileID: 1197405025}
   controllerInput: {fileID: 1699223320}
   Pivot: {fileID: 78194253}
   World: {fileID: 146794962}
@@ -6462,7 +6482,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   LeftController: {fileID: 2053542333}
+  LeftUI: {fileID: 0}
   RightController: {fileID: 1347866310}
+  RightUI: {fileID: 0}
 --- !u!1 &1715641644
 GameObject:
   m_ObjectHideFlags: 0
