@@ -42,7 +42,6 @@ public class ROSManager : MonoBehaviour {
     public class ROSDroneConnectionInput
     {
         public string droneName;
-        public string droneTag;
         public string ipAddress; // is this int32?
         public int port;
         public DroneType droneType;
@@ -58,7 +57,6 @@ public class ROSManager : MonoBehaviour {
     public class ROSSensorConnectionInput
     {
         public string sensorName;
-        public string sensorTag;
         public string ipAddress;
         public int port;
         public SensorType sensorType;
@@ -106,7 +104,6 @@ public class ROSManager : MonoBehaviour {
         // Create a new drone
         Drone droneInstance = new Drone(WorldProperties.worldObject.transform.position, uniqueID);
         GameObject droneGameObject = droneInstance.gameObjectPointer;
-        droneGameObject.tag = rosDroneConnectionInput.droneTag;
         droneGameObject.name = rosDroneConnectionInput.droneName;
 
         // Add drone sim manager script on the drone
@@ -182,7 +179,6 @@ public class ROSManager : MonoBehaviour {
 
         GameObject sensor = new GameObject(rosSensorConnectionInput.sensorName);
         sensor.transform.parent = this.transform;
-        sensor.tag = rosSensorConnectionInput.sensorTag;
 
         switch (sensorType)
         {
