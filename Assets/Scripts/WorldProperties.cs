@@ -34,7 +34,6 @@
         public static Dictionary<int, GameObject> sensorDict;
         public static SensorManager sensorManager;
 
-
         [Header("Misc. State variables")]
         public static GameObject worldObject;
         public static GameObject placementPlane;
@@ -42,7 +41,7 @@
         public static Vector3 actualScale;
         public static Vector3 currentScale;
 
-        public static Shader clipShader;
+        private static Shader clipShader;
 
         [Header("Mission Center Coordinates")]
         // ROS-Unity conversion variables
@@ -68,7 +67,6 @@
         {
             selectedDrone = null;
 
-            selectedDrone = null;
             dronesQueue = new Queue<Drone>();
 
             selectedSensor = null;
@@ -92,11 +90,11 @@
         /// <summary>
         /// Cycle through the connected drones
         /// </summary>
-        public static void SelectNextDrone()
+        public static Drone SelectNextDrone()
         {
             Debug.Log("Selection next drone");
 
-            if (selectedDrone != null)
+            if(selectedDrone != null)
             {
                 dronesQueue.Enqueue(selectedDrone);
             }
@@ -105,10 +103,12 @@
             {
                 Drone nextDrone = dronesQueue.Dequeue();
                 nextDrone.gameObjectPointer.GetComponent<DroneProperties>().SelectDrone();
+                return nextDrone;
             }
             else
             {
                 Debug.Log("No drones connected");
+                return null;
             }
 
         }
@@ -124,7 +124,7 @@
             }
             selectedDrone = newSelectedDrone;
         }
-
+        
         /// <summary>
         /// Get the selected drone
         /// </summary>

@@ -214,6 +214,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
     public void StartMission()
     {
         // Integrate dynamic waypoint system
+        Debug.Log("Starting drone mission");
 
         if (simDrone)
         {

@@ -1,4 +1,4 @@
-﻿namespace ISAACS
+﻿/*namespace ISAACS
 {
     using System;
     using System.Collections;
@@ -24,7 +24,7 @@
              private AudioSource backing;
              public AudioSource Value { get { return backing; } set { backing = value; } }
              public AudioRef(AudioSource reference) { backing = reference; }
-         } */
+         } 
 
         [Tooltip("The amount of time to wait before tutorial starts")]
         public float seconds = 4;
@@ -176,7 +176,7 @@
                  }
                  stepFinished = false;
              }
-             */
+             
 
         /// <summary>
         /// Plays the audio of the tutorial step, and shows the tooltip of the corresponding button and additional givin tooltip if there is one.
@@ -289,7 +289,7 @@
                         stepFinished = true;
                     }
                     break;
-                */
+                
                 case Tutorial.TutorialState.PRIMARYPLACEMENT:
                     if (ControllerInteractions.currentControllerState == ControllerInteractions.ControllerState.PLACING_WAYPOINT)
                     {
@@ -332,8 +332,9 @@
                          VRTK_SDKManager.instance.UnloadSDKSetup();
                          SceneManager.LoadScene("Main");
                          break;
-                         */
+                         
             }
         }
     }
 }
+*/

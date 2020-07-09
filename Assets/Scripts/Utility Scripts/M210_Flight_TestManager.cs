@@ -70,7 +70,8 @@ public class M210_Flight_TestManager : MonoBehaviour
 
         if (Input.GetKeyDown(init))
         {
-            rosDroneConnection = (Matrice_ROSDroneConnection)WorldProperties.GetSelectedDrone().gameObjectPointer.GetComponent<DroneProperties>().droneROSConnection;
+            Drone drone = WorldProperties.SelectNextDrone();
+            rosDroneConnection = (Matrice_ROSDroneConnection)drone.droneProperties.droneROSConnection;
         }
 
         if (Input.GetKeyDown(viewHomeLat))
@@ -209,8 +210,8 @@ public class M210_Flight_TestManager : MonoBehaviour
 
         if (Input.GetKeyUp(cycleDrone))
         {
-            WorldProperties.SelectNextDrone();
-            rosDroneConnection = (Matrice_ROSDroneConnection)WorldProperties.GetSelectedDrone().gameObjectPointer.GetComponent<DroneProperties>().droneROSConnection;
+            Drone drone = WorldProperties.SelectNextDrone();
+            rosDroneConnection = (Matrice_ROSDroneConnection)drone.droneProperties.droneROSConnection;
         }
 
         if (Input.GetKeyDown(cycleSensor))

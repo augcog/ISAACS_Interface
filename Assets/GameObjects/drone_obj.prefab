@@ -832,8 +832,7 @@ GameObject:
   - component: {fileID: 4064626513410216}
   - component: {fileID: 95997159724389742}
   - component: {fileID: 114575724737126230}
-  - component: {fileID: 114568125012931094}
-  - component: {fileID: 114654833738737616}
+  - component: {fileID: 114113094254671172}
   - component: {fileID: 54791174084844380}
   - component: {fileID: 135519695496822468}
   m_Layer: 0
@@ -7558,7 +7557,7 @@ TextMesh:
   m_Color:
     serializedVersion: 2
     rgba: 4294967295
---- !u!114 &114568125012931094
+--- !u!114 &114113094254671172
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -7566,17 +7565,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1497704686498948}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e3db36a039854e43ac6e0b8e40b9aef, type: 3}
+  m_Script: {fileID: 11500000, guid: 7787ec4cc870bae4c9e65fbfa30a4364, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedPassedLine: {fileID: 2100000, guid: 27c39b5231ccc5442911794c139776f0, type: 2}
-  unselectedPassedLine: {fileID: 2100000, guid: 1e28fed50ea79664484fd85b6c397929,
-    type: 2}
-  speed: 0.1
-  move: 0
-  targetWaypoint: {fileID: 0}
-  currentWaypoint: 0
-  prevPoint: {fileID: 0}
+  speed: 1
 --- !u!114 &114575724737126230
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -7590,38 +7582,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selectedMaterial: {fileID: 2100000, guid: 97c9345d2c577e543b55b547a33c4858, type: 2}
   deselectedMaterial: {fileID: 2100000, guid: 1fe7c2dc0eb2fb34b989fb4e05287a4d, type: 2}
---- !u!114 &114654833738737616
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1497704686498948}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a3abaf4521bf2344ea21ed3020b98eb2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  disableWhenIdle: 1
-  allowedNearTouchControllers: 0
-  allowedTouchControllers: 0
-  ignoredColliders: []
-  isGrabbable: 0
-  holdButtonToGrab: 1
-  stayGrabbedOnTeleport: 1
-  validDrop: 1
-  grabOverrideButton: 0
-  allowedGrabControllers: 0
-  grabAttachMechanicScript: {fileID: 0}
-  secondaryGrabActionScript: {fileID: 0}
-  isUsable: 0
-  holdButtonToUse: 1
-  useOnlyIfGrabbed: 0
-  pointerActivatesUseAction: 0
-  useOverrideButton: 0
-  allowedUseControllers: 0
-  objectHighlighter: {fileID: 0}
-  touchHighlightColor: {r: 0, g: 0, b: 0, a: 0}
-  usingState: 0
+  droneSimulationManager: {fileID: 114113094254671172}
 --- !u!135 &135519695496822468
 SphereCollider:
   m_ObjectHideFlags: 1

@@ -1,4 +1,4 @@
-﻿namespace ISAACS
+﻿/*namespace ISAACS
 {
     using UnityEngine;
     using VRTK;
@@ -202,7 +202,7 @@
                         tooltips.ToggleTips(false, tooltipButton);
                     }
                     break;
-            }*/
+            }
         }
 
         private void DoTriggerPressed(object sender, ControllerInteractionEventArgs e)
@@ -224,7 +224,7 @@
         {
             DoTooltipReleased(buttonOne, VRTK_ControllerTooltips.TooltipButtons.ButtonOneTooltip);
         }
-        */
+        
         private void DoButtonTwoPressed(object sender, ControllerInteractionEventArgs e)
         {
             DoTooltipPressed(buttonTwo, VRTK_ControllerTooltips.TooltipButtons.ButtonTwoTooltip);
@@ -264,7 +264,7 @@
         {
           
         }
-        */
+        
 
         /// <summary>
         /// This function sets up the event handlers for when controller buttons are pressed and released
@@ -290,4 +290,4 @@
             events.TouchpadTouchEnd += new ControllerInteractionEventHandler(DoTouchpadTouchEnd);
         }
     }
-}
+}*/

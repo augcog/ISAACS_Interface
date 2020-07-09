@@ -3,8 +3,10 @@
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
+    using UnityEngine.UI;
 
-    public class DroneProperties : MonoBehaviour {
+    public class DroneProperties : MonoBehaviour
+    {
 
         // Assigned in Drone constructor
         public Drone droneClassPointer;
@@ -12,11 +14,14 @@
         public Material selectedMaterial;
         public Material deselectedMaterial;
 
+
         // Assigned in ROS Manager during runtime
         public ROSDroneConnectionInterface droneROSConnection;
         public DroneSimulationManager droneSimulationManager;
 
-
+        /// <summary>
+        /// Select this drone
+        /// </summary>
         public void SelectDrone()
         {
             Debug.Log("Drone selected");
@@ -27,20 +32,13 @@
             WorldProperties.UpdateSelectedDrone(droneClassPointer);
             this.droneClassPointer.selected = true;
 
-            // TODO: Peru, Jasmine: Update SensorUI in this function.
-            // Find the Sensor UI Gameobject: can be stored as a variable in world properties.
-            // attachedSensors is the list of ROSSensorInterface in this class that can be send acorss.
-
-            // init the sensor with the following:
-            // Create a list of sensor UI's based on attachedSensors.
-            // For each sensor UI: have the number of buttons/obtions be no. of subscribers & map every button to a subscriber id.
-            // On click: call sensor function to switch ros subscriber on/off
-
-            // We call a function on sensorUIManager -> Update UI (List<ROSSensorInterface>droneSensors)
-
+            // Update the sensor manager
             WorldProperties.sensorManager.initializeSensorUI(droneClassPointer.attachedSensors);
         }
 
+        /// <summary>
+        /// Deselect the current drone
+        /// </summary>
         public void DeselectDrone()
         {
             Debug.Log("Drone deselected");
