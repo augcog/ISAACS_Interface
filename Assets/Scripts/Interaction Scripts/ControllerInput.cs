@@ -3,10 +3,10 @@
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
-		using VRTK;
+	using VRTK;
 
 
-	/* This script is a wrapper around VRTK, to be used as a library for
+	/** This script is a wrapper around VRTK, to be used as a library for
 	higher-level scripts needing access to user input coming from a controller.
 	Initialize the ControllerState class as a singleton of the GameObject Controller.
 	For further clarifications, please ask Apollo.

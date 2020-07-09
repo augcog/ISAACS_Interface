@@ -3,11 +3,11 @@
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
-        using VRTK;
-        using ISAACS_ControllerInput;
+    using VRTK;
+    using ISAACS_ControllerInput;
 
 
-    /* TODO
+    /** TODO: documentation
     */
 
     public class ThirdPersonView : MonoBehaviour
@@ -306,15 +306,6 @@
                 angle = controllerInput.RightStickDelta().x * rotationalSpeed * 360 * Time.fixedDeltaTime;
             }
             World.transform.RotateAround(Pivot.transform.position, Vector3.up, angle);
-
-            // Peru: 5/28/2020 : Point Cloud Rotate
-            // FIXME: Is declaring here correct?
-            GameObject pointCloud = GameObject.Find("PointCloud");
-
-            if (pointCloud)
-            {
-                pointCloud.transform.RotateAround(Pivot.transform.position, Vector3.up, angle);
-            }
         }
 
 
