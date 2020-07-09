@@ -11,6 +11,8 @@
     /// </summary>
     public class WaypointProperties : MonoBehaviour
     {
+        private GameObject controller; // TODO: hardcoded, remove.
+
         public Waypoint classPointer;
         public Drone referenceDrone;
         public GameObject referenceDroneGameObject;
@@ -42,6 +44,7 @@
 
         void Start()
         {
+            controller = GameObject.Find("Controller");
             passed = false;
 
             referenceDrone = classPointer.referenceDrone;
@@ -131,9 +134,8 @@
 
                 endpoint = prevPoint.transform.position;
                 LineProperties.SetPosition(1, endpoint);
-
-                LineProperties.startWidth = world.GetComponent<MapInteractions>().actualScale.y / 200;
-                LineProperties.endWidth = world.GetComponent<MapInteractions>().actualScale.y / 200;
+                LineProperties.startWidth = controller.GetComponent<MapInteractions>().actualScale.y / 200;
+                LineProperties.endWidth = controller.GetComponent<MapInteractions>().actualScale.y / 200;
             }
         }
         
@@ -143,7 +145,7 @@
             Vector3 endpoint = prevPoint.transform.position;
 
             lineCollider.transform.parent = LineProperties.transform;
-            lineCollider.radius = world.GetComponent<MapInteractions>().actualScale.y / 50;
+            lineCollider.radius = controller.GetComponent<MapInteractions>().actualScale.y / 50;
             lineCollider.center = Vector3.zero;
             lineCollider.transform.position = (endpoint + this.gameObject.transform.position) / 2;
             lineCollider.direction = 2;
@@ -169,7 +171,7 @@
 
             Vector3 groundpoint = new Vector3(this.transform.position.x, world.transform.position.y + modelGroundpoint.transform.localScale.y, this.transform.position.z);
             thisGroundpoint = Instantiate(modelGroundpoint, groundpoint, Quaternion.identity);
-            thisGroundpoint.transform.localScale = world.GetComponent<MapInteractions>().actualScale / 100;
+            thisGroundpoint.transform.localScale = controller.GetComponent<MapInteractions>().actualScale / 100;
             thisGroundpoint.transform.parent = world.transform;
             groundpointLine = thisGroundpoint.GetComponent<LineRenderer>();
         }
@@ -179,8 +181,8 @@
         {
             groundpointLine.SetPosition(0, thisGroundpoint.transform.position);
             groundpointLine.SetPosition(1, this.transform.position);
-            groundpointLine.startWidth = world.GetComponent<MapInteractions>().actualScale.y / 400;
-            groundpointLine.endWidth = world.GetComponent<MapInteractions>().actualScale.y / 400;
+            groundpointLine.startWidth = controller.GetComponent<MapInteractions>().actualScale.y / 400;
+            groundpointLine.endWidth = controller.GetComponent<MapInteractions>().actualScale.y / 400;
             if (referenceDrone.selected)
             {
                 groundpointLine.material = selectedGroundpointLine;

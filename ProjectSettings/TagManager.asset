@@ -36,6 +36,9 @@ TagManager:
   - LAMP
   - MESH
   - PC
+  - SENSORUI
+  - Mesh
+  - TOGGLESENSORS
   layers:
   - Default
   - TransparentFX

@@ -27,13 +27,13 @@ public class LampSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
         WHITE = 6
     }
 
-    // Visualizer variables
-    public static string rendererObjectName = "PlacementPlane"; // pick a center point of the map, ideally as part of rotating map
     public PointCloudLevel pointCloudLevel = PointCloudLevel.WHITE;
+    private Dictionary<string, PointCloudVisualizer> pcVisualizers = new Dictionary<string, PointCloudVisualizer>();
 
     // Private connection variables
     private ROSBridgeWebSocketConnection ros = null;
-    public string client_id;
+    private string client_id;
+    private List<string> sensorSubscriberTopics = new List<string>();
 
     // Initilize the sensor
     public void InitilizeSensor(int uniqueID, string sensorIP, int sensorPort, List<string> sensorSubscribers)
@@ -56,7 +56,12 @@ public class LampSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
                     subscriberTopic = "/" + subscriber;
                     break;
             }
+
+            PointCloudVisualizer pcVisualizer = gameObject.AddComponent<PointCloudVisualizer>();
+            pcVisualizer.SetParentTransform(this.transform);
+            pcVisualizers.Add(subscriberTopic, pcVisualizer);
             Debug.Log(" LAMP Subscribing to : " + subscriberTopic);
+            sensorSubscriberTopics.Add(subscriberTopic);
             ros.AddSubscriber(subscriberTopic, this);
         }
 
@@ -69,6 +74,54 @@ public class LampSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
         if (ros != null)
         {
             ros.Render();
+        }
+    }
+
+    public string GetSensorName()
+    {
+        return this.gameObject.name;
+    }
+
+    /// <summary>
+    /// Returns a list of connected subscriber topics (which are unique identifiers).
+    /// </summary>
+    /// <returns></returns>
+    public List<string> GetSensorSubscribers()
+    {
+        return sensorSubscriberTopics;
+    }
+
+    /// <summary>
+    /// Function to disconnect a specific subscriber
+    /// </summary>
+    /// <param name="subscriberID"></param>
+    public void Unsubscribe(string subscriberTopic)
+    {
+        if (sensorSubscriberTopics.Contains(subscriberTopic))
+        {
+            sensorSubscriberTopics.Remove(subscriberTopic);
+            ros.RemoveSubscriber(subscriberTopic);
+        }
+        else
+        {
+            Debug.Log("No such subscriber exists: " + subscriberTopic);
+        }
+
+    }
+
+    /// <summary>
+    /// Function to connect a specific subscriber
+    /// </summary>
+    /// <param name="subscriberID"></param>
+    public void Subscribe(string subscriberTopic)
+    {
+        if (sensorSubscriberTopics.Contains(subscriberTopic) == false)
+        {
+            ros.AddSubscriber(subscriberTopic, this);
+        }
+        else
+        {
+            Debug.Log("Subscriber already registered: " + subscriberTopic);
         }
     }
 
@@ -109,8 +162,9 @@ public class LampSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
         }
 
         PointCloud2Msg pointCloudMsg = new PointCloud2Msg(raw_msg);
-        PointCloudVisualizer(pointCloudMsg);
- 
+        this.pcVisualizers[topic].PointCloudLevel = pointCloudLevel;
+        this.pcVisualizers[topic].SetPointCloud(pointCloudMsg.GetCloud());
+        Debug.Log("Updated Point Cloud");
         return result;
     }
     public string GetMessageType(string topic)
@@ -147,15 +201,6 @@ public class LampSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
         return "";
 
         **/
-    }
-
-    // Visualizer helper scripts
-    private void PointCloudVisualizer(PointCloud2Msg pointCloudMsg)
-    {
-        // Idea: We could have each sesnor have a PointCloudVisualizer attached to it and use that one.
-        PointCloudVisualizer visualizer = GameObject.Find(rendererObjectName).GetComponent<PointCloudVisualizer>();
-        visualizer.SetPointCloud(pointCloudMsg.GetCloud());
-        Debug.Log("Updated Point Cloud");
     }
 
     /// <summary>
@@ -211,5 +256,20 @@ public class LampSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
     public void DisconnectROSConnection()
     {
         ros.Disconnect();
+    }
+
+    public void SetLocalOrientation(Quaternion quaternion)
+    {
+        this.transform.localRotation = quaternion; 
+    }
+
+    public void SetLocalPosition(Vector3 position)
+    {
+        this.transform.localPosition = position;
+    }
+
+    public void SetLocalScale(Vector3 scale)
+    {
+        this.transform.localScale = scale;
     }
 }

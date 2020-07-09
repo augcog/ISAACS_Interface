@@ -20,6 +20,7 @@ public class MeshSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
     private ROSBridgeWebSocketConnection ros = null;
     public string client_id;
     private Thread rosMsgThread;
+    private List<string> sensorSubscriberTopics = new List<string>();
 
     /// Queue of jsonMsgs to be parsed on thread
     private Queue<JSONNode> jsonMsgs = new Queue<JSONNode>();
@@ -94,6 +95,7 @@ public class MeshSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
                     break;
             }
             Debug.Log(" Mesh Subscribing to : " + subscriberTopic);
+            sensorSubscriberTopics.Add(subscriberTopic);
             ros.AddSubscriber(subscriberTopic, this);
         }
 
@@ -108,9 +110,9 @@ public class MeshSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
         CreateThread();
 
         // Hardcode Parent transform
-        this.transform.position = new Vector3(0.198f, 2.146f, -0.694f);
-        this.transform.Rotate(0f, 124.654f ,0f);
-        this.transform.localScale = new Vector3(0.505388f, 0.505388f, 0.505388f);
+        SetLocalPosition(new Vector3(1.98f, 0f, -6.65f));
+        SetLocalOrientation(Quaternion.Euler(0f, 124.654f ,0f));
+        SetLocalScale(new Vector3(0.505388f, 0.505388f, 0.505388f));
     }
 
     // Update is called once per frame in Unity
@@ -129,6 +131,68 @@ public class MeshSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
             Dictionary<long[], MeshArray> mesh_dict = meshDicts.Dequeue();
             visualizer.SetMesh(mesh_dict);
             Debug.Log("Set Mesh: " + DateTime.Now.Subtract(startTime).TotalMilliseconds.ToString() + "ms");
+        }
+
+        if (Input.GetKeyDown("n"))
+        {
+            string topic = sensorSubscriberTopics[0];
+            Debug.Log("Testing with topic: " + topic);
+            Unsubscribe(topic);
+        }
+
+        if (Input.GetKeyDown("m"))
+        {
+            string topic = sensorSubscriberTopics[0];
+            Debug.Log("Testing with topic: " + topic);
+            Subscribe(topic);
+        }
+    }
+
+    public string GetSensorName()
+    {
+        return this.gameObject.name;
+    }
+
+    /// <summary>
+    /// Returns a list of connected subscriber topics (which are unique identifiers).
+    /// </summary>
+    /// <returns></returns>
+    public List<string> GetSensorSubscribers()
+    {
+        return sensorSubscriberTopics;
+    }
+
+    /// <summary>
+    /// Function to disconnect a specific subscriber
+    /// </summary>
+    /// <param name="subscriberID"></param>
+    public void Unsubscribe(string subscriberTopic)
+    {
+        if (sensorSubscriberTopics.Contains(subscriberTopic))
+        {
+            sensorSubscriberTopics.Remove(subscriberTopic);
+            ros.RemoveSubscriber(subscriberTopic);
+        }
+        else
+        {
+            Debug.Log("No such subscriber exists: " + subscriberTopic);
+        }
+
+    }
+
+    /// <summary>
+    /// Function to connect a specific subscriber
+    /// </summary>
+    /// <param name="subscriberID"></param>
+    public void Subscribe(string subscriberTopic)
+    {
+        if (sensorSubscriberTopics.Contains(subscriberTopic) == false)
+        {
+            ros.AddSubscriber(subscriberTopic, this);
+        }
+        else
+        {
+            Debug.Log("Subscriber already registered: " + subscriberTopic);
         }
     }
 
@@ -159,6 +223,20 @@ public class MeshSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
     public void DisconnectROSConnection()
     {
         ros.Disconnect();
+    }
+
+    public void SetLocalOrientation(Quaternion quaternion)
+    {
+        this.transform.localRotation = quaternion; 
+    }
+    public void SetLocalPosition(Vector3 position)
+    {
+        this.transform.localPosition = position;
+    }
+
+    public void SetLocalScale(Vector3 scale)
+    {
+        this.transform.localScale = scale;
     }
 
 }

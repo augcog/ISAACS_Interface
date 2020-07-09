@@ -3,13 +3,14 @@
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
-    using ROSBridgeLib.interface_msgs;
 
     public class Drone
     {
 
         public GameObject gameObjectPointer; // This is the related game object
-        public char id; // This is the identifier of the drone in the dronesDict and across the ROSBridge
+        public DroneProperties droneProperties;
+
+        public int id; // This is the identifier of the drone in the dronesDict and across the ROSBridge
         public bool selected;
 
         public ArrayList waypoints; // All waypoints held by the drone
@@ -18,18 +19,24 @@
         public int nextWaypointId; // Incrementing counter to give all waypoints a unique ID when combined with the Drone ID
         public Dictionary<string, Waypoint> waypointsDict; // Collection of the waypoints in this drone's path
 
+        public List<ROSSensorConnectionInterface> attachedSensors; // List of attached sensors to this drone
+
         /// <summary>
         /// Constructor method for Drone class objects
         /// </summary>
         /// <param name="drone_obj"> We pass in a Gameobject for the drone -- this will be phased out and the new drone_obj gameObject will be instantiated in this method </param>
-        public Drone(Vector3 position)
+        public Drone(Vector3 position, int uniqueID)
         {
             // Create gameObject at position
             GameObject baseObject = (GameObject)WorldProperties.worldObject.GetComponent<WorldProperties>().droneBaseObject;
             gameObjectPointer = Object.Instantiate(baseObject, position, Quaternion.identity);
           
             Debug.Log("Position init: " + position.ToString());
-            gameObjectPointer.GetComponent<DroneProperties>().classPointer = this; // Connect the gameObject back to the classObject
+            droneProperties = gameObjectPointer.GetComponent<DroneProperties>();
+            droneProperties.enabled = true;
+            droneProperties.droneClassPointer = this; // Connect the gameObject back to the classObject
+            droneProperties.selectedMeshRenderer = gameObjectPointer.transform.Find("group3/Outline").GetComponent<MeshRenderer>();
+
             gameObjectPointer.tag = "Drone";
             gameObjectPointer.name = baseObject.name;
             gameObjectPointer.transform.localScale = WorldProperties.actualScale / 5;
@@ -46,15 +53,27 @@
             waypointsDict = new Dictionary<string, Waypoint>();
 
             // Updating the world properties to reflect a new drone being added
-            id = WorldProperties.nextDroneId;
-            WorldProperties.dronesDict.Add(id, this);
-            WorldProperties.nextDroneId++;
+            id = uniqueID;
+            WorldProperties.AddDrone(this);
 
-            // Select this drone
-            // Peru: 6/10/20: Do not select on initilization but are deselected
-            //this.Select();
+            // Initilize the sensor list
+            // @Jasmine: this is populated by ROS Manager when initilzing the drone and can be used for the UI
+            // @Jasmine: feel free to add/remove functionality as needed, it's a very rough structure right now
+            attachedSensors = new List<ROSSensorConnectionInterface>();
+
             this.gameObjectPointer.transform.Find("group3").Find("Outline").GetComponent<MeshRenderer>().material = this.gameObjectPointer.GetComponent<DroneProperties>().deselectedMaterial;
+
             Debug.Log("Created new drone with id: " + id);
+        }
+
+        /// <summary>
+        /// Add a sensor attached to this drone instance.
+        /// </summary>
+        /// <param name="sensor"></param>
+        public void AddSensor(ROSSensorConnectionInterface sensor)
+        {
+            Debug.Log("Adding sensor: " + sensor.GetSensorName());
+            attachedSensors.Add(sensor);
         }
 
         /// <summary>
@@ -167,28 +186,5 @@
             Object.Destroy(deletedWaypoint.gameObjectPointer);
         }
 
-        /// <summary>
-        /// Use this to change which drone is selected in the world.
-        /// This also changes all drone aura materials so this drone is the only yellow one.
-        /// </summary>
-        public void Select() {
-            // Changes the color of the drone to indicate that it has been selected
-            this.gameObjectPointer.transform.Find("group3/Outline").GetComponent<MeshRenderer>().material =
-                this.gameObjectPointer.GetComponent<DroneProperties>().selectedMaterial;
-            this.selected = true;
-
-            WorldProperties.selectedDrone = this;
-
-            // Check through all other drones and change their materials to deselected
-            foreach (Drone otherDrone in WorldProperties.dronesDict.Values)
-            {
-                if (otherDrone != this)
-                {
-                    otherDrone.gameObjectPointer.transform.Find("group3").Find("Outline").GetComponent<MeshRenderer>().material = 
-                        this.gameObjectPointer.GetComponent<DroneProperties>().deselectedMaterial;
-                    otherDrone.selected = false;
-                }
-            }
-        }
     }
 }

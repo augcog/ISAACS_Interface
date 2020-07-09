@@ -15,13 +15,11 @@ using ISAACS;
 
 public class PCFaceSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber, ROSSensorConnectionInterface
 {
-    // Visualizer variables
-    public static string rendererObjectName = "PlacementPlane"; // pick a center point of the map, ideally as part of rotating map
-
     // Private connection variables
     private ROSBridgeWebSocketConnection ros = null;
-    public string client_id;
-    public float alpha = 0.8f;
+    private string client_id;
+    private float alpha = 0.8f;
+    private List<string> sensorSubscriberTopics = new List<string>();
 
     // List of visualizers
     private Dictionary<string, PCFaceVisualizer> pcFaceVisualizers = new Dictionary<string, PCFaceVisualizer>();
@@ -33,16 +31,13 @@ public class PCFaceSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
 
         ros = new ROSBridgeWebSocketConnection("ws://" + sensorIP, sensorPort);
         client_id = uniqueID.ToString();
-        
+
         foreach (string subscriber in sensorSubscribers)
         {
             string subscriberTopic = "";
 
             switch (subscriber)
             {
-                case "mesh":
-                    subscriberTopic = "/voxblox_node/" + subscriber;
-                    break;
                 default:
                     subscriberTopic = "/" + subscriber;
                     // Create PC Face Visualizer, initilize it as a child of this sensor gameobject and add it to the PCFaceVisualizer dictionary
@@ -52,15 +47,16 @@ public class PCFaceSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
                     break;
             }
             Debug.Log(" PC Face Mesh Subscribing to : " + subscriberTopic);
+            sensorSubscriberTopics.Add(subscriberTopic);
             ros.AddSubscriber(subscriberTopic, this);
         }
 
         ros.Connect();
 
         // Hardcode Parent transform
-        this.transform.position = new Vector3(0.198f, 2.146f, -0.694f);
-        this.transform.Rotate(0f, 124.654f ,0f);
-        this.transform.localScale = new Vector3(0.505388f, 0.505388f, 0.505388f);
+        SetLocalPosition(new Vector3(1.98f, 0f, -6.65f));
+        SetLocalOrientation(Quaternion.Euler(0f, 124.654f ,0f));
+        SetLocalScale(new Vector3(0.505388f, 0.505388f, 0.505388f));
 
     }
     // Update is called once per frame in Unity
@@ -69,6 +65,54 @@ public class PCFaceSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
         if (ros != null)
         {
             ros.Render();
+        }
+    }
+
+    public string GetSensorName()
+    {
+        return this.gameObject.name;
+    }
+
+    /// <summary>
+    /// Returns a list of connected subscriber topics (which are unique identifiers).
+    /// </summary>
+    /// <returns></returns>
+    public List<string> GetSensorSubscribers()
+    {
+        return sensorSubscriberTopics;
+    }
+
+    /// <summary>
+    /// Function to disconnect a specific subscriber
+    /// </summary>
+    /// <param name="subscriberID"></param>
+    public void Unsubscribe(string subscriberTopic)
+    {
+        if (sensorSubscriberTopics.Contains(subscriberTopic))
+        {
+            sensorSubscriberTopics.Remove(subscriberTopic);
+            ros.RemoveSubscriber(subscriberTopic);
+        }
+        else
+        {
+            Debug.Log("No such subscriber exists: " + subscriberTopic);
+        }
+
+    }
+
+    /// <summary>
+    /// Function to connect a specific subscriber
+    /// </summary>
+    /// <param name="subscriberID"></param>
+    public void Subscribe(string subscriberTopic)
+    {
+        if (sensorSubscriberTopics.Contains(subscriberTopic) == false)
+        {
+            ros.AddSubscriber(subscriberTopic, this);
+        }
+        else
+        {
+            Debug.Log("Subscriber already registered: " + subscriberTopic);
         }
     }
 
@@ -144,4 +188,20 @@ public class PCFaceSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
     {
         ros.Disconnect();
     }
+
+    public void SetLocalOrientation(Quaternion quaternion)
+    {
+        this.transform.localRotation = quaternion; 
+    }
+
+    public void SetLocalPosition(Vector3 position)
+    {
+        this.transform.localPosition = position;
+    }
+
+    public void SetLocalScale(Vector3 scale)
+    {
+        this.transform.localScale = scale;
+    }
+
 }
