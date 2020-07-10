@@ -2,6 +2,24 @@
 
 Look at Radiation Visualization's Hololens Testing.md
 
+## Server Installation
+
+1. [Install ROS](http://wiki.ros.org/melodic/Installation/Ubuntu).
+    - Configure repositories, sources and keys.
+    - `sudo apt install ros-melodic-desktop`
+    - `echo "source /opt/ros/melodic/setup.bash" >> ~/.bashrc`
+    - `source ~/.bashrc`
+    - `sudo apt install python-rosdep python-rosinstall python-rosinstall-generator python-wstool build-essential`
+    - `rosdep init`
+    - `rosdep update`
+1. Install ROSBridge-suite.
+    - `sudo apt install ros-melodic-rosbridge-suite`
+    - `rosdep install rosbridge-server`
+1. Install custom messages. Remember to add them to your .bashrc file.
+    - VoxBlox Messages: https://voxblox.readthedocs.io/en/latest/pages/Installation.html
+    - [PCFace Messages](#setting-up-pcface-messages)
+    - `echo "source [path to catkin_ws/]devel/setup.bash" >> ~/.bashrc`
+
 ## Setting up PCFace messages
 
 1. Create a Catkin workspace if you have not already
