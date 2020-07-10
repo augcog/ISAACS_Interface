@@ -149,10 +149,8 @@ public class ROSManager : MonoBehaviour {
         }
 
         // Create attached sensors
-        // @Jasmine: We should refine this based on what makes the most sense 
         foreach (ROSSensorConnectionInput rosSensorInput in rosDroneConnectionInput.attachedSensors)
         {
-            // @Jasmine: We might need a sensor properties type script to connect a sensor back to the drone?
             ROSSensorConnectionInterface sensor = InstantiateSensor(rosSensorInput);
             droneInstance.AddSensor(sensor);
         }
