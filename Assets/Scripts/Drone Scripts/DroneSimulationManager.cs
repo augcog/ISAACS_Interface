@@ -56,11 +56,60 @@ public class DroneSimulationManager : MonoBehaviour {
     /// </summary>
     public void startMission()
     {
-        nextWaypointID = 0;
-        waypoints = drone.waypoints;
-        updateDestination(true, false, false);
-        droneStatus = FlightStatus.FLYING;
-        droneStatusPrev = FlightStatus.ON_GROUND_STANDBY;
+        switch (droneStatus)
+        {
+            case FlightStatus.ON_GROUND_STANDBY:
+
+                if (droneStatusPrev == FlightStatus.NULL)
+                {
+                    nextWaypointID = 0;
+                    waypoints = drone.waypoints;
+                    updateDestination(true, false, false);
+                    droneStatus = FlightStatus.FLYING;
+                    droneStatusPrev = FlightStatus.ON_GROUND_STANDBY;
+                }
+                else
+                {
+                    waypoints = drone.waypoints;
+                    if (updateDestination(true, false, false))
+                    {
+                        droneStatusPrev = droneStatus;
+                        droneStatus = FlightStatus.FLYING;
+                    }
+                    else
+                    {
+                        Debug.Log("Invalid drone command request, all waypoints completed");
+                    }
+                }
+
+                break;
+
+            case FlightStatus.IN_AIR_STANDBY:
+                waypoints = drone.waypoints;
+                if (updateDestination(true, false, false))
+                {
+                    droneStatusPrev = droneStatus;
+                    droneStatus = FlightStatus.FLYING;
+                }
+                else
+                {
+                    Debug.Log("Invalid drone command request, all waypoints completed");
+                }
+
+                break;
+
+            case FlightStatus.PAUSED_IN_AIR:
+                resumeFlight();
+                break;
+
+            case FlightStatus.LANDING:
+            case FlightStatus.FLYING_HOME:
+            case FlightStatus.FLYING:
+            case FlightStatus.NULL:
+                Debug.Log("Invalid drone command request");
+                break;
+        }
+        
     }
 
     /// <summary>
@@ -68,8 +117,23 @@ public class DroneSimulationManager : MonoBehaviour {
     /// </summary>
     public void pauseFlight()
     {
-        droneStatusPrev = droneStatus;
-        droneStatus = FlightStatus.PAUSED_IN_AIR;
+        switch (droneStatus)
+        {
+            case FlightStatus.ON_GROUND_STANDBY:
+            case FlightStatus.IN_AIR_STANDBY:
+            case FlightStatus.LANDING:
+            case FlightStatus.FLYING_HOME:
+            case FlightStatus.FLYING:
+                droneStatusPrev = droneStatus;
+                droneStatus = FlightStatus.PAUSED_IN_AIR;
+                break;
+
+            case FlightStatus.PAUSED_IN_AIR:
+            case FlightStatus.NULL:
+                Debug.Log("Invalid drone command request");
+                break;
+        }
+        
     }
 
     /// <summary>
@@ -77,8 +141,36 @@ public class DroneSimulationManager : MonoBehaviour {
     /// </summary>
     public void resumeFlight()
     {
-        droneStatus = droneStatusPrev;
-        droneStatusPrev = FlightStatus.PAUSED_IN_AIR;
+        switch (droneStatus)
+        {
+            case FlightStatus.ON_GROUND_STANDBY:
+            case FlightStatus.IN_AIR_STANDBY:
+
+                waypoints = drone.waypoints;
+                if (updateDestination(true, false, false))
+                {
+                    droneStatusPrev = droneStatus;
+                    droneStatus = FlightStatus.FLYING;
+                }
+                else
+                {
+                    Debug.Log("Invalid drone command request, all waypoints completed");
+                }
+
+                break;
+
+            case FlightStatus.PAUSED_IN_AIR:
+                droneStatus = droneStatusPrev;
+                droneStatusPrev = FlightStatus.PAUSED_IN_AIR;
+                break;
+
+            case FlightStatus.FLYING:
+            case FlightStatus.FLYING_HOME:
+            case FlightStatus.LANDING:
+            case FlightStatus.NULL:
+                Debug.Log("Invalid drone command request");
+                break;
+        }
     }
 
     /// <summary>
@@ -88,14 +180,28 @@ public class DroneSimulationManager : MonoBehaviour {
     {
         switch (droneStatus)
         {
+            case FlightStatus.ON_GROUND_STANDBY:
+            case FlightStatus.IN_AIR_STANDBY:
+            case FlightStatus.LANDING:
+                updateDestination(false, true, false);
+                droneStatusPrev = droneStatus;
+                droneStatus = FlightStatus.FLYING_HOME;
+                break;
+
             case FlightStatus.FLYING:
+            case FlightStatus.PAUSED_IN_AIR:
                 nextWaypointID -= 1;
+                updateDestination(false, true, false);
+                droneStatusPrev = droneStatus;
+                droneStatus = FlightStatus.FLYING_HOME;
+                break;
+
+            case FlightStatus.FLYING_HOME:
+            case FlightStatus.NULL:
+                Debug.Log("Invalid drone command request");
                 break;
         }
-
-        updateDestination(false, true, false);
-        droneStatusPrev = droneStatus;
-        droneStatus = FlightStatus.FLYING_HOME;
+        
     }
 
     /// <summary>
@@ -105,14 +211,27 @@ public class DroneSimulationManager : MonoBehaviour {
     {
         switch (droneStatus)
         {
+            case FlightStatus.IN_AIR_STANDBY:
+            case FlightStatus.FLYING_HOME:
+                updateDestination(false, true, false);
+                droneStatusPrev = droneStatus;
+                droneStatus = FlightStatus.LANDING;
+                break;
+
             case FlightStatus.FLYING:
+            case FlightStatus.PAUSED_IN_AIR:
                 nextWaypointID -= 1;
+                updateDestination(false, true, false);
+                droneStatusPrev = droneStatus;
+                droneStatus = FlightStatus.LANDING;
+                break;
+
+            case FlightStatus.ON_GROUND_STANDBY:
+            case FlightStatus.LANDING:
+            case FlightStatus.NULL:
+                Debug.Log("Invalid drone command request");
                 break;
         }
-        
-        updateDestination(false, false, true);
-        droneStatusPrev = droneStatus;
-        droneStatus = FlightStatus.LANDING;
     }
 
     /// <summary>
