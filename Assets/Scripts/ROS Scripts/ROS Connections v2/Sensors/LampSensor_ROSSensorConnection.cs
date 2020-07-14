@@ -77,6 +77,11 @@ public class LampSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
         }
     }
 
+    public string GetSensorName()
+    {
+        return this.gameObject.name;
+    }
+
     /// <summary>
     /// Returns a list of connected subscriber topics (which are unique identifiers).
     /// </summary>
@@ -196,56 +201,6 @@ public class LampSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
         return "";
 
         **/
-    }
-
-    /// <summary>
-    /// Helper functions for subscribing to different LAMP topics.
-    /// </summary>
-    /// <returns></returns>
-    private void resetLampConnection(System.Type subscriber)
-    {
-        if (ros != null)
-        {
-            ros.Disconnect();
-        }
-
-        ros.AddSubscriber(subscriber);
-        ros.Connect();
-    }
-    public void LampSubscribe_SurfacePointcloud()
-    {
-        resetLampConnection(typeof(PointCloud2Subscriber));
-        pointCloudLevel = PointCloudLevel.WHITE;
-    }
-    public void LampSubscribe_Colorized_0()
-    {
-        resetLampConnection(typeof(ColorizedCloud0Subscriber));
-        pointCloudLevel = PointCloudLevel.RED;
-    }
-    public void LampSubscribe_Colorized_1()
-    {
-        resetLampConnection(typeof(ColorizedCloud1Subscriber));
-        pointCloudLevel = PointCloudLevel.ORANGE;
-    }
-    public void LampSubscribe_Colorized_2()
-    {
-        resetLampConnection(typeof(ColorizedCloud2Subscriber));
-        pointCloudLevel = PointCloudLevel.YELLOW;
-    }
-    public void LampSubscribe_Colorized_3()
-    {
-        resetLampConnection(typeof(ColorizedCloud3Subscriber));
-        pointCloudLevel = PointCloudLevel.GREEN;
-    }
-    public void LampSubscribe_Colorized_4()
-    {
-        resetLampConnection(typeof(ColorizedCloud4Subscriber));
-        pointCloudLevel = PointCloudLevel.BLUE;
-    }
-    public void LampSubscribe_Colorized_5()
-    {
-        resetLampConnection(typeof(ColorizedCloud5Subscriber));
-        pointCloudLevel = PointCloudLevel.LIGHT_BLUE;
     }
 
     public void DisconnectROSConnection()

@@ -17,7 +17,7 @@ public class M210_Flight_TestManager : MonoBehaviour
     /// Each string maps a key to the required function used for debugging.
     /// </summary>
 
-    [Header("Initilize")]
+    [Header("Initialize")]
     public string init = "0";
 
     [Header("Subscriber Tests")]
@@ -52,9 +52,14 @@ public class M210_Flight_TestManager : MonoBehaviour
     public string pauseMission = "g";
     public string resumeMission = "h";
 
+    [Header("Drone/Sensor Selection Tests")]
+    public string cycleDrone = "j";
+    public string cycleSensor = "k";
+    public string unsubscribe = "z";
+
     [Header("Dyanmic waypoint system Tests")]
     // TODO: Ensure waypoint array removes past waypoints.
-    public string stopMission = "j";
+    public string stopMission = "l";
 
     [Header("Drone Variable")]
     public Matrice_ROSDroneConnection rosDroneConnection;
@@ -65,16 +70,8 @@ public class M210_Flight_TestManager : MonoBehaviour
 
         if (Input.GetKeyDown(init))
         {
-            /*
-            if (WorldProperties.GetSelectedDrone() == null)
-            {
-                WorldProperties.SelectNextDrone();
-            }
-
-            rosDroneConnection = (Matrice_ROSDroneConnection)WorldProperties.GetSelectedDrone().gameObjectPointer.GetComponent<DroneProperties>().droneROSConnection;
-            */
-            rosDroneConnection = (Matrice_ROSDroneConnection)WorldProperties.selectedDrone.gameObjectPointer.GetComponent<DroneProperties>().droneROSConnection;
-
+            Drone drone = WorldProperties.SelectNextDrone();
+            rosDroneConnection = (Matrice_ROSDroneConnection)drone.droneProperties.droneROSConnection;
         }
 
         if (Input.GetKeyDown(viewHomeLat))
@@ -209,6 +206,24 @@ public class M210_Flight_TestManager : MonoBehaviour
         if (Input.GetKeyDown(stopMission))
         {
             rosDroneConnection.SendWaypointAction(Matrice_ROSDroneConnection.WaypointMissionAction.STOP);
+        }
+
+        if (Input.GetKeyUp(cycleDrone))
+        {
+            Drone drone = WorldProperties.SelectNextDrone();
+            rosDroneConnection = (Matrice_ROSDroneConnection)drone.droneProperties.droneROSConnection;
+        }
+
+        if (Input.GetKeyDown(cycleSensor))
+        {
+            WorldProperties.sensorManager.ShowNextSensor();
+        }
+
+        if (Input.GetKeyDown(unsubscribe))
+        {
+            ROSSensorConnectionInterface sensor = WorldProperties.sensorManager.getSelectedSensor();
+            List<string> subscriberList = WorldProperties.sensorManager.getSubscriberList();
+            sensor.Unsubscribe(subscriberList[0]);
         }
     }
 }

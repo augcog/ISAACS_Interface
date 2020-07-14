@@ -8,7 +8,6 @@ using ISAACS;
 public class RadiationButtons : MonoBehaviour {
 
     Button myButton;
-    Drone drone;
 
     public bool surface_pointcloud = false;
     public bool Level_0 = false;
@@ -29,44 +28,57 @@ public class RadiationButtons : MonoBehaviour {
         if (surface_pointcloud)
         {
             Debug.Log("Switching to surface point cloud");
-            WorldProperties.worldObject.GetComponent<ROSDroneConnection>().LampSubscribe_SurfacePointcloud();
+            GameObject sensor = WorldProperties.GetSelectedSensor();
+            LampSensor_ROSSensorConnection lampSensor_ROS = sensor.GetComponent<LampSensor_ROSSensorConnection>();
+            //lampSensor_ROS.Unsubscribe();
         }
 
         if (Level_0)
         {
             Debug.Log("Switching to Level 0");
-            WorldProperties.worldObject.GetComponent<ROSDroneConnection>().LampSubscribe_Colorized_0();
+            GameObject sensor = WorldProperties.GetSelectedSensor();
+            LampSensor_ROSSensorConnection lampSensor_ROS = sensor.GetComponent<LampSensor_ROSSensorConnection>();
+            //lampSensor_ROS.Unsubscribe();
         }
 
         if (Level_1)
         {
             Debug.Log("Switching to Level 1");
-            WorldProperties.worldObject.GetComponent<ROSDroneConnection>().LampSubscribe_Colorized_1();
+            GameObject sensor = WorldProperties.GetSelectedSensor();
+            LampSensor_ROSSensorConnection lampSensor_ROS = sensor.GetComponent<LampSensor_ROSSensorConnection>();
+            //lampSensor_ROS.Unsubscribe();
         }
 
         if (Level_2)
         {
             Debug.Log("Switching to Level 2");
-            WorldProperties.worldObject.GetComponent<ROSDroneConnection>().LampSubscribe_Colorized_2();
+            GameObject sensor = WorldProperties.GetSelectedSensor();
+            LampSensor_ROSSensorConnection lampSensor_ROS = sensor.GetComponent<LampSensor_ROSSensorConnection>();
+            //lampSensor_ROS.Unsubscribe();
         }
 
 
         if (Level_3)
         {
             Debug.Log("Switching to Level 3");
-            WorldProperties.worldObject.GetComponent<ROSDroneConnection>().LampSubscribe_Colorized_3();
+            GameObject sensor = WorldProperties.GetSelectedSensor();
+            LampSensor_ROSSensorConnection lampSensor_ROS = sensor.GetComponent<LampSensor_ROSSensorConnection>();
+            //lampSensor_ROS.Unsubscribe();
         }
 
         if (Level_4)
         {
             Debug.Log("Switching to Level 4");
-            WorldProperties.worldObject.GetComponent<ROSDroneConnection>().LampSubscribe_Colorized_4();
+            GameObject sensor = WorldProperties.GetSelectedSensor();
+            LampSensor_ROSSensorConnection lampSensor_ROS = sensor.GetComponent<LampSensor_ROSSensorConnection>();
+            //lampSensor_ROS.Unsubscribe();
         }
 
         if (Level_5)
         {
             Debug.Log("Switching to Level 5");
-            WorldProperties.worldObject.GetComponent<ROSDroneConnection>().LampSubscribe_Colorized_5();
+            GameObject sensor = WorldProperties.GetSelectedSensor();
+            LampSensor_ROSSensorConnection lampSensor_ROS = sensor.GetComponent<LampSensor_ROSSensorConnection>();
         }
 
     }

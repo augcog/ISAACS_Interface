@@ -129,6 +129,12 @@ public interface ROSSensorConnectionInterface
     void DisconnectROSConnection();
 
     /// <summary>
+    /// Get the name of the sensor
+    /// </summary>
+    /// <returns></returns>
+    string GetSensorName();
+
+    /// <summary>
     /// Returns a list of connected subscriber topics (which are unique identifiers).
     /// </summary>
     /// <returns></returns>

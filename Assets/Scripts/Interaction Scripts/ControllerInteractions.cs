@@ -1,4 +1,5 @@
-﻿namespace ISAACS
+﻿/*
+namespace ISAACS
 {
     using System;
     using System.Linq;
@@ -14,6 +15,8 @@
 
     public class ControllerInteractions : MonoBehaviour
     {
+        
+
         public enum ControllerState { IDLE, GRABBING, PLACING_DRONE, PLACING_WAYPOINT, POINTING, SETTING_HEIGHT, SCALING, DELETING }; // These are the possible values for the controller's state
         public static ControllerState currentControllerState; // We use this to determine what state the controller is in - and what actions are available
 
@@ -59,7 +62,7 @@
             tempSphere.transform.parent = this.gameObject.transform;
             this.gameObject.transform.position = new Vector3(0F, 0F, 0F);
             tempSphere.transform.position = new Vector3(0F, 0F, 0.1F);
-            tempSphere.transform.localScale = new Vector3(0.08F, 0.08F, 0.08F);
+            tempSphere.transform.localScale = new Vector3(0.01F, 0.01F, 0.01F);
             this.gameObject.GetComponent<VRTK_InteractTouch>().customColliderContainer = tempSphere;
             tempSphere.gameObject.name = "grabZone";
             Renderer tempRend = tempSphere.GetComponent<Renderer>();
@@ -105,12 +108,17 @@
                 Debug.Log(x.id + " : " + x.unityLocation);
             }
             Debug.Log("---");
-            **/
+            
 
             // SELECTION POINTER  
             SelectionPointerChecks();
+            Drone currentlySelectedDrone = WorldProperties.GetSelectedDrone();
 
-            if (WorldProperties.selectedDrone != null)
+<<<<<<< HEAD
+            if (currentlySelectedDrone != null)
+=======
+            if (WorldProperties.GetSelectedDrone() != null)
+>>>>>>> master
             {
                 // WAYPOINT GRABBING
                 GrabbingChecks();
@@ -143,7 +151,7 @@
                 //Debug.Log("getting here");
                 
                 Waypoint collidedWaypoint = currentCollider.gameObject.GetComponent<WaypointProperties>().classPointer;
-                if (collidedWaypoint.id == "A0")
+                /*if (collidedWaypoint.id == "A0")
                 {
                     Debug.Log("destroy");
                     Destroy(collidedWaypoint.gameObjectPointer.GetComponent<SphereCollider>());
@@ -453,7 +461,7 @@
         {
             // We will use the placePoint location.
             Vector3 newLocation = new Vector3(groundPoint.x, placePoint.transform.position.y, groundPoint.z);
-            Drone currentlySelectedDrone = WorldProperties.selectedDrone; // Grabbing the drone that we are creating this waypoint for
+            Drone currentlySelectedDrone = WorldProperties.GetSelectedDrone(); // Grabbing the drone that we are creating this waypoint for
 
             // Make sure our drone exists
             if (currentlySelectedDrone != null)
@@ -500,7 +508,7 @@
         /// </summary>
         public void UndoAndDeleteWaypoints()
         {
-            Drone currentlySelectedDrone = WorldProperties.selectedDrone;
+            Drone currentlySelectedDrone = WorldProperties.GetSelectedDrone();
 
             // Make sure the currently selected drone has waypoints
             if (currentlySelectedDrone.waypoints != null && currentlySelectedDrone.waypoints.Count > 0)
@@ -532,7 +540,8 @@
                     // Otherwise we default to removing the last waypoint (UNDO)
                     Debug.Log("Removing most recently placed waypoint");
 
-                    Waypoint lastWaypoint = (Waypoint)currentlySelectedDrone.waypointsOrder[currentlySelectedDrone.waypointsOrder.Count - 1];
+                    //Waypoint lastWaypoint = (Waypoint)currentlySelectedDrone.waypointsOrder[currentlySelectedDrone.waypointsOrder.Count - 1];
+                    Waypoint lastWaypoint = null;
 
                     // Remove from collisions list
                     currentCollisions.RemoveAll(collision => collision.waypoint == lastWaypoint &&
@@ -555,6 +564,7 @@
             }
         }
 
+        /*
         /// <summary>
         /// Print statements to help debug the collisions logic.
         /// </summary>
@@ -616,3 +626,4 @@
         }
     }
 }
+*/

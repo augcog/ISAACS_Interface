@@ -8,10 +8,6 @@ using ISAACS;
 public class DroneButtons : MonoBehaviour {
 
     Button myButton;
-    private Drone drone;
-    private GameObject controller; //needed to access pointer
-
-    public bool simulation = true;
 
     public bool startMission = false;
     public bool pauseMission = false;
@@ -23,96 +19,46 @@ public class DroneButtons : MonoBehaviour {
 
     void Awake()
     {
-        controller = GameObject.FindGameObjectWithTag("GameController");
-
         myButton = GetComponent<Button>(); // <-- you get access to the button component here
         myButton.onClick.AddListener(() => { OnClickEvent(); });  // <-- you assign a method to the button OnClick event here
     }
 
     void OnClickEvent()
     {
+        Drone selectedDrone = WorldProperties.GetSelectedDrone();
+        ROSDroneConnectionInterface droneROSConnection = selectedDrone.droneProperties.droneROSConnection;
+
         if (startMission)
         {
-            Debug.Log("Start Mission Button: Currently not connected to Drone_ROS Connection");
-
-            if (simulation)
-            {
-                GameObject world = GameObject.FindGameObjectWithTag("World");
-                DroneSimulationManager droneSim = world.GetComponent<DroneSimulationManager>();
-                droneSim.FlyNextWaypoint(true);
-                return;
-            }
-
+            droneROSConnection.StartMission();
         }
 
         if (pauseMission)
         {
-            Debug.Log("TO TEST: Pause Mission Button: Currently not connected to Drone_ROS Connection");
-
-            if (simulation)
-            {
-                GameObject world = GameObject.FindGameObjectWithTag("World");
-                DroneSimulationManager droneSim = world.GetComponent<DroneSimulationManager>();
-                droneSim.pauseFlight();
-                return;
-            }
-            // Test and switch
-            // WorldProperties.PauseDroneMission();
+            droneROSConnection.PauseMission();
         }
 
         if (resumeMission)
         {
-            Debug.Log("TO TEST: Resume Mission Button: Currently not connected to Drone_ROS Connection");
-            if (simulation)
-            {
-                GameObject world = GameObject.FindGameObjectWithTag("World");
-                DroneSimulationManager droneSim = world.GetComponent<DroneSimulationManager>();
-                droneSim.resumeFlight();
-                return;
-            }
-
-            // Test and switch
-            // WorldProperties.ResumeDroneMission();
+            droneROSConnection.ResumeMission();
         }
 
 
         if (clearWaypoints)
         {
-            Debug.Log(" Clear Waypoints  Button");
-            if (controller.GetComponent<VRTK_Pointer>().IsPointerActive())
-            {
-                drone = WorldProperties.selectedDrone;
-                while (drone.waypoints.Count > 1)
-                {
-                    if (((Waypoint)drone.waypoints[drone.waypoints.Count - 1]).prevPathPoint != null)
-                    {
-                        drone.DeleteWaypoint((Waypoint)drone.waypoints[drone.waypoints.Count - 1]);
-                    }
-                }
-            }
+            selectedDrone.DeleteAllWaypoints();
         }
 
 
         if (landDrone)
         {
-            Debug.Log("Land  Button: Currently not connected to Drone_ROS Connection");
-            //WorldProperties.worldObject.GetComponent<ROSDroneConnection>().Land();
+            droneROSConnection.LandDrone();
         }
 
 
         if (homeDrone)
         {
-            Debug.Log("Home  Button: Currently not connected to Drone_ROS Connection");
-
-            if (simulation)
-            {
-                GameObject world = GameObject.FindGameObjectWithTag("World");
-                DroneSimulationManager droneSim = world.GetComponent<DroneSimulationManager>();
-                droneSim.flyHome();
-                return;
-            }
-
-            //WorldProperties.worldObject.GetComponent<ROSDroneConnection>().GoHome();
+            droneROSConnection.FlyHome();        
         }
 
 
