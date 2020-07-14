@@ -218,7 +218,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
 
         if (simDrone)
         {
-            this.GetComponent<DroneSimulationManager>().FlyNextWaypoint();
+            this.GetComponent<DroneSimulationManager>().startMission();
             return;
         }
 
@@ -290,7 +290,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
     {
         if (simDrone)
         {
-            this.GetComponent<DroneSimulationManager>().FlyNextWaypoint(true);
+            this.GetComponent<DroneSimulationManager>().updateWaypoints();
             return;
         }
 
@@ -307,7 +307,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
     {
         if (simDrone)
         {
-            this.GetComponent<DroneSimulationManager>().flyHome();
+            this.GetComponent<DroneSimulationManager>().landDrone();
             return;
         }
 

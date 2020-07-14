@@ -6,118 +6,61 @@ using ISAACS;
 public class DroneSimulationManager : MonoBehaviour {
 
     [Header("Selected drone and simulation speed")]
-    public Drone drone;
-    public float speed = 1.0f;
+    private Drone drone;
+    private float speed = 0.1f;
 
-    private int nextWaypointID = 0;
-    private bool flying = false;
-
-    private float startTime;
-    private float journeyLength;
-
-    private Vector3 origin;
-    private Vector3 destination;
-    private Vector3 home;
-
-    private bool endFlight = false;
-    private float fractionOfJourney = 0;
-
-    // Update is called once per frame
-    void Update()
+    /// <summary>
+    /// Current flight status of the drone
+    /// </summary>
+    public enum FlightStatus
     {
-        if (flying)
-        {
-            if (fractionOfJourney < 1)
-            {
-                // Distance moved equals elapsed time times speed..
-                float distCovered = (Time.time - startTime) * speed;
-
-                // Fraction of journey completed equals current distance divided by total distance.
-                fractionOfJourney = distCovered / journeyLength;
-
-                Vector3 new_position = Vector3.Lerp(origin, destination, fractionOfJourney);
-                drone.gameObjectPointer.transform.localPosition = new_position;
-            }
-            else
-            {
-                flying = false;
-                if (!endFlight)
-                {
-                    FlyNextWaypoint();
-                }
-            }
-
-        }
-
+        ON_GROUND_STANDBY = 1,
+        IN_AIR_STANDBY =2,
+        FLYING = 3,
+        FLYING_HOME = 4,
+        PAUSED_IN_AIR = 5,
+        LANDING = 6,
+        NULL = 7
     }
+
+    // Drone state variables
+    private FlightStatus droneStatus;
+    private FlightStatus droneStatusPrev;
+
+    private Vector3 currentLocation;
+    private Vector3 currentDestination;
+    private Vector3 homeLocation;
+
+    List<Waypoint> waypoints;
+    private int nextWaypointID = 0;
 
     /// <summary>
     /// Initilize the drone sim with the required references.
     /// </summary>
     /// <param name="droneInit"></param>
-    public void InitDroneSim(Drone droneInit)
+    public void InitDroneSim()
     {
-        Debug.Log("Drone Flight Sim initilized");
-        // TODO: This oscilates between null and selecting the correct drone.
-        drone = droneInit;
-        home = drone.gameObjectPointer.transform.localPosition;
-        Debug.Log("The selected drone is: " + drone.gameObjectPointer.name);
-    }
-
-    /// <summary>
-    /// Fly to the next waypoint in the list
-    /// </summary>
-    /// <param name="restart"></param>
-    public void FlyNextWaypoint(bool restart = false)
-    {
-        // TODO: debug drone variable osciallting
         drone = this.GetComponent<DroneProperties>().droneClassPointer;
-        Debug.Log("Simulating flight for drone: " + drone.gameObjectPointer.name);
+  
+        homeLocation = drone.gameObjectPointer.transform.localPosition;
+        currentLocation = drone.gameObjectPointer.transform.localPosition;
 
-        List<Waypoint> waypoints = drone.waypoints;
+        droneStatus = FlightStatus.ON_GROUND_STANDBY;
+        droneStatusPrev = FlightStatus.NULL;
 
-        if (restart)
-        {
-            endFlight = false;
-            nextWaypointID = 0;
-        }
-
-        /// Check if there is another waypoint
-        if (waypoints.Count == nextWaypointID)
-        {
-            Debug.Log("ALERT: All waypoints successfully send");
-            Debug.Log("ALERT: Drone is send home by default");
-            flying = false;
-            endFlight = true;
-            return;
-        }
-
-        Waypoint waypoint = (Waypoint)waypoints[nextWaypointID];
-
-        startTime = Time.time;
-        origin = drone.gameObjectPointer.transform.localPosition;
-        destination = waypoint.gameObjectPointer.transform.localPosition;
-        journeyLength = Vector3.Distance(origin, destination);
-        fractionOfJourney = 0.0f;
-        flying = true;
-
-        nextWaypointID += 1;
-
+        waypoints = drone.waypoints;
     }
 
     /// <summary>
-    /// Helper function if every needed for debugging to fly to a certain coordinate
+    /// Start the drone mission
     /// </summary>
-    /// <param name="waypoint"></param>
-    public void FlyNextWaypoint(Vector3 waypoint)
+    public void startMission()
     {
-        origin = drone.gameObjectPointer.transform.localPosition;
-        destination = waypoint;
-
-        Debug.Log("Origin: " + origin);
-        Debug.Log("Dest:   " + destination);
-
-        flying = true;
+        nextWaypointID = 0;
+        waypoints = drone.waypoints;
+        updateDestination(true, false, false);
+        droneStatus = FlightStatus.FLYING;
+        droneStatusPrev = FlightStatus.ON_GROUND_STANDBY;
     }
 
     /// <summary>
@@ -125,7 +68,8 @@ public class DroneSimulationManager : MonoBehaviour {
     /// </summary>
     public void pauseFlight()
     {
-        flying = false;
+        droneStatusPrev = droneStatus;
+        droneStatus = FlightStatus.PAUSED_IN_AIR;
     }
 
     /// <summary>
@@ -133,7 +77,8 @@ public class DroneSimulationManager : MonoBehaviour {
     /// </summary>
     public void resumeFlight()
     {
-        flying = true;
+        droneStatus = droneStatusPrev;
+        droneStatusPrev = FlightStatus.PAUSED_IN_AIR;
     }
 
     /// <summary>
@@ -141,8 +86,141 @@ public class DroneSimulationManager : MonoBehaviour {
     /// </summary>
     public void flyHome()
     {
-        endFlight = true;
-        FlyNextWaypoint(home);
+        switch (droneStatus)
+        {
+            case FlightStatus.FLYING:
+                nextWaypointID -= 1;
+                break;
+        }
+
+        updateDestination(false, true, false);
+        droneStatusPrev = droneStatus;
+        droneStatus = FlightStatus.FLYING_HOME;
+    }
+
+    /// <summary>
+    /// Land the drone at the current point
+    /// </summary>
+    public void landDrone()
+    {
+        switch (droneStatus)
+        {
+            case FlightStatus.FLYING:
+                nextWaypointID -= 1;
+                break;
+        }
+        
+        updateDestination(false, false, true);
+        droneStatusPrev = droneStatus;
+        droneStatus = FlightStatus.LANDING;
+    }
+
+    /// <summary>
+    /// update the waypoints list
+    /// </summary>
+    public void updateWaypoints()
+    {
+        waypoints = drone.waypoints;
+    }
+
+    /// <summary>
+    /// Check if the drone has reached the current destination
+    /// </summary>
+    /// <returns></returns>
+    private bool reachedCurrentDestination()
+    {
+        if (Vector3.Distance(currentLocation, currentDestination) < 0.1f)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// Update the destination to the next waypoint if possible
+    /// </summary>
+    /// <returns>True if updated, false if no more waypoints available</returns>
+    private bool updateDestination(bool waypoint, bool home, bool land)
+    {
+
+        if (home)
+        {
+            currentDestination = homeLocation;
+            Debug.Log("Destination set to: " + currentDestination);
+            return true;
+        }
+
+        if (land)
+        {
+            currentDestination = new Vector3(currentLocation.x, homeLocation.y, currentLocation.z);
+            Debug.Log("Destination set to: " + currentDestination);
+            return true;
+        }
+
+        if (nextWaypointID == waypoints.Count)
+        {
+            return false;
+        }
+
+        Waypoint nextDestination = waypoints[nextWaypointID];
+        currentDestination = nextDestination.gameObjectPointer.transform.localPosition;
+        Debug.Log("Destination set to: " + currentDestination);
+        nextWaypointID += 1;
+
+        return true;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        currentLocation = this.transform.localPosition;
+
+        switch (droneStatus)
+        {
+
+            case FlightStatus.FLYING:
+
+                this.transform.Translate(Vector3.Normalize(currentDestination-currentLocation)* speed * Time.deltaTime, Space.Self);
+
+                if (reachedCurrentDestination())
+                {
+                    if (updateDestination(true, false, false) == false)
+                    {
+                        Debug.Log("All waypoints completed");
+                        droneStatusPrev = FlightStatus.FLYING; 
+                        droneStatus = FlightStatus.IN_AIR_STANDBY;
+                    }
+                    
+                }
+
+                break;
+
+            case FlightStatus.FLYING_HOME:
+
+                this.transform.Translate(Vector3.Normalize(currentDestination - currentLocation) * speed * Time.deltaTime, Space.Self);
+
+                if (reachedCurrentDestination())
+                {
+                    Debug.Log("Drone reached home");
+                    droneStatusPrev = FlightStatus.FLYING_HOME;
+                    droneStatus = FlightStatus.ON_GROUND_STANDBY;
+                }
+
+                break;
+
+            case FlightStatus.LANDING:
+
+                this.transform.Translate(Vector3.Normalize(currentDestination - currentLocation) * speed * Time.deltaTime, Space.Self);
+
+                if (reachedCurrentDestination())
+                {
+                    Debug.Log("Drone landed");
+                    droneStatusPrev = FlightStatus.LANDING;
+                    droneStatus = FlightStatus.ON_GROUND_STANDBY;
+                }
+
+                break;
+        }
     }
 
 }

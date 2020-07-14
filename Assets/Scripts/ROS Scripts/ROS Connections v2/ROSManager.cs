@@ -106,11 +106,6 @@ public class ROSManager : MonoBehaviour {
         GameObject droneGameObject = droneInstance.gameObjectPointer;
         droneGameObject.name = rosDroneConnectionInput.droneName;
 
-        // Add drone sim manager script on the drone
-        DroneSimulationManager droneSim = droneGameObject.AddComponent<DroneSimulationManager>();
-        droneGameObject.GetComponent<DroneProperties>().droneSimulationManager = droneSim;
-        droneSim.InitDroneSim(droneInstance);
-
         // Add corresponding ros drone connection script
         switch (droneType)
         {
@@ -157,7 +152,11 @@ public class ROSManager : MonoBehaviour {
             droneInstance.AddSensor(sensor);
         }
 
-        uniqueID ++;
+        // Initilize drone sim manager script on the drone
+        DroneSimulationManager droneSim = droneGameObject.GetComponent<DroneSimulationManager>();
+        droneSim.InitDroneSim();
+        
+        uniqueID++;
     }
 
     /// <summary>
