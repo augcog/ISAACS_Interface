@@ -20,10 +20,15 @@ using VRTK;
 
 public class DroneMenu : MonoBehaviour {
 
+    // The font used for the menu
     public Font menuFont;
+    // The Text UI component attached to the drone prefab for displaying the drone position
     public Text dronePosText;
+    // The Text UI component attached to the drone prefab for displaying the drone name
     public Text droneNameText;
+    // The Text UI component attached to the drone prefab for displaying the drone authority status
     public Text droneAuthorityText;
+    // The Canvas UI component attached to the drone prefab for displaying the drone subscribers data
     public GameObject menuCanvas; // already attached to prefab's canvas
     private ROSDroneConnectionInterface connection; // used to query for data from drone's subscribers
     private List<string> droneSubscriberTopics;
