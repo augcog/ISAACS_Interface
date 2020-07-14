@@ -20,6 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 224992479379954240}
   - component: {fileID: 114198195313044982}
+  - component: {fileID: 65184878560775328}
   m_Layer: 5
   m_Name: SubscriberToggle
   m_TagString: Untagged
@@ -78,6 +79,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!65 &65184878560775328
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1065003490303774}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 177.20761, y: 24.6577, z: 28.524387}
+  m_Center: {x: -0.8697179, y: 0.8486285, z: -1.3382131}
 --- !u!114 &114168002779651414
 MonoBehaviour:
   m_ObjectHideFlags: 1
