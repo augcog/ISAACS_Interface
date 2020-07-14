@@ -97,9 +97,6 @@ public class ROSManager : MonoBehaviour {
         bool simFlight = rosDroneConnectionInput.simFlight;
         List<string> droneSubscribers = new List<string>();
 
-
-
-
         foreach (DroneSubscribers subscriber in rosDroneConnectionInput.droneSubscribers)
         {
             droneSubscribers.Add(subscriber.ToString());
@@ -112,6 +109,7 @@ public class ROSManager : MonoBehaviour {
 
         // Add DroneFlightSim
         // TODO: Make a prefab.
+        // Add drone sim manager script on the drone
         DroneSimulationManager droneSim = droneGameObject.AddComponent<DroneSimulationManager>();
         droneGameObject.GetComponent<DroneProperties>().droneSimulationManager = droneSim;
         droneSim.InitDroneSim(droneInstance);
@@ -173,10 +171,6 @@ public class ROSManager : MonoBehaviour {
             ROSSensorConnectionInterface sensor = InstantiateSensor(rosSensorInput);
             droneInstance.AddSensor(sensor);
         }
-
-
-        // Add to list of active connections
-        ROSDroneConnections.Add(uniqueID, rosDroneConnection);
 
 
         // Get DroneMenu and instansiate.
