@@ -164,7 +164,7 @@
                     if (!controllerInput.LeftY())
                     {
                         controllerState = ControllerState.IDLE;
-                        // @Jasmine: Make the connection to display the next sensor in the UI here
+                        WorldProperties.sensorManager.ShowNextSensor();
                     }
                     break;
                 }
