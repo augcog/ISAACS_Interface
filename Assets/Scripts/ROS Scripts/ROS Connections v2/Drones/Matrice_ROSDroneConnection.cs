@@ -95,17 +95,17 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
     /// <summary>
     /// Battery state of the drone
     /// </summary>
-    BatteryStateMsg battery_state;
+    BatteryStateMsg battery_state = null;
     
     /// <summary>
     /// Current flight status of the drone
     /// </summary>
-    FlightStatus flight_status;
+    FlightStatus flight_status = FlightStatus.ON_GROUND_STANDBY;
 
     /// <summary>
     /// Reading of the 6 channels of the remote controller, published at 50 Hz.
     /// </summary>
-    JoyMsg remote_controller_msg;
+    JoyMsg remote_controller_msg = null;
 
     /// <summary>
     /// Vehicle attitude is as quaternion for the rotation from Forward-Left-Up (FLU) body frame to East-North-Up (ENU) ground frame, published at 100 Hz.
@@ -132,43 +132,43 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
     /// published at 100 Hz for M100, and 400 Hz for other platforms. 
     /// Note that raw accelerometer reading will give a Z direction 9.8 m/s2 when the drone is put on a level ground statically.
     /// </summary>
-    IMUMsg imu;
+    IMUMsg imu = null;
 
     /// <summary>
     /// Current velocity of the drone
     /// </summary>
-    Vector3 velocity;
+    Vector3 velocity = Vector3.zero;
 
     /// <summary>
     /// Height above takeoff location. It is only valid after drone is armed, when the flight controller has a reference altitude set.
     /// </summary>
-    float relative_altitude;
+    float relative_altitude = 0.0f;
 
     /// <summary>
     /// Local position in Cartesian ENU frame, of which the origin is set by the user by calling the /dji_sdk/set_local_pos_ref service. 
     /// Note that the local position is calculated from GPS position, so good GPS health is needed for the local position to be useful.
     /// </summary>
-    Vector3 local_position;
+    Vector3 local_position = Vector3.zero;
     
     /// <summary>
     /// Current angles of gimbal
     /// </summary>
-    Vector3 gimbal_joint_angles;
+    Vector3 gimbal_joint_angles = Vector3.zero;
     
     /// <summary>
     /// Current gps health
     /// </summary>
-    uint gps_health;
+    uint gps_health = 0;
     
     /// <summary>
     /// Current gps position
     /// </summary>
-    NavSatFixMsg gps_position;
+    NavSatFixMsg gps_position = null;
     
     /// <summary>
     /// Home position of the drone
     /// </summary>
-    NavSatFixMsg home_position;
+    NavSatFixMsg home_position = null;
 
     /// <summary>
     /// Initilize drone home position if it hasn't been set yet
@@ -348,35 +348,56 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
     /// <returns> requested value as string </returns>
     public string GetValueByTopic(string topic)
     {
-        switch (topic)
+        try
         {
-            case "/dji_sdk/attitude":
-                return attitude.ToString();
-            case "/dji_sdk/battery_state":
-                return battery_state.ToString();
-            case "/dji_sdk/flight_status":
-                return flight_status.ToString();
-            case "/dji_sdk/gimbal_angle":
-                return gimbal_joint_angles.ToString();
-            case "/dji_sdk/gps_health":
-                return gps_health.ToString();
-            case "/dji_sdk/gps_position":
-                return gps_position.ToString();
-            case "/dji_sdk/imu":
-                return imu.ToString();
-            case "/dji_sdk/rc":
-                return remote_controller_msg.ToString();
-            case "/dji_sdk/velocity":
-                return velocity.ToString();
-            case "/dji_sdk/height_above_takeoff":
-                return relative_altitude.ToString();
-            case "/dji_sdk/local_position":
-                return local_position.ToString();
-            default:
-                Debug.LogError("Topic " + topic + " not registered.");
-                return "NO DATA";
+            switch (topic)
+            {
+                case "/dji_sdk/attitude":
+                case "attitude":
+                    return attitude.ToString();
+                case "/dji_sdk/battery_state":
+                case "battery_state":
+                    return battery_state.ToString();
+                case "/dji_sdk/flight_status":
+                case "flight_status":
+                    return flight_status.ToString();
+                case "/dji_sdk/gimbal_angle":
+                case "gimbal_angle":
+                    return gimbal_joint_angles.ToString();
+                case "/dji_sdk/gps_health":
+                case "gps_health":
+                    return gps_health.ToString();
+                case "/dji_sdk/gps_position":
+                case "gps_position":
+                case "/dji_sdk/rtk_position":
+                case "rtk_position":
+                    return gps_position.ToString();
+                case "/dji_sdk/imu":
+                case "imu":
+                    return imu.ToString();
+                case "/dji_sdk/rc":
+                case "rc":
+                    return remote_controller_msg.ToString();
+                case "/dji_sdk/velocity":
+                case "velocity":
+                    return velocity.ToString();
+                case "/dji_sdk/height_above_takeoff":
+                case "height_above_takeoff":
+                    return relative_altitude.ToString();
+                case "/dji_sdk/local_position":
+                case "local_position":
+                    return local_position.ToString();
+                default:
+                    Debug.LogError("Topic " + topic + " not registered.");
+                    return "INVALID TOPIC";
+            }
         }
-        
+        catch (Exception e)
+        {
+            print("Error: " + e);
+            return " NO DATA ";
+        }
+
     }
 
 
