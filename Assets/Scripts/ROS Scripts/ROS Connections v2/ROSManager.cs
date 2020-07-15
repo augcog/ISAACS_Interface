@@ -84,6 +84,9 @@ public class ROSManager : MonoBehaviour
         {
             InstantiateDrone(rosDroneConnectionInput);
         }
+
+        success = true;
+        WorldProperties.SelectNextDrone();
     }
 
     /// <summary>
