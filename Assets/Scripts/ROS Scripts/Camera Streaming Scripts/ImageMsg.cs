@@ -1,17 +1,14 @@
-﻿using SimpleJSON;
+﻿/*using SimpleJSON;
+using ROSBridgeLib;
 using ROSBridgeLib.std_msgs;
 using UnityEngine;
-
-/**
- * Define a Image message.
- *  
- * @author Mathias Ciarlo Thorstensen
- */
 
 namespace ROSBridgeLib
 {
     namespace sensor_msgs
     {
+       
+        // Add each image data (or just imagemsg object), width, height?, encoding? to a worldproperties dictionary?
         public class ImageMsg : ROSBridgeMsg
         {
             private HeaderMsg _header;
@@ -58,6 +55,10 @@ namespace ROSBridgeLib
                 return _height;
             }
 
+            public string GetEncoding()
+            {
+                return _encoding;
+            }
             public uint GetRowStep()
             {
                 return _row_step;
@@ -94,4 +95,4 @@ namespace ROSBridgeLib
             }
         }
     }
-}
+}*/

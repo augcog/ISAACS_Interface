@@ -25,14 +25,14 @@ public class ROSManager : MonoBehaviour {
     /// <summary>
     /// Sensor types supported by ISAACS System
     /// </summary>
-    public enum SensorType { PointCloud, Mesh, LAMP, PCFace };
+    public enum SensorType { PointCloud, Mesh, LAMP, PCFace, Image };
 
     /// <summary>
     /// Sensor subscribers supported by ISAACS System
     /// </summary>
     public enum SensorSubscribers { surface_pointcloud, mesh,
     colorized_points_0, colorized_points_1, colorized_points_2, colorized_points_3, colorized_points_4, colorized_points_5,
-        colorized_points_faced_0, colorized_points_faced_1, colorized_points_faced_2, colorized_points_faced_3, colorized_points_faced_4, colorized_points_faced_5
+        colorized_points_faced_0, colorized_points_faced_1, colorized_points_faced_2, colorized_points_faced_3, colorized_points_faced_4, colorized_points_faced_5, image_raw
     };
 
     /// <summary>
@@ -210,6 +210,11 @@ public class ROSManager : MonoBehaviour {
                 pcFace_rosSensorConnection.InitilizeSensor(uniqueID, sensorIP, sensorPort, sensorSubscribers);
                 ROSSensorConnections.Add(uniqueID, pcFace_rosSensorConnection);
                 rosSensorConnection = pcFace_rosSensorConnection;
+                break;
+
+            case SensorType.Image:
+                Debug.Log("Camera Stream created");
+                
                 break;
 
             default:
