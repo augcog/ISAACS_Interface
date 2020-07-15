@@ -71,6 +71,11 @@
                 // If nothing is held down, default to the idle state. 
                 case ControllerState.IDLE:
                 {
+                    if (controllerInput.RightIsGrabbing())
+                    {
+                        controllerState = ControllerState.MOVING_WAYPOINT;
+                        Debug.Log("*********************GW*********************");
+                    } 
                     if (controllerInput.BothGrip())
                     {
                         controllerState = ControllerState.SCALING;
@@ -227,6 +232,7 @@
                 {
                     if (!controllerInput.RightA())
                     {
+                        ControllerState.IDLE;
                         Undo();
                         break;
                     }
@@ -237,7 +243,6 @@
                         /// TODO: make waypoint disappear
                         break;
                     }
-                    controllerState = ControllerState.IDLE;
                     break;
                 }
 
@@ -245,7 +250,9 @@
                 {
                     if (!controllerInput.RightB())
                     {
+                        ControllerState.IDLE;
                         Redo();
+                        break; 
                     }
                     if (controllerInput.RightGrip())
                     {
@@ -254,7 +261,6 @@
                         /// TODO: make waypoint disappear
                         break;
                     }
-                    controllerState = ControllerState.IDLE;
                     break;
                 }
 

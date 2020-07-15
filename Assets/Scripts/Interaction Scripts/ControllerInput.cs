@@ -75,6 +75,22 @@
 		}
 
 		/// <summary>
+		/// Whether the left hand is currently grabbing a waypoint.
+		/// </summary>
+        /// <returns>True if the left hand is currently grabbing a waypoint.</returns>
+		public bool LeftIsGrabbingWaypoint()
+		{
+			GameObject grabbed = LeftController.GetComponent<VRTK_InteractGrab>().GetGrabbedObject();
+			if (grabbed) {
+				if (grabbed.tag == "waypoint")
+				{
+					return true;
+				}	
+			}
+			return false;
+		}
+
+		/// <summary>
 		/// Whether the left trigger (index finger) is held down. 
 		/// </summary>
 		/// <returns>True if the left trigger is held down.</returns>
@@ -263,7 +279,23 @@
         /// <returns>True if the right hand is currently grabbing an object.</returns>
 		public bool RightIsGrabbing()
 		{
-			return (RightController.GetComponent<VRTK_InteractGrab>().GetGrabbedObject()) ? true : false;;
+			return (RightController.GetComponent<VRTK_InteractGrab>().GetGrabbedObject()) ? true : false;
+		}
+
+		/// <summary>
+		/// Whether the right hand is currently grabbing a waypoint.
+		/// </summary>
+        /// <returns>True if the right hand is currently grabbing a waypoint.</returns>
+		public bool RightIsGrabbingWaypoint()
+		{
+			GameObject grabbed = RightController.GetComponent<VRTK_InteractGrab>().GetGrabbedObject();
+			if (grabbed) {
+				if (grabbed.tag == "waypoint")
+				{
+					return true;
+				}
+			}
+			return false;
 		}
 
 		/// <summary>
