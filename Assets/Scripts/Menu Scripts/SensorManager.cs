@@ -76,12 +76,12 @@ public class SensorManager : MonoBehaviour {
             Debug.Log("Creating button for :" + subscriber);
 
             //Instantiating and positioning toggles
-            float ypos = 40 - (subscribercount * 25);
+            float ypos = 60 - (subscribercount * 40);
             var position = new Vector3(-19, ypos, -14);
             GameObject toggleUI = Instantiate(togglePrefab, new Vector3(0, 0, 0), Quaternion.identity);
             toggleUI.transform.parent = GameObject.Find("Sensor Menu").transform;
             toggleUI.transform.localPosition = position;
-            toggleUI.transform.localScale = Vector3.one;
+            toggleUI.transform.localScale = Vector3.one *1.3f;
             toggleUI.transform.localRotation = Quaternion.identity;
             toggleUI.tag = "TOGGLESENSORS";
 

@@ -17,6 +17,7 @@
 
         // Assigned in ROS Manager during runtime
         public ROSDroneConnectionInterface droneROSConnection;
+        // Assigned on the drone prefab
         public DroneSimulationManager droneSimulationManager;
         public DroneMenu droneMenu;
 

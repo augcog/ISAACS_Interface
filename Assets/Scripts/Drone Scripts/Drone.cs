@@ -100,7 +100,7 @@
             if (isEmptyWaypointList(waypoints))
             {
                 // Creating the starter waypoint.
-                Waypoint takeoffWaypoint = new Waypoint(this, new Vector3(0,1,0));
+                Waypoint takeoffWaypoint = new Waypoint(this, this.gameObjectPointer.transform.position + new Vector3(0,1,0));
 
                 Debug.Log("Creating take off waypoint at: " + takeoffWaypoint.ToString());
 

@@ -109,11 +109,6 @@ public class ROSManager : MonoBehaviour
         GameObject droneGameObject = droneInstance.gameObjectPointer;
         droneGameObject.name = rosDroneConnectionInput.droneName;
 
-        // Add drone sim manager script on the drone
-        DroneSimulationManager droneSim = droneGameObject.AddComponent<DroneSimulationManager>();
-        droneGameObject.GetComponent<DroneProperties>().droneSimulationManager = droneSim;
-        droneSim.InitDroneSim(droneInstance);
-
         ROSDroneConnectionInterface rosDroneConnection = null;
 
         // Add corresponding ros drone connection script
@@ -165,7 +160,10 @@ public class ROSManager : MonoBehaviour
             droneInstance.AddSensor(sensor);
         }
 
-
+        // Initilize drone sim manager script on the drone
+        DroneSimulationManager droneSim = droneGameObject.GetComponent<DroneSimulationManager>();
+        droneSim.InitDroneSim();
+ 
         // Get DroneMenu and instansiate.
         DroneMenu droneMenu = droneGameObject.GetComponent<DroneMenu>();
         droneMenu.InitDroneMenu(rosDroneConnection, droneSubscribers);
