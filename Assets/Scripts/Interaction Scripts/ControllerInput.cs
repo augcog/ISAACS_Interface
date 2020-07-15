@@ -279,7 +279,7 @@
         /// <returns>True if the right hand is currently grabbing an object.</returns>
 		public bool RightIsGrabbing()
 		{
-			return (RightController.GetComponent<VRTK_InteractGrab>().GetGrabbedObject()) ? true : false;
+			return (RightController.GetComponent<VRTK_InteractGrab>().GetGrabbedObject() != null) ? true : false;
 		}
 
 		/// <summary>

@@ -71,11 +71,6 @@
                 // If nothing is held down, default to the idle state. 
                 case ControllerState.IDLE:
                 {
-                    if (controllerInput.RightIsGrabbing())
-                    {
-                        controllerState = ControllerState.MOVING_WAYPOINT;
-                        Debug.Log("*********************GW*********************");
-                    } 
                     if (controllerInput.BothGrip())
                     {
                         controllerState = ControllerState.SCALING;
@@ -200,6 +195,12 @@
 
                 case ControllerState.PLACING_WAYPOINT:
                 {
+                    if (controllerInput.RightIsGrabbingWaypoint())
+                    {
+                        controllerState = ControllerState.MOVING_WAYPOINT;
+                        break; 
+                    }
+
                     if (controllerInput.RightGrip()) /// Cancel waypoint placement
                     {
                         /// TODO: stop showing line
@@ -217,7 +218,7 @@
                     }
                     else
                     {
-                        /// TODO: continue line showing
+                        /// TODO: continue line showing and slightly faded wp
                     }
                     break;
 
@@ -225,6 +226,12 @@
 
                 case ControllerState.MOVING_WAYPOINT:
                 {
+                    if (!controllerInput.RightIsGrabbingWaypoint())
+                    {
+                        controllerState = ControllerState.IDLE;
+                        controllerInput.EnableRightPointer();
+                        break;
+                    }
                     break;
                 }
 
@@ -232,7 +239,7 @@
                 {
                     if (!controllerInput.RightA())
                     {
-                        ControllerState.IDLE;
+                        controllerState = ControllerState.IDLE;
                         Undo();
                         break;
                     }
@@ -250,7 +257,7 @@
                 {
                     if (!controllerInput.RightB())
                     {
-                        ControllerState.IDLE;
+                        controllerState = ControllerState.IDLE;
                         Redo();
                         break; 
                     }
