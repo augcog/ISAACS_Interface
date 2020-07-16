@@ -605,7 +605,6 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
             case "/dji_sdk/rtk_position":
                 gps_position = (parsed == null) ? new NavSatFixMsg(raw_msg) : (NavSatFixMsg)parsed;
                 result = gps_position;
-
                 if (gps_position.GetLatitude() == 0.0f && gps_position.GetLongitude() == 0.0f)
                 {
                     break;

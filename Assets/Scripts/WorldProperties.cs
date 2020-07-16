@@ -61,6 +61,8 @@
         /// Radius of the Earth in meters.
         /// </summary>
         private const double EARTH_RADIUS = 6378137;
+        private const double TO_RADIANS = Math.PI / 180.0;
+        private const double FROM_RADIANS = 180.0 / Math.PI;
 
         // Use this for initialization
         void Start()
@@ -192,7 +194,7 @@
         /// <returns>Unity position vector to use within World GameObject</returns>
         public static Vector3 ROSCoordToUnityCoord(NavSatFixMsg gpsPosition)
         {
-            return ROSCoordToUnityCoord(new GPSCoordinate(gpsPosition.GetLongitude(), gpsPosition.GetLatitude(), gpsPosition.GetAltitude()));
+            return ROSCoordToUnityCoord(new GPSCoordinate(gpsPosition.GetLatitude(), gpsPosition.GetLongitude(), gpsPosition.GetAltitude()));
         }
 
         /// <summary>
@@ -203,8 +205,8 @@
         public static Vector3 ROSCoordToUnityCoord(GPSCoordinate gpsPosition)
         {
             Vector3 unityCoord = Vector3.zero;
-            unityCoord.z = (float)((gpsPosition.Lat - Lat0) * EARTH_RADIUS);
-            unityCoord.x = (float)((gpsPosition.Lng - Lng0) * EARTH_RADIUS * lngCorrection);
+            unityCoord.z = (float)((gpsPosition.Lat - Lat0) * TO_RADIANS * EARTH_RADIUS);
+            unityCoord.x = (float)((gpsPosition.Lng - Lng0) * TO_RADIANS *  EARTH_RADIUS * lngCorrection);
             unityCoord.y = (float)(gpsPosition.Alt - Alt0);
 
             return unityCoord;
@@ -219,9 +221,9 @@
         public static GPSCoordinate UnityCoordToROSCoord(Vector3 unityPosition)
         {
             GPSCoordinate gpsCoord = new GPSCoordinate();
-            gpsCoord.x = (float)((unityPosition.x / (EARTH_RADIUS * lngCorrection)) + Lng0);
-            gpsCoord.y = (float)((unityPosition.z / EARTH_RADIUS) + Lat0);
-            gpsCoord.z= (float)((unityPosition.y) + Alt0);
+            gpsCoord.x = (((double) unityPosition.x * FROM_RADIANS / (EARTH_RADIUS * lngCorrection)) + Lng0);
+            gpsCoord.y = (((double) unityPosition.z * FROM_RADIANS / EARTH_RADIUS) + Lat0);
+            gpsCoord.z= (((double) unityPosition.y) + Alt0);
             return gpsCoord;
         }
     }
