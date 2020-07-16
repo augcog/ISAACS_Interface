@@ -837,7 +837,9 @@
 			}	
 		}
 
-		// TODO: Documentation
+		/// <summary>
+ 		/// Display the sphere/waypoint placement visualizer in front of the right controller where a waypoint will be spawned.
+		/// </summary>
 		public void ShowWaypointPlacementVisualizer()
 		{
 			MeshRenderer renderer = WaypointPlacementVisualizer.gameObject.GetComponent<MeshRenderer>();
@@ -847,8 +849,11 @@
 			}
 		}
 
-		// TODO: Documentation
-		public void HideWaypointPlacementVisualizer()
+
+		/// <summary>
+ 		/// Hide the sphere/waypoint placement visualizer in front of the right controller where a waypoint will be spawned.
+		/// </summary>
+        public void HideWaypointPlacementVisualizer()
 		{
 			MeshRenderer renderer = WaypointPlacementVisualizer.gameObject.GetComponent<MeshRenderer>();
 			if (renderer.enabled)
