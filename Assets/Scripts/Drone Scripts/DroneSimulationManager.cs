@@ -206,7 +206,7 @@ public class DroneSimulationManager : MonoBehaviour {
         {
             case FlightStatus.IN_AIR_STANDBY:
             case FlightStatus.FLYING_HOME:
-                updateDestination(false, true, false);
+                updateDestination(false, false, true);
                 droneStatusPrev = droneStatus;
                 droneStatus = FlightStatus.LANDING;
                 break;
@@ -214,7 +214,7 @@ public class DroneSimulationManager : MonoBehaviour {
             case FlightStatus.FLYING:
             case FlightStatus.PAUSED_IN_AIR:
                 nextWaypointID -= 1;
-                updateDestination(false, true, false);
+                updateDestination(false, false, true);
                 droneStatusPrev = droneStatus;
                 droneStatus = FlightStatus.LANDING;
                 break;
