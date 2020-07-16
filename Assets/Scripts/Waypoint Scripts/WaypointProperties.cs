@@ -20,7 +20,7 @@
 
         public Material unpassedWaypoint;
         public Material passedWaypoint;
-        public Material selectedGroundpoint;
+        public Material touchedWaypoint;
         public Material selectedUnpassedLine;
         public Material unselectedUnpassedLine;
         public Material selectedPassedLine;
@@ -112,6 +112,11 @@
                 CreateWaypointIndicator();
 
                 ChangeColor();
+                //TODO: change color of waypoint currnetly touched
+                /*if (GetComponent<VRTK_InteractableObject>().IsTouched())
+                {
+                    ChangeColorToTouched();
+                }*/
             }
 
             UpdateGroundpointLine();
@@ -269,6 +274,11 @@
                     LineProperties.material = unselectedUnpassedLine;
                 }
             }
+        }
+
+        private void ChangeColorToTouched()
+        {
+            this.GetComponent<MeshRenderer>().material = touchedWaypoint;  
         }
 
         // Destroys groundpoint when waypoint is destroyed

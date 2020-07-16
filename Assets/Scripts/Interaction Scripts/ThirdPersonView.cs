@@ -35,8 +35,6 @@
         public enum RotationalDirection { REGULAR, INVERSE }
         public RotationalDirection rotationalDirection = RotationalDirection.REGULAR;
 
-
-
         //private enum CollisionType { NOTHING, WAYPOINT, OTHER }; // These are the possible values for objects we could be colliding with
         //private CollisionPair mostRecentCollision;
         //private List<CollisionPair> currentCollisions;
@@ -71,6 +69,15 @@
                 // If nothing is held down, default to the idle state. 
                 case ControllerState.IDLE:
                 {
+                    if (controllerInput.RightIsTouchingWaypoint())
+                    {
+                        controllerInput.HideWaypointPlacementVisualizer();
+                    }
+                    else
+                    {
+                        controllerInput.ShowWaypointPlacementVisualizer();
+                    }
+
                     if (controllerInput.BothGrip())
                     {
                         controllerState = ControllerState.SCALING;
