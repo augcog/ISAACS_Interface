@@ -302,7 +302,7 @@
 
 
         /// <summary>
-        /// TODO: document
+        /// TReturn the waypoint at the requested index if valid
         /// </summary>
         /// <param></param>
         /// <returns></returns>
