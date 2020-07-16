@@ -5,14 +5,13 @@ using UnityEngine;
 
 public class ImageVisualizer : MonoBehaviour {
 
-    //attached gameobject with texture2D that will change
+    //attached gameobject with texture2D that will change per frame
     public GameObject imageTarget;
 
     string encoding;
     uint width;
     uint height;
     ImageMsg image;
-    //Get encoding string
 
 	// Use this for initialization
 	void Start () {
@@ -24,5 +23,5 @@ public class ImageVisualizer : MonoBehaviour {
 		
 	}
 
-    //
+    
 }

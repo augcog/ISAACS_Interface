@@ -1,0 +1,162 @@
+﻿using System;
+using UnityEngine;
+using System.Collections.Generic;
+using SimpleJSON;
+
+using ROSBridgeLib;
+using ROSBridgeLib.geometry_msgs;
+using ROSBridgeLib.sensor_msgs;
+using ROSBridgeLib.std_msgs;
+using ROSBridgeLib.interface_msgs;
+using ROSBridgeLib.voxblox_msgs;
+using ROSBridgeLib.rntools;
+
+using ISAACS;
+
+public class CameraSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber, ROSSensorConnectionInterface
+{
+    //Note: Copied from PCFACEsensor 
+    // Private connection variables
+    private ROSBridgeWebSocketConnection ros = null;
+    private string client_id;
+    private float alpha = 0.8f;
+    private List<string> sensorSubscriberTopics = new List<string>();
+
+    // List of visualizers
+    private Dictionary<string, ImageVisualizer> imageVisualizers = new Dictionary<string, ImageVisualizer>();
+
+    // Initilize the sensor
+    public void InitilizeSensor(int uniqueID, string sensorIP, int sensorPort, List<string> sensorSubscribers)
+    {
+        Debug.Log("Init Camera Connection at IP " + sensorIP + " Port " + sensorPort.ToString());
+
+        ros = new ROSBridgeWebSocketConnection("ws://" + sensorIP, sensorPort);
+        client_id = uniqueID.ToString();
+
+        foreach (string subscriber in sensorSubscribers)
+        {
+            string subscriberTopic = "";
+
+            switch (subscriber)
+            {
+                default:
+                    subscriberTopic = "/" + subscriber;
+                    ImageVisualizer imageVisualizer = gameObject.AddComponent<ImageVisualizer>();
+                    //PCFaceVisualizer pcFaceVisualizer = gameObject.AddComponent<PCFaceVisualizer>();
+                    //pcFaceVisualizer.CreateMeshGameobject(this.transform);
+                    //pcFaceVisualizers.Add(subscriberTopic, pcFaceVisualizer);
+                    break;
+            }
+            Debug.Log("Camera Subscribing to : " + subscriberTopic);
+            sensorSubscriberTopics.Add(subscriberTopic);
+            ros.AddSubscriber(subscriberTopic, this);
+        }
+
+        ros.Connect();
+
+        //// Hardcode Parent transform
+        //SetLocalPosition(new Vector3(1.98f, 0f, -6.65f));
+        //SetLocalOrientation(Quaternion.Euler(0f, 124.654f, 0f));
+        //SetLocalScale(new Vector3(0.505388f, 0.505388f, 0.505388f));
+
+    }
+    // Update is called once per frame in Unity
+    void Update()
+    {
+        if (ros != null)
+        {
+            ros.Render();
+        }
+    }
+
+    public string GetSensorName()
+    {
+        return this.gameObject.name;
+    }
+
+    /// <summary>
+    /// Returns a list of connected subscriber topics (which are unique identifiers).
+    /// </summary>
+    /// <returns></returns>
+    public List<string> GetSensorSubscribers()
+    {
+        return sensorSubscriberTopics;
+    }
+
+    /// <summary>
+    /// Function to disconnect a specific subscriber
+    /// </summary>
+    /// <param name="subscriberID"></param>
+    public void Unsubscribe(string subscriberTopic)
+    {
+        if (sensorSubscriberTopics.Contains(subscriberTopic))
+        {
+            sensorSubscriberTopics.Remove(subscriberTopic);
+            ros.RemoveSubscriber(subscriberTopic);
+        }
+        else
+        {
+            Debug.Log("No such subscriber exists: " + subscriberTopic);
+        }
+
+    }
+
+    /// <summary>
+    /// Function to connect a specific subscriber
+    /// </summary>
+    /// <param name="subscriberID"></param>
+    public void Subscribe(string subscriberTopic)
+    {
+        if (sensorSubscriberTopics.Contains(subscriberTopic) == false)
+        {
+            ros.AddSubscriber(subscriberTopic, this);
+        }
+        else
+        {
+            Debug.Log("Subscriber already registered: " + subscriberTopic);
+        }
+    }
+
+    // ROS Topic Subscriber methods
+    public ROSBridgeMsg OnReceiveMessage(string topic, JSONNode raw_msg, ROSBridgeMsg parsed = null)
+    {
+        Debug.Log("Camera Recieved message");
+
+        ROSBridgeMsg result = null;
+      
+        ImageMsg meshMsg = new ImageMsg(raw_msg);
+        Debug.Log("Image encoding is:" + meshMsg.GetEncoding());
+        // Obtain visualizer for this topic
+        ImageVisualizer visualizer = imageVisualizers[topic];
+
+        //TODO: change the gameobject's texture2D with visualizer.GetData();
+
+        return result;
+    }
+    public string GetMessageType(string topic)
+    {
+        //Debug.Log("PCFace message type is returned as rntools/PCFace by default");
+        //return "rntools/PCFace";
+        return "ImageMsg";
+    }
+
+    public void DisconnectROSConnection()
+    {
+        ros.Disconnect();
+    }
+
+    public void SetLocalOrientation(Quaternion quaternion)
+    {
+        this.transform.localRotation = quaternion;
+    }
+
+    public void SetLocalPosition(Vector3 position)
+    {
+        this.transform.localPosition = position;
+    }
+
+    public void SetLocalScale(Vector3 scale)
+    {
+        this.transform.localScale = scale;
+    }
+}

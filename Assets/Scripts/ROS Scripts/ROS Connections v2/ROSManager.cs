@@ -214,7 +214,10 @@ public class ROSManager : MonoBehaviour {
 
             case SensorType.Image:
                 Debug.Log("Camera Stream created");
-                
+                CameraSensor_ROSSensorConnection camera_rosSensorConnection = sensor.AddComponent<CameraSensor_ROSSensorConnection>();
+                camera_rosSensorConnection.InitilizeSensor(uniqueID, sensorIP, sensorPort, sensorSubscribers);
+                ROSSensorConnections.Add(uniqueID, camera_rosSensorConnection);
+                rosSensorConnection = camera_rosSensorConnection;
                 break;
 
             default:
