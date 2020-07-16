@@ -238,13 +238,13 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
             command_params[i] = 0;
         }
 
-        ArrayList waypoints = new ArrayList(this.GetComponent<DroneProperties>().droneClassPointer.waypoints);
+        //If the following leads to a null pointer reference, then use instead: Drone currentlySelectedDrone = this.GetComponent<DroneProperties>().droneClassPointer;
+        Drone currentlySelectedDrone = WorldProperties.GetSelectedDrone();
 
-        // Removing first waypoint set above the drone as takeoff is automatic.
-        waypoints.RemoveAt(0);
-
-        foreach (Waypoint waypoint in waypoints)
+        // Start from 1 instead of 0, as takeoff is automatic.
+        for (int i = 1; i < currentlySelectedDrone.WaypointsCount(); i++)
         {
+            Waypoint waypoint = currentlySelectedDrone.GetWaypoint(i);
             Vector3 unityCoord = waypoint.gameObjectPointer.transform.localPosition;
             GPSCoordinate rosCoord = WorldProperties.UnityCoordToROSCoord(unityCoord);
 
@@ -252,6 +252,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
             Debug.Log("Adding waypoint at: " + new_waypoint);
             missionMsgList.Add(new_waypoint);
         }
+
         MissionWaypointTaskMsg Task = new MissionWaypointTaskMsg(15.0f, 15.0f, MissionWaypointTaskMsg.ActionOnFinish.AUTO_LANDING, 1, MissionWaypointTaskMsg.YawMode.AUTO, MissionWaypointTaskMsg.TraceMode.POINT, MissionWaypointTaskMsg.ActionOnRCLost.FREE, MissionWaypointTaskMsg.GimbalPitchMode.FREE, missionMsgList.ToArray());
         Debug.Log("Uploading waypoint mission");
         UploadWaypointsTask(Task);
@@ -295,7 +296,6 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
     {
         if (simDrone)
         {
-            this.GetComponent<DroneSimulationManager>().updateWaypoints();
             return;
         }
 

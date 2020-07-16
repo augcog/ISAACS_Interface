@@ -31,7 +31,6 @@ public class DroneSimulationManager : MonoBehaviour {
     private Vector3 currentDestination;
     private Vector3 homeLocation;
 
-    List<Waypoint> waypoints;
     private int nextWaypointID = 0;
 
     /// <summary>
@@ -41,14 +40,12 @@ public class DroneSimulationManager : MonoBehaviour {
     public void InitDroneSim()
     {
         drone = this.GetComponent<DroneProperties>().droneClassPointer;
-  
+        
         homeLocation = drone.gameObjectPointer.transform.localPosition;
         currentLocation = drone.gameObjectPointer.transform.localPosition;
 
         droneStatus = FlightStatus.ON_GROUND_STANDBY;
         droneStatusPrev = FlightStatus.NULL;
-
-        waypoints = drone.waypoints;
     }
 
     /// <summary>
@@ -63,14 +60,12 @@ public class DroneSimulationManager : MonoBehaviour {
                 if (droneStatusPrev == FlightStatus.NULL)
                 {
                     nextWaypointID = 0;
-                    waypoints = drone.waypoints;
                     updateDestination(true, false, false);
                     droneStatus = FlightStatus.FLYING;
                     droneStatusPrev = FlightStatus.ON_GROUND_STANDBY;
                 }
                 else
                 {
-                    waypoints = drone.waypoints;
                     if (updateDestination(true, false, false))
                     {
                         droneStatusPrev = droneStatus;
@@ -85,7 +80,6 @@ public class DroneSimulationManager : MonoBehaviour {
                 break;
 
             case FlightStatus.IN_AIR_STANDBY:
-                waypoints = drone.waypoints;
                 if (updateDestination(true, false, false))
                 {
                     droneStatusPrev = droneStatus;
@@ -146,7 +140,6 @@ public class DroneSimulationManager : MonoBehaviour {
             case FlightStatus.ON_GROUND_STANDBY:
             case FlightStatus.IN_AIR_STANDBY:
 
-                waypoints = drone.waypoints;
                 if (updateDestination(true, false, false))
                 {
                     droneStatusPrev = droneStatus;
@@ -234,13 +227,6 @@ public class DroneSimulationManager : MonoBehaviour {
         }
     }
 
-    /// <summary>
-    /// update the waypoints list
-    /// </summary>
-    public void updateWaypoints()
-    {
-        waypoints = drone.waypoints;
-    }
 
     /// <summary>
     /// Check if the drone has reached the current destination
@@ -276,12 +262,12 @@ public class DroneSimulationManager : MonoBehaviour {
             return true;
         }
 
-        if (nextWaypointID == waypoints.Count)
+        if (nextWaypointID == drone.WaypointsCount())
         {
             return false;
         }
 
-        Waypoint nextDestination = waypoints[nextWaypointID];
+        Waypoint nextDestination = drone.GetWaypoint(nextWaypointID);
         currentDestination = nextDestination.gameObjectPointer.transform.localPosition;
         Debug.Log("Destination set to: " + currentDestination);
         nextWaypointID += 1;
