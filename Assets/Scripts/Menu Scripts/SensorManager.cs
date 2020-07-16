@@ -15,7 +15,7 @@ public class SensorManager : MonoBehaviour {
     public GameObject togglePrefab;
 
     private List<ROSSensorConnectionInterface> sensorList = new List<ROSSensorConnectionInterface>();
-    private List<string> subscriberList = new List<string>();
+    private Dictionary<string, bool> subscriberDict = new Dictionary<string, bool>();
     private ROSSensorConnectionInterface selectedSensor;
     private int selectedSensorPos;
 
@@ -69,9 +69,10 @@ public class SensorManager : MonoBehaviour {
     {
         //clear all previous toggles
         sensorText.text = inputSensor.GetSensorName();
-        subscriberList = new List<string>(inputSensor.GetSensorSubscribers());
+        subscriberDict = new Dictionary<string, bool>(inputSensor.GetSensorSubscribers());
         int subscribercount = 0;
-        foreach (string subscriber in subscriberList)
+
+        foreach (string subscriber in subscriberDict.Keys)
         {
             Debug.Log("Creating button for :" + subscriber);
 
@@ -89,6 +90,7 @@ public class SensorManager : MonoBehaviour {
             Toggle thisToggle = toggleUI.GetComponent<Toggle>();
             Text toggleName = toggleUI.GetComponentInChildren<Text>();
             toggleName.text = subscriber;
+            thisToggle.isOn = subscriberDict[subscriber];
             thisToggle.onValueChanged.AddListener(delegate { ToggleValueChanged(thisToggle); });
             subscribercount++;
             
@@ -153,8 +155,8 @@ public class SensorManager : MonoBehaviour {
         return selectedSensor;
     }
 
-    public List<string> getSubscriberList()
+    public Dictionary<string,bool> getSubscriberDict()
     {
-        return subscriberList;
+        return subscriberDict;
     }
 }

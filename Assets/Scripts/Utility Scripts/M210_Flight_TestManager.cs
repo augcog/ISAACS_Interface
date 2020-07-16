@@ -222,8 +222,11 @@ public class M210_Flight_TestManager : MonoBehaviour
         if (Input.GetKeyDown(unsubscribe))
         {
             ROSSensorConnectionInterface sensor = WorldProperties.sensorManager.getSelectedSensor();
-            List<string> subscriberList = WorldProperties.sensorManager.getSubscriberList();
-            sensor.Unsubscribe(subscriberList[0]);
+            Dictionary<string, bool> subscriberDict = WorldProperties.sensorManager.getSubscriberDict();
+            foreach (string topic in subscriberDict.Keys)
+            {
+                sensor.Unsubscribe(topic);
+            }
         }
     }
 }
