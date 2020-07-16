@@ -103,6 +103,7 @@
             {
                 Drone nextDrone = dronesQueue.Dequeue();
                 nextDrone.gameObjectPointer.GetComponent<DroneProperties>().SelectDrone();
+
                 return nextDrone;
             }
             else
