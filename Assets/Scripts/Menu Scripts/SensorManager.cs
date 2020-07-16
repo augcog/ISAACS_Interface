@@ -13,9 +13,10 @@ public class SensorManager : MonoBehaviour {
     public Button rightButton;
     public Text sensorText;
     public GameObject togglePrefab;
+    public GameObject sensorMenu;
 
     private List<ROSSensorConnectionInterface> sensorList = new List<ROSSensorConnectionInterface>();
-    private List<string> subscriberList = new List<string>();
+    private Dictionary<string, bool> subscriberDict = new Dictionary<string, bool>();
     private ROSSensorConnectionInterface selectedSensor;
     private int selectedSensorPos;
 
@@ -36,6 +37,13 @@ public class SensorManager : MonoBehaviour {
         sensorList.Clear();
         deleteOldSensors();
 
+        if (allSensors.Count == 0)
+        {
+            Debug.Log("No sensors");
+            sensorText.text = "No attached sensors";
+            return;
+        }
+
         foreach (ROSSensorConnectionInterface sensor in allSensors)
         {
             Debug.Log("Adding sensor to UI: " + sensor.GetSensorName());
@@ -45,8 +53,6 @@ public class SensorManager : MonoBehaviour {
         Debug.Log("Selecting sensor: " + sensorList[0].GetSensorName());
         selectedSensor = sensorList[0];
         selectedSensorPos = 0;
-
-        Debug.Log("The sensor's subscribers are: " + sensorList.ToString());
         updateSensorUI(selectedSensor);
 
     }
@@ -67,11 +73,13 @@ public class SensorManager : MonoBehaviour {
     /// </summary>
     public void updateSensorUI(ROSSensorConnectionInterface inputSensor)
     {
-        //clear all previous toggles
+        deleteOldSensors();
+
         sensorText.text = inputSensor.GetSensorName();
-        subscriberList = new List<string>(inputSensor.GetSensorSubscribers());
+        subscriberDict = new Dictionary<string, bool>(inputSensor.GetSensorSubscribers());
         int subscribercount = 0;
-        foreach (string subscriber in subscriberList)
+
+        foreach (string subscriber in subscriberDict.Keys)
         {
             Debug.Log("Creating button for :" + subscriber);
 
@@ -79,7 +87,7 @@ public class SensorManager : MonoBehaviour {
             float ypos = 60 - (subscribercount * 40);
             var position = new Vector3(-19, ypos, -14);
             GameObject toggleUI = Instantiate(togglePrefab, new Vector3(0, 0, 0), Quaternion.identity);
-            toggleUI.transform.parent = GameObject.Find("Sensor Menu").transform;
+            toggleUI.transform.parent = sensorMenu.transform;
             toggleUI.transform.localPosition = position;
             toggleUI.transform.localScale = Vector3.one *1.3f;
             toggleUI.transform.localRotation = Quaternion.identity;
@@ -89,6 +97,7 @@ public class SensorManager : MonoBehaviour {
             Toggle thisToggle = toggleUI.GetComponent<Toggle>();
             Text toggleName = toggleUI.GetComponentInChildren<Text>();
             toggleName.text = subscriber;
+            thisToggle.isOn = subscriberDict[subscriber];
             thisToggle.onValueChanged.AddListener(delegate { ToggleValueChanged(thisToggle); });
             subscribercount++;
             
@@ -153,8 +162,8 @@ public class SensorManager : MonoBehaviour {
         return selectedSensor;
     }
 
-    public List<string> getSubscriberList()
+    public Dictionary<string,bool> getSubscriberDict()
     {
-        return subscriberList;
+        return subscriberDict;
     }
 }

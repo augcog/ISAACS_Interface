@@ -19,7 +19,7 @@ public class PCFaceSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
     private ROSBridgeWebSocketConnection ros = null;
     private string client_id;
     private float alpha = 0.8f;
-    private List<string> sensorSubscriberTopics = new List<string>();
+    private Dictionary<string, bool> sensorSubscriberTopicsDict = new Dictionary<string, bool>();
 
     // List of visualizers
     private Dictionary<string, PCFaceVisualizer> pcFaceVisualizers = new Dictionary<string, PCFaceVisualizer>();
@@ -47,7 +47,7 @@ public class PCFaceSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
                     break;
             }
             Debug.Log(" PC Face Mesh Subscribing to : " + subscriberTopic);
-            sensorSubscriberTopics.Add(subscriberTopic);
+            sensorSubscriberTopicsDict.Add(subscriberTopic, true);
             ros.AddSubscriber(subscriberTopic, this);
         }
 
@@ -77,9 +77,13 @@ public class PCFaceSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
     /// Returns a list of connected subscriber topics (which are unique identifiers).
     /// </summary>
     /// <returns></returns>
-    public List<string> GetSensorSubscribers()
+    /// <summary>
+    /// Returns a list of connected subscriber topics (which are unique identifiers).
+    /// </summary>
+    /// <returns></returns>
+    public Dictionary<string, bool> GetSensorSubscribers()
     {
-        return sensorSubscriberTopics;
+        return sensorSubscriberTopicsDict;
     }
 
     /// <summary>
@@ -88,9 +92,9 @@ public class PCFaceSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
     /// <param name="subscriberID"></param>
     public void Unsubscribe(string subscriberTopic)
     {
-        if (sensorSubscriberTopics.Contains(subscriberTopic))
+        if (sensorSubscriberTopicsDict.ContainsKey(subscriberTopic))
         {
-            sensorSubscriberTopics.Remove(subscriberTopic);
+            sensorSubscriberTopicsDict[subscriberTopic] = false;
             ros.RemoveSubscriber(subscriberTopic);
         }
         else
@@ -106,14 +110,17 @@ public class PCFaceSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
     /// <param name="subscriberID"></param>
     public void Subscribe(string subscriberTopic)
     {
-        if (sensorSubscriberTopics.Contains(subscriberTopic) == false)
+        if (sensorSubscriberTopicsDict.ContainsKey(subscriberTopic))
         {
-            ros.AddSubscriber(subscriberTopic, this);
+            if (sensorSubscriberTopicsDict[subscriberTopic] == false)
+            {
+                ros.AddSubscriber(subscriberTopic, this);
+                sensorSubscriberTopicsDict[subscriberTopic] = true;
+                return;
+            }
         }
-        else
-        {
-            Debug.Log("Subscriber already registered: " + subscriberTopic);
-        }
+
+        Debug.Log("Subscriber already registered: " + subscriberTopic);
     }
 
     // ROS Topic Subscriber methods

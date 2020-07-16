@@ -102,7 +102,14 @@
             if (dronesQueue.Count > 0)
             {
                 Drone nextDrone = dronesQueue.Dequeue();
-                nextDrone.gameObjectPointer.GetComponent<DroneProperties>().SelectDrone();
+                nextDrone.droneProperties.SelectDrone();
+
+                if (worldObject.GetComponent<M210_Flight_TestManager>() != null)
+                {
+                    M210_Flight_TestManager flight_TestManager = worldObject.GetComponent<M210_Flight_TestManager>();
+                    flight_TestManager.UpdateDrone(nextDrone.droneProperties.droneROSConnection);
+                }
+
                 return nextDrone;
             }
             else

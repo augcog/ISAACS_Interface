@@ -695,16 +695,16 @@ MonoBehaviour:
     droneSubscribers: 0500000001000000
     simFlight: 1
     attachedSensors:
+    - sensorName: Perry_Lidar
+      ipAddress: 12
+      port: 12
+      sensorType: 0
+      sensorSubscribers: 00000000
     - sensorName: Perry_Mesh
       ipAddress: 13
       port: 13
       sensorType: 1
       sensorSubscribers: 01000000
-    - sensorName: Perry_Lidar
-      ipAddress: 14
-      port: 14
-      sensorType: 0
-      sensorSubscribers: 00000000
   - droneName: Apollo the Antelope
     ipAddress: 75.25.126.85
     port: 9090
@@ -1164,7 +1164,7 @@ Animator:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 322076860}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: c454080d636f840038dc8f37941751b3, type: 2}
   m_CullingMode: 0
@@ -1208,7 +1208,7 @@ MonoBehaviour:
   m_AnimationTriggers:
     m_NormalTrigger: Normal
     m_HighlightedTrigger: Highlighted
-    m_PressedTrigger: 
+    m_PressedTrigger: Pressed
     m_DisabledTrigger: Disabled
   m_Interactable: 1
   m_TargetGraphic: {fileID: 1209136062}
@@ -1231,11 +1231,11 @@ BoxCollider:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 322076860}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 240, y: 80, z: 50}
-  m_Center: {x: 0, y: 0, z: -20}
+  m_Center: {x: 0, y: 0, z: -25}
 --- !u!114 &322076866
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1796,11 +1796,11 @@ BoxCollider:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 459626910}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 240, y: 80, z: 50}
-  m_Center: {x: 0, y: 0, z: -20}
+  m_Center: {x: 0, y: 0, z: -25}
 --- !u!95 &459626914
 Animator:
   serializedVersion: 3
@@ -1809,7 +1809,7 @@ Animator:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 459626910}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: c454080d636f840038dc8f37941751b3, type: 2}
   m_CullingMode: 0
@@ -1852,7 +1852,7 @@ MonoBehaviour:
   m_AnimationTriggers:
     m_NormalTrigger: Normal
     m_HighlightedTrigger: Highlighted
-    m_PressedTrigger: 
+    m_PressedTrigger: Pressed
     m_DisabledTrigger: Disabled
   m_Interactable: 1
   m_TargetGraphic: {fileID: 1359283832}
@@ -2041,11 +2041,11 @@ BoxCollider:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 553067302}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 240, y: 80, z: 50}
-  m_Center: {x: 0, y: 0, z: -20}
+  m_Center: {x: 0, y: 0, z: -25}
 --- !u!95 &553067306
 Animator:
   serializedVersion: 3
@@ -2054,7 +2054,7 @@ Animator:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 553067302}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: c454080d636f840038dc8f37941751b3, type: 2}
   m_CullingMode: 0
@@ -2097,7 +2097,7 @@ MonoBehaviour:
   m_AnimationTriggers:
     m_NormalTrigger: Normal
     m_HighlightedTrigger: Highlighted
-    m_PressedTrigger: 
+    m_PressedTrigger: Pressed
     m_DisabledTrigger: Disabled
   m_Interactable: 1
   m_TargetGraphic: {fileID: 1818637097}
@@ -2660,11 +2660,11 @@ BoxCollider:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1050719667}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 240, y: 80, z: 50}
-  m_Center: {x: 0, y: 0, z: -20}
+  m_Center: {x: 0, y: 0, z: -25}
 --- !u!95 &1050719671
 Animator:
   serializedVersion: 3
@@ -2673,7 +2673,7 @@ Animator:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1050719667}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: c454080d636f840038dc8f37941751b3, type: 2}
   m_CullingMode: 0
@@ -2716,7 +2716,7 @@ MonoBehaviour:
   m_AnimationTriggers:
     m_NormalTrigger: Normal
     m_HighlightedTrigger: Highlighted
-    m_PressedTrigger: 
+    m_PressedTrigger: Pressed
     m_DisabledTrigger: Disabled
   m_Interactable: 1
   m_TargetGraphic: {fileID: 1198472608}
@@ -3776,11 +3776,11 @@ BoxCollider:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1409379668}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 240, y: 80, z: 50}
-  m_Center: {x: 0, y: 0, z: -20}
+  m_Center: {x: 0, y: 0, z: -25}
 --- !u!95 &1409379672
 Animator:
   serializedVersion: 3
@@ -3789,7 +3789,7 @@ Animator:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1409379668}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: c454080d636f840038dc8f37941751b3, type: 2}
   m_CullingMode: 0
@@ -3832,7 +3832,7 @@ MonoBehaviour:
   m_AnimationTriggers:
     m_NormalTrigger: Normal
     m_HighlightedTrigger: Highlighted
-    m_PressedTrigger: 
+    m_PressedTrigger: Pressed
     m_DisabledTrigger: Disabled
   m_Interactable: 1
   m_TargetGraphic: {fileID: 954736635}
@@ -4845,6 +4845,7 @@ MonoBehaviour:
   LeftUI: {fileID: 491234449}
   RightController: {fileID: 1347866310}
   RightUI: {fileID: 1197405025}
+  WaypointPlacementVisualizer: {fileID: 1456301587}
 --- !u!1 &1715641644
 GameObject:
   m_ObjectHideFlags: 0
@@ -5146,7 +5147,7 @@ Animator:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1830922788}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: c454080d636f840038dc8f37941751b3, type: 2}
   m_CullingMode: 0
@@ -5189,7 +5190,7 @@ MonoBehaviour:
   m_AnimationTriggers:
     m_NormalTrigger: Normal
     m_HighlightedTrigger: Highlighted
-    m_PressedTrigger: 
+    m_PressedTrigger: Pressed
     m_DisabledTrigger: Disabled
   m_Interactable: 1
   m_TargetGraphic: {fileID: 1046134704}
@@ -5212,11 +5213,11 @@ BoxCollider:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1830922788}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 240, y: 80, z: 50}
-  m_Center: {x: 0, y: 0, z: -20}
+  m_Center: {x: 0, y: 0, z: -25}
 --- !u!114 &1830922794
 MonoBehaviour:
   m_ObjectHideFlags: 0

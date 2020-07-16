@@ -33,7 +33,7 @@ public class LampSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
     // Private connection variables
     private ROSBridgeWebSocketConnection ros = null;
     private string client_id;
-    private List<string> sensorSubscriberTopics = new List<string>();
+    private Dictionary<string, bool> sensorSubscriberTopicsDict = new Dictionary<string, bool>();
 
     // Initilize the sensor
     public void InitilizeSensor(int uniqueID, string sensorIP, int sensorPort, List<string> sensorSubscribers)
@@ -61,7 +61,7 @@ public class LampSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
             pcVisualizer.SetParentTransform(this.transform);
             pcVisualizers.Add(subscriberTopic, pcVisualizer);
             Debug.Log(" LAMP Subscribing to : " + subscriberTopic);
-            sensorSubscriberTopics.Add(subscriberTopic);
+            sensorSubscriberTopicsDict.Add(subscriberTopic, true);
             ros.AddSubscriber(subscriberTopic, this);
         }
 
@@ -86,9 +86,9 @@ public class LampSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
     /// Returns a list of connected subscriber topics (which are unique identifiers).
     /// </summary>
     /// <returns></returns>
-    public List<string> GetSensorSubscribers()
+    public Dictionary<string, bool> GetSensorSubscribers()
     {
-        return sensorSubscriberTopics;
+        return sensorSubscriberTopicsDict;
     }
 
     /// <summary>
@@ -97,9 +97,9 @@ public class LampSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
     /// <param name="subscriberID"></param>
     public void Unsubscribe(string subscriberTopic)
     {
-        if (sensorSubscriberTopics.Contains(subscriberTopic))
+        if (sensorSubscriberTopicsDict.ContainsKey(subscriberTopic))
         {
-            sensorSubscriberTopics.Remove(subscriberTopic);
+            sensorSubscriberTopicsDict[subscriberTopic] = false;
             ros.RemoveSubscriber(subscriberTopic);
         }
         else
@@ -115,14 +115,17 @@ public class LampSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
     /// <param name="subscriberID"></param>
     public void Subscribe(string subscriberTopic)
     {
-        if (sensorSubscriberTopics.Contains(subscriberTopic) == false)
+        if (sensorSubscriberTopicsDict.ContainsKey(subscriberTopic))
         {
-            ros.AddSubscriber(subscriberTopic, this);
+            if (sensorSubscriberTopicsDict[subscriberTopic] == false)
+            {
+                ros.AddSubscriber(subscriberTopic, this);
+                sensorSubscriberTopicsDict[subscriberTopic] = true;
+                return;
+            }
         }
-        else
-        {
-            Debug.Log("Subscriber already registered: " + subscriberTopic);
-        }
+
+        Debug.Log("Subscriber already registered: " + subscriberTopic);
     }
 
     // ROS Topic Subscriber methods

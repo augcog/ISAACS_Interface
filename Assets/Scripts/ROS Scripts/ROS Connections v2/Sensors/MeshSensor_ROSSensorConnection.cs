@@ -20,7 +20,7 @@ public class MeshSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
     private ROSBridgeWebSocketConnection ros = null;
     public string client_id;
     private Thread rosMsgThread;
-    private List<string> sensorSubscriberTopics = new List<string>();
+    private Dictionary<string, bool> sensorSubscriberTopicsDict = new Dictionary<string, bool>();
 
     /// Queue of jsonMsgs to be parsed on thread
     private Queue<JSONNode> jsonMsgs = new Queue<JSONNode>();
@@ -95,7 +95,7 @@ public class MeshSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
                     break;
             }
             Debug.Log(" Mesh Subscribing to : " + subscriberTopic);
-            sensorSubscriberTopics.Add(subscriberTopic);
+            sensorSubscriberTopicsDict.Add(subscriberTopic, true);
             ros.AddSubscriber(subscriberTopic, this);
         }
 
@@ -133,19 +133,6 @@ public class MeshSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
             Debug.Log("Set Mesh: " + DateTime.Now.Subtract(startTime).TotalMilliseconds.ToString() + "ms");
         }
 
-        if (Input.GetKeyDown("n"))
-        {
-            string topic = sensorSubscriberTopics[0];
-            Debug.Log("Testing with topic: " + topic);
-            Unsubscribe(topic);
-        }
-
-        if (Input.GetKeyDown("m"))
-        {
-            string topic = sensorSubscriberTopics[0];
-            Debug.Log("Testing with topic: " + topic);
-            Subscribe(topic);
-        }
     }
 
     public string GetSensorName()
@@ -157,9 +144,9 @@ public class MeshSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
     /// Returns a list of connected subscriber topics (which are unique identifiers).
     /// </summary>
     /// <returns></returns>
-    public List<string> GetSensorSubscribers()
+    public Dictionary<string,bool> GetSensorSubscribers()
     {
-        return sensorSubscriberTopics;
+        return sensorSubscriberTopicsDict;
     }
 
     /// <summary>
@@ -168,9 +155,9 @@ public class MeshSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
     /// <param name="subscriberID"></param>
     public void Unsubscribe(string subscriberTopic)
     {
-        if (sensorSubscriberTopics.Contains(subscriberTopic))
+        if (sensorSubscriberTopicsDict.ContainsKey(subscriberTopic))
         {
-            sensorSubscriberTopics.Remove(subscriberTopic);
+            sensorSubscriberTopicsDict[subscriberTopic] = false;
             ros.RemoveSubscriber(subscriberTopic);
         }
         else
@@ -186,14 +173,17 @@ public class MeshSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
     /// <param name="subscriberID"></param>
     public void Subscribe(string subscriberTopic)
     {
-        if (sensorSubscriberTopics.Contains(subscriberTopic) == false)
+        if (sensorSubscriberTopicsDict.ContainsKey(subscriberTopic))
         {
-            ros.AddSubscriber(subscriberTopic, this);
+            if (sensorSubscriberTopicsDict[subscriberTopic] == false)
+            {
+                ros.AddSubscriber(subscriberTopic, this);
+                sensorSubscriberTopicsDict[subscriberTopic] = true;
+                return;
+            }
         }
-        else
-        {
-            Debug.Log("Subscriber already registered: " + subscriberTopic);
-        }
+
+        Debug.Log("Subscriber already registered: " + subscriberTopic);
     }
 
     // ROS Topic Subscriber methods
