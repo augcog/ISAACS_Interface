@@ -195,6 +195,12 @@
 
                 case ControllerState.PLACING_WAYPOINT:
                 {
+                    if (controllerInput.RightIsGrabbingWaypoint())
+                    {
+                        controllerState = ControllerState.MOVING_WAYPOINT;
+                        break; 
+                    }
+
                     if (controllerInput.RightGrip()) /// Cancel waypoint placement
                     {
                         /// TODO: stop showing line
@@ -212,7 +218,7 @@
                     }
                     else
                     {
-                        /// TODO: continue line showing
+                        /// TODO: continue line showing and slightly faded wp
                     }
                     break;
 
@@ -220,6 +226,12 @@
 
                 case ControllerState.MOVING_WAYPOINT:
                 {
+                    if (!controllerInput.RightIsGrabbingWaypoint())
+                    {
+                        controllerState = ControllerState.IDLE;
+                        controllerInput.EnableRightPointer();
+                        break;
+                    }
                     break;
                 }
 
@@ -227,6 +239,7 @@
                 {
                     if (!controllerInput.RightA())
                     {
+                        controllerState = ControllerState.IDLE;
                         Undo();
                         break;
                     }
@@ -237,7 +250,6 @@
                         /// TODO: make waypoint disappear
                         break;
                     }
-                    controllerState = ControllerState.IDLE;
                     break;
                 }
 
@@ -245,7 +257,9 @@
                 {
                     if (!controllerInput.RightB())
                     {
+                        controllerState = ControllerState.IDLE;
                         Redo();
+                        break; 
                     }
                     if (controllerInput.RightGrip())
                     {
@@ -254,7 +268,6 @@
                         /// TODO: make waypoint disappear
                         break;
                     }
-                    controllerState = ControllerState.IDLE;
                     break;
                 }
 

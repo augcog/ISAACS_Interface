@@ -31,7 +31,7 @@ GameObject:
   - component: {fileID: 114629310516917166}
   m_Layer: 0
   m_Name: waypoint
-  m_TagString: Untagged
+  m_TagString: waypoint
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -180,7 +180,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   disableWhenIdle: 1
-  touchHighlightColor: {r: 0.72794116, g: 0.9705882, b: 0.8501014, a: 0}
+  allowedNearTouchControllers: 0
   allowedTouchControllers: 0
   ignoredColliders:
   - {fileID: 0}
@@ -198,6 +198,8 @@ MonoBehaviour:
   pointerActivatesUseAction: 0
   useOverrideButton: 0
   allowedUseControllers: 0
+  objectHighlighter: {fileID: 0}
+  touchHighlightColor: {r: 0.72794116, g: 0.9705882, b: 0.8501014, a: 0}
   usingState: 0
 --- !u!120 &120057133663641978
 LineRenderer:
