@@ -675,13 +675,13 @@ MonoBehaviour:
   sensorManagerBaseObject: {fileID: 130481553}
   MeshLatitude: 37.915202
   MeshLongitude: -122.338001
-  MeshAltitude: 0
+  MeshAltitude: 4.779
   MeshRotation: {x: 0, y: 0, z: 0}
   MeshScale: {x: 4.839771, y: 4.839771, z: 4.839771}
   MeshEarthPrefab: {fileID: 854219398}
   MCLatitude: 37.9152
   MCLongitude: -122.338
-  MCAltitude: 0
+  MCAltitude: 5
 --- !u!114 &146794968
 MonoBehaviour:
   m_ObjectHideFlags: 0
