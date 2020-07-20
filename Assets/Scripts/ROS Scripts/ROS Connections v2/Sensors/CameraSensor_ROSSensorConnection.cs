@@ -4,14 +4,7 @@ using System.Collections.Generic;
 using SimpleJSON;
 
 using ROSBridgeLib;
-using ROSBridgeLib.geometry_msgs;
 using ROSBridgeLib.sensor_msgs;
-using ROSBridgeLib.std_msgs;
-using ROSBridgeLib.interface_msgs;
-using ROSBridgeLib.voxblox_msgs;
-using ROSBridgeLib.rntools;
-
-using ISAACS;
 
 public class CameraSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber, ROSSensorConnectionInterface
 {
@@ -40,16 +33,16 @@ public class CameraSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
             switch (subscriber)
             {
                 default:
-                    subscriberTopic = "/" + subscriber;
+                    subscriberTopic = "/camera/" + subscriber;
                     ImageVisualizer imageVisualizer = gameObject.AddComponent<ImageVisualizer>();
-                    //PCFaceVisualizer pcFaceVisualizer = gameObject.AddComponent<PCFaceVisualizer>();
-                    //pcFaceVisualizer.CreateMeshGameobject(this.transform);
-                    //pcFaceVisualizers.Add(subscriberTopic, pcFaceVisualizer);
+                    //imageVisualizer.SetParentTransform(this.transform);
+                    imageVisualizers.Add(subscriberTopic, imageVisualizer);
+                    Debug.Log("Camera subscribing to: " + subscriberTopic);
+                    ros.AddSubscriber("/camera/" + subscriber, this);
                     break;
             }
             Debug.Log("Camera Subscribing to : " + subscriberTopic);
             sensorSubscriberTopics.Add(subscriberTopic);
-            ros.AddSubscriber(subscriberTopic, this);
         }
 
         ros.Connect();
@@ -125,9 +118,9 @@ public class CameraSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
         ROSBridgeMsg result = null;
       
         ImageMsg meshMsg = new ImageMsg(raw_msg);
-        Debug.Log("Image encoding is:" + meshMsg.GetEncoding());
         // Obtain visualizer for this topic
         ImageVisualizer visualizer = imageVisualizers[topic];
+        this.imageVisualizers[topic].SetFrame(meshMsg);
 
         //TODO: change the gameobject's texture2D with visualizer.GetData();
 
@@ -136,8 +129,7 @@ public class CameraSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
     public string GetMessageType(string topic)
     {
         //Debug.Log("PCFace message type is returned as rntools/PCFace by default");
-        //return "rntools/PCFace";
-        return "ImageMsg";
+        return "camera/image_raw";
     }
 
     public void DisconnectROSConnection()

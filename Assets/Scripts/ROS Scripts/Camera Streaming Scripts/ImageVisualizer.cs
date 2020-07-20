@@ -15,13 +15,17 @@ public class ImageVisualizer : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		
 	}
+
+	public void SetFrame(ImageMsg data)
+    {
+        Debug.Log(data.GetEncoding());
+    }
 
     
 }
