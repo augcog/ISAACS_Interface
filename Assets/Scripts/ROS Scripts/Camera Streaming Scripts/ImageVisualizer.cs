@@ -25,6 +25,8 @@ public class ImageVisualizer : MonoBehaviour {
 	public void SetFrame(ImageMsg data)
     {
         Debug.Log(data.GetEncoding());
+        //encoding type is bayer_bggr8
+        //is there any way to change this to something more usable (in drone settings??)
     }
 
     

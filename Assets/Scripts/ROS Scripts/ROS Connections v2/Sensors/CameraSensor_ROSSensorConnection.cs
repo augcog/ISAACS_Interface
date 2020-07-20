@@ -129,7 +129,7 @@ public class CameraSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
     public string GetMessageType(string topic)
     {
         //Debug.Log("PCFace message type is returned as rntools/PCFace by default");
-        return "camera/image_raw";
+        return "sensor_msgs/Image";
     }
 
     public void DisconnectROSConnection()
