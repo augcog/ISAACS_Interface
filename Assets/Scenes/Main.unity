@@ -677,7 +677,7 @@ MonoBehaviour:
   MeshLongitude: -122.337749
   MeshAltitude: 4.779
   MeshRotation: {x: 0, y: 270, z: 0}
-  MeshScale: {x: 4.839771, y: 4.839771, z: 4.839771}
+  MeshScale: {x: 10, y: 10, z: 10}
   MeshEarthPrefab: {fileID: 854219398}
   MCLatitude: 37.9152
   MCLongitude: -122.338
