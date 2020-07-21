@@ -16,7 +16,7 @@ public class PointCloudSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubsc
     // Private connection variables
     private ROSBridgeWebSocketConnection ros = null;
     private string client_id;
-    private List<string> sensorSubscriberTopics = new List<string>();
+    private Dictionary<string, bool> sensorSubscriberTopicsDict = new Dictionary<string, bool>();
 
     private Dictionary<string, PointCloudVisualizer> pcVisualizers = new Dictionary<string, PointCloudVisualizer>();
 
@@ -35,7 +35,9 @@ public class PointCloudSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubsc
             pcVisualizer.SetParentTransform(this.transform);
             pcVisualizers.Add(subscriberTopic, pcVisualizer);
             Debug.Log("Point Cloud subscribing to: " + subscriberTopic);
-            ros.AddSubscriber("/voxblox_node/" + subscriber, this);
+
+            sensorSubscriberTopicsDict.Add(subscriberTopic, true);
+            ros.AddSubscriber(subscriberTopic, this);
         }
         ros.Connect();
     }
@@ -59,9 +61,13 @@ public class PointCloudSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubsc
     /// Returns a list of connected subscriber topics (which are unique identifiers).
     /// </summary>
     /// <returns></returns>
-    public List<string> GetSensorSubscribers()
+    /// <summary>
+    /// Returns a list of connected subscriber topics (which are unique identifiers).
+    /// </summary>
+    /// <returns></returns>
+    public Dictionary<string, bool> GetSensorSubscribers()
     {
-        return sensorSubscriberTopics;
+        return sensorSubscriberTopicsDict;
     }
 
     /// <summary>
@@ -70,9 +76,9 @@ public class PointCloudSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubsc
     /// <param name="subscriberID"></param>
     public void Unsubscribe(string subscriberTopic)
     {
-        if (sensorSubscriberTopics.Contains(subscriberTopic))
+        if (sensorSubscriberTopicsDict.ContainsKey(subscriberTopic))
         {
-            sensorSubscriberTopics.Remove(subscriberTopic);
+            sensorSubscriberTopicsDict[subscriberTopic] = false;
             ros.RemoveSubscriber(subscriberTopic);
         }
         else
@@ -88,14 +94,17 @@ public class PointCloudSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubsc
     /// <param name="subscriberID"></param>
     public void Subscribe(string subscriberTopic)
     {
-        if (sensorSubscriberTopics.Contains(subscriberTopic) == false)
+        if (sensorSubscriberTopicsDict.ContainsKey(subscriberTopic))
         {
-            ros.AddSubscriber(subscriberTopic, this);
+            if (sensorSubscriberTopicsDict[subscriberTopic] == false)
+            {
+                ros.AddSubscriber(subscriberTopic, this);
+                sensorSubscriberTopicsDict[subscriberTopic] = true;
+                return;
+            }
         }
-        else
-        {
-            Debug.Log("Subscriber already registered: " + subscriberTopic);
-        }
+
+        Debug.Log("Subscriber already registered: " + subscriberTopic);
     }
 
     //Get State variables

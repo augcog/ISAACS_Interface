@@ -64,6 +64,15 @@ public class M210_Flight_TestManager : MonoBehaviour
     [Header("Drone Variable")]
     public Matrice_ROSDroneConnection rosDroneConnection;
 
+    /// <summary>
+    /// Set the rosDroneConnection to given argument
+    /// </summary>
+    /// <param name="new_ROSDroneConnection"></param>
+    public void UpdateDrone(ROSDroneConnectionInterface new_ROSDroneConnection)
+    {
+        rosDroneConnection = (Matrice_ROSDroneConnection)new_ROSDroneConnection;
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -222,8 +231,11 @@ public class M210_Flight_TestManager : MonoBehaviour
         if (Input.GetKeyDown(unsubscribe))
         {
             ROSSensorConnectionInterface sensor = WorldProperties.sensorManager.getSelectedSensor();
-            List<string> subscriberList = WorldProperties.sensorManager.getSubscriberList();
-            sensor.Unsubscribe(subscriberList[0]);
+            Dictionary<string, bool> subscriberDict = WorldProperties.sensorManager.getSubscriberDict();
+            foreach (string topic in subscriberDict.Keys)
+            {
+                sensor.Unsubscribe(topic);
+            }
         }
     }
 }

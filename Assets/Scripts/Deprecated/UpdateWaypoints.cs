@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿/*using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 namespace ISAACS
@@ -25,8 +25,6 @@ namespace ISAACS
 
         void Update()
         {
-            totalWaypoints = thisDrone.waypoints.Count - 1;
-
             if (prevPoint != null)
             {
                 DisplayPastPath();
@@ -60,21 +58,22 @@ namespace ISAACS
 
         private void SelectTarget()
         {
-            if (thisDrone.waypoints.Count != 0)
+            totalWaypoints = thisDrone.WaypointsCount();
+            if (totalWaypoints >= 0)
             {
                 if (totalWaypoints > currentWaypoint)
                 {
-                    targetWaypoint = (Waypoint)thisDrone.waypoints[currentWaypoint + 1];
+                    targetWaypoint = thisDrone.GetWaypoint(currentWaypoint + 1);
                     if (this.transform.position == targetWaypoint.gameObjectPointer.transform.position)
                     {
-                        prevPoint = (Waypoint)thisDrone.waypoints[currentWaypoint + 1];
+                        prevPoint = targetWaypoint;
                         currentWaypoint++;
                     }
                 }
                 else if (totalWaypoints < currentWaypoint)
                 {
                     currentWaypoint = totalWaypoints;
-                    prevPoint = (Waypoint)thisDrone.waypoints[totalWaypoints];
+                    prevPoint = thisDrone.GetWaypoint(totalWaypoints);
                 }
                 else
                 {
@@ -90,8 +89,6 @@ namespace ISAACS
             }
         }
 
+
     }
-
-}
-
-
+}*/
