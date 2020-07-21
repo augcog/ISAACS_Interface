@@ -43,6 +43,17 @@
 
         private static Shader clipShader;
 
+        [Header("Google Earth Mesh")]
+        // ROS-Unity conversion variables
+        public double MeshLatitude;
+        public double MeshLongitude;
+        // Relative to the surface of the WGS 84 Ellipsoid
+        public double MeshAltitude;
+        public Vector3 MeshRotation;
+        public Vector3 MeshScale;
+
+        public GameObject MeshEarthPrefab;
+
         [Header("Mission Center Coordinates")]
         // ROS-Unity conversion variables
         public double MCLatitude;
@@ -87,6 +98,10 @@
             Alt0 = MCAltitude;
             lngCorrection = Math.Cos(MCLatitude / 180.0 * Math.PI);
             clipShader = GameObject.FindWithTag("Ground").GetComponent<Renderer>().material.shader;
+
+            MeshEarthPrefab.transform.localPosition = ROSCoordToUnityCoord(new GPSCoordinate(MeshLatitude, MeshLongitude, MeshAltitude));
+            MeshEarthPrefab.transform.localRotation = Quaternion.Euler(MeshRotation);
+            MeshEarthPrefab.transform.localScale = MeshScale;
         }
 
         /// <summary>
