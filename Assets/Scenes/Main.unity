@@ -673,10 +673,10 @@ MonoBehaviour:
   waypointBaseObject: {fileID: 1161822125618724, guid: c209b41633a109640bb6a3527c86c801,
     type: 2}
   sensorManagerBaseObject: {fileID: 130481553}
-  MeshLatitude: 37.915202
-  MeshLongitude: -122.338001
+  MeshLatitude: 37.915278
+  MeshLongitude: -122.337749
   MeshAltitude: 4.779
-  MeshRotation: {x: 0, y: 0, z: 0}
+  MeshRotation: {x: 0, y: 270, z: 0}
   MeshScale: {x: 4.839771, y: 4.839771, z: 4.839771}
   MeshEarthPrefab: {fileID: 854219398}
   MCLatitude: 37.9152
@@ -1272,11 +1272,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400172, guid: 804ac96ebacbb37488605e7a96725e34, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.65999985
+      value: -0.66
       objectReference: {fileID: 0}
     - target: {fileID: 400172, guid: 804ac96ebacbb37488605e7a96725e34, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -13.41
+      value: -13.4
       objectReference: {fileID: 0}
     - target: {fileID: 400172, guid: 804ac96ebacbb37488605e7a96725e34, type: 3}
       propertyPath: m_LocalRotation.x
@@ -1304,11 +1304,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400172, guid: 804ac96ebacbb37488605e7a96725e34, type: 3}
       propertyPath: m_LocalScale.y
-      value: 4.8397713
+      value: 4.839771
       objectReference: {fileID: 0}
     - target: {fileID: 400172, guid: 804ac96ebacbb37488605e7a96725e34, type: 3}
       propertyPath: m_LocalScale.z
-      value: 4.8397713
+      value: 4.839771
       objectReference: {fileID: 0}
     - target: {fileID: 100172, guid: 804ac96ebacbb37488605e7a96725e34, type: 3}
       propertyPath: m_IsActive
