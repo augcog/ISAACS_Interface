@@ -695,14 +695,9 @@ MonoBehaviour:
     droneSubscribers: 0500000001000000
     simFlight: 1
     attachedSensors:
-    - sensorName: Perry_Lidar
-      ipAddress: 12
-      port: 12
-      sensorType: 0
-      sensorSubscribers: 00000000
     - sensorName: Perry_Mesh
-      ipAddress: 13
-      port: 13
+      ipAddress: 75.25.126.85
+      port: 9090
       sensorType: 1
       sensorSubscribers: 01000000
   - droneName: Apollo the Antelope
@@ -713,10 +708,10 @@ MonoBehaviour:
     simFlight: 1
     attachedSensors:
     - sensorName: Apollo_PCFace
-      ipAddress: 15
-      port: 15
+      ipAddress: 75.25.126.85
+      port: 9090
       sensorType: 3
-      sensorSubscribers: 090000000a0000000c0000000d000000
+      sensorSubscribers: 090000000a0000000b0000000c0000000d00000008000000
   success: 0
   uniqueID: 0
 --- !u!4 &167235401 stripped
@@ -2610,7 +2605,7 @@ GameObject:
   - component: {fileID: 1050719670}
   - component: {fileID: 1050719669}
   m_Layer: 5
-  m_Name: End Mission
+  m_Name: Fly Home
   m_TagString: DroneMenu
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6164,9 +6159,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'End Mission
-
-'
+  m_Text: Fly Home
 --- !u!222 &2097199226
 CanvasRenderer:
   m_ObjectHideFlags: 0

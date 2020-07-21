@@ -160,7 +160,7 @@ public class M210_Flight_TestManager : MonoBehaviour
 
             MissionWaypointMsg[] test_waypoint_array = new MissionWaypointMsg[] { test_waypoint_1, test_waypoint_2, test_waypoint_3 };
 
-            MissionWaypointTaskMsg test_Task = new MissionWaypointTaskMsg(15.0f, 15.0f, MissionWaypointTaskMsg.ActionOnFinish.RETURN_TO_HOME, 1, MissionWaypointTaskMsg.YawMode.AUTO, MissionWaypointTaskMsg.TraceMode.COORDINATED, MissionWaypointTaskMsg.ActionOnRCLost.FREE, MissionWaypointTaskMsg.GimbalPitchMode.FREE, test_waypoint_array);
+            MissionWaypointTaskMsg test_Task = new MissionWaypointTaskMsg(15.0f, 15.0f, MissionWaypointTaskMsg.ActionOnFinish.NO_ACTION, 1, MissionWaypointTaskMsg.YawMode.AUTO, MissionWaypointTaskMsg.TraceMode.COORDINATED, MissionWaypointTaskMsg.ActionOnRCLost.FREE, MissionWaypointTaskMsg.GimbalPitchMode.FREE, test_waypoint_array);
 
             rosDroneConnection.UploadWaypointsTask(test_Task);
         }
@@ -198,8 +198,7 @@ public class M210_Flight_TestManager : MonoBehaviour
 
         if (Input.GetKeyUp(uploadUserMission))
         {
-            Debug.Log("Ensure Waypoint system is working. Currently code is commented out.");
-            //rosDroneConnection.StartMission();
+            rosDroneConnection.StartMission();
         }
 
         if (Input.GetKeyUp(pauseMission))
