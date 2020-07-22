@@ -101,7 +101,7 @@
             lngCorrection = Math.Cos(MCLatitude * TO_RADIANS);
             clipShader = GameObject.FindWithTag("Ground").GetComponent<Renderer>().material.shader;
 
-            MeshEarthPrefab.transform.localPosition = ROSCoordToUnityCoord(new GPSCoordinate(MeshLatitude, MeshLongitude, MeshAltitude));
+            MeshEarthPrefab.transform.localPosition = GPSCoordToUnityCoord(new GPSCoordinate(MeshLatitude, MeshLongitude, MeshAltitude));
             MeshEarthPrefab.transform.localRotation = Quaternion.Euler(MeshRotation);
             MeshEarthPrefab.transform.localScale = MeshScale;
         }
