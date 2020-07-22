@@ -88,9 +88,9 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
 
 
     /// <summary>
-    /// Next waypoint to be flown.
+    /// The iindex of the waypoint the drone is currently flying to.
     /// </summary>
-    private int nextWaypointID = 0;
+    private int currentWaypointID = 0;
 
 
     /// <summary>
@@ -229,6 +229,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
         {
             ros.Render();
         }
+        
     }
 
     /// <summary>
@@ -252,7 +253,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
 
                 if (prev_flight_status == FlightStatus.NULL)
                 {
-                    nextWaypointID = 0;
+                    currentWaypointID = 1;
                     flight_status = FlightStatus.FLYING;
                     prev_flight_status = FlightStatus.ON_GROUND_STANDBY;
 
@@ -286,22 +287,16 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
                     Debug.Log("Uploading waypoint mission");
                     UploadWaypointsTask(Task);
 
-
-
                 }
                 else
                 {
                     UpdateMission(UpdateMissionAction.CONTINUE_MISSION);
-                    prev_flight_status = flight_status;
-                    flight_status = FlightStatus.FLYING;
                 }
 
                 break;
 
             case FlightStatus.IN_AIR_STANDBY:
                 UpdateMission(UpdateMissionAction.CONTINUE_MISSION);
-                prev_flight_status = flight_status;
-                flight_status = FlightStatus.FLYING;
                 break;
 
             case FlightStatus.PAUSED_IN_AIR:
@@ -368,8 +363,6 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
             case FlightStatus.ON_GROUND_STANDBY:
             case FlightStatus.IN_AIR_STANDBY:
                 UpdateMission(UpdateMissionAction.CONTINUE_MISSION);
-                prev_flight_status = flight_status;
-                flight_status = FlightStatus.FLYING;
                 break;
 
             case FlightStatus.PAUSED_IN_AIR:
@@ -408,9 +401,64 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
             return;
         }
 
-        // TODO: Integrate dynamic waypoint system
-        SendWaypointAction(WaypointMissionAction.STOP);
-        StartMission();
+        switch (action)
+        {
+            case UpdateMissionAction.CONTINUE_MISSION:
+
+                //If the following leads to a null pointer reference, then use instead: Drone currentlySelectedDrone = this.GetComponent<DroneProperties>().droneClassPointer;
+                Drone currentlySelectedDrone = WorldProperties.GetSelectedDrone();
+
+                if (currentWaypointID == currentlySelectedDrone.WaypointsCount())
+                {
+                    Debug.Log("Invalid Request: All waypoints have been flown");
+                }
+
+                prev_flight_status = flight_status;
+                flight_status = FlightStatus.FLYING;
+
+                List<MissionWaypointMsg> missionMsgList = new List<MissionWaypointMsg>();
+
+                uint[] command_list = new uint[16];
+                uint[] command_params = new uint[16];
+
+                for (int i = 0; i < 16; i++)
+                {
+                    command_list[i] = 0;
+                    command_params[i] = 0;
+                }
+
+                // Start from 1 instead of 0, as takeoff is automatic.
+                for (int i = currentWaypointID; i < currentlySelectedDrone.WaypointsCount(); i++)
+                {
+                    currentWaypointID += 1;
+                    Waypoint waypoint = currentlySelectedDrone.GetWaypoint(i);
+                    Vector3 unityCoord = waypoint.gameObjectPointer.transform.localPosition;
+                    GPSCoordinate rosCoord = WorldProperties.UnityCoordToGPSCoord(unityCoord);
+
+                    MissionWaypointMsg new_waypoint = new MissionWaypointMsg(rosCoord.Lat, rosCoord.Lng, (float)rosCoord.Alt, 3.0f, 0, 0, MissionWaypointMsg.TurnMode.CLOCKWISE, 0, 30, new MissionWaypointActionMsg(0, command_list, command_params));
+                    Debug.Log("Adding waypoint at: " + new_waypoint);
+                    missionMsgList.Add(new_waypoint);
+                }
+
+                MissionWaypointTaskMsg Task = new MissionWaypointTaskMsg(15.0f, 15.0f, MissionWaypointTaskMsg.ActionOnFinish.NO_ACTION, 1, MissionWaypointTaskMsg.YawMode.AUTO, MissionWaypointTaskMsg.TraceMode.POINT, MissionWaypointTaskMsg.ActionOnRCLost.FREE, MissionWaypointTaskMsg.GimbalPitchMode.FREE, missionMsgList.ToArray());
+                Debug.Log("Uploading waypoint mission");
+                UploadWaypointsTask(Task);
+
+                break;
+
+            case UpdateMissionAction.END_AND_HOVER:
+                SendWaypointAction(WaypointMissionAction.STOP);
+                break;
+
+            case UpdateMissionAction.UPDATE_CURRENT_MISSION:
+                SendWaypointAction(WaypointMissionAction.STOP);
+                UpdateMission(UpdateMissionAction.CONTINUE_MISSION);
+                break;
+
+            default:
+                Debug.Log("Invalid Mission update requested");
+                break;
+        }
     }
     
     /// <summary>
@@ -453,7 +501,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
 
             case FlightStatus.FLYING:
             case FlightStatus.PAUSED_IN_AIR:
-                nextWaypointID -= 1;
+                currentWaypointID -= 1;
                 ExecuteTask(DroneTask.GO_HOME);
                 prev_flight_status = flight_status;
                 flight_status = FlightStatus.FLYING_HOME;
