@@ -96,7 +96,7 @@ public class DroneMenu : MonoBehaviour {
             }
 
             Vector3 dronePosition = this.gameObject.transform.localPosition;
-            GPSCoordinate gps =  WorldProperties.UnityCoordToROSCoord(dronePosition);
+            GPSCoordinate gps =  WorldProperties.UnityCoordToGPSCoord(dronePosition);
             dronePosText.text = "Lat:   " + String.Format("{0:0.0000000}", gps.Lat) + "\nLon: " + String.Format("{0:0.0000000}", gps.Lng);
 
             if (connection.HasAuthority())
@@ -112,9 +112,12 @@ public class DroneMenu : MonoBehaviour {
 
             // Make canvas always face the user as drone moves
             headsetTransform = VRTK_DeviceFinder.HeadsetTransform();
-            Vector3 targetPosition = headsetTransform.position;
-            // canvas LookAt code is funky. Credit: https://answers.unity.com/questions/132592/lookat-in-opposite-direction.html
-            menuCanvas.transform.LookAt(2 * menuCanvas.transform.position - targetPosition);
+            if (headsetTransform != null)
+            {
+                Vector3 targetPosition = headsetTransform.position;
+                // canvas LookAt code is funky. Credit: https://answers.unity.com/questions/132592/lookat-in-opposite-direction.html
+                menuCanvas.transform.LookAt(2 * menuCanvas.transform.position - targetPosition);
+            }
         }
     }
 
