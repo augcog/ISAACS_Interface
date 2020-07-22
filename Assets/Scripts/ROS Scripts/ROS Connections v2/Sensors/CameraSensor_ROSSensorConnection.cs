@@ -33,12 +33,12 @@ public class CameraSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
             switch (subscriber)
             {
                 default:
-                    subscriberTopic = "/camera/" + subscriber;
+                    subscriberTopic = "/dji_sdk/" + subscriber;
                     ImageVisualizer imageVisualizer = gameObject.AddComponent<ImageVisualizer>();
                     //imageVisualizer.SetParentTransform(this.transform);
                     imageVisualizers.Add(subscriberTopic, imageVisualizer);
                     Debug.Log("Camera subscribing to: " + subscriberTopic);
-                    ros.AddSubscriber("/camera/" + subscriber, this);
+                    ros.AddSubscriber("/dji_sdk/" + subscriber, this);
                     break;
             }
             Debug.Log("Camera Subscribing to : " + subscriberTopic);
