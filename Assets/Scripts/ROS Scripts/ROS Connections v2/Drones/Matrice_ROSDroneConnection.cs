@@ -243,7 +243,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
             Vector3 unityCoord = waypoint.gameObjectPointer.transform.localPosition;
             GPSCoordinate rosCoord = WorldProperties.UnityCoordToGPSCoord(unityCoord);
 
-            MissionWaypointMsg new_waypoint = new MissionWaypointMsg(rosCoord.z, rosCoord.x, (float) rosCoord.y, 3.0f, 0, 0, MissionWaypointMsg.TurnMode.CLOCKWISE, 0, 30, new MissionWaypointActionMsg(0, command_list, command_params));
+            MissionWaypointMsg new_waypoint = new MissionWaypointMsg(rosCoord.Lat, rosCoord.Lng, (float) rosCoord.Alt, 3.0f, 0, 0, MissionWaypointMsg.TurnMode.CLOCKWISE, 0, 30, new MissionWaypointActionMsg(0, command_list, command_params));
             Debug.Log("Adding waypoint at: " + new_waypoint);
             missionMsgList.Add(new_waypoint);
         }
