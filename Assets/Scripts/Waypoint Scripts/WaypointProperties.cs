@@ -13,14 +13,20 @@
     {
         private GameObject controller; // TODO: hardcoded, remove.
 
+        [Header("Connected gameobjects")]
         public Waypoint classPointer;
         public Drone referenceDrone;
         public GameObject referenceDroneGameObject;
         private GameObject prevPoint;
 
+        [Header ("Waypoint Materials")]
         public Material unpassedWaypoint;
         public Material passedWaypoint;
         public Material touchedWaypoint;
+        public Material lockedWaypoint;
+        public Material uploadedWaypoint;
+
+        [Header("Line Render Materials")]
         public Material selectedUnpassedLine;
         public Material unselectedUnpassedLine;
         public Material selectedPassedLine;
@@ -28,7 +34,16 @@
         public Material selectedGroundpointLine;
         public Material unselectedGroundpointLine;
 
-        public bool passed; // Indicates whether this waypoint has been passed by the drone
+        public enum WaypointStatus
+        {
+            STATIC = 0,
+            PASSED = 1, // Indicates whether this waypoint has been passed by the drone
+            GRABBED = 2, // Indicates whether this waypoint is currently grabbed
+            LOCKED = 3, // Indicated whether this waypoint is locked (cannot be edited by the user)
+            UPLOADED = 4 // Indicated whether this waypoint has been uploaded to the drone
+        }
+        public WaypointStatus waypointStatus;
+        public WaypointStatus prevWaypointStatus;
 
         public GameObject modelGroundpoint; // Refers to the groundpoint object being instantiated
         private GameObject thisGroundpoint; // groundpoint instantiated under current waypoint
@@ -48,7 +63,8 @@
         void Start()
         {
             controller = GameObject.Find("Controller");
-            passed = false;
+            waypointStatus = WaypointStatus.STATIC;
+            prevWaypointStatus = WaypointStatus.STATIC;
 
             referenceDrone = classPointer.referenceDrone;
             referenceDroneGameObject = referenceDrone.gameObjectPointer;
@@ -91,10 +107,6 @@
             {
                 prevPoint = classPointer.prevPathPoint.gameObjectPointer;
             }
-            //else
-            //{
-            //    prevPoint = referenceDrone.gameObjectPointer;
-            //}
 
             if (prevPoint != null)
             {
@@ -111,13 +123,27 @@
 
                 CreateWaypointIndicator();
 
-                ChangeColor();
-                //TODO: change color of waypoint currnetly touched
-                /*if (GetComponent<VRTK_InteractableObject>().IsTouched())
+                if (waypointStatus == WaypointStatus.GRABBED)
                 {
-                    ChangeColorToTouched();
-                }*/
+                    if (GetComponent<VRTK_InteractableObject>().IsGrabbed() == false)
+                    {
+                        waypointStatus = prevWaypointStatus;
+                        prevWaypointStatus = WaypointStatus.GRABBED;
+                    }
+                }
+                else
+                {
+                    if (GetComponent<VRTK_InteractableObject>().IsGrabbed())
+                    {
+                        prevWaypointStatus = waypointStatus;
+                        waypointStatus = WaypointStatus.GRABBED;
+                    }
+                }
+
+                ChangeColor();
+
             }
+
 
             UpdateGroundpointLine();
         }
@@ -246,39 +272,71 @@
         // Changes the colors of waypoints and lines based on their selected and passed states
         public void ChangeColor()
         {
-            if (passed)
+            
+            switch (waypointStatus)
             {
-                this.GetComponent<MeshRenderer>().material = passedWaypoint;
-                if (referenceDrone.selected)
-                {
-                    LineProperties.material = selectedPassedLine;
-                }
-                else
-                {
-                    LineProperties.material = unselectedPassedLine;
-                }
-            } /*else if (( controller_right.GetComponent<ControllerInteractions>().mostRecentCollision.waypoint != null && 
-                controller_right.GetComponent<ControllerInteractions>().mostRecentCollision.waypoint.gameObjectPointer == this.gameObject) && 
-                referenceDrone.selected)
-            {
-                LineProperties.material = unpassedWaypoint;
-            } */ else
-            {
-                this.GetComponent<MeshRenderer>().material = unpassedWaypoint;
-                if (referenceDrone.selected)
-                {
-                    LineProperties.material = selectedUnpassedLine;
-                }
-                else
-                {
-                    LineProperties.material = unselectedUnpassedLine;
-                }
+                case WaypointStatus.STATIC:
+                    this.GetComponent<MeshRenderer>().material = unpassedWaypoint;
+                    if (referenceDrone.selected)
+                    {
+                        LineProperties.material = selectedUnpassedLine;
+                    }
+                    else
+                    {
+                        LineProperties.material = unselectedUnpassedLine;
+                    }
+                    break;
+                case WaypointStatus.PASSED:
+                    this.GetComponent<MeshRenderer>().material = passedWaypoint;
+                    if (referenceDrone.selected)
+                    {
+                        LineProperties.material = selectedPassedLine;
+                    }
+                    else
+                    {
+                        LineProperties.material = unselectedPassedLine;
+                    }
+                    break;
+                case WaypointStatus.GRABBED:
+                    this.GetComponent<MeshRenderer>().material = touchedWaypoint;
+                    break;
+                case WaypointStatus.LOCKED:
+                    this.GetComponent<MeshRenderer>().material = lockedWaypoint;
+                    break;
+                case WaypointStatus.UPLOADED:
+                    this.GetComponent<MeshRenderer>().material = uploadedWaypoint;
+                    break;
             }
-        }
 
-        private void ChangeColorToTouched()
-        {
-            this.GetComponent<MeshRenderer>().material = touchedWaypoint;  
+            switch (waypointStatus)
+            {
+                case WaypointStatus.STATIC:
+                case WaypointStatus.GRABBED:
+                case WaypointStatus.LOCKED:
+                case WaypointStatus.UPLOADED:
+
+                    if (referenceDrone.selected)
+                    {
+                        LineProperties.material = selectedUnpassedLine;
+                    }
+                    else
+                    {
+                        LineProperties.material = unselectedUnpassedLine;
+                    }
+                    break;
+
+                case WaypointStatus.PASSED:
+                    if (referenceDrone.selected)
+                    {
+                        LineProperties.material = selectedPassedLine;
+                    }
+                    else
+                    {
+                        LineProperties.material = unselectedPassedLine;
+                    }
+                    break;
+            }
+
         }
 
         // Destroys groundpoint when waypoint is destroyed
@@ -290,10 +348,39 @@
         // Sets this waypoint's passed state
         public void SetPassedState()
         {
-            if (!passed && referenceDroneGameObject.transform.position == this.transform.position)
+            if ( waypointStatus != WaypointStatus.PASSED && Vector3.Distance(referenceDroneGameObject.transform.localPosition , this.transform.localPosition) <0.1f) 
             {
-                passed = true;
+                prevWaypointStatus = waypointStatus;
+                waypointStatus = WaypointStatus.PASSED;
+                GetComponent<VRTK_InteractableObject>().isGrabbable = false;
+                ChangeColor();
             }
+        }
+
+        // Lock the waypoint
+        public void LockWaypoint()
+        {
+            prevWaypointStatus = waypointStatus;
+            waypointStatus = WaypointStatus.LOCKED;
+            GetComponent<VRTK_InteractableObject>().isGrabbable = false;
+            ChangeColor();
+        }
+
+        // Lock the waypoint
+        public void UnlockWaypoint()
+        {
+            waypointStatus = prevWaypointStatus;
+            prevWaypointStatus = WaypointStatus.LOCKED;
+            GetComponent<VRTK_InteractableObject>().isGrabbable = true;
+            ChangeColor();
+        }
+
+        // Successfully uploaded waypoint to drone
+        public void WaypointUploaded()
+        {
+            prevWaypointStatus = waypointStatus;
+            waypointStatus = WaypointStatus.UPLOADED;
+            ChangeColor();
         }
 
         void InteractableObjectUngrabbed(object sender, VRTK.InteractableObjectEventArgs e)

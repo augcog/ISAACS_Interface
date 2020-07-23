@@ -1112,8 +1112,10 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
         // Start flight upon completing upload        
         if (response["result"].AsBool == true)
         {
-            Debug.Log("Executing mission");
-            
+            Debug.Log("Mission successfully uploaded");
+
+            FetchCurrentWaypointMission();
+
             // @Eric,Nitzan: Uncomment as needed.
             //SendWaypointAction(WaypointMissionAction.START);
         }
@@ -1162,6 +1164,31 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
     {
         MissionWaypointTaskMsg waypoint_task = new MissionWaypointTaskMsg(response["values"]);
         Debug.LogFormat("Current waypoint mission: \n{0}", waypoint_task.ToYAMLString());
+
+        foreach (MissionWaypointMsg waypoint in waypoint_task.GetMissionWaypoints())
+        {
+            Debug.Log("Parsing waypoint from drone: " + waypoint.ToString());
+
+            Vector3 waypoint_coord = WorldProperties.GPSCoordToUnityCoord(new GPSCoordinate(waypoint.GetLatitude(), waypoint.GetLongitude(), waypoint.GetAltitude()));
+
+            Debug.Log("Waypoint from drone coord: " + waypoint_coord.ToString());
+
+            Drone currentlySelectedDrone = WorldProperties.GetSelectedDrone();
+
+            for (int i = 1; i < currentlySelectedDrone.WaypointsCount(); i++)
+            {
+                Waypoint unityWaypoint = currentlySelectedDrone.GetWaypoint(i);
+                float distance = Vector3.Distance(unityWaypoint.gameObjectPointer.transform.localPosition, waypoint_coord);
+
+                Debug.Log("Testing against unity waypoint: " + unityWaypoint.ToString());
+                Debug.Log("Distance: " + distance.ToString());
+
+                if ( distance < 0.2f)
+                {
+                    unityWaypoint.gameObjectPointer.GetComponent<WaypointProperties>().WaypointUploaded();
+                }
+            }
+        }
     }
 
     /// <summary>

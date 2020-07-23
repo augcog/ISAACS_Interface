@@ -104,6 +104,8 @@
             MeshEarthPrefab.transform.localPosition = GPSCoordToUnityCoord(new GPSCoordinate(MeshLatitude, MeshLongitude, MeshAltitude));
             MeshEarthPrefab.transform.localRotation = Quaternion.Euler(MeshRotation);
             MeshEarthPrefab.transform.localScale = MeshScale;
+
+            AddClipShader(this.transform);
         }
 
         /// <summary>
