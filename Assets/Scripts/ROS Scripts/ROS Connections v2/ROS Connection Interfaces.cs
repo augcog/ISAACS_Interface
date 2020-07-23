@@ -23,6 +23,13 @@ public interface ROSDroneConnectionInterface
     string GetValueByTopic(string topic);
 
     /// <summary>
+    /// If the drone is currently flying or not
+    /// TODO: return drone status properly
+    /// </summary>
+    /// <returns></returns>
+    bool IsFlying();
+
+    /// <summary>
     /// State of Unity interface authority over controlling the drone
     /// </summary>
     /// <returns></returns>

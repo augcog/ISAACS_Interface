@@ -642,6 +642,15 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
     }
     
     /// <summary>
+    /// If the drone is currently flying or not
+    /// </summary>
+    /// <returns></returns>
+    public bool IsFlying()
+    {
+        return (flight_status == FlightStatus.FLYING);
+    }
+
+    /// <summary>
     /// Current drone flight status
     /// </summary>
     /// <returns></returns>
