@@ -88,9 +88,15 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
 
 
     /// <summary>
-    /// The iindex of the waypoint the drone is currently flying to.
+    /// The index of the waypoint the drone is currently flying to.
+    /// TODO: how to best update?
     /// </summary>
     private int currentWaypointID = 0;
+
+    /// <summary>
+    /// Count of uploaded waypoints.
+    /// </summary>
+    private int uploadedWaypointsCount = 0;
 
 
     /// <summary>
@@ -229,7 +235,43 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
         {
             ros.Render();
         }
+
+        if (flight_status == FlightStatus.FLYING)
+        {
+            if (reachedCurrentDestination())
+            {
+                if (currentWaypointID < uploadedWaypointsCount)
+                {
+                    Debug.Log("Locking waypoint: " + currentWaypointID);
+                    currentWaypointID += 1;
+                    //this.gameObject.GetComponent<DroneProperties>().droneClassPointer.GetWaypoint(currentWaypointID).LockWaypoint();
+                }
+                else
+                {
+                    Debug.Log("Waypoint mission complete");
+                    flight_status = FlightStatus.IN_AIR_STANDBY;
+                    prev_flight_status = FlightStatus.FLYING;
+                }
+
+            }
+        }
         
+    }
+
+    /// <summary>
+    /// Check if the drone has reached the current destination
+    /// </summary>
+    /// <returns></returns>
+    private bool reachedCurrentDestination()
+    {
+        Vector3 currentLocation = this.gameObject.transform.localPosition;
+        Vector3 currentDestination = this.gameObject.GetComponent<DroneProperties>().droneClassPointer.GetWaypoint(currentWaypointID).gameObjectPointer.transform.localPosition;
+
+        if (Vector3.Distance(currentLocation, currentDestination) < 0.1f)
+        {
+            return true;
+        }
+        return false;
     }
 
     /// <summary>
@@ -254,6 +296,8 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
                 if (prev_flight_status == FlightStatus.NULL)
                 {
                     currentWaypointID = 1;
+                    //this.gameObject.GetComponent<DroneProperties>().droneClassPointer.GetWaypoint(currentWaypointID).LockWaypoint();
+
                     flight_status = FlightStatus.FLYING;
                     prev_flight_status = FlightStatus.ON_GROUND_STANDBY;
 
@@ -274,6 +318,8 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
                     // Start from 1 instead of 0, as takeoff is automatic.
                     for (int i = 1; i < currentlySelectedDrone.WaypointsCount(); i++)
                     {
+                        uploadedWaypointsCount += 1;
+
                         Waypoint waypoint = currentlySelectedDrone.GetWaypoint(i);
                         Vector3 unityCoord = waypoint.gameObjectPointer.transform.localPosition;
                         GPSCoordinate rosCoord = WorldProperties.UnityCoordToGPSCoord(unityCoord);
@@ -380,7 +426,6 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
         }
     }
 
-
     /// <summary>
     /// The Control UI should call this function to update mission
     /// Update the waypoint mission.
@@ -408,7 +453,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
                 //If the following leads to a null pointer reference, then use instead: Drone currentlySelectedDrone = this.GetComponent<DroneProperties>().droneClassPointer;
                 Drone currentlySelectedDrone = WorldProperties.GetSelectedDrone();
 
-                if (currentWaypointID == currentlySelectedDrone.WaypointsCount())
+                if (uploadedWaypointsCount == currentlySelectedDrone.WaypointsCount())
                 {
                     Debug.Log("Invalid Request: All waypoints have been flown");
                 }
@@ -428,9 +473,9 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
                 }
 
                 // Start from 1 instead of 0, as takeoff is automatic.
-                for (int i = currentWaypointID; i < currentlySelectedDrone.WaypointsCount(); i++)
+                for (int i = currentWaypointID +1; i < currentlySelectedDrone.WaypointsCount(); i++)
                 {
-                    currentWaypointID += 1;
+                    uploadedWaypointsCount += 1;
                     Waypoint waypoint = currentlySelectedDrone.GetWaypoint(i);
                     Vector3 unityCoord = waypoint.gameObjectPointer.transform.localPosition;
                     GPSCoordinate rosCoord = WorldProperties.UnityCoordToGPSCoord(unityCoord);
@@ -452,6 +497,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
 
             case UpdateMissionAction.UPDATE_CURRENT_MISSION:
                 SendWaypointAction(WaypointMissionAction.STOP);
+                currentWaypointID -= 1;
                 UpdateMission(UpdateMissionAction.CONTINUE_MISSION);
                 break;
 
@@ -495,14 +541,18 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
             case FlightStatus.IN_AIR_STANDBY:
             case FlightStatus.LANDING:
                 ExecuteTask(DroneTask.GO_HOME);
+
                 prev_flight_status = flight_status;
                 flight_status = FlightStatus.FLYING_HOME;
+
                 break;
 
             case FlightStatus.FLYING:
             case FlightStatus.PAUSED_IN_AIR:
-                currentWaypointID -= 1;
+
+                uploadedWaypointsCount = 0;
                 ExecuteTask(DroneTask.GO_HOME);
+
                 prev_flight_status = flight_status;
                 flight_status = FlightStatus.FLYING_HOME;
                 break;
@@ -749,7 +799,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
                 result = battery_state;
                 break;
             case "/dji_sdk/flight_status":
-                flight_status = (FlightStatus)(new UInt8Msg(raw_msg)).GetData();
+                //flight_status = (FlightStatus)(new UInt8Msg(raw_msg)).GetData();
                 break;
             case "/dji_sdk/gimbal_angle":
                 Vector3Msg gimbalAngleMsg = (parsed == null) ? new Vector3Msg(raw_msg["vector"]) : (Vector3Msg)parsed;
