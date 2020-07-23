@@ -927,7 +927,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
     /// <param name="response"></param>
     public void HandleCurrentWaypointMissionResponse(JSONNode response)
     {
-        MissionWaypointTaskMsg waypoint_task = new MissionWaypointTaskMsg(response["values"]);
+        MissionWaypointTaskMsg waypoint_task = new MissionWaypointTaskMsg(response["values"]["waypoint_task"]);
         Debug.LogFormat("Current waypoint mission: \n{0}", waypoint_task.ToYAMLString());
 
         foreach (MissionWaypointMsg waypoint in waypoint_task.GetMissionWaypoints())

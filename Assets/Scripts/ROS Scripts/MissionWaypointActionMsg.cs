@@ -5,6 +5,7 @@ using System.Collections;
 using SimpleJSON;
 using UnityEngine;
 using System.Text;
+using System;
 
 namespace ROSBridgeLib
 {
@@ -21,10 +22,11 @@ namespace ROSBridgeLib
                 _action_repeat = (uint)msg["action_repeat"].AsInt;
 
                 JSONArray temp = msg["command_list"].AsArray;
-                _command_list = new uint[temp.Count];
-                for (int i = 0; i < _command_list.Length; i++)
+                byte[] command_list = Convert.FromBase64String(msg["command_list"].Value);
+                _command_list = new uint[command_list.Length];
+                for (int i = 0; i < command_list.Length; i++)
                 {
-                    _command_list[i] = (uint)temp[i].AsInt;
+                    _command_list[i] = (uint)command_list[i];
                 }
 
                 temp = msg["command_parameter"].AsArray;
