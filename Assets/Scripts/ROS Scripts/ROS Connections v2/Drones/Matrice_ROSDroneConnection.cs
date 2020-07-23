@@ -244,7 +244,8 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
                 {
                     Debug.Log("Locking waypoint: " + currentWaypointID);
                     currentWaypointID += 1;
-                    //this.gameObject.GetComponent<DroneProperties>().droneClassPointer.GetWaypoint(currentWaypointID).LockWaypoint();
+                    Waypoint currentWaypoint = this.gameObject.GetComponent<DroneProperties>().droneClassPointer.GetWaypoint(currentWaypointID);
+                    currentWaypoint.gameObjectPointer.GetComponent<WaypointProperties>().LockWaypoint();
                 }
                 else
                 {
@@ -296,7 +297,8 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
                 if (prev_flight_status == FlightStatus.NULL)
                 {
                     currentWaypointID = 1;
-                    //this.gameObject.GetComponent<DroneProperties>().droneClassPointer.GetWaypoint(currentWaypointID).LockWaypoint();
+                    Waypoint currentWaypoint = this.gameObject.GetComponent<DroneProperties>().droneClassPointer.GetWaypoint(currentWaypointID);
+                    currentWaypoint.gameObjectPointer.GetComponent<WaypointProperties>().LockWaypoint();
 
                     flight_status = FlightStatus.FLYING;
                     prev_flight_status = FlightStatus.ON_GROUND_STANDBY;

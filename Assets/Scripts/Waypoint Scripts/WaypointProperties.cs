@@ -129,6 +129,9 @@
                     {
                         waypointStatus = prevWaypointStatus;
                         prevWaypointStatus = WaypointStatus.GRABBED;
+
+                        // Trigger UpdateWaypoints call for drone.
+                        referenceDrone.droneProperties.droneROSConnection.UpdateMission();
                     }
                 }
                 else
