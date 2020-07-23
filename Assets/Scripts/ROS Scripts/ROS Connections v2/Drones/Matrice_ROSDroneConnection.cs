@@ -1118,8 +1118,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
 
             FetchCurrentWaypointMission();
 
-            // @Eric,Nitzan: Uncomment as needed.
-            //SendWaypointAction(WaypointMissionAction.START);
+            SendWaypointAction(WaypointMissionAction.START);
         }
         else
         {
