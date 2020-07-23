@@ -119,6 +119,8 @@ MonoBehaviour:
   unpassedWaypoint: {fileID: 2100000, guid: afba4be579bef284c89de7b26b5e7cba, type: 2}
   passedWaypoint: {fileID: 2100000, guid: a9daeb5b833c0a0488eaad3102105b2d, type: 2}
   touchedWaypoint: {fileID: 2100000, guid: a6b8d73a9ec98454fa523b580489b686, type: 2}
+  lockedWaypoint: {fileID: 2100000, guid: a235c9ef53b67974898f2378dd243557, type: 2}
+  uploadedWaypoint: {fileID: 2100000, guid: 9cf45ff77abd26a4da04aa71d8f388e8, type: 2}
   selectedUnpassedLine: {fileID: 2100000, guid: 4464a80a04b3c7648b7eb56b8ef58f8b,
     type: 2}
   unselectedUnpassedLine: {fileID: 2100000, guid: 524b2fc9a59bf6448bf2d1b136cf6e39,
@@ -130,7 +132,8 @@ MonoBehaviour:
     type: 2}
   unselectedGroundpointLine: {fileID: 2100000, guid: 265b177cdfd2bff4f87141ff55372302,
     type: 2}
-  passed: 0
+  waypointStatus: 0
+  prevWaypointStatus: 0
   modelGroundpoint: {fileID: 1072266980392874, guid: fe9c4c5a263cc4144a730d848f5fd6ad,
     type: 2}
 --- !u!114 &114629310516917166
@@ -295,7 +298,7 @@ SphereCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1161822125618724}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
