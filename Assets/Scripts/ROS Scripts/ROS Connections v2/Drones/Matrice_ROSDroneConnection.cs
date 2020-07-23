@@ -198,11 +198,6 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
         ros.Connect();
     }
 
-    string GetTopicValue(string topic)
-    {
-        return "<3 peru";
-    }
-
     // Update is called once per frame in Unity
     void Update()
     {
@@ -246,14 +241,14 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
         {
             Waypoint waypoint = currentlySelectedDrone.GetWaypoint(i);
             Vector3 unityCoord = waypoint.gameObjectPointer.transform.localPosition;
-            GPSCoordinate rosCoord = WorldProperties.UnityCoordToROSCoord(unityCoord);
+            GPSCoordinate rosCoord = WorldProperties.UnityCoordToGPSCoord(unityCoord);
 
-            MissionWaypointMsg new_waypoint = new MissionWaypointMsg(rosCoord.z, rosCoord.x, (float) rosCoord.y, 3.0f, 0, 0, MissionWaypointMsg.TurnMode.CLOCKWISE, 0, 30, new MissionWaypointActionMsg(0, command_list, command_params));
+            MissionWaypointMsg new_waypoint = new MissionWaypointMsg(rosCoord.Lat, rosCoord.Lng, (float) rosCoord.Alt, 3.0f, 0, 0, MissionWaypointMsg.TurnMode.CLOCKWISE, 0, 30, new MissionWaypointActionMsg(0, command_list, command_params));
             Debug.Log("Adding waypoint at: " + new_waypoint);
             missionMsgList.Add(new_waypoint);
         }
 
-        MissionWaypointTaskMsg Task = new MissionWaypointTaskMsg(15.0f, 15.0f, MissionWaypointTaskMsg.ActionOnFinish.AUTO_LANDING, 1, MissionWaypointTaskMsg.YawMode.AUTO, MissionWaypointTaskMsg.TraceMode.POINT, MissionWaypointTaskMsg.ActionOnRCLost.FREE, MissionWaypointTaskMsg.GimbalPitchMode.FREE, missionMsgList.ToArray());
+        MissionWaypointTaskMsg Task = new MissionWaypointTaskMsg(15.0f, 15.0f, MissionWaypointTaskMsg.ActionOnFinish.NO_ACTION, 1, MissionWaypointTaskMsg.YawMode.AUTO, MissionWaypointTaskMsg.TraceMode.POINT, MissionWaypointTaskMsg.ActionOnRCLost.FREE, MissionWaypointTaskMsg.GimbalPitchMode.FREE, missionMsgList.ToArray());
         Debug.Log("Uploading waypoint mission");
         UploadWaypointsTask(Task);
     }
@@ -879,18 +874,20 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
         response = response["values"];
         Debug.LogFormat("Waypoint task upload {0} (ACK: {1})", (response["result"].AsBool ? "succeeded" : "failed"), response["ack_data"].AsInt);
 
-        // Start flight upon completing upload
-        // Disabled for now
-        /*
+        // Start flight upon completing upload        
         if (response["result"].AsBool == true)
         {
-            SendWaypointAction(WaypointMissionAction.START);
+            Debug.Log("Executing mission");
+            
+            // @Eric,Nitzan: Uncomment as needed.
+            //SendWaypointAction(WaypointMissionAction.START);
         }
         else
         {
-            StartMission();
+            Debug.Log("Mission upload failed");
+            //StartMission();
         }
-        */
+        
     }
 
     /// <summary>
