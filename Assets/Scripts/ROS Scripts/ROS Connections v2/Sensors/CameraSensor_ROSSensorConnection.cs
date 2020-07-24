@@ -8,17 +8,17 @@ using ROSBridgeLib.sensor_msgs;
 
 public class CameraSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber, ROSSensorConnectionInterface
 {
-    //Note: Copied from PCFACEsensor 
     // Private connection variables
     private ROSBridgeWebSocketConnection ros = null;
     private string client_id;
     private float alpha = 0.8f;
     private List<string> sensorSubscriberTopics = new List<string>();
+    private string videoType;
 
     // List of visualizers
     private Dictionary<string, ImageVisualizer> imageVisualizers = new Dictionary<string, ImageVisualizer>();
 
-    // Initilize the sensor
+    // Initialize the sensor
     public void InitilizeSensor(int uniqueID, string sensorIP, int sensorPort, List<string> sensorSubscribers)
     {
         Debug.Log("Init Camera Connection at IP " + sensorIP + " Port " + sensorPort.ToString());
@@ -34,7 +34,7 @@ public class CameraSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
             {
                 default:
                     subscriberTopic = "/dji_sdk/" + subscriber;
-                    ImageVisualizer imageVisualizer = gameObject.AddComponent<ImageVisualizer>();
+                    ImageVisualizer imageVisualizer = new ImageVisualizer();
                     //imageVisualizer.SetParentTransform(this.transform);
                     imageVisualizers.Add(subscriberTopic, imageVisualizer);
                     Debug.Log("Camera subscribing to: " + subscriberTopic);
@@ -47,12 +47,8 @@ public class CameraSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
 
         ros.Connect();
 
-        //// Hardcode Parent transform
-        //SetLocalPosition(new Vector3(1.98f, 0f, -6.65f));
-        //SetLocalOrientation(Quaternion.Euler(0f, 124.654f, 0f));
-        //SetLocalScale(new Vector3(0.505388f, 0.505388f, 0.505388f));
-
     }
+
     // Update is called once per frame in Unity
     void Update()
     {
@@ -67,6 +63,15 @@ public class CameraSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
         return this.gameObject.name;
     }
 
+    public string GetVideoType()
+    {
+        return videoType;
+    }
+
+    public void SetVideoType(string input)
+    {
+        videoType = input;
+    }
     /// <summary>
     /// Returns a list of connected subscriber topics (which are unique identifiers).
     /// </summary>
@@ -120,15 +125,11 @@ public class CameraSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
         ImageMsg meshMsg = new ImageMsg(raw_msg);
         // Obtain visualizer for this topic
         ImageVisualizer visualizer = imageVisualizers[topic];
-        this.imageVisualizers[topic].SetFrame(meshMsg);
-
-        //TODO: change the gameobject's texture2D with visualizer.GetData();
-
+        this.imageVisualizers[topic].SetFrame(meshMsg, videoType);
         return result;
     }
     public string GetMessageType(string topic)
     {
-        //Debug.Log("PCFace message type is returned as rntools/PCFace by default");
         return "sensor_msgs/Image";
     }
 

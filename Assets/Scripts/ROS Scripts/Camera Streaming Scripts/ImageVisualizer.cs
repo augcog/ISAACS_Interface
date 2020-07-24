@@ -28,14 +28,18 @@ public class ImageVisualizer : MonoBehaviour {
 		
 	}
 
-	public void SetFrame(ImageMsg data)
+	public void SetFrame(ImageMsg data, string videoPlayer)
     {
+        Debug.Log(videoPlayer);
+        if (videoPlayer == "")
+        {
+            return;
+        }
         Texture2D tex = new Texture2D((int)data.GetWidth(), (int)data.GetHeight(), TextureFormat.RGB24, false);
-        GameObject.Find("CameraManager").GetComponent<RectTransform>().sizeDelta = new Vector2((int)data.GetWidth(), (int)data.GetHeight());
+        GameObject.Find(videoPlayer).GetComponent<RawImage>().enabled = true;
+        GameObject.Find(videoPlayer).GetComponent<RectTransform>().sizeDelta = new Vector2((int)data.GetWidth(), (int)data.GetHeight());
         tex.LoadRawTextureData(data.GetImage());
         tex.Apply();
-        GameObject.Find("CameraManager").GetComponent<RawImage>().texture = tex;
+        GameObject.Find(videoPlayer).GetComponent<RawImage>().texture = tex;
     }
-
-
 }
