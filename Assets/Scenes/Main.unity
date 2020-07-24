@@ -1308,7 +1308,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 100172, guid: 804ac96ebacbb37488605e7a96725e34, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6400034, guid: 804ac96ebacbb37488605e7a96725e34, type: 3}
       propertyPath: m_Enabled
@@ -4914,6 +4914,7 @@ MonoBehaviour:
   LeftUI: {fileID: 491234449}
   RightController: {fileID: 1347866310}
   RightUI: {fileID: 1197405025}
+  WaypointPlacementVisualizer: {fileID: 0}
 --- !u!1 &1761053835
 GameObject:
   m_ObjectHideFlags: 0
