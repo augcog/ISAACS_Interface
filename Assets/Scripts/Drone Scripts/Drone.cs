@@ -29,27 +29,13 @@
         //public List<Waypoint> deletedWaypoints;
 
         // The waypoint ID the drone is currently flying to
-        private int currentWaypointTargetID
-        {
-            get { return currentWaypointTargetID; } 
-            set
-            {
-                currentWaypointTargetID = value;
-            }
-        }
+        private int currentWaypointTargetID = 0;
 
         /// The current waypoint the drone is flying to
         private Waypoint currentWaypointTarget;
 
         // Total waypoints uploaded to the drone.
-        private int uploadedWaypointsCount
-        {
-            get { return uploadedWaypointsCount; }
-            set
-            {
-                uploadedWaypointsCount = value;
-            }
-        }
+        private int uploadedWaypointsCount = 0;
 
         // List of attached sensor gameobjects
         public List<ROSSensorConnectionInterface> attachedSensors;
@@ -312,10 +298,14 @@
         }
 
         /// <summary>
-        /// Start checking the status of the drone from the target waypoint to update the waypoint and mission status.
+        /// Update the target waypoint and total uploaded and start checking the distance of the drone from the target waypoint to update the waypoint and mission status.
         /// </summary>
-        public void CheckFlightProgress()
+        public void StartCheckingFlightProgress( int _currentWaypointTargetID, int _waypointsUploaded)
         {
+            currentWaypointTargetID = _currentWaypointTargetID;
+            uploadedWaypointsCount += _waypointsUploaded;
+            currentWaypointTarget = waypoints[currentWaypointTargetID];
+
             StartCoroutine(CheckTargetWaypoint());
         }
 

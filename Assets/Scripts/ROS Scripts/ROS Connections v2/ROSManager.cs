@@ -109,6 +109,7 @@ public class ROSManager : MonoBehaviour
 
         // Create a new drone
         Drone droneInstance = new Drone(WorldProperties.worldObject.transform.position, uniqueID);
+        DroneProperties droneProperties = droneInstance.droneProperties;
         GameObject droneGameObject = droneInstance.gameObjectPointer;
         droneGameObject.name = rosDroneConnectionInput.droneName;
 
@@ -120,7 +121,7 @@ public class ROSManager : MonoBehaviour
             case DroneType.M100:
                 Debug.Log("M100 created");
                 M100_ROSDroneConnection M100_rosDroneConnection = droneGameObject.AddComponent<M100_ROSDroneConnection>();
-                M100_rosDroneConnection.InitilizeDrone(uniqueID, droneIP, dronePort, droneSubscribers, simFlight);
+                M100_rosDroneConnection.InitilizeDrone(uniqueID, droneIP, dronePort, droneSubscribers, simFlight, droneProperties);
                 rosDroneConnection = M100_rosDroneConnection;
                 droneGameObject.GetComponent<DroneProperties>().droneROSConnection = M100_rosDroneConnection;
                 ROSDroneConnections.Add(uniqueID, M100_rosDroneConnection);
@@ -129,7 +130,7 @@ public class ROSManager : MonoBehaviour
             case DroneType.M210:
                 Debug.Log("M210 created");
                 M210_ROSDroneConnection M210_rosDroneConnection = droneGameObject.AddComponent<M210_ROSDroneConnection>();
-                M210_rosDroneConnection.InitilizeDrone(uniqueID, droneIP, dronePort, droneSubscribers, simFlight);
+                M210_rosDroneConnection.InitilizeDrone(uniqueID, droneIP, dronePort, droneSubscribers, simFlight, droneProperties);
                 rosDroneConnection = M210_rosDroneConnection;
                 droneGameObject.GetComponent<DroneProperties>().droneROSConnection = M210_rosDroneConnection;
                 ROSDroneConnections.Add(uniqueID, M210_rosDroneConnection);
@@ -138,7 +139,7 @@ public class ROSManager : MonoBehaviour
             case DroneType.M600:
                 Debug.Log("M600 created");
                 M600_ROSDroneConnection M600_rosDroneConnection = droneGameObject.AddComponent<M600_ROSDroneConnection>();
-                M600_rosDroneConnection.InitilizeDrone(uniqueID, droneIP, dronePort, droneSubscribers, simFlight);
+                M600_rosDroneConnection.InitilizeDrone(uniqueID, droneIP, dronePort, droneSubscribers, simFlight, droneProperties);
                 rosDroneConnection = M600_rosDroneConnection;
                 droneGameObject.GetComponent<DroneProperties>().droneROSConnection = M600_rosDroneConnection;
                 ROSDroneConnections.Add(uniqueID, M600_rosDroneConnection);
@@ -155,7 +156,6 @@ public class ROSManager : MonoBehaviour
         }
 
         // Create attached sensors
-        // @Jasmine: We should refine this based on what makes the most sense 
         foreach (ROSSensorConnectionInput rosSensorInput in rosDroneConnectionInput.attachedSensors)
         {
             // @Jasmine: We might need a sensor properties type script to connect a sensor back to the drone?
