@@ -10,6 +10,7 @@
 
         // Assigned in Drone constructor
         public Drone droneClassPointer;
+
         public MeshRenderer selectedMeshRenderer;
         public Material selectedMaterial;
         public Material deselectedMaterial;
@@ -17,6 +18,7 @@
 
         // Assigned in ROS Manager during runtime
         public ROSDroneConnectionInterface droneROSConnection;
+
         // Assigned on the drone prefab
         public DroneSimulationManager droneSimulationManager;
         public DroneMenu droneMenu;
@@ -26,8 +28,6 @@
         /// </summary>
         public void SelectDrone()
         {
-            Debug.Log("Drone selected");
-
             // Changes the color of the drone to indicate that it has been selected
             this.selectedMeshRenderer.material = selectedMaterial;
 
@@ -36,6 +36,13 @@
 
             // Update the sensor manager
             WorldProperties.sensorManager.initializeSensorUI(droneClassPointer.attachedSensors);
+
+            // Select all the waypoints associated with the drone
+            foreach (Waypoint waypoint in droneClassPointer.AllWaypoints())
+            {
+                waypoint.waypointProperties.Selected();
+            }
+
         }
 
         /// <summary>
@@ -43,10 +50,17 @@
         /// </summary>
         public void DeselectDrone()
         {
-            Debug.Log("Drone deselected");
             // Changes the color of the drone to indicate that it has been deselected
             this.selectedMeshRenderer.material = deselectedMaterial;
             this.droneClassPointer.selected = false;
+
+            // Unselect all the waypoints associated with the drone
+            foreach (Waypoint waypoint in droneClassPointer.AllWaypoints())
+            {
+                waypoint.waypointProperties.UnSelected();
+            }
+
+
         }
 
         /// <summary>

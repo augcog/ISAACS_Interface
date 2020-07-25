@@ -100,6 +100,82 @@
             GetComponent<VRTK_InteractableObject>().InteractableObjectUngrabbed += new InteractableObjectEventHandler(InteractableObjectUngrabbed);
         }
 
+        /// <para>
+        /// These are the functions that the drone script will interface with.
+        /// Note: We shouldn't use ChangeColor() but just implement the change in the functions.
+        /// @Jasmine.
+        /// </para>
+
+
+        /// <summary>
+        /// Change the state and color of the waypoint to unselected.
+        /// Question: Should it still be grabbable?
+        /// </summary>
+        public void UnSelected()
+        {
+            //TODO
+        }
+
+        /// <summary>
+        /// Change the state and color of the waypoint to selected.
+        /// </summary>
+        public void Selected()
+        {
+
+        }
+
+        /// <summary>
+        /// Change the state and color of the waypoint to passed.
+        /// Question: Lock the waypoint as well?
+        /// </summary>
+        public void WaypointPassed()
+        {
+
+        }
+
+        /// <summary>
+        /// Lock the waypoint so it cannot be edited by the user.
+        /// Change the state, color and VRTK grabble state accordingly
+        /// </summary>
+        public void LockWaypoint()
+        {
+            /* Old code by Peru:
+            prevWaypointStatus = waypointStatus;
+            waypointStatus = WaypointStatus.LOCKED;
+            GetComponent<VRTK_InteractableObject>().isGrabbable = false;
+            ChangeColor();
+            */
+        }
+
+        /// <summary>
+        /// Unlock the waypoint so it cannot be edited by the user.
+        /// Change the state, color and VRTK grabble state accordingly
+        /// </summary>
+        public void UnlockWaypoint()
+        {
+            /* Old code by Peru:
+
+            waypointStatus = prevWaypointStatus;
+            prevWaypointStatus = WaypointStatus.LOCKED;
+            GetComponent<VRTK_InteractableObject>().isGrabbable = true;
+            ChangeColor();
+            */
+        }
+
+        /// <summary>
+        /// Change the state and color of the waypoint to indicate that it has been successfully uploaded to the drone.
+        /// </summary>
+        public void WaypointUploaded()
+        {
+            /* Old code by Peru:
+
+            prevWaypointStatus = waypointStatus;
+            waypointStatus = WaypointStatus.UPLOADED;
+            ChangeColor();
+            */
+        }
+
+
         void Update()
         {
             // Establishing the previous point in the path. (could be the drone)
@@ -358,32 +434,6 @@
                 GetComponent<VRTK_InteractableObject>().isGrabbable = false;
                 ChangeColor();
             }
-        }
-
-        // Lock the waypoint
-        public void LockWaypoint()
-        {
-            prevWaypointStatus = waypointStatus;
-            waypointStatus = WaypointStatus.LOCKED;
-            GetComponent<VRTK_InteractableObject>().isGrabbable = false;
-            ChangeColor();
-        }
-
-        // Lock the waypoint
-        public void UnlockWaypoint()
-        {
-            waypointStatus = prevWaypointStatus;
-            prevWaypointStatus = WaypointStatus.LOCKED;
-            GetComponent<VRTK_InteractableObject>().isGrabbable = true;
-            ChangeColor();
-        }
-
-        // Successfully uploaded waypoint to drone
-        public void WaypointUploaded()
-        {
-            prevWaypointStatus = waypointStatus;
-            waypointStatus = WaypointStatus.UPLOADED;
-            ChangeColor();
         }
 
         void InteractableObjectUngrabbed(object sender, VRTK.InteractableObjectEventArgs e)

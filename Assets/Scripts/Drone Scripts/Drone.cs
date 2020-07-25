@@ -1,10 +1,11 @@
 ﻿namespace ISAACS
 {
+    using ROSBridgeLib.interface_msgs;
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
 
-    public class Drone
+    public class Drone : MonoBehaviour
     {
         // This is the related game object
         public GameObject gameObjectPointer;
@@ -27,10 +28,31 @@
         // All waypoints that were deleted, in case the player wants to redo them.
         //public List<Waypoint> deletedWaypoints;
 
+        // The waypoint ID the drone is currently flying to
+        private int currentWaypointTargetID
+        {
+            get { return currentWaypointTargetID; } 
+            set
+            {
+                currentWaypointTargetID = value;
+            }
+        }
+
+        /// The current waypoint the drone is flying to
+        private Waypoint currentWaypointTarget;
+
+        // Total waypoints uploaded to the drone.
+        private int uploadedWaypointsCount
+        {
+            get { return uploadedWaypointsCount; }
+            set
+            {
+                uploadedWaypointsCount = value;
+            }
+        }
+
         // List of attached sensor gameobjects
         public List<ROSSensorConnectionInterface> attachedSensors;
-
-        //private bool 
 
         /// <summary>
         /// Constructor method for Drone class objects
@@ -86,6 +108,10 @@
             Debug.Log("Adding sensor: " + sensor.GetSensorName());
             attachedSensors.Add(sensor);
         }
+
+        /******************************/
+        // User waypoint interactions //
+        /******************************/
 
         /// <summary>
         /// Use this to add a new Waypoint to the end of the drone's path
@@ -246,12 +272,103 @@
                 waypoints.Clear();
             }
         }
+
+        /******************************/
+        //    Waypoint Flight Logic   //
+        /******************************/
+
+        /// <summary>
+        ///  To be called by ROSConnection when waypoints have been successfully uploaded.
+        ///  Inform each waypoint that it has been uploaded for state change and user feedback.
+        /// </summary>
+        public void WaypointsUploaded(MissionWaypointMsg[] uploadedWaypoints)
+        {
+            foreach (MissionWaypointMsg waypoint in uploadedWaypoints)
+            {
+
+                Vector3 waypoint_coord = WorldProperties.GPSCoordToUnityCoord(new GPSCoordinate(waypoint.GetLatitude(), waypoint.GetLongitude(), waypoint.GetAltitude()));
+
+                // TODO: refine search to accound for order.
+                for (int i = 1; i < waypoints.Count; i++)
+                {
+                    Waypoint unityWaypoint = waypoints[i];
+                    float distance = Vector3.Distance(unityWaypoint.gameObjectPointer.transform.localPosition, waypoint_coord);
+
+                    if (distance < 0.2f)
+                    {
+                        unityWaypoint.waypointProperties.WaypointUploaded();
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// To be called by any future waypoint that is edited.
+        /// Relays the information to the ROSConnection.
+        /// </summary>
+        public void DronePathUpdated()
+        {
+            droneProperties.droneROSConnection.UpdateMission();
+        }
+
+        /// <summary>
+        /// Start checking the status of the drone from the target waypoint to update the waypoint and mission status.
+        /// </summary>
+        public void CheckFlightProgress()
+        {
+            StartCoroutine(CheckTargetWaypoint());
+        }
+
+        /// <summary>
+        /// Stop checking the status of the drone flight.
+        /// </summary>
+        public void StopCheckingFlightProgress()
+        {
+            StopCoroutine(CheckTargetWaypoint());
+        }
+
+        /// <summary>
+        /// Check the distance of the drone from the current target waypoint. 
+        /// If reached, inform waypoint it has been passed.
+        /// If next waypoint is aviable, lock that and continue checking
+        /// If mission completed, inform the ROSConnection and end checking coroutine
+        /// </summary>
+        /// <returns></returns>
+        IEnumerator CheckTargetWaypoint()
+        {
+
+            if (reachedCurrentDestination())
+            {
+                // Inform current waypoint it has been passed
+                currentWaypointTarget.waypointProperties.WaypointPassed();
+
+                // Check if mission is complete
+                if (currentWaypointTargetID == uploadedWaypointsCount)
+                {
+                    // Inform ROS Connection that current mission is complete
+                    // droneProperties.droneROSConnection.UploadedMissionCompleted();
+
+                    // Stop the checking
+                    StopCheckingFlightProgress();
+                }
+                else
+                {
+                    // Upadate waypoint target and lock next waypoint.
+                    currentWaypointTargetID += 1;
+                    currentWaypointTarget = waypoints[currentWaypointTargetID];
+                    currentWaypointTarget.waypointProperties.LockWaypoint();
+
+                }
+
+            }
+
+            yield return new WaitForSeconds(.1f);
+
+        }
         
-
-
-		/******************************/
-		//       HELPER METHODS       //
-		/******************************/
+        /******************************/
+        //       HELPER METHODS       //
+        /******************************/
 
         /// <summary>
         /// Return true if waypoint list is empty and false if not
@@ -267,12 +384,34 @@
             return waypointList.Count == 0;
         }
 
+        /// <summary>
+        /// Check if the drone has reached the current destination
+        /// </summary>
+        /// <returns></returns>
+        private bool reachedCurrentDestination()
+        {
+            Vector3 currentLocation = this.gameObjectPointer.transform.localPosition;
+            Vector3 currentDestination = currentWaypointTarget.gameObjectPointer.transform.localPosition;
 
+            if (Vector3.Distance(currentLocation, currentDestination) < 0.1f)
+            {
+                return true;
+            }
+            return false;
+        }
 
+        /******************************/
+        //  WAYPOINTS GETTER METHODS  //
+        /******************************/
 
-		/******************************/
-		//  WAYPOINTS GETTER METHODS  //
-		/******************************/
+        /// <summary>
+        /// Get the list of all waypoints.
+        /// </summary>
+        /// <returns></returns>
+        public List<Waypoint> AllWaypoints()
+        {
+            return waypoints;
+        }
 
         /// <summary>
         /// The number of waypoints placed for the current drone.
@@ -299,8 +438,7 @@
             }
             return deletedWaypoints.Count; 
         }
-
-
+        
         /// <summary>
         /// TReturn the waypoint at the requested index if valid
         /// </summary>

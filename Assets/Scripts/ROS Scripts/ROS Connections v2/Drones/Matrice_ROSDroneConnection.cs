@@ -88,18 +88,6 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
 
 
     /// <summary>
-    /// The index of the waypoint the drone is currently flying to.
-    /// TODO: how to best update?
-    /// </summary>
-    private int currentWaypointID = 0;
-
-    /// <summary>
-    /// Count of uploaded waypoints.
-    /// </summary>
-    private int uploadedWaypointsCount = 0;
-
-
-    /// <summary>
     /// DJI SDK status
     /// </summary>
     public bool sdk_ready
@@ -235,44 +223,17 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
         {
             ros.Render();
         }
-
-        if (flight_status == FlightStatus.FLYING)
-        {
-            if (reachedCurrentDestination())
-            {
-                if (currentWaypointID < uploadedWaypointsCount)
-                {
-                    Debug.Log("Locking waypoint: " + currentWaypointID);
-                    currentWaypointID += 1;
-                    Waypoint currentWaypoint = this.gameObject.GetComponent<DroneProperties>().droneClassPointer.GetWaypoint(currentWaypointID);
-                    currentWaypoint.gameObjectPointer.GetComponent<WaypointProperties>().LockWaypoint();
-                }
-                else
-                {
-                    Debug.Log("Waypoint mission complete");
-                    flight_status = FlightStatus.IN_AIR_STANDBY;
-                    prev_flight_status = FlightStatus.FLYING;
-                }
-
-            }
-        }
         
     }
 
     /// <summary>
-    /// Check if the drone has reached the current destination
+    /// Change flight state when uploaded mission is completed, informed from attached Drone.cs
     /// </summary>
-    /// <returns></returns>
-    private bool reachedCurrentDestination()
+    public void UploadedMissionCompleted()
     {
-        Vector3 currentLocation = this.gameObject.transform.localPosition;
-        Vector3 currentDestination = this.gameObject.GetComponent<DroneProperties>().droneClassPointer.GetWaypoint(currentWaypointID).gameObjectPointer.transform.localPosition;
-
-        if (Vector3.Distance(currentLocation, currentDestination) < 0.1f)
-        {
-            return true;
-        }
-        return false;
+        Debug.Log("Waypoint mission complete");
+        flight_status = FlightStatus.IN_AIR_STANDBY;
+        prev_flight_status = FlightStatus.FLYING;
     }
 
     /// <summary>
@@ -1175,30 +1136,8 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
         MissionWaypointTaskMsg waypoint_task = new MissionWaypointTaskMsg(response["values"]["waypoint_task"]);
         Debug.LogFormat("Current waypoint mission: \n{0}", waypoint_task.ToYAMLString());
 
-        foreach (MissionWaypointMsg waypoint in waypoint_task.GetMissionWaypoints())
-        {
-            Debug.Log("Parsing waypoint from drone: " + waypoint.ToString());
-
-            Vector3 waypoint_coord = WorldProperties.GPSCoordToUnityCoord(new GPSCoordinate(waypoint.GetLatitude(), waypoint.GetLongitude(), waypoint.GetAltitude()));
-
-            Debug.Log("Waypoint from drone coord: " + waypoint_coord.ToString());
-
-            Drone currentlySelectedDrone = WorldProperties.GetSelectedDrone();
-
-            for (int i = 1; i < currentlySelectedDrone.WaypointsCount(); i++)
-            {
-                Waypoint unityWaypoint = currentlySelectedDrone.GetWaypoint(i);
-                float distance = Vector3.Distance(unityWaypoint.gameObjectPointer.transform.localPosition, waypoint_coord);
-
-                Debug.Log("Testing against unity waypoint: " + unityWaypoint.ToString());
-                Debug.Log("Distance: " + distance.ToString());
-
-                if ( distance < 0.2f)
-                {
-                    unityWaypoint.gameObjectPointer.GetComponent<WaypointProperties>().WaypointUploaded();
-                }
-            }
-        }
+        // Inform the Drone.cs that the following waypoints have been successfully uploaded.
+        this.GetComponent<DroneProperties>().droneClassPointer.WaypointsUploaded(waypoint_task.GetMissionWaypoints());
     }
 
     /// <summary>
