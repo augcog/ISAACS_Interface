@@ -98,6 +98,67 @@
 
             // Sets up interaction events
             GetComponent<VRTK_InteractableObject>().InteractableObjectUngrabbed += new InteractableObjectEventHandler(InteractableObjectUngrabbed);
+            GetComponent<VRTK_InteractableObject>().InteractableObjectGrabbed += new InteractableObjectEventHandler(Grabbed);
+        }
+
+        //this is called when the object is ungrabbed (was here before somehow)
+        void InteractableObjectUngrabbed(object sender, VRTK.InteractableObjectEventArgs e)
+        {
+            //stop coroutine
+            StopCoroutine(updateLine());
+            //was already here?? taking out for now
+            //CreateGroundpoint();
+
+            //inform the reference drone that the flight path has been changed.
+            waypointStatus = prevWaypointStatus;
+            prevWaypointStatus = WaypointStatus.GRABBED;
+
+            // Trigger UpdateWaypoints call for drone.
+            referenceDrone.droneProperties.droneROSConnection.UpdateMission();
+        }
+
+        //called if an object is grabbed
+        void Grabbed(object sender, InteractableObjectEventArgs e)
+        {
+            //should start updating the line render and stuff
+            //if so then update the line, ground waypoint, etc every frame using a coroutine.
+            prevWaypointStatus = waypointStatus;
+            waypointStatus = WaypointStatus.GRABBED;
+            //do coroutine
+            StartCoroutine(updateLine());
+        }
+
+        //Coroutine here to update line ONLY if grabbed
+        IEnumerator updateLine()
+        {
+            //might not be necessary to have while loop, because can stop in InteractableObjectUngrabbed function
+            while (GetComponent<VRTK_InteractableObject>().IsGrabbed())
+            {
+                if (classPointer.prevPathPoint != null)
+                {
+                    prevPoint = classPointer.prevPathPoint.gameObjectPointer;
+                }
+
+                if (prevPoint != null)
+                {
+                    SetPassedState();
+
+                    SetLine();
+
+                    UpdateLineCollider();
+
+                    if (thisGroundpoint == null)
+                    {
+                        CreateGroundpoint();
+                    }
+
+                    CreateWaypointIndicator();
+                    ChangeColor();
+                }
+
+                UpdateGroundpointLine();
+            }
+            yield return null;
         }
 
         /// <para>
@@ -179,52 +240,52 @@
         void Update()
         {
             // Establishing the previous point in the path. (could be the drone)
-            if (classPointer.prevPathPoint != null)
-            {
-                prevPoint = classPointer.prevPathPoint.gameObjectPointer;
-            }
+            //if (classPointer.prevPathPoint != null)
+            //{
+            //    prevPoint = classPointer.prevPathPoint.gameObjectPointer;
+            //}
 
-            if (prevPoint != null)
-            {
-                SetPassedState();
+            //if (prevPoint != null)
+            //{
+            //    SetPassedState();
 
-                SetLine();
+            //    SetLine();
 
-                UpdateLineCollider();
+            //    UpdateLineCollider();
 
-                if (thisGroundpoint == null)
-                {
-                    CreateGroundpoint();
-                }             
+            //    //if (thisGroundpoint == null)
+            //    //{
+            //    //    CreateGroundpoint();
+            //    //}             
 
-                CreateWaypointIndicator();
+            //    CreateWaypointIndicator();
 
-                if (waypointStatus == WaypointStatus.GRABBED)
-                {
-                    if (GetComponent<VRTK_InteractableObject>().IsGrabbed() == false)
-                    {
-                        waypointStatus = prevWaypointStatus;
-                        prevWaypointStatus = WaypointStatus.GRABBED;
+            //    //if (waypointStatus == WaypointStatus.GRABBED)
+            //    //{
+            //    //    if (GetComponent<VRTK_InteractableObject>().IsGrabbed() == false)
+            //    //    {
+            //    //        waypointStatus = prevWaypointStatus;
+            //    //        prevWaypointStatus = WaypointStatus.GRABBED;
 
-                        // Trigger UpdateWaypoints call for drone.
-                        referenceDrone.droneProperties.droneROSConnection.UpdateMission();
-                    }
-                }
-                else
-                {
-                    if (GetComponent<VRTK_InteractableObject>().IsGrabbed())
-                    {
-                        prevWaypointStatus = waypointStatus;
-                        waypointStatus = WaypointStatus.GRABBED;
-                    }
-                }
+            //    //        // Trigger UpdateWaypoints call for drone.
+            //    //        referenceDrone.droneProperties.droneROSConnection.UpdateMission();
+            //    //    }
+            //    //}
+            //    //else
+            //    //{
+            //    //    if (GetComponent<VRTK_InteractableObject>().IsGrabbed())
+            //    //    {
+            //    //        prevWaypointStatus = waypointStatus;
+            //    //        waypointStatus = WaypointStatus.GRABBED;
+            //    //    }
+            //    //}
 
-                ChangeColor();
+            //    ChangeColor();
 
-            }
+            //}
 
 
-            UpdateGroundpointLine();
+            //UpdateGroundpointLine();
         }
 
         private void ComputeWorldScaleActual() {
@@ -436,10 +497,6 @@
             }
         }
 
-        void InteractableObjectUngrabbed(object sender, VRTK.InteractableObjectEventArgs e)
-        {
-            CreateGroundpoint();
-        }
 
         public void DeleteLineCollider()
         {
