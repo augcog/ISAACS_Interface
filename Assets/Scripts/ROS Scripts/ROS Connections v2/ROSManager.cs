@@ -166,6 +166,7 @@ public class ROSManager : MonoBehaviour
         // Initilize drone sim manager script on the drone
         DroneSimulationManager droneSim = droneGameObject.GetComponent<DroneSimulationManager>();
         droneSim.InitDroneSim();
+        droneProperties.droneSimulationManager = droneSim;
  
         // Get DroneMenu and instansiate.
         DroneMenu droneMenu = droneGameObject.GetComponent<DroneMenu>();

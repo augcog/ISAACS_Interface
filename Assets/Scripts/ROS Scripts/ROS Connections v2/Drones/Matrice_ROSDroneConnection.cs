@@ -439,10 +439,48 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
             return;
         }
 
+        List<MissionWaypointMsg> missionMsgList = new List<MissionWaypointMsg>();
+
+        uint[] command_list = new uint[16];
+        uint[] command_params = new uint[16];
+
+        for (int i = 0; i < 16; i++)
+        {
+            command_list[i] = 0;
+            command_params[i] = 0;
+        }
+
         switch (action)
         {
             case UpdateMissionAction.CONTINUE_MISSION:
-                // TODO after lunch
+
+                int continueFromWaypointID = droneProperties.droneClassPointer.CurrentWaypointTargetID() + 1;
+
+                if ( continueFromWaypointID >= droneProperties.droneClassPointer.WaypointsCount())
+                {
+                    Debug.Log("All waypoints flown.");
+                    return;
+                }
+
+                for (int i = continueFromWaypointID; i < droneProperties.droneClassPointer.WaypointsCount(); i++)
+                {
+                    Waypoint waypoint = droneProperties.droneClassPointer.GetWaypoint(i);
+                    Vector3 unityCoord = waypoint.gameObjectPointer.transform.localPosition;
+                    GPSCoordinate rosCoord = WorldProperties.UnityCoordToGPSCoord(unityCoord);
+
+                    MissionWaypointMsg new_waypoint = new MissionWaypointMsg(rosCoord.Lat, rosCoord.Lng, (float)rosCoord.Alt, 3.0f, 0, 0, MissionWaypointMsg.TurnMode.CLOCKWISE, 0, 30, new MissionWaypointActionMsg(0, command_list, command_params));
+                    Debug.Log("Adding waypoint at: " + new_waypoint);
+                    missionMsgList.Add(new_waypoint);
+                }
+
+                MissionWaypointTaskMsg Task = new MissionWaypointTaskMsg(15.0f, 15.0f, MissionWaypointTaskMsg.ActionOnFinish.NO_ACTION, 1, MissionWaypointTaskMsg.YawMode.AUTO, MissionWaypointTaskMsg.TraceMode.POINT, MissionWaypointTaskMsg.ActionOnRCLost.FREE, MissionWaypointTaskMsg.GimbalPitchMode.FREE, missionMsgList.ToArray());
+                Debug.Log("Uploading continuing waypoint mission");
+                UploadWaypointsTask(Task);
+
+                prev_flight_status = flight_status;
+                flight_status = FlightStatus.FLYING;
+
+                droneProperties.droneClassPointer.StartCheckingFlightProgress(continueFromWaypointID, missionMsgList.Count);
                 
                 break;
 
@@ -452,8 +490,35 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
 
             case UpdateMissionAction.UPDATE_CURRENT_MISSION:
                 SendWaypointAction(WaypointMissionAction.STOP);
-                //currentWaypointID -= 1;
-                //UpdateMission(UpdateMissionAction.CONTINUE_MISSION);
+                
+                continueFromWaypointID = droneProperties.droneClassPointer.CurrentWaypointTargetID();
+
+                if (continueFromWaypointID >= droneProperties.droneClassPointer.WaypointsCount())
+                {
+                    Debug.Log("All waypoints flown.");
+                    return;
+                }
+
+                for (int i = continueFromWaypointID; i < droneProperties.droneClassPointer.WaypointsCount(); i++)
+                {
+                    Waypoint waypoint = droneProperties.droneClassPointer.GetWaypoint(i);
+                    Vector3 unityCoord = waypoint.gameObjectPointer.transform.localPosition;
+                    GPSCoordinate rosCoord = WorldProperties.UnityCoordToGPSCoord(unityCoord);
+
+                    MissionWaypointMsg new_waypoint = new MissionWaypointMsg(rosCoord.Lat, rosCoord.Lng, (float)rosCoord.Alt, 3.0f, 0, 0, MissionWaypointMsg.TurnMode.CLOCKWISE, 0, 30, new MissionWaypointActionMsg(0, command_list, command_params));
+                    Debug.Log("Adding waypoint at: " + new_waypoint);
+                    missionMsgList.Add(new_waypoint);
+                }
+
+                MissionWaypointTaskMsg Task_Update = new MissionWaypointTaskMsg(15.0f, 15.0f, MissionWaypointTaskMsg.ActionOnFinish.NO_ACTION, 1, MissionWaypointTaskMsg.YawMode.AUTO, MissionWaypointTaskMsg.TraceMode.POINT, MissionWaypointTaskMsg.ActionOnRCLost.FREE, MissionWaypointTaskMsg.GimbalPitchMode.FREE, missionMsgList.ToArray());
+                Debug.Log("Uploading updated waypoint mission");
+                UploadWaypointsTask(Task_Update);
+
+                prev_flight_status = flight_status;
+                flight_status = FlightStatus.FLYING;
+
+                droneProperties.droneClassPointer.StartCheckingFlightProgress(continueFromWaypointID, missionMsgList.Count);
+                
                 break;
 
             default:

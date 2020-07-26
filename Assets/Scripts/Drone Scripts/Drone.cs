@@ -297,6 +297,16 @@
             droneProperties.droneROSConnection.UpdateMission();
         }
 
+        public int CurrentWaypointTargetID()
+        {
+            return currentWaypointTargetID;
+        }
+
+        public int TotalUploadedWaypoints()
+        {
+            return uploadedWaypointsCount;
+        }
+
         /// <summary>
         /// Update the target waypoint and total uploaded and start checking the distance of the drone from the target waypoint to update the waypoint and mission status.
         /// </summary>
