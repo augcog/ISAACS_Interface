@@ -104,6 +104,9 @@
         //this is called when the object is ungrabbed (was here before somehow)
         void InteractableObjectUngrabbed(object sender, VRTK.InteractableObjectEventArgs e)
         {
+            Debug.Log("VRTK Waypoint UNGrabber Function called");
+
+
             //stop coroutine
             StopCoroutine(updateLine());
             //was already here?? taking out for now
@@ -114,12 +117,14 @@
             prevWaypointStatus = WaypointStatus.GRABBED;
 
             // Trigger UpdateWaypoints call for drone.
-            referenceDrone.droneProperties.droneROSConnection.UpdateMission();
+            //referenceDrone.droneProperties.droneROSConnection.UpdateMission();
         }
 
         //called if an object is grabbed
         void Grabbed(object sender, InteractableObjectEventArgs e)
         {
+            Debug.Log("VRTK Waypoint Grabber Function called");
+
             //should start updating the line render and stuff
             //if so then update the line, ground waypoint, etc every frame using a coroutine.
             prevWaypointStatus = waypointStatus;
@@ -131,8 +136,9 @@
         //Coroutine here to update line ONLY if grabbed
         IEnumerator updateLine()
         {
-            //might not be necessary to have while loop, because can stop in InteractableObjectUngrabbed function
-            while (GetComponent<VRTK_InteractableObject>().IsGrabbed())
+            Debug.Log("Starting coroutine");
+
+            while (true)
             {
                 if (classPointer.prevPathPoint != null)
                 {
@@ -143,22 +149,36 @@
                 {
                     SetPassedState();
 
+
+
                     SetLine();
 
+                    Debug.Log("SetLine() called");
+
                     UpdateLineCollider();
+                    Debug.Log("UpdateLineCollider called");
 
                     if (thisGroundpoint == null)
                     {
                         CreateGroundpoint();
+                        Debug.Log("Ground point created");
+
                     }
 
                     CreateWaypointIndicator();
+                    Debug.Log("created waypoint indicator");
+
                     ChangeColor();
+                    Debug.Log("changed color");
+
                 }
 
                 UpdateGroundpointLine();
+                Debug.Log("Updated groudpoint line");
+
             }
-            yield return null;
+            
+            yield return  new WaitForSeconds(.1f);
         }
 
         /// <para>

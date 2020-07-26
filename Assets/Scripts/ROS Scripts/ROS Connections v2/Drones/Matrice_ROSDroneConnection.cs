@@ -642,7 +642,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
         }
         catch (Exception e)
         {
-            print("Error: " + e);
+            //print("Error: " + e);
             return " NO DATA ";
         }
 
