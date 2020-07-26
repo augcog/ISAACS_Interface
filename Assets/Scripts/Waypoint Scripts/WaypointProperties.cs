@@ -176,9 +176,10 @@
                 UpdateGroundpointLine();
                 Debug.Log("Updated groudpoint line");
 
+                yield return new WaitForEndOfFrame();
+
             }
             
-            yield return  new WaitForSeconds(.1f);
         }
 
         /// <para>
