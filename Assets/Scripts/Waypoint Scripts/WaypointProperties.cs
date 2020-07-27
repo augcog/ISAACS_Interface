@@ -99,16 +99,37 @@
             // Sets up interaction events
             GetComponent<VRTK_InteractableObject>().InteractableObjectUngrabbed += new InteractableObjectEventHandler(InteractableObjectUngrabbed);
             GetComponent<VRTK_InteractableObject>().InteractableObjectGrabbed += new InteractableObjectEventHandler(Grabbed);
+
+            //Trying to fix first initial waypoint
+            Debug.Log("Init first line");
+            SetPassedState();
+
+            SetLine();
+
+            UpdateLineCollider();
+
+            if (thisGroundpoint == null)
+            {
+                CreateGroundpoint();
+
+            }
+
+            CreateWaypointIndicator();
+
+            ChangeColor();
+
+            UpdateGroundpointLine();
         }
 
         //this is called when the object is ungrabbed (was here before somehow)
         void InteractableObjectUngrabbed(object sender, VRTK.InteractableObjectEventArgs e)
         {
-            Debug.Log("VRTK Waypoint UNGrabber Function called");
+            Debug.Log("VRTK Waypoint UnGrabber Function called");
 
 
             //stop coroutine
             StopCoroutine(updateLine());
+
             //was already here?? taking out for now
             //CreateGroundpoint();
 
@@ -117,6 +138,7 @@
             prevWaypointStatus = WaypointStatus.GRABBED;
 
             // Trigger UpdateWaypoints call for drone.
+          
             //referenceDrone.droneProperties.droneROSConnection.UpdateMission();
         }
 
@@ -125,11 +147,8 @@
         {
             Debug.Log("VRTK Waypoint Grabber Function called");
 
-            //should start updating the line render and stuff
-            //if so then update the line, ground waypoint, etc every frame using a coroutine.
             prevWaypointStatus = waypointStatus;
             waypointStatus = WaypointStatus.GRABBED;
-            //do coroutine
             StartCoroutine(updateLine());
         }
 
@@ -145,33 +164,30 @@
                     prevPoint = classPointer.prevPathPoint.gameObjectPointer;
                 }
 
-                if (prevPoint != null)
+
+                //took out if prevPoint is not null, otherwise it will not update the first line most likely
+                Debug.Log("Creating Line.");
+                SetPassedState();
+
+                SetLine();
+
+                Debug.Log("SetLine() called");
+
+                UpdateLineCollider();
+                Debug.Log("UpdateLineCollider called");
+
+                if (thisGroundpoint == null)
                 {
-                    SetPassedState();
-
-
-
-                    SetLine();
-
-                    Debug.Log("SetLine() called");
-
-                    UpdateLineCollider();
-                    Debug.Log("UpdateLineCollider called");
-
-                    if (thisGroundpoint == null)
-                    {
-                        CreateGroundpoint();
-                        Debug.Log("Ground point created");
-
-                    }
-
-                    CreateWaypointIndicator();
-                    Debug.Log("created waypoint indicator");
-
-                    ChangeColor();
-                    Debug.Log("changed color");
+                    CreateGroundpoint();
+                    Debug.Log("Ground point created");
 
                 }
+
+                CreateWaypointIndicator();
+                Debug.Log("created waypoint indicator");
+
+                ChangeColor();
+                Debug.Log("changed color");
 
                 UpdateGroundpointLine();
                 Debug.Log("Updated groudpoint line");
@@ -196,6 +212,9 @@
         public void UnSelected()
         {
             //TODO
+            prevWaypointStatus = waypointStatus;
+            waypointStatus = WaypointStatus.STATIC;
+
         }
 
         /// <summary>
@@ -203,16 +222,20 @@
         /// </summary>
         public void Selected()
         {
-
+            prevWaypointStatus = waypointStatus;
+            waypointStatus = WaypointStatus.GRABBED;
         }
 
         /// <summary>
         /// Change the state and color of the waypoint to passed.
-        /// Question: Lock the waypoint as well?
+        /// Question: Lock the waypoint as well? Yes we should probably, 
         /// </summary>
         public void WaypointPassed()
         {
-
+            prevWaypointStatus = waypointStatus;
+            waypointStatus = WaypointStatus.PASSED;
+            //FIXME: If not called in drone, should be called here.
+            //LockWaypoint();
         }
 
         /// <summary>
@@ -221,6 +244,8 @@
         /// </summary>
         public void LockWaypoint()
         {
+            prevWaypointStatus = waypointStatus;
+            waypointStatus = WaypointStatus.LOCKED;
             /* Old code by Peru:
             prevWaypointStatus = waypointStatus;
             waypointStatus = WaypointStatus.LOCKED;
@@ -260,6 +285,7 @@
 
         void Update()
         {
+            //Old Code, will be deleted
             // Establishing the previous point in the path. (could be the drone)
             //if (classPointer.prevPathPoint != null)
             //{
