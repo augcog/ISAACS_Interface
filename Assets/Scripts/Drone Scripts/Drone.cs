@@ -336,33 +336,36 @@
         /// <returns></returns>
         IEnumerator CheckTargetWaypoint()
         {
-
-            if (reachedCurrentDestination())
+            while (true)
             {
-                // Inform current waypoint it has been passed
-                currentWaypointTarget.waypointProperties.WaypointPassed();
-
-                // Check if mission is complete
-                if (currentWaypointTargetID == uploadedWaypointsCount)
+                if (reachedCurrentDestination())
                 {
-                    // Inform ROS Connection that current mission is complete
-                    // droneProperties.droneROSConnection.UploadedMissionCompleted();
+                    // Inform current waypoint it has been passed
+                    currentWaypointTarget.waypointProperties.WaypointPassed();
 
-                    // Stop the checking
-                    StopCheckingFlightProgress();
-                }
-                else
-                {
-                    // Upadate waypoint target and lock next waypoint.
-                    currentWaypointTargetID += 1;
-                    currentWaypointTarget = waypoints[currentWaypointTargetID];
-                    currentWaypointTarget.waypointProperties.LockWaypoint();
+                    // Check if mission is complete
+                    if (currentWaypointTargetID == uploadedWaypointsCount)
+                    {
+                        // Inform ROS Connection that current mission is complete
+                        // droneProperties.droneROSConnection.UploadedMissionCompleted();
+
+                        // Stop the checking
+                        StopCheckingFlightProgress();
+                    }
+                    else
+                    {
+                        // Upadate waypoint target and lock next waypoint.
+                        currentWaypointTargetID += 1;
+                        currentWaypointTarget = waypoints[currentWaypointTargetID];
+                        currentWaypointTarget.waypointProperties.LockWaypoint();
+
+                    }
 
                 }
+
+                yield return new WaitForEndOfFrame();
 
             }
-
-            yield return new WaitForSeconds(.1f);
 
         }
         
