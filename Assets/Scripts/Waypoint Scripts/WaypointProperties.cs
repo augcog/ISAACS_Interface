@@ -56,7 +56,6 @@
         private Vector3 WorldScaleInitial;
         private Vector3 WorldScaleCurrent;
         private Vector3 WorldScaleActual;
-        //private GameObject controller;
 
         public static GameObject controller_right;
 
@@ -71,7 +70,6 @@
 
             World = GameObject.FindGameObjectWithTag("World");
             WorldScaleInitial = World.transform.localScale;
-            //controller = GameObject.FindGameObjectWithTag("GameController");
             controller_right = GameObject.Find("controller_right");
 
             if (classPointer.prevPathPoint != null)
@@ -93,7 +91,6 @@
             else
             {
                 prevPoint = null;
-                //prevPoint = referenceDrone.gameObjectPointer;
             }
 
             // Sets up interaction events
@@ -116,7 +113,19 @@
 
             CreateWaypointIndicator();
 
-            ChangeColor();
+            //if needed will input again;
+            //ChangeColor();
+
+            //static coloring
+            this.GetComponent<MeshRenderer>().material = unpassedWaypoint;
+            if (referenceDrone.selected)
+            {
+                LineProperties.material = selectedUnpassedLine;
+            }
+            else
+            {
+                LineProperties.material = unselectedUnpassedLine;
+            }
 
             UpdateGroundpointLine();
         }
@@ -136,10 +145,10 @@
             //inform the reference drone that the flight path has been changed.
             waypointStatus = prevWaypointStatus;
             prevWaypointStatus = WaypointStatus.GRABBED;
+            //should we call the unselected function instead??
 
             // Trigger UpdateWaypoints call for drone.
-          
-            //referenceDrone.droneProperties.droneROSConnection.UpdateMission();
+            referenceDrone.DronePathUpdated();
         }
 
         //called if an object is grabbed
@@ -149,6 +158,7 @@
 
             prevWaypointStatus = waypointStatus;
             waypointStatus = WaypointStatus.GRABBED;
+            //should we call the selected function instead??
             StartCoroutine(updateLine());
         }
 
@@ -186,8 +196,9 @@
                 CreateWaypointIndicator();
                 Debug.Log("created waypoint indicator");
 
-                ChangeColor();
-                Debug.Log("changed color");
+                //if needed will input again;
+                //ChangeColor();
+                //Debug.Log("changed color");
 
                 UpdateGroundpointLine();
                 Debug.Log("Updated groudpoint line");
@@ -198,23 +209,24 @@
             
         }
 
-        /// <para>
-        /// These are the functions that the drone script will interface with.
-        /// Note: We shouldn't use ChangeColor() but just implement the change in the functions.
-        /// @Jasmine.
-        /// </para>
-
-
         /// <summary>
         /// Change the state and color of the waypoint to unselected.
-        /// Question: Should it still be grabbable?
         /// </summary>
         public void UnSelected()
         {
-            //TODO
             prevWaypointStatus = waypointStatus;
             waypointStatus = WaypointStatus.STATIC;
 
+            //static coloring
+            this.GetComponent<MeshRenderer>().material = unpassedWaypoint;
+            if (referenceDrone.selected)
+            {
+                LineProperties.material = selectedUnpassedLine;
+            }
+            else
+            {
+                LineProperties.material = unselectedUnpassedLine;
+            }
         }
 
         /// <summary>
@@ -224,49 +236,76 @@
         {
             prevWaypointStatus = waypointStatus;
             waypointStatus = WaypointStatus.GRABBED;
+            this.GetComponent<MeshRenderer>().material = touchedWaypoint;
+            if (referenceDrone.selected)
+            {
+                LineProperties.material = selectedUnpassedLine;
+            }
+            else
+            {
+                LineProperties.material = unselectedUnpassedLine;
+            }
         }
 
         /// <summary>
         /// Change the state and color of the waypoint to passed.
-        /// Question: Lock the waypoint as well? Yes we should probably, 
         /// </summary>
         public void WaypointPassed()
         {
             prevWaypointStatus = waypointStatus;
             waypointStatus = WaypointStatus.PASSED;
-            //FIXME: If not called in drone, should be called here.
-            //LockWaypoint();
+            GetComponent<VRTK_InteractableObject>().isGrabbable = false;
+            this.GetComponent<MeshRenderer>().material = passedWaypoint;
+            if (referenceDrone.selected)
+            {
+                LineProperties.material = selectedPassedLine;
+            }
+            else
+            {
+                LineProperties.material = unselectedPassedLine;
+            }
+
         }
 
         /// <summary>
         /// Lock the waypoint so it cannot be edited by the user.
-        /// Change the state, color and VRTK grabble state accordingly
+        /// Change the state, color and VRTK grabable state accordingly
         /// </summary>
         public void LockWaypoint()
         {
-            prevWaypointStatus = waypointStatus;
-            waypointStatus = WaypointStatus.LOCKED;
-            /* Old code by Peru:
+
             prevWaypointStatus = waypointStatus;
             waypointStatus = WaypointStatus.LOCKED;
             GetComponent<VRTK_InteractableObject>().isGrabbable = false;
-            ChangeColor();
-            */
+            if (referenceDrone.selected)
+            {
+                LineProperties.material = selectedUnpassedLine;
+            }
+            else
+            {
+                LineProperties.material = unselectedUnpassedLine;
+            }
+
         }
 
         /// <summary>
-        /// Unlock the waypoint so it cannot be edited by the user.
+        /// Unlock the waypoint so it can be edited by the user.
         /// Change the state, color and VRTK grabble state accordingly
         /// </summary>
         public void UnlockWaypoint()
         {
-            /* Old code by Peru:
-
             waypointStatus = prevWaypointStatus;
-            prevWaypointStatus = WaypointStatus.LOCKED;
+            prevWaypointStatus = WaypointStatus.STATIC;
             GetComponent<VRTK_InteractableObject>().isGrabbable = true;
-            ChangeColor();
-            */
+            if (referenceDrone.selected)
+            {
+                LineProperties.material = selectedUnpassedLine;
+            }
+            else
+            {
+                LineProperties.material = unselectedUnpassedLine;
+            }
+
         }
 
         /// <summary>
@@ -274,65 +313,17 @@
         /// </summary>
         public void WaypointUploaded()
         {
-            /* Old code by Peru:
-
             prevWaypointStatus = waypointStatus;
             waypointStatus = WaypointStatus.UPLOADED;
-            ChangeColor();
-            */
-        }
-
-
-        void Update()
-        {
-            //Old Code, will be deleted
-            // Establishing the previous point in the path. (could be the drone)
-            //if (classPointer.prevPathPoint != null)
-            //{
-            //    prevPoint = classPointer.prevPathPoint.gameObjectPointer;
-            //}
-
-            //if (prevPoint != null)
-            //{
-            //    SetPassedState();
-
-            //    SetLine();
-
-            //    UpdateLineCollider();
-
-            //    //if (thisGroundpoint == null)
-            //    //{
-            //    //    CreateGroundpoint();
-            //    //}             
-
-            //    CreateWaypointIndicator();
-
-            //    //if (waypointStatus == WaypointStatus.GRABBED)
-            //    //{
-            //    //    if (GetComponent<VRTK_InteractableObject>().IsGrabbed() == false)
-            //    //    {
-            //    //        waypointStatus = prevWaypointStatus;
-            //    //        prevWaypointStatus = WaypointStatus.GRABBED;
-
-            //    //        // Trigger UpdateWaypoints call for drone.
-            //    //        referenceDrone.droneProperties.droneROSConnection.UpdateMission();
-            //    //    }
-            //    //}
-            //    //else
-            //    //{
-            //    //    if (GetComponent<VRTK_InteractableObject>().IsGrabbed())
-            //    //    {
-            //    //        prevWaypointStatus = waypointStatus;
-            //    //        waypointStatus = WaypointStatus.GRABBED;
-            //    //    }
-            //    //}
-
-            //    ChangeColor();
-
-            //}
-
-
-            //UpdateGroundpointLine();
+            this.GetComponent<MeshRenderer>().material = uploadedWaypoint;
+            if (referenceDrone.selected)
+            {
+                LineProperties.material = selectedUnpassedLine;
+            }
+            else
+            {
+                LineProperties.material = unselectedUnpassedLine;
+            }
         }
 
         private void ComputeWorldScaleActual() {
@@ -456,75 +447,76 @@
             }
         }
 
+        //will delete
         // Changes the colors of waypoints and lines based on their selected and passed states
-        public void ChangeColor()
-        {
+        //public void ChangeColor()
+        //{
             
-            switch (waypointStatus)
-            {
-                case WaypointStatus.STATIC:
-                    this.GetComponent<MeshRenderer>().material = unpassedWaypoint;
-                    if (referenceDrone.selected)
-                    {
-                        LineProperties.material = selectedUnpassedLine;
-                    }
-                    else
-                    {
-                        LineProperties.material = unselectedUnpassedLine;
-                    }
-                    break;
-                case WaypointStatus.PASSED:
-                    this.GetComponent<MeshRenderer>().material = passedWaypoint;
-                    if (referenceDrone.selected)
-                    {
-                        LineProperties.material = selectedPassedLine;
-                    }
-                    else
-                    {
-                        LineProperties.material = unselectedPassedLine;
-                    }
-                    break;
-                case WaypointStatus.GRABBED:
-                    this.GetComponent<MeshRenderer>().material = touchedWaypoint;
-                    break;
-                case WaypointStatus.LOCKED:
-                    this.GetComponent<MeshRenderer>().material = lockedWaypoint;
-                    break;
-                case WaypointStatus.UPLOADED:
-                    this.GetComponent<MeshRenderer>().material = uploadedWaypoint;
-                    break;
-            }
+        //    switch (waypointStatus)
+        //    {
+        //        case WaypointStatus.STATIC:
+        //            this.GetComponent<MeshRenderer>().material = unpassedWaypoint;
+        //            if (referenceDrone.selected)
+        //            {
+        //                LineProperties.material = selectedUnpassedLine;
+        //            }
+        //            else
+        //            {
+        //                LineProperties.material = unselectedUnpassedLine;
+        //            }
+        //            break;
+        //        case WaypointStatus.PASSED:
+        //            this.GetComponent<MeshRenderer>().material = passedWaypoint;
+        //            if (referenceDrone.selected)
+        //            {
+        //                LineProperties.material = selectedPassedLine;
+        //            }
+        //            else
+        //            {
+        //                LineProperties.material = unselectedPassedLine;
+        //            }
+        //            break;
+        //        case WaypointStatus.GRABBED:
+        //            this.GetComponent<MeshRenderer>().material = touchedWaypoint;
+        //            break;
+        //        case WaypointStatus.LOCKED:
+        //            this.GetComponent<MeshRenderer>().material = lockedWaypoint;
+        //            break;
+        //        case WaypointStatus.UPLOADED:
+        //            this.GetComponent<MeshRenderer>().material = uploadedWaypoint;
+        //            break;
+        //    }
 
-            switch (waypointStatus)
-            {
-                case WaypointStatus.STATIC:
-                case WaypointStatus.GRABBED:
-                case WaypointStatus.LOCKED:
-                case WaypointStatus.UPLOADED:
+        //    switch (waypointStatus)
+        //    {
+        //        case WaypointStatus.STATIC:
+        //        case WaypointStatus.GRABBED:
+        //        case WaypointStatus.LOCKED:
+        //        case WaypointStatus.UPLOADED:
 
-                    if (referenceDrone.selected)
-                    {
-                        LineProperties.material = selectedUnpassedLine;
-                    }
-                    else
-                    {
-                        LineProperties.material = unselectedUnpassedLine;
-                    }
-                    break;
+        //            if (referenceDrone.selected)
+        //            {
+        //                LineProperties.material = selectedUnpassedLine;
+        //            }
+        //            else
+        //            {
+        //                LineProperties.material = unselectedUnpassedLine;
+        //            }
+        //            break;
 
-                case WaypointStatus.PASSED:
-                    if (referenceDrone.selected)
-                    {
-                        LineProperties.material = selectedPassedLine;
-                    }
-                    else
-                    {
-                        LineProperties.material = unselectedPassedLine;
-                    }
-                    break;
-            }
+        //        case WaypointStatus.PASSED:
+        //            if (referenceDrone.selected)
+        //            {
+        //                LineProperties.material = selectedPassedLine;
+        //            }
+        //            else
+        //            {
+        //                LineProperties.material = unselectedPassedLine;
+        //            }
+        //            break;
+        //    }
 
-        }
+        //}
 
         // Destroys groundpoint when waypoint is destroyed
         public void OnDestroy()
