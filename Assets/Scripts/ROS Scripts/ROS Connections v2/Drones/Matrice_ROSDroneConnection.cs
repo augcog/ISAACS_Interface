@@ -882,6 +882,11 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
                 if (home_position_set)
                 {
                     this.transform.localPosition = WorldProperties.ROSCoordToUnityCoord(gps_position);
+
+                    if (WorldProperties.DJI_SIM)
+                    {
+                        this.transform.localPosition += new Vector3(0, -100.0f, 0);
+                    }
                 }
 
                 break;
