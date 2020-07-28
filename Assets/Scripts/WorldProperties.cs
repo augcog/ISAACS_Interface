@@ -117,6 +117,8 @@
 
             if(selectedDrone != null)
             {
+                Debug.Log("Enquing selected drone");
+                selectedDrone.gameObjectPointer.GetComponent<DroneProperties>().DeselectDrone();
                 dronesQueue.Enqueue(selectedDrone);
             }
 
@@ -125,11 +127,19 @@
                 Drone nextDrone = dronesQueue.Dequeue();
                 nextDrone.droneProperties.SelectDrone();
 
+                Debug.Log("############# Drone selected: " + nextDrone.droneProperties.droneClassPointer);
+
                 if (worldObject.GetComponent<M210_Flight_TestManager>() != null)
                 {
                     M210_Flight_TestManager flight_TestManager = worldObject.GetComponent<M210_Flight_TestManager>();
                     flight_TestManager.UpdateDrone(nextDrone.droneProperties.droneROSConnection);
                 }
+                Debug.Log("############# Drone selected: " + nextDrone);
+
+                Debug.Log("############# Drone selected: " + nextDrone.gameObjectPointer.name);
+
+                selectedDrone = nextDrone;
+
 
                 return nextDrone;
             }
@@ -139,18 +149,6 @@
                 return null;
             }
 
-        }
-
-        /// <summary>
-        /// Update the selected drone.
-        /// </summary>
-        public static void UpdateSelectedDrone(Drone newSelectedDrone)
-        {
-            if (selectedDrone != null)
-            {
-                selectedDrone.gameObjectPointer.GetComponent<DroneProperties>().DeselectDrone();
-            }
-            selectedDrone = newSelectedDrone;
         }
         
         /// <summary>

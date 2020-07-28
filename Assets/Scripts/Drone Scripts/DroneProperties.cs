@@ -31,7 +31,6 @@
             // Changes the color of the drone to indicate that it has been selected
             this.selectedMeshRenderer.material = selectedMaterial;
 
-            WorldProperties.UpdateSelectedDrone(droneClassPointer);
             this.droneClassPointer.selected = true;
 
             // Update the sensor manager

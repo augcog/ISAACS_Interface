@@ -36,7 +36,7 @@
 
         public enum WaypointStatus
         {
-            STATIC = 0,
+            STATIC = 0, // Indicates if this waypoint is just static, placed and has not been passed.
             PASSED = 1, // Indicates whether this waypoint has been passed by the drone
             GRABBED = 2, // Indicates whether this waypoint is currently grabbed
             LOCKED = 3, // Indicated whether this waypoint is locked (cannot be edited by the user)
@@ -139,13 +139,12 @@
             //stop coroutine
             StopCoroutine(updateLine());
 
-            //was already here?? taking out for now
-            //CreateGroundpoint();
-
             //inform the reference drone that the flight path has been changed.
             waypointStatus = prevWaypointStatus;
             prevWaypointStatus = WaypointStatus.GRABBED;
-            //should we call the unselected function instead??
+
+            // change the color to un grabbed
+            this.GetComponent<MeshRenderer>().material = unpassedWaypoint;
 
             // Trigger UpdateWaypoints call for drone.
             referenceDrone.DronePathUpdated();
@@ -156,17 +155,20 @@
         {
             Debug.Log("VRTK Waypoint Grabber Function called");
 
+            // update the waypoint status
             prevWaypointStatus = waypointStatus;
             waypointStatus = WaypointStatus.GRABBED;
-            //should we call the selected function instead??
+
+            // change the color to grabbed
+            this.GetComponent<MeshRenderer>().material = touchedWaypoint;
+
+            // Start updating the line renderer.
             StartCoroutine(updateLine());
         }
 
         //Coroutine here to update line ONLY if grabbed
         IEnumerator updateLine()
         {
-            Debug.Log("Starting coroutine");
-
             while (true)
             {
                 if (classPointer.prevPathPoint != null)
@@ -174,34 +176,18 @@
                     prevPoint = classPointer.prevPathPoint.gameObjectPointer;
                 }
 
-
-                //took out if prevPoint is not null, otherwise it will not update the first line most likely
-                Debug.Log("Creating Line.");
-                SetPassedState();
-
                 SetLine();
 
-                Debug.Log("SetLine() called");
-
                 UpdateLineCollider();
-                Debug.Log("UpdateLineCollider called");
 
                 if (thisGroundpoint == null)
                 {
                     CreateGroundpoint();
-                    Debug.Log("Ground point created");
-
                 }
 
                 CreateWaypointIndicator();
-                Debug.Log("created waypoint indicator");
-
-                //if needed will input again;
-                //ChangeColor();
-                //Debug.Log("changed color");
 
                 UpdateGroundpointLine();
-                Debug.Log("Updated groudpoint line");
 
                 yield return new WaitForEndOfFrame();
 
@@ -214,19 +200,31 @@
         /// </summary>
         public void UnSelected()
         {
-            prevWaypointStatus = waypointStatus;
-            waypointStatus = WaypointStatus.STATIC;
+            Debug.Log("Waypoint unselected!");
+            switch (waypointStatus)
+            {
+                case WaypointStatus.STATIC:
+                    this.GetComponent<MeshRenderer>().material = unpassedWaypoint;
+                    LineProperties.material = unselectedUnpassedLine;
+                    break;
+                case WaypointStatus.UPLOADED:
+                    this.GetComponent<MeshRenderer>().material = uploadedWaypoint;
+                    LineProperties.material = unselectedUnpassedLine;
+                    break;
+                case WaypointStatus.LOCKED:
+                    this.GetComponent<MeshRenderer>().material = lockedWaypoint;
+                    LineProperties.material = unselectedUnpassedLine;
+                    break;
+                case WaypointStatus.GRABBED:
+                    this.GetComponent<MeshRenderer>().material = touchedWaypoint;
+                    LineProperties.material = unselectedUnpassedLine;
+                    break;
+                case WaypointStatus.PASSED:
+                    this.GetComponent<MeshRenderer>().material = passedWaypoint;
+                    LineProperties.material = unselectedPassedLine;
+                    break;
+            }
 
-            //static coloring
-            this.GetComponent<MeshRenderer>().material = unpassedWaypoint;
-            if (referenceDrone.selected)
-            {
-                LineProperties.material = selectedUnpassedLine;
-            }
-            else
-            {
-                LineProperties.material = unselectedUnpassedLine;
-            }
         }
 
         /// <summary>
@@ -234,17 +232,31 @@
         /// </summary>
         public void Selected()
         {
-            prevWaypointStatus = waypointStatus;
-            waypointStatus = WaypointStatus.GRABBED;
-            this.GetComponent<MeshRenderer>().material = touchedWaypoint;
-            if (referenceDrone.selected)
+            Debug.Log("Waypoint Selected!");
+            switch (waypointStatus)
             {
-                LineProperties.material = selectedUnpassedLine;
+                case WaypointStatus.STATIC:
+                    this.GetComponent<MeshRenderer>().material = unpassedWaypoint;
+                    LineProperties.material = selectedUnpassedLine;
+                    break;
+                case WaypointStatus.UPLOADED:
+                    this.GetComponent<MeshRenderer>().material = uploadedWaypoint;
+                    LineProperties.material = selectedUnpassedLine;
+                    break;
+                case WaypointStatus.LOCKED:
+                    this.GetComponent<MeshRenderer>().material = lockedWaypoint;
+                    LineProperties.material = selectedUnpassedLine;
+                    break;
+                case WaypointStatus.GRABBED:
+                    this.GetComponent<MeshRenderer>().material = touchedWaypoint;
+                    LineProperties.material = selectedUnpassedLine;
+                    break;
+                case WaypointStatus.PASSED:
+                    this.GetComponent<MeshRenderer>().material = passedWaypoint;
+                    LineProperties.material = selectedPassedLine;
+                    break;
             }
-            else
-            {
-                LineProperties.material = unselectedUnpassedLine;
-            }
+
         }
 
         /// <summary>
@@ -254,8 +266,11 @@
         {
             prevWaypointStatus = waypointStatus;
             waypointStatus = WaypointStatus.PASSED;
+
             GetComponent<VRTK_InteractableObject>().isGrabbable = false;
+
             this.GetComponent<MeshRenderer>().material = passedWaypoint;
+
             if (referenceDrone.selected)
             {
                 LineProperties.material = selectedPassedLine;
@@ -273,10 +288,16 @@
         /// </summary>
         public void LockWaypoint()
         {
+            if (waypointStatus == WaypointStatus.PASSED)
+            {
+                Debug.Log("Invalid command. Please check logic.");
+            }
 
             prevWaypointStatus = waypointStatus;
             waypointStatus = WaypointStatus.LOCKED;
+
             GetComponent<VRTK_InteractableObject>().isGrabbable = false;
+
             if (referenceDrone.selected)
             {
                 LineProperties.material = selectedUnpassedLine;
@@ -313,8 +334,14 @@
         /// </summary>
         public void WaypointUploaded()
         {
+            if (waypointStatus == WaypointStatus.PASSED)
+            {
+                Debug.Log("Invalid command. Please check logic.");
+            }
+
             prevWaypointStatus = waypointStatus;
             waypointStatus = WaypointStatus.UPLOADED;
+
             this.GetComponent<MeshRenderer>().material = uploadedWaypoint;
             if (referenceDrone.selected)
             {
@@ -532,7 +559,6 @@
                 prevWaypointStatus = waypointStatus;
                 waypointStatus = WaypointStatus.PASSED;
                 GetComponent<VRTK_InteractableObject>().isGrabbable = false;
-                ChangeColor();
             }
         }
 
