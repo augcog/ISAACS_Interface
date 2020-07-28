@@ -113,8 +113,6 @@
         /// </summary>
         public static Drone SelectNextDrone()
         {
-            Debug.Log("Selection next drone");
-            Debug.Log("Switch Drone from " + selectedDrone);
             if(selectedDrone != null)
             {
                 Debug.Log("Enquing selected drone");
@@ -127,20 +125,14 @@
                 Drone nextDrone = dronesQueue.Dequeue();
                 nextDrone.droneProperties.SelectDrone();
 
-                Debug.Log("############# Drone selected: " + nextDrone.droneProperties.droneClassPointer);
 
                 if (worldObject.GetComponent<M210_Flight_TestManager>() != null)
                 {
                     M210_Flight_TestManager flight_TestManager = worldObject.GetComponent<M210_Flight_TestManager>();
                     flight_TestManager.UpdateDrone(nextDrone.droneProperties.droneROSConnection);
                 }
-                Debug.Log("############# Drone selected: " + nextDrone);
-
-                Debug.Log("############# Drone selected: " + nextDrone.gameObjectPointer.name);
-
 
                 selectedDrone = nextDrone;
-
 
                 return nextDrone;
             }

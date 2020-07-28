@@ -215,8 +215,10 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
             ros.AddSubscriber("/dji_sdk/" + subscriber, this);
         }
 
-        // TODO: Initilize Informative UI Prefab and attach as child.
         ros.Connect();
+
+        // Get authority automatically.
+        this.SetSDKControl(true);
     }
 
     // Update is called once per frame in Unity
