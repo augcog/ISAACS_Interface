@@ -23,6 +23,15 @@
         public DroneSimulationManager droneSimulationManager;
         public DroneMenu droneMenu;
 
+        // The waypoint ID the drone is currently flying to
+        private int currentWaypointTargetID = 0;
+
+        /// The current waypoint the drone is flying to
+        private Waypoint currentWaypointTarget;
+
+        // Total waypoints uploaded to the drone.
+        private int uploadedWaypointsCount = 0;
+
         /// <summary>
         /// Select this drone
         /// </summary>
@@ -74,7 +83,36 @@
             }
         }
 
+        public int CurrentWaypointTargetID()
+        {
+            return currentWaypointTargetID;
+        }
 
+        public int TotalUploadedWaypoints()
+        {
+            return uploadedWaypointsCount;
+        }
+
+        /// <summary>
+        /// Update the target waypoint and total uploaded and start checking the distance of the drone from the target waypoint to update the waypoint and mission status.
+        /// </summary>
+        public void StartCheckingFlightProgress(int _currentWaypointTargetID, int _waypointsUploaded)
+        {
+            currentWaypointTargetID = _currentWaypointTargetID;
+            uploadedWaypointsCount += _waypointsUploaded;
+            currentWaypointTarget = droneClassPointer.GetWaypoint(currentWaypointTargetID);
+
+            StartCoroutine(CheckTargetWaypoint());
+        }
+
+        /// <summary>
+        /// Stop checking the status of the drone flight.
+        /// </summary>
+        public void StopCheckingFlightProgress()
+        {
+            StopCoroutine(CheckTargetWaypoint());
+        }
+        
         /// <summary>
         /// Check the distance of the drone from the current target waypoint. 
         /// If reached, inform waypoint it has been passed.
@@ -82,7 +120,6 @@
         /// If mission completed, inform the ROSConnection and end checking coroutine
         /// </summary>
         /// <returns></returns>
-        /*
         IEnumerator CheckTargetWaypoint()
         {
             while (true)
@@ -105,9 +142,8 @@
                     {
                         // Upadate waypoint target and lock next waypoint.
                         currentWaypointTargetID += 1;
-                        currentWaypointTarget = waypoints[currentWaypointTargetID];
+                        currentWaypointTarget = droneClassPointer.GetWaypoint(currentWaypointTargetID);
                         currentWaypointTarget.waypointProperties.LockWaypoint();
-
                     }
 
                 }
@@ -117,6 +153,22 @@
             }
 
         }
-        */
+        
+        /// <summary>
+        /// Check if the drone has reached the current destination
+        /// </summary>
+        /// <returns></returns>
+        private bool reachedCurrentDestination()
+        {
+            Vector3 currentLocation = this.droneClassPointer.gameObjectPointer.transform.localPosition;
+            Vector3 currentDestination = currentWaypointTarget.gameObjectPointer.transform.localPosition;
+
+            if (Vector3.Distance(currentLocation, currentDestination) < 0.1f)
+            {
+                return true;
+            }
+            return false;
+        }
+
     }
 }

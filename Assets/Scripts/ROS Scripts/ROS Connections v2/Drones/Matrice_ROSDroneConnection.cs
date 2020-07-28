@@ -295,7 +295,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
                     prev_flight_status = flight_status;
                     flight_status = FlightStatus.FLYING;
 
-                    droneProperties.droneClassPointer.StartCheckingFlightProgress(1, missionMsgList.Count);
+                    droneProperties.StartCheckingFlightProgress(1, missionMsgList.Count);
 
                 }
                 else
@@ -313,9 +313,12 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
                 ResumeMission();
                 break;
 
+            case FlightStatus.FLYING:
+                UpdateMissionHelper(UpdateMissionAction.UPDATE_CURRENT_MISSION);
+                break;
+
             case FlightStatus.LANDING:
             case FlightStatus.FLYING_HOME:
-            case FlightStatus.FLYING:
             case FlightStatus.NULL:
                 Debug.Log("Invalid drone command request");
                 break;
@@ -454,7 +457,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
         {
             case UpdateMissionAction.CONTINUE_MISSION:
 
-                int continueFromWaypointID = droneProperties.droneClassPointer.CurrentWaypointTargetID() + 1;
+                int continueFromWaypointID = droneProperties.CurrentWaypointTargetID() + 1;
 
                 if ( continueFromWaypointID >= droneProperties.droneClassPointer.WaypointsCount())
                 {
@@ -480,7 +483,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
                 prev_flight_status = flight_status;
                 flight_status = FlightStatus.FLYING;
 
-                droneProperties.droneClassPointer.StartCheckingFlightProgress(continueFromWaypointID, missionMsgList.Count);
+                droneProperties.StartCheckingFlightProgress(continueFromWaypointID, missionMsgList.Count);
                 
                 break;
 
@@ -491,7 +494,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
             case UpdateMissionAction.UPDATE_CURRENT_MISSION:
                 SendWaypointAction(WaypointMissionAction.STOP);
                 
-                continueFromWaypointID = droneProperties.droneClassPointer.CurrentWaypointTargetID();
+                continueFromWaypointID = droneProperties.CurrentWaypointTargetID();
 
                 if (continueFromWaypointID >= droneProperties.droneClassPointer.WaypointsCount())
                 {
@@ -517,7 +520,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
                 prev_flight_status = flight_status;
                 flight_status = FlightStatus.FLYING;
 
-                droneProperties.droneClassPointer.StartCheckingFlightProgress(continueFromWaypointID, missionMsgList.Count);
+                droneProperties.StartCheckingFlightProgress(continueFromWaypointID, missionMsgList.Count);
                 
                 break;
 

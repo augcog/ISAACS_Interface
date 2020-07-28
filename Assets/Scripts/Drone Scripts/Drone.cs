@@ -28,15 +28,6 @@
         // All waypoints that were deleted, in case the player wants to redo them.
         //public List<Waypoint> deletedWaypoints;
 
-        // The waypoint ID the drone is currently flying to
-        private int currentWaypointTargetID = 0;
-
-        /// The current waypoint the drone is flying to
-        private Waypoint currentWaypointTarget;
-
-        // Total waypoints uploaded to the drone.
-        private int uploadedWaypointsCount = 0;
-
         // List of attached sensor gameobjects
         public List<ROSSensorConnectionInterface> attachedSensors;
 
@@ -296,36 +287,6 @@
         {
             droneProperties.droneROSConnection.UpdateMission();
         }
-
-        public int CurrentWaypointTargetID()
-        {
-            return currentWaypointTargetID;
-        }
-
-        public int TotalUploadedWaypoints()
-        {
-            return uploadedWaypointsCount;
-        }
-
-        /// <summary>
-        /// Update the target waypoint and total uploaded and start checking the distance of the drone from the target waypoint to update the waypoint and mission status.
-        /// </summary>
-        public void StartCheckingFlightProgress( int _currentWaypointTargetID, int _waypointsUploaded)
-        {
-            currentWaypointTargetID = _currentWaypointTargetID;
-            uploadedWaypointsCount += _waypointsUploaded;
-            currentWaypointTarget = waypoints[currentWaypointTargetID];
-
-            //StartCoroutine(CheckTargetWaypoint());
-        }
-
-        /// <summary>
-        /// Stop checking the status of the drone flight.
-        /// </summary>
-        public void StopCheckingFlightProgress()
-        {
-            //StopCoroutine(CheckTargetWaypoint());
-        }
         
         /******************************/
         //       HELPER METHODS       //
@@ -343,22 +304,6 @@
                 return true;
             }
             return waypointList.Count == 0;
-        }
-
-        /// <summary>
-        /// Check if the drone has reached the current destination
-        /// </summary>
-        /// <returns></returns>
-        private bool reachedCurrentDestination()
-        {
-            Vector3 currentLocation = this.gameObjectPointer.transform.localPosition;
-            Vector3 currentDestination = currentWaypointTarget.gameObjectPointer.transform.localPosition;
-
-            if (Vector3.Distance(currentLocation, currentDestination) < 0.1f)
-            {
-                return true;
-            }
-            return false;
         }
 
         /******************************/
