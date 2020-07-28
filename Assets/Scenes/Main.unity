@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.17302455, g: 0.2162439, b: 0.2982352, a: 1}
+  m_IndirectSpecularColor: {r: 0.17302507, g: 0.21624431, b: 0.298236, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -1644,6 +1644,10 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 804ac96ebacbb37488605e7a96725e34, type: 3}
   m_IsPrefabParent: 0
+--- !u!1 &373642551 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 113768, guid: 126d619cf4daa52469682f85c1378b4a, type: 2}
+  m_PrefabInternal: {fileID: 242895466}
 --- !u!1 &422848528
 GameObject:
   m_ObjectHideFlags: 0
@@ -2331,12 +2335,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoPopulateObjectReferences: 1
-  actualBoundaries: {fileID: 0}
-  actualHeadset: {fileID: 0}
-  actualLeftController: {fileID: 0}
-  actualRightController: {fileID: 0}
-  modelAliasLeftController: {fileID: 0}
-  modelAliasRightController: {fileID: 0}
+  actualBoundaries: {fileID: 1578342133}
+  actualHeadset: {fileID: 1067901340}
+  actualLeftController: {fileID: 2123514600}
+  actualRightController: {fileID: 373642551}
+  modelAliasLeftController: {fileID: 283578732}
+  modelAliasRightController: {fileID: 665289476}
   cachedSystemSDKInfo:
     baseTypeName: VRTK.SDK_BaseSystem
     fallbackTypeName: VRTK.SDK_FallbackSystem
@@ -2725,6 +2729,10 @@ CanvasRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1050719667}
+--- !u!1 &1067901340 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 100002, guid: 126d619cf4daa52469682f85c1378b4a, type: 2}
+  m_PrefabInternal: {fileID: 242895466}
 --- !u!1 &1076179632
 GameObject:
   m_ObjectHideFlags: 0
@@ -6060,3 +6068,7 @@ CanvasRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2097199223}
+--- !u!1 &2123514600 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 109308, guid: 126d619cf4daa52469682f85c1378b4a, type: 2}
+  m_PrefabInternal: {fileID: 242895466}

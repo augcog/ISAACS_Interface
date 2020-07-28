@@ -49,7 +49,7 @@
         private GameObject thisGroundpoint; // groundpoint instantiated under current waypoint
         private LineRenderer groundpointLine; // Connects the groundpoint to the waypoint
 
-        private LineRenderer LineProperties;
+        public LineRenderer LineProperties;
         private CapsuleCollider lineCollider;
 
         private GameObject World;
@@ -74,7 +74,6 @@
 
             if (classPointer.prevPathPoint != null)
             {
-                LineProperties = this.GetComponentInParent<LineRenderer>();
                 lineCollider = new GameObject("Line Collider").AddComponent<CapsuleCollider>();
                 lineCollider.tag = "Line Collider";
                 lineCollider.isTrigger = true;
@@ -200,11 +199,13 @@
         /// </summary>
         public void UnSelected()
         {
-            Debug.Log("Waypoint unselected!");
+            GetComponent<VRTK_InteractableObject>().isGrabbable = false;
+
             switch (waypointStatus)
             {
                 case WaypointStatus.STATIC:
                     this.GetComponent<MeshRenderer>().material = unpassedWaypoint;
+                    Debug.Log(LineProperties);
                     LineProperties.material = unselectedUnpassedLine;
                     break;
                 case WaypointStatus.UPLOADED:
@@ -232,7 +233,8 @@
         /// </summary>
         public void Selected()
         {
-            Debug.Log("Waypoint Selected!");
+            GetComponent<VRTK_InteractableObject>().isGrabbable = true;
+
             switch (waypointStatus)
             {
                 case WaypointStatus.STATIC:
