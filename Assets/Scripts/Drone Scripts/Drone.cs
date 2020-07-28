@@ -5,7 +5,7 @@
     using System.Collections.Generic;
     using UnityEngine;
 
-    public class Drone : MonoBehaviour
+    public class Drone 
     {
         // This is the related game object
         public GameObject gameObjectPointer;
@@ -316,7 +316,7 @@
             uploadedWaypointsCount += _waypointsUploaded;
             currentWaypointTarget = waypoints[currentWaypointTargetID];
 
-            StartCoroutine(CheckTargetWaypoint());
+            //StartCoroutine(CheckTargetWaypoint());
         }
 
         /// <summary>
@@ -324,49 +324,7 @@
         /// </summary>
         public void StopCheckingFlightProgress()
         {
-            StopCoroutine(CheckTargetWaypoint());
-        }
-
-        /// <summary>
-        /// Check the distance of the drone from the current target waypoint. 
-        /// If reached, inform waypoint it has been passed.
-        /// If next waypoint is aviable, lock that and continue checking
-        /// If mission completed, inform the ROSConnection and end checking coroutine
-        /// </summary>
-        /// <returns></returns>
-        IEnumerator CheckTargetWaypoint()
-        {
-            while (true)
-            {
-                if (reachedCurrentDestination())
-                {
-                    // Inform current waypoint it has been passed
-                    currentWaypointTarget.waypointProperties.WaypointPassed();
-
-                    // Check if mission is complete
-                    if (currentWaypointTargetID == uploadedWaypointsCount)
-                    {
-                        // Inform ROS Connection that current mission is complete
-                        // droneProperties.droneROSConnection.UploadedMissionCompleted();
-
-                        // Stop the checking
-                        StopCheckingFlightProgress();
-                    }
-                    else
-                    {
-                        // Upadate waypoint target and lock next waypoint.
-                        currentWaypointTargetID += 1;
-                        currentWaypointTarget = waypoints[currentWaypointTargetID];
-                        currentWaypointTarget.waypointProperties.LockWaypoint();
-
-                    }
-
-                }
-
-                yield return new WaitForEndOfFrame();
-
-            }
-
+            //StopCoroutine(CheckTargetWaypoint());
         }
         
         /******************************/
