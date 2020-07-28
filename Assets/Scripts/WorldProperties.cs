@@ -114,7 +114,7 @@
         public static Drone SelectNextDrone()
         {
             Debug.Log("Selection next drone");
-
+            Debug.Log("Switch Drone from " + selectedDrone);
             if(selectedDrone != null)
             {
                 Debug.Log("Enquing selected drone");
@@ -137,6 +137,7 @@
                 Debug.Log("############# Drone selected: " + nextDrone);
 
                 Debug.Log("############# Drone selected: " + nextDrone.gameObjectPointer.name);
+
 
                 selectedDrone = nextDrone;
 
@@ -165,6 +166,7 @@
         /// <param name="drone"></param>
         public static void AddDrone(Drone drone)
         {
+            Debug.Log("Added drone " + drone);
             dronesQueue.Enqueue(drone);
         }
 
