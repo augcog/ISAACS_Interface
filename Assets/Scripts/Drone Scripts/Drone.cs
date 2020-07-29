@@ -125,8 +125,9 @@
 
                 Debug.Log("Added first two waypoints to the list:" + waypoints.ToString());
 
+                // Prevent the purple plane from appearing.
                 takeoffWaypoint.gameObjectPointer.GetComponent<LineRenderer>().enabled = false; // TODO: fix this jank.
-                newWaypoint.gameObjectPointer.GetComponent<WaypointProperties>().UpdateGroundpointLine(); // TODO: fix this jank.
+
                 return newWaypoint; 
             }
             else
@@ -144,17 +145,6 @@
                 Debug.Log("Added waypoint to the list:" + waypoints.ToString());
 
                 // Make lines mesh appear. TODO: check coloring.
-                /*newWaypoint.gameObjectPointer.GetComponent<WaypointProperties>().SetLineCollider(); // TODO: fix this jank.
-                newWaypoint.gameObjectPointer.GetComponent<WaypointProperties>().SetLine(); // TODO: fix this jank.
-                newWaypoint.gameObjectPointer.GetComponent<WaypointProperties>().UpdateLineCollider(); // TODO: fix this jank.
-                newWaypoint.gameObjectPointer.GetComponent<WaypointProperties>().CreateWaypointIndicator();
-                newWaypoint.gameObjectPointer.GetComponent<WaypointProperties>().UpdateGroundpointLine(); // TODO: fix this jank.
-
-                prevWaypoint.gameObjectPointer.GetComponent<WaypointProperties>().SetLineCollider(); // TODO: fix this jank.
-                prevWaypoint.gameObjectPointer.GetComponent<WaypointProperties>().SetLine(); // TODO: fix this jank.
-                prevWaypoint.gameObjectPointer.GetComponent<WaypointProperties>().UpdateLineCollider(); // TODO: fix this jank.
-                prevWaypoint.gameObjectPointer.GetComponent<WaypointProperties>().CreateWaypointIndicator();
-                prevWaypoint.gameObjectPointer.GetComponent<WaypointProperties>().UpdateGroundpointLine(); // TODO: fix this jank.*/
                 return newWaypoint; 
             }
         }
