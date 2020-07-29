@@ -101,7 +101,7 @@
             currentWaypointTargetID = _currentWaypointTargetID;
             uploadedWaypointsCount += _waypointsUploaded;
             currentWaypointTarget = droneClassPointer.GetWaypoint(currentWaypointTargetID);
-
+            Debug.Log("Starting Coroutine");
             StartCoroutine(CheckTargetWaypoint());
         }
 
@@ -111,6 +111,8 @@
         public void StopCheckingFlightProgress()
         {
             StopCoroutine(CheckTargetWaypoint());
+            droneROSConnection.UploadedMissionCompleted();
+            Debug.Log("Mission Completed!");
         }
         
         /// <summary>
@@ -124,6 +126,7 @@
         {
             while (true)
             {
+                Debug.Log("Coroutine Running from a bear.");
                 if (reachedCurrentDestination())
                 {
                     // Inform current waypoint it has been passed
@@ -163,10 +166,11 @@
             Vector3 currentLocation = this.droneClassPointer.gameObjectPointer.transform.localPosition;
             Vector3 currentDestination = currentWaypointTarget.gameObjectPointer.transform.localPosition;
 
-            if (Vector3.Distance(currentLocation, currentDestination) < 0.1f)
+            if (Vector3.Distance(currentLocation, currentDestination) < 0.5f)
             {
                 return true;
             }
+            Debug.Log(Vector3.Distance(currentLocation, currentDestination));
             return false;
         }
 

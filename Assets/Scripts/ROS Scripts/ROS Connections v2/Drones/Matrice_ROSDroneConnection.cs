@@ -218,7 +218,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
         ros.Connect();
 
         // Get authority automatically.
-        this.SetSDKControl(true);
+        // this.SetSDKControl(true);
     }
 
     // Update is called once per frame in Unity
