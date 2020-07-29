@@ -101,21 +101,6 @@
             Debug.Log("Init first line");
             SetPassedState();
 
-            SetLine();
-
-            UpdateLineCollider();
-
-            if (thisGroundpoint == null)
-            {
-                CreateGroundpoint();
-
-            }
-
-            CreateWaypointIndicator();
-
-            //if needed will input again;
-            //ChangeColor();
-
             //static coloring
             this.GetComponent<MeshRenderer>().material = unpassedWaypoint;
             if (referenceDrone.selected)
@@ -127,7 +112,11 @@
                 LineProperties.material = unselectedUnpassedLine;
             }
 
-            UpdateGroundpointLine();
+            //if needed will input again;
+            //ChangeColor();
+
+            StartCoroutine(updateLine()); 
+            StopCoroutine(updateLine()); 
         }
 
         //this is called when the object is ungrabbed (was here before somehow)
@@ -210,9 +199,7 @@
                 UpdateGroundpointLine();
 
                 yield return new WaitForEndOfFrame();
-
             }
-            
         }
 
         /// <summary>
@@ -391,7 +378,7 @@
             {
                 LineProperties.SetPosition(0, this.transform.position);
 
-                Vector3 endpoint;
+                Vector3 endpoint= prevPoint.transform.position;
 
                 //if (referenceDroneGameObject.GetComponent<MoveDrone>().targetWaypoint != this.gameObject || passed)
                 //{
@@ -403,7 +390,6 @@
                 //    LineProperties.SetPosition(1, endpoint);
                 //}
 
-                endpoint = prevPoint.transform.position;
                 LineProperties.SetPosition(1, endpoint);
 
                 // Code in WaypointSystemUpgrade
