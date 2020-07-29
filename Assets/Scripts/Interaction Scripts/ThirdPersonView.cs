@@ -1,5 +1,6 @@
 ﻿namespace ISAACS {
 
+    using System;
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
@@ -339,15 +340,21 @@
             // update map position based on input
             Vector3 position = World.transform.position;
 
+            // Get the angle of the headset's rotation
+            float theta = controllerInput.HeadsetTransform().rotation.eulerAngles.y;
+            // Convert from degrees to radians. 
+            float theta_sin = (float)Math.Sin(Math.PI / 180.0 * theta);
+            float theta_cos = (float)Math.Cos(Math.PI / 180.0 * theta);
+
             if (direction == Direction.REGULAR)
             {
-                position.x -= moveX * speed * Time.deltaTime * 3.0f;
-                position.z -= moveZ * speed * Time.deltaTime * 3.0f;
+                position.x -= theta_cos * moveX * speed * Time.deltaTime * 3.0f + theta_sin * moveZ * speed * Time.deltaTime * 3.0f;
+                position.z -= theta_sin * moveX * speed * Time.deltaTime * 3.0f + theta_cos * moveZ * speed * Time.deltaTime * 3.0f;
             }
             else
             {
-                position.x = moveX * speed * Time.deltaTime * 3.0f;
-                position.z = moveZ * speed * Time.deltaTime * 3.0f;
+                position.x += theta_cos * moveX * speed * Time.deltaTime * 3.0f + theta_sin * moveZ * speed * Time.deltaTime * 3.0f;
+                position.z += theta_sin * moveX * speed * Time.deltaTime * 3.0f + theta_cos * moveZ * speed * Time.deltaTime * 3.0f;
             }
 
             World.transform.position = position;
