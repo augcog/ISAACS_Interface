@@ -60,9 +60,18 @@ public class DroneSimulationManager : MonoBehaviour {
                 if (droneStatusPrev == FlightStatus.NULL)
                 {
                     nextWaypointID = 0;
+
+                    foreach(Waypoint waypoint in drone.AllWaypoints())
+                    {
+                        waypoint.waypointProperties.WaypointUploaded();
+                    }
+
                     updateDestination(true, false, false);
+
                     droneStatus = FlightStatus.FLYING;
                     droneStatusPrev = FlightStatus.ON_GROUND_STANDBY;
+
+                    drone.droneProperties.StartCheckingFlightProgress(1, drone.WaypointsCount() - 1);
                 }
                 else
                 {

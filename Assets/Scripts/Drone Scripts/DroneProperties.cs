@@ -101,7 +101,7 @@
             currentWaypointTargetID = _currentWaypointTargetID;
             uploadedWaypointsCount += _waypointsUploaded;
             currentWaypointTarget = droneClassPointer.GetWaypoint(currentWaypointTargetID);
-            Debug.Log("Starting Coroutine");
+            currentWaypointTarget.waypointProperties.LockWaypoint();
             StartCoroutine(CheckTargetWaypoint());
         }
 
@@ -126,7 +126,6 @@
         {
             while (true)
             {
-                Debug.Log("Coroutine Running from a bear.");
                 if (reachedCurrentDestination())
                 {
                     // Inform current waypoint it has been passed
