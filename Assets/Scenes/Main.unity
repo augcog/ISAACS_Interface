@@ -4850,6 +4850,7 @@ MonoBehaviour:
   LeftUI: {fileID: 491234449}
   RightController: {fileID: 1347866310}
   RightUI: {fileID: 1197405025}
+  WaypointPlacementVisualizer: {fileID: 1456301587}
 --- !u!1 &1761053835
 GameObject:
   m_ObjectHideFlags: 0
