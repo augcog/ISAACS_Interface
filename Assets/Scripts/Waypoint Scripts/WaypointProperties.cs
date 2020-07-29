@@ -18,6 +18,7 @@
         public Drone referenceDrone;
         public GameObject referenceDroneGameObject;
         private GameObject prevPoint;
+        private GameObject nextPoint;
 
         [Header ("Waypoint Materials")]
         public Material unpassedWaypoint;
@@ -147,6 +148,7 @@
 
             // Trigger UpdateWaypoints call for drone.
             referenceDrone.DronePathUpdated();
+
         }
 
         //called if an object is grabbed
@@ -161,8 +163,20 @@
             // change the color to grabbed
             this.GetComponent<MeshRenderer>().material = touchedWaypoint;
 
+            // Check to see if there exists a next waypoint, and update the nextPoint variable accordingly.
+            // If there exists a next waypoint, then its line will also be updated by the updateLine coroutine.
+            if (classPointer.nextPathPoint != null)
+            {
+                nextPoint = classPointer.nextPathPoint.gameObjectPointer;
+            }
+            else
+            {
+                nextPoint = null;
+            }
+
             // Start updating the line renderer.
             StartCoroutine(updateLine());
+
         }
 
         //Coroutine here to update line ONLY if grabbed
@@ -173,6 +187,16 @@
                 if (classPointer.prevPathPoint != null)
                 {
                     prevPoint = classPointer.prevPathPoint.gameObjectPointer;
+                }
+
+                // TODO: there is probably a better fix than getting the next waypoint's WaypointProperties script.
+                // ie. A getter function inside the Waypoint class.
+                if (nextPoint != null)
+                {
+                    nextPoint.GetComponent<WaypointProperties>().SetLine();
+                    nextPoint.GetComponent<WaypointProperties>().UpdateLineCollider();
+                    nextPoint.GetComponent<WaypointProperties>().CreateWaypointIndicator();
+                    nextPoint.GetComponent<WaypointProperties>().UpdateGroundpointLine();
                 }
 
                 SetLine();
