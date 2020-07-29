@@ -532,6 +532,16 @@
 		}
 
 
+		/******************************/
+		//   HEADSET GETTER METHODS   //
+		/******************************/
+
+		// TODO: documentation
+		public Transform HeadsetTransform()
+		{
+			return VRTK_DeviceFinder.HeadsetTransform();
+		}
+
 
 		/******************************/
 		//  COMPOSITE GETTER METHODS  //
