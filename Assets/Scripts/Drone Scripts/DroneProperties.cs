@@ -102,6 +102,7 @@
             uploadedWaypointsCount += _waypointsUploaded;
             currentWaypointTarget = droneClassPointer.GetWaypoint(currentWaypointTargetID);
 
+            currentWaypointTarget.waypointProperties.LockWaypoint();
             StartCoroutine(CheckTargetWaypoint());
         }
 

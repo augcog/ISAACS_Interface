@@ -270,7 +270,6 @@
             waypointStatus = WaypointStatus.PASSED;
 
             GetComponent<VRTK_InteractableObject>().isGrabbable = false;
-
             this.GetComponent<MeshRenderer>().material = passedWaypoint;
 
             if (referenceDrone.selected)
@@ -299,6 +298,7 @@
             waypointStatus = WaypointStatus.LOCKED;
 
             GetComponent<VRTK_InteractableObject>().isGrabbable = false;
+            this.GetComponent<MeshRenderer>().material = lockedWaypoint;
 
             if (referenceDrone.selected)
             {

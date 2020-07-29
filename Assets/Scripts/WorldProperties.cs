@@ -37,7 +37,7 @@
         [Header("Misc. State variables")]
         public static GameObject worldObject;
         public static GameObject placementPlane;
-        public static bool DJI_SIM = true;
+        public static bool DJI_SIM = false;
 
         public static Vector3 actualScale;
         public static Vector3 currentScale;
