@@ -8,7 +8,8 @@ using UnityEditor;
 using System.IO;
 using ISAACS;
 
-public class ROSManager : MonoBehaviour {
+public class ROSManager : MonoBehaviour
+{
 
     // Let's gooooo
 
@@ -27,15 +28,19 @@ public class ROSManager : MonoBehaviour {
     /// </summary>
     public enum SensorType { PointCloud, Mesh, LAMP, PCFace, Image };
 
-    /// <summary>
-    /// Sensor subscribers supported by ISAACS System
-    /// </summary>
-    public enum SensorSubscribers { surface_pointcloud, mesh,
-    colorized_points_0, colorized_points_1, colorized_points_2, colorized_points_3, colorized_points_4, colorized_points_5,
-        colorized_points_faced_0, colorized_points_faced_1, colorized_points_faced_2, colorized_points_faced_3, colorized_points_faced_4, colorized_points_faced_5};
 
     //add SensorSubscriber , fpv_camera_images to resolve merge conflict
 
+
+    /// <summary>
+    /// Sensor subscribers supported by ISAACS System
+    /// </summary>
+    public enum SensorSubscribers
+    {
+        surface_pointcloud, mesh,
+        colorized_points_0, colorized_points_1, colorized_points_2, colorized_points_3, colorized_points_4, colorized_points_5,
+        colorized_points_faced_0, colorized_points_faced_1, colorized_points_faced_2, colorized_points_faced_3, colorized_points_faced_4, colorized_points_faced_5
+    };
 
     /// <summary>
     /// All information required to be set by the user in the Editor to create a drone connection
@@ -82,9 +87,9 @@ public class ROSManager : MonoBehaviour {
     /// <summary>
     /// Initialize all drones and sensors
     /// </summary>
-    void Start ()
+    void Start()
     {
-        foreach ( ROSDroneConnectionInput rosDroneConnectionInput in DronesList)
+        foreach (ROSDroneConnectionInput rosDroneConnectionInput in DronesList)
         {
             InstantiateDrone(rosDroneConnectionInput);
         }
@@ -126,7 +131,7 @@ public class ROSManager : MonoBehaviour {
                 M100_ROSDroneConnection M100_rosDroneConnection = droneGameObject.AddComponent<M100_ROSDroneConnection>();
                 M100_rosDroneConnection.InitilizeDrone(uniqueID, droneIP, dronePort, droneSubscribers, simFlight);
                 droneGameObject.GetComponent<DroneProperties>().droneROSConnection = M100_rosDroneConnection;
-                ROSDroneConnections.Add(uniqueID,M100_rosDroneConnection);
+                ROSDroneConnections.Add(uniqueID, M100_rosDroneConnection);
                 break;
 
             case DroneType.M210:
@@ -149,7 +154,7 @@ public class ROSManager : MonoBehaviour {
                 Debug.Log("Sprite class not implemented created");
                 //Sprite_ROSDroneConnection drone_rosDroneConnection = drone.AddComponent<Sprite_ROSDroneConnection>();
                 break;
-            
+
             default:
                 Debug.Log("No drone type selected");
                 return;
@@ -162,7 +167,7 @@ public class ROSManager : MonoBehaviour {
             droneInstance.AddSensor(sensor);
         }
 
-        uniqueID ++;
+        uniqueID++;
     }
 
     /// <summary>
@@ -260,7 +265,7 @@ public class ROSManager : MonoBehaviour {
         return rosSensorConnection;
 
     }
-    
+
     void OnApplicationQuit()
     {
         foreach (ROSDroneConnectionInterface rosDroneConnection in ROSDroneConnections.Values)
@@ -275,5 +280,3 @@ public class ROSManager : MonoBehaviour {
     }
 
 }
-
-

@@ -699,7 +699,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dac87ae293d0bd348a6bcb090e69c517, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DronesList: []
+  DronesList:
+  - droneName: Perry Pepe the Platipus
+    ipAddress: 75.25.126.85
+    port: 9090
+    droneType: 0
+    droneSubscribers: 0400000001000000
+    simFlight: 1
+    attachedSensors:
+    - sensorName: Perry_Mesh
+      ipAddress: 75.25.126.85
+      port: 9090
+      sensorType: 1
+      sensorSubscribers: 00000000
+      videoPlayers: 0
   success: 0
   uniqueID: 0
 --- !u!4 &167235401 stripped
