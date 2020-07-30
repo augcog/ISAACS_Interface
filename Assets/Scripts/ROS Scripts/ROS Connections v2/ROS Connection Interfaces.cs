@@ -15,6 +15,13 @@ public interface ROSDroneConnectionInterface
 
     // Query state variables for Informative UI and misc. info
 
+    /// Get the value of a certain topic.
+    /// To be used by the UI for further abstraction
+    /// </summary>
+    /// <param name="topic"></param>
+    /// <returns></returns>
+    string GetValueByTopic(string topic);
+
     /// <summary>
     /// State of Unity interface authority over controlling the drone
     /// </summary>
@@ -128,10 +135,10 @@ public interface ROSSensorConnectionInterface
     string GetSensorName();
 
     /// <summary>
-    /// Returns a list of connected subscriber topics (which are unique identifiers).
+    /// Returns a dictionary of connected subscriber topics (which are unique identifiers) as keys and T/F as value representing the status of subscriber
     /// </summary>
     /// <returns></returns>
-    List<string> GetSensorSubscribers();
+    Dictionary<string,bool> GetSensorSubscribers();
 
     /// <summary>
     /// Function to disconnect a specific subscriber

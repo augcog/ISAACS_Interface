@@ -24,14 +24,13 @@ GameObject:
   - component: {fileID: 23641259943467106}
   - component: {fileID: 120057133663641978}
   - component: {fileID: 114176171675139136}
-  - component: {fileID: 136277372781703870}
   - component: {fileID: 54895740343813164}
   - component: {fileID: 114879755666982984}
   - component: {fileID: 114755281248396062}
   - component: {fileID: 114629310516917166}
   m_Layer: 0
   m_Name: waypoint
-  m_TagString: Untagged
+  m_TagString: waypoint
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -57,7 +56,7 @@ MeshRenderer:
   m_GameObject: {fileID: 1161822125618724}
   m_Enabled: 1
   m_CastShadows: 1
-  m_ReceiveShadows: 1
+  m_ReceiveShadows: 0
   m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
@@ -119,7 +118,7 @@ MonoBehaviour:
   referenceDroneGameObject: {fileID: 0}
   unpassedWaypoint: {fileID: 2100000, guid: afba4be579bef284c89de7b26b5e7cba, type: 2}
   passedWaypoint: {fileID: 2100000, guid: a9daeb5b833c0a0488eaad3102105b2d, type: 2}
-  selectedGroundpoint: {fileID: 2100000, guid: 0ebdfb7905093244790e2db73e2e5c13, type: 2}
+  touchedWaypoint: {fileID: 2100000, guid: a6b8d73a9ec98454fa523b580489b686, type: 2}
   selectedUnpassedLine: {fileID: 2100000, guid: 4464a80a04b3c7648b7eb56b8ef58f8b,
     type: 2}
   unselectedUnpassedLine: {fileID: 2100000, guid: 524b2fc9a59bf6448bf2d1b136cf6e39,
@@ -180,7 +179,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   disableWhenIdle: 1
-  touchHighlightColor: {r: 0.72794116, g: 0.9705882, b: 0.8501014, a: 0}
+  allowedNearTouchControllers: 0
   allowedTouchControllers: 0
   ignoredColliders:
   - {fileID: 0}
@@ -198,6 +197,8 @@ MonoBehaviour:
   pointerActivatesUseAction: 0
   useOverrideButton: 0
   allowedUseControllers: 0
+  objectHighlighter: {fileID: 0}
+  touchHighlightColor: {r: 0.72794116, g: 0.9705882, b: 0.8501014, a: 0}
   usingState: 0
 --- !u!120 &120057133663641978
 LineRenderer:
@@ -298,17 +299,4 @@ SphereCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!136 &136277372781703870
-CapsuleCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1161822125618724}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  m_Radius: 0.5
-  m_Height: 1
-  m_Direction: 0
   m_Center: {x: 0, y: 0, z: 0}

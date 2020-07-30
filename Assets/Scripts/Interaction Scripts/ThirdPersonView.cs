@@ -1,5 +1,6 @@
 ﻿namespace ISAACS {
 
+    using System;
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
@@ -35,8 +36,6 @@
         public enum RotationalDirection { REGULAR, INVERSE }
         public RotationalDirection rotationalDirection = RotationalDirection.REGULAR;
 
-
-
         //private enum CollisionType { NOTHING, WAYPOINT, OTHER }; // These are the possible values for objects we could be colliding with
         //private CollisionPair mostRecentCollision;
         //private List<CollisionPair> currentCollisions;
@@ -71,6 +70,15 @@
                 // If nothing is held down, default to the idle state. 
                 case ControllerState.IDLE:
                 {
+                    if (controllerInput.RightIsTouchingWaypoint())
+                    {
+                        controllerInput.HideWaypointPlacementVisualizer();
+                    }
+                    else
+                    {
+                        controllerInput.ShowWaypointPlacementVisualizer();
+                    }
+
                     if (controllerInput.BothGrip())
                     {
                         controllerState = ControllerState.SCALING;
@@ -164,7 +172,7 @@
                     if (!controllerInput.LeftY())
                     {
                         controllerState = ControllerState.IDLE;
-                        // @Jasmine: Make the connection to display the next sensor in the UI here
+                        WorldProperties.sensorManager.ShowNextSensor();
                     }
                     break;
                 }
@@ -195,6 +203,12 @@
 
                 case ControllerState.PLACING_WAYPOINT:
                 {
+                    if (controllerInput.RightIsGrabbingWaypoint())
+                    {
+                        controllerState = ControllerState.MOVING_WAYPOINT;
+                        break; 
+                    }
+
                     if (controllerInput.RightGrip()) /// Cancel waypoint placement
                     {
                         /// TODO: stop showing line
@@ -212,7 +226,7 @@
                     }
                     else
                     {
-                        /// TODO: continue line showing
+                        /// TODO: continue line showing and slightly faded wp
                     }
                     break;
 
@@ -220,6 +234,12 @@
 
                 case ControllerState.MOVING_WAYPOINT:
                 {
+                    if (!controllerInput.RightIsGrabbingWaypoint())
+                    {
+                        controllerState = ControllerState.IDLE;
+                        controllerInput.EnableRightPointer();
+                        break;
+                    }
                     break;
                 }
 
@@ -227,6 +247,7 @@
                 {
                     if (!controllerInput.RightA())
                     {
+                        controllerState = ControllerState.IDLE;
                         Undo();
                         break;
                     }
@@ -237,7 +258,6 @@
                         /// TODO: make waypoint disappear
                         break;
                     }
-                    controllerState = ControllerState.IDLE;
                     break;
                 }
 
@@ -245,7 +265,9 @@
                 {
                     if (!controllerInput.RightB())
                     {
+                        controllerState = ControllerState.IDLE;
                         Redo();
+                        break; 
                     }
                     if (controllerInput.RightGrip())
                     {
@@ -254,7 +276,6 @@
                         /// TODO: make waypoint disappear
                         break;
                     }
-                    controllerState = ControllerState.IDLE;
                     break;
                 }
 
@@ -266,7 +287,7 @@
         private void ScaleWorld()
         {
             // Get the scaling factor, and adjust its size.
-            float ScalingFactor = 1.0f + 0.2f * controllerInput.ScalingFactor();
+            float ScalingFactor = 1.0f + 0.2f * controllerInput.ScalingFactor(); // TODO: scaling factor should be directly calculated here, and not computed in controller input.
             Vector3 ScalingVector = Vector3.Scale(World.transform.localScale, new Vector3(ScalingFactor, ScalingFactor, ScalingFactor));
 
             //Checking Scaling Bounds
@@ -311,23 +332,31 @@
 
         private void MoveWorld()
         {
-            // Negative values are here to make moving around look natural.
-            // Without occlusion this looks mediocre because it seems like the map is being moved in the wrong direction.
             float moveX = controllerInput.LeftStickDelta().x;
             float moveZ = controllerInput.LeftStickDelta().y;
 
             // update map position based on input
             Vector3 position = World.transform.position;
 
+            // Get the angle of the headset's rotation
+            float theta = controllerInput.HeadsetTransform().rotation.eulerAngles.y;
+            // Convert from degrees to radians and get trigonometric constants.
+            float theta_sin = (float)Math.Sin(Math.PI / 180.0 * theta);
+            float theta_cos = (float)Math.Cos(Math.PI / 180.0 * theta);
+
             if (direction == Direction.REGULAR)
             {
-                position.x -= moveX * speed * Time.deltaTime * 3.0f;
-                position.z -= moveZ * speed * Time.deltaTime * 3.0f;
+                // 3.0f is an arbitrary constant for aesthetic purposes.
+                // Negative values are here to make moving around look natural.
+                // Without occlusion this looks mediocre because it seems like the map is being moved in the wrong direction.
+                position.x -= 3.0f * speed * Time.deltaTime * ( theta_cos * moveX + theta_sin * moveZ);
+                position.z -= 3.0f * speed * Time.deltaTime * (-theta_sin * moveX + theta_cos * moveZ);
             }
             else
             {
-                position.x = moveX * speed * Time.deltaTime * 3.0f;
-                position.z = moveZ * speed * Time.deltaTime * 3.0f;
+                // 3.0f is an arbitrary constant for aesthetic purposes.
+                position.x += 3.0f * speed * Time.deltaTime * ( theta_cos * moveX + theta_sin * moveZ);
+                position.z += 3.0f * speed * Time.deltaTime * (-theta_sin * moveX + theta_cos * moveZ);
             }
 
             World.transform.position = position;

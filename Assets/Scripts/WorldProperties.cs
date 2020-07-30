@@ -43,8 +43,21 @@
 
         private static Shader clipShader;
 
+        [Header("Google Earth Mesh")]
+        // ROS-Unity conversion variables
+        public double MeshLatitude;
+        public double MeshLongitude;
+        // Relative to the surface of the WGS 84 Ellipsoid
+        public double MeshAltitude;
+        public Vector3 MeshRotation;
+        public Vector3 MeshScale;
+
+        public GameObject MeshEarthPrefab;
+
         [Header("Mission Center Coordinates")]
         // ROS-Unity conversion variables
+        // MCLat/Long should be set in editor to location of flight. 
+        // Correct conversion is dependent on where we wish to convert GPS <--> Unity coords
         public double MCLatitude;
         public double MCLongitude;
         // Relative to the surface of the WGS 84 Ellipsoid
@@ -61,6 +74,8 @@
         /// Radius of the Earth in meters.
         /// </summary>
         private const double EARTH_RADIUS = 6378137;
+        private const double TO_RADIANS = Math.PI / 180.0;
+        private const double FROM_RADIANS = 180.0 / Math.PI;
 
         // Use this for initialization
         void Start()
@@ -83,8 +98,12 @@
             Lat0 = MCLatitude;
             Lng0 = MCLongitude;
             Alt0 = MCAltitude;
-            lngCorrection = Math.Cos(MCLatitude / 180.0 * Math.PI);
+            lngCorrection = Math.Cos(MCLatitude * TO_RADIANS);
             clipShader = GameObject.FindWithTag("Ground").GetComponent<Renderer>().material.shader;
+
+            MeshEarthPrefab.transform.localPosition = GPSCoordToUnityCoord(new GPSCoordinate(MeshLatitude, MeshLongitude, MeshAltitude));
+            MeshEarthPrefab.transform.localRotation = Quaternion.Euler(MeshRotation);
+            MeshEarthPrefab.transform.localScale = MeshScale;
         }
 
         /// <summary>
@@ -102,7 +121,14 @@
             if (dronesQueue.Count > 0)
             {
                 Drone nextDrone = dronesQueue.Dequeue();
-                nextDrone.gameObjectPointer.GetComponent<DroneProperties>().SelectDrone();
+                nextDrone.droneProperties.SelectDrone();
+
+                if (worldObject.GetComponent<M210_Flight_TestManager>() != null)
+                {
+                    M210_Flight_TestManager flight_TestManager = worldObject.GetComponent<M210_Flight_TestManager>();
+                    flight_TestManager.UpdateDrone(nextDrone.droneProperties.droneROSConnection);
+                }
+
                 return nextDrone;
             }
             else
@@ -192,7 +218,7 @@
         /// <returns>Unity position vector to use within World GameObject</returns>
         public static Vector3 ROSCoordToUnityCoord(NavSatFixMsg gpsPosition)
         {
-            return ROSCoordToUnityCoord(new GPSCoordinate(gpsPosition.GetLongitude(), gpsPosition.GetLatitude(), gpsPosition.GetAltitude()));
+            return GPSCoordToUnityCoord(new GPSCoordinate(gpsPosition.GetLatitude(), gpsPosition.GetLongitude(), gpsPosition.GetAltitude()));
         }
 
         /// <summary>
@@ -200,11 +226,11 @@
         /// </summary>
         /// <param name="gpsPosition"></param>
         /// <returns></returns>
-        public static Vector3 ROSCoordToUnityCoord(GPSCoordinate gpsPosition)
+        public static Vector3 GPSCoordToUnityCoord(GPSCoordinate gpsPosition)
         {
             Vector3 unityCoord = Vector3.zero;
-            unityCoord.z = (float)((gpsPosition.Lat - Lat0) * EARTH_RADIUS);
-            unityCoord.x = (float)((gpsPosition.Lng - Lng0) * EARTH_RADIUS * lngCorrection);
+            unityCoord.z = (float)((gpsPosition.Lat - Lat0) * TO_RADIANS * EARTH_RADIUS);
+            unityCoord.x = (float)((gpsPosition.Lng - Lng0) * TO_RADIANS *  EARTH_RADIUS * lngCorrection);
             unityCoord.y = (float)(gpsPosition.Alt - Alt0);
 
             return unityCoord;
@@ -216,12 +242,12 @@
         /// </summary>
         /// <param name="unityPosition"></param>
         /// <returns>GPSCoordinates</returns>
-        public static GPSCoordinate UnityCoordToROSCoord(Vector3 unityPosition)
+        public static GPSCoordinate UnityCoordToGPSCoord(Vector3 unityPosition)
         {
             GPSCoordinate gpsCoord = new GPSCoordinate();
-            gpsCoord.x = (float)((unityPosition.x / (EARTH_RADIUS * lngCorrection)) + Lng0);
-            gpsCoord.z = (float)((unityPosition.z / EARTH_RADIUS) + Lat0);
-            gpsCoord.y = (float)((unityPosition.y) + Alt0);
+            gpsCoord.x = (((double) unityPosition.x * FROM_RADIANS / (EARTH_RADIUS * lngCorrection)) + Lng0);
+            gpsCoord.y = (((double) unityPosition.z * FROM_RADIANS / EARTH_RADIUS) + Lat0);
+            gpsCoord.z= (((double) unityPosition.y) + Alt0);
             return gpsCoord;
         }
     }

@@ -64,6 +64,15 @@ public class M210_Flight_TestManager : MonoBehaviour
     [Header("Drone Variable")]
     public Matrice_ROSDroneConnection rosDroneConnection;
 
+    /// <summary>
+    /// Set the rosDroneConnection to given argument
+    /// </summary>
+    /// <param name="new_ROSDroneConnection"></param>
+    public void UpdateDrone(ROSDroneConnectionInterface new_ROSDroneConnection)
+    {
+        rosDroneConnection = (Matrice_ROSDroneConnection)new_ROSDroneConnection;
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -151,7 +160,7 @@ public class M210_Flight_TestManager : MonoBehaviour
 
             MissionWaypointMsg[] test_waypoint_array = new MissionWaypointMsg[] { test_waypoint_1, test_waypoint_2, test_waypoint_3 };
 
-            MissionWaypointTaskMsg test_Task = new MissionWaypointTaskMsg(15.0f, 15.0f, MissionWaypointTaskMsg.ActionOnFinish.RETURN_TO_HOME, 1, MissionWaypointTaskMsg.YawMode.AUTO, MissionWaypointTaskMsg.TraceMode.COORDINATED, MissionWaypointTaskMsg.ActionOnRCLost.FREE, MissionWaypointTaskMsg.GimbalPitchMode.FREE, test_waypoint_array);
+            MissionWaypointTaskMsg test_Task = new MissionWaypointTaskMsg(15.0f, 15.0f, MissionWaypointTaskMsg.ActionOnFinish.NO_ACTION, 1, MissionWaypointTaskMsg.YawMode.AUTO, MissionWaypointTaskMsg.TraceMode.COORDINATED, MissionWaypointTaskMsg.ActionOnRCLost.FREE, MissionWaypointTaskMsg.GimbalPitchMode.FREE, test_waypoint_array);
 
             rosDroneConnection.UploadWaypointsTask(test_Task);
         }
@@ -168,29 +177,42 @@ public class M210_Flight_TestManager : MonoBehaviour
 
         if (Input.GetKeyUp(viewSafeWaypointMission))
         {
+
+
+            // 37.915411
+            // -122.338024
+
+            // 37.915159, -122.337983
+
+
+            // LEFT CORNER:  37.915188, -122.337988
+            // RIGHT CORNER: 37.915262, -122.337984
+
+
             GameObject waypoint1 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             waypoint1.name = "Waypoint 1";
             waypoint1.transform.parent = this.transform;
-            waypoint1.transform.localPosition = new Vector3(1.443817f, 2.1f, 0.4977149f);
+            waypoint1.transform.localPosition = WorldProperties.GPSCoordToUnityCoord(new GPSCoordinate(37.915701652, -122.337967237, 20));
             waypoint1.transform.localScale = Vector3.one * (0.05f);
 
+            Debug.Log("SANITY CHECK GPS: " + WorldProperties.UnityCoordToGPSCoord( WorldProperties.GPSCoordToUnityCoord(new GPSCoordinate(37.915701652, -122.337967237, 20))).Lat);
+            Debug.Log("SANITY CHECK GPS: " + WorldProperties.UnityCoordToGPSCoord(WorldProperties.GPSCoordToUnityCoord(new GPSCoordinate(37.915701652, -122.337967237, 20))).Lng);
             GameObject waypoint2 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             waypoint2.name = "Waypoint 2";
             waypoint2.transform.parent = this.transform;
-            waypoint2.transform.localPosition = new Vector3(2.845169f, 2.1f, -0.6636199f);
+            waypoint2.transform.localPosition = WorldProperties.GPSCoordToUnityCoord(new GPSCoordinate(37.915585270, -122.338122805, 20));
             waypoint2.transform.localScale = Vector3.one * (0.05f);
 
             GameObject waypoint3 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             waypoint3.name = "Waypoint 3";
             waypoint3.transform.parent = this.transform;
-            waypoint3.transform.localPosition = new Vector3(4.161591f, 2.1f, 0.9954298f);
+            waypoint3.transform.localPosition = WorldProperties.GPSCoordToUnityCoord(new GPSCoordinate(37.915457249, -122.338015517, 20));
             waypoint3.transform.localScale = Vector3.one * (0.05f);
         }
 
         if (Input.GetKeyUp(uploadUserMission))
         {
-            Debug.Log("Ensure Waypoint system is working. Currently code is commented out.");
-            //rosDroneConnection.StartMission();
+            rosDroneConnection.StartMission();
         }
 
         if (Input.GetKeyUp(pauseMission))
@@ -222,8 +244,11 @@ public class M210_Flight_TestManager : MonoBehaviour
         if (Input.GetKeyDown(unsubscribe))
         {
             ROSSensorConnectionInterface sensor = WorldProperties.sensorManager.getSelectedSensor();
-            List<string> subscriberList = WorldProperties.sensorManager.getSubscriberList();
-            sensor.Unsubscribe(subscriberList[0]);
+            Dictionary<string, bool> subscriberDict = WorldProperties.sensorManager.getSubscriberDict();
+            foreach (string topic in subscriberDict.Keys)
+            {
+                sensor.Unsubscribe(topic);
+            }
         }
     }
 }

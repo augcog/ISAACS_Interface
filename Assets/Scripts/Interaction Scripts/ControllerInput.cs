@@ -28,7 +28,8 @@
 		public GameObject RightController;
 		[Tooltip("The UI attached to the right hand. By default at 'VRTK SDK Manager/Oculus SDK/Tracking Space/RightHandAnchor/Right UI Sphere'.")]
 		public GameObject RightUI;
-
+		[Tooltip("The small sphere showing where a new waypoint will be placed if the appropriate button is pressed. By default at 'VRTK SDK Manager/Oculus SDK/Tracking Space/RightHandAnchor/Right UI Sphere/Waypoint Placement Visualizer.'.")]
+		public GameObject WaypointPlacementVisualizer;
 
 		private VRTK_Pointer LeftPointer;                          // The VRTK Pointer Component (script) of the left controller.
 		private VRTK_BezierPointerRenderer LeftPointerRenderer;    // The VRTK Pointer Renderer Component (script) of the left controller.
@@ -66,12 +67,55 @@
 		/******************************/
 
 		/// <summary>
+		/// Whether the left hand is currently touching an object.
+		/// </summary>
+        /// <returns>True if the left hand is currently touching an object.</returns>
+		public bool LeftIsTouching()
+		{
+			return (LeftController.GetComponent<VRTK_InteractTouch>().GetTouchedObject()) ? true : false;
+		}
+
+		/// <summary>
+		/// Whether the left hand is currently touching an object.
+		/// </summary>
+        /// <returns>True if the left hand is currently touching an object.</returns>
+		public bool LeftIsTouchingWaypoint()
+		{
+			GameObject touched = LeftController.GetComponent<VRTK_InteractTouch>().GetTouchedObject();
+			if (touched)
+			{
+				if (touched.tag == "waypoint")
+				{
+					return true;
+				}	
+			}
+			return false;
+		}
+
+		/// <summary>
 		/// Whether the left hand is currently grabbing an object.
 		/// </summary>
         /// <returns>True if the left hand is currently grabbing an object.</returns>
 		public bool LeftIsGrabbing()
 		{
 			return (LeftController.GetComponent<VRTK_InteractGrab>().GetGrabbedObject()) ? true : false;
+		}
+
+		/// <summary>
+		/// Whether the left hand is currently grabbing a waypoint.
+		/// </summary>
+        /// <returns>True if the left hand is currently grabbing a waypoint.</returns>
+		public bool LeftIsGrabbingWaypoint()
+		{
+			GameObject grabbed = LeftController.GetComponent<VRTK_InteractGrab>().GetGrabbedObject();
+			if (grabbed)
+			{
+				if (grabbed.tag == "waypoint")
+				{
+					return true;
+				}	
+			}
+			return false;
 		}
 
 		/// <summary>
@@ -258,12 +302,55 @@
 		/*******************************/
 		
 		/// <summary>
+		/// Whether the right hand is currently touching an object.
+		/// </summary>
+        /// <returns>True if the right hand is currently touching an object.</returns>
+		public bool RightIsTouching()
+		{
+			return (RightController.GetComponent<VRTK_InteractTouch>().GetTouchedObject()) ? true : false;
+		}
+
+		/// <summary>
+		/// Whether the right hand is currently touching an object.
+		/// </summary>
+        /// <returns>True if the right hand is currently touching an object.</returns>
+		public bool RightIsTouchingWaypoint()
+		{
+			GameObject touched = RightController.GetComponent<VRTK_InteractTouch>().GetTouchedObject();
+			if (touched)
+			{
+				if (touched.tag == "waypoint")
+				{
+					return true;
+				}	
+			}
+			return false;
+		}
+
+		/// <summary>
 		/// Whether the right hand is currently grabbing an object.
 		/// </summary>
         /// <returns>True if the right hand is currently grabbing an object.</returns>
 		public bool RightIsGrabbing()
 		{
-			return (RightController.GetComponent<VRTK_InteractGrab>().GetGrabbedObject()) ? true : false;;
+			return (RightController.GetComponent<VRTK_InteractGrab>().GetGrabbedObject() != null) ? true : false;
+		}
+
+		/// <summary>
+		/// Whether the right hand is currently grabbing a waypoint.
+		/// </summary>
+        /// <returns>True if the right hand is currently grabbing a waypoint.</returns>
+		public bool RightIsGrabbingWaypoint()
+		{
+			GameObject grabbed = RightController.GetComponent<VRTK_InteractGrab>().GetGrabbedObject();
+			if (grabbed)
+			{
+				if (grabbed.tag == "waypoint")
+				{
+					return true;
+				}
+			}
+			return false;
 		}
 
 		/// <summary>
@@ -444,6 +531,16 @@
 			}
 		}
 
+
+		/******************************/
+		//   HEADSET GETTER METHODS   //
+		/******************************/
+
+		// TODO: documentation
+		public Transform HeadsetTransform()
+		{
+			return VRTK_DeviceFinder.HeadsetTransform();
+		}
 
 
 		/******************************/
@@ -749,6 +846,32 @@
 				RightUI.SetActive(false);
 			}	
 		}
+
+		/// <summary>
+ 		/// Display the sphere/waypoint placement visualizer in front of the right controller where a waypoint will be spawned.
+		/// </summary>
+		public void ShowWaypointPlacementVisualizer()
+		{
+			MeshRenderer renderer = WaypointPlacementVisualizer.gameObject.GetComponent<MeshRenderer>();
+			if (!renderer.enabled)
+			{
+				renderer.enabled = true;
+			}
+		}
+
+
+		/// <summary>
+ 		/// Hide the sphere/waypoint placement visualizer in front of the right controller where a waypoint will be spawned.
+		/// </summary>
+        public void HideWaypointPlacementVisualizer()
+		{
+			MeshRenderer renderer = WaypointPlacementVisualizer.gameObject.GetComponent<MeshRenderer>();
+			if (renderer.enabled)
+			{
+				renderer.enabled = false;
+			}
+		}
+
 
 	}
 }

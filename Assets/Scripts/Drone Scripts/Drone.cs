@@ -19,13 +19,18 @@
         public bool selected;
 
         // All waypoints held by the drone
-        public List<Waypoint> waypoints;
+        private List<Waypoint> waypoints;
 
         // All waypoints that were deleted, in case the player wants to redo them.
-        public List<Waypoint> deletedWaypoints;
+        private List<Waypoint> deletedWaypoints;
+
+        // All waypoints that were deleted, in case the player wants to redo them.
+        //public List<Waypoint> deletedWaypoints;
 
         // List of attached sensor gameobjects
         public List<ROSSensorConnectionInterface> attachedSensors;
+
+        //private bool 
 
         /// <summary>
         /// Constructor method for Drone class objects
@@ -100,7 +105,7 @@
             if (isEmptyWaypointList(waypoints))
             {
                 // Creating the starter waypoint.
-                Waypoint takeoffWaypoint = new Waypoint(this, new Vector3(0,1,0));
+                Waypoint takeoffWaypoint = new Waypoint(this, this.gameObjectPointer.transform.position + new Vector3(0,1,0));
 
                 Debug.Log("Creating take off waypoint at: " + takeoffWaypoint.ToString());
 
@@ -242,35 +247,11 @@
             }
         }
         
-		/******************************/
-		//  WAYPOINTS GETTER METHODS  //
-		/******************************/
 
-        /// <summary>
-        /// Return the length of the waypoints list
-        /// </summary>
-        /// <returns></returns>
-        public int WaypointsCount()
-        {
-            if (isEmptyWaypointList(waypoints))
-            {
-                return 0;
-            }
-            return waypoints.Count;
-        }
 
-        /// <summary>
-        /// Return the number of deleted waypoints
-        /// </summary>
-        /// <returns></returns>
-        public int DeletedWaypointsCount()
-        {
-            if (isEmptyWaypointList(deletedWaypoints))
-            {
-                return 0;
-            }
-            return deletedWaypoints.Count;
-        }
+		/******************************/
+		//       HELPER METHODS       //
+		/******************************/
 
         /// <summary>
         /// Return true if waypoint list is empty and false if not
@@ -283,10 +264,57 @@
             {
                 return true;
             }
-            else
-            {
-                return waypointList.Count == 0;
-            }
+            return waypointList.Count == 0;
         }
+
+
+
+
+		/******************************/
+		//  WAYPOINTS GETTER METHODS  //
+		/******************************/
+
+        /// <summary>
+        /// The number of waypoints placed for the current drone.
+        /// </summary>
+        /// <returns>An integer, equal to the length of the waypoints list.
+        public int WaypointsCount()
+        {
+            if (isEmptyWaypointList(waypoints))
+            {
+                return 0;
+            }
+            return waypoints.Count;
+        }
+
+        /// <summary>
+        /// The number of waypoints that were placed, but got deleted for the current drone.
+        /// </summary>
+        /// <returns>An integer, equal to the length of the deletedWaypoints list.</returns>
+        public int DeletedWaypointsCount()
+        {
+            if (isEmptyWaypointList(deletedWaypoints))
+            {
+                return 0;
+            }
+            return deletedWaypoints.Count; 
+        }
+
+
+        /// <summary>
+        /// TReturn the waypoint at the requested index if valid
+        /// </summary>
+        /// <param></param>
+        /// <returns></returns>
+        public Waypoint GetWaypoint(int index)
+        {
+            if (isEmptyWaypointList(waypoints) || index >= waypoints.Count)
+            {
+                return null;
+            }
+            return (Waypoint)waypoints[index];
+        }
+
+
     }
 }
