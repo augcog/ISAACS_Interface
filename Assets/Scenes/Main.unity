@@ -3360,7 +3360,6 @@ GameObject:
   - component: {fileID: 1347866311}
   - component: {fileID: 1347866317}
   - component: {fileID: 1347866315}
-  - component: {fileID: 1347866318}
   - component: {fileID: 1347866316}
   m_Layer: 0
   m_Name: RightController
@@ -3550,21 +3549,6 @@ MonoBehaviour:
   canClickOnHover: 0
   autoActivatingCanvas: {fileID: 0}
   collisionClick: 0
---- !u!114 &1347866318
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1347866310}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65eb64f0f2fd6d64faddbcf5d7d3bdbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  useButton: 3
-  controllerEvents: {fileID: 0}
-  interactTouch: {fileID: 0}
-  interactGrab: {fileID: 0}
 --- !u!21 &1348097625
 Material:
   serializedVersion: 6
