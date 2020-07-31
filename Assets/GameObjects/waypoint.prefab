@@ -146,7 +146,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   active: 1
   unhighlightOnDisable: 1
-  thickness: 1
+  thickness: 1.2
   customOutlineModels: []
   customOutlineModelPaths: []
   enableSubmeshHighlight: 0
