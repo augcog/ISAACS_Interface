@@ -12,24 +12,24 @@ public class CameraSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
     private ROSBridgeWebSocketConnection ros = null;
     private string client_id;
     private float alpha = 0.8f;
-    private List<string> sensorSubscriberTopics = new List<string>();
+    private Dictionary<string, bool> sensorSubscriberTopics = new Dictionary<string, bool>();
     private string videoType;
+    private List<string> keyList = new List<string>();
 
     // List of visualizers
     private Dictionary<string, ImageVisualizer> imageVisualizers = new Dictionary<string, ImageVisualizer>();
 
     // Initialize the sensor
-    public void InitilizeSensor(int uniqueID, string sensorIP, int sensorPort, List<string> sensorSubscribers)
+    public void InitilizeSensor(int uniqueID, string sensorIP, int sensorPort, Dictionary<string, bool> sensorSubscribers)
     {
         Debug.Log("Init Camera Connection at IP " + sensorIP + " Port " + sensorPort.ToString());
 
         ros = new ROSBridgeWebSocketConnection("ws://" + sensorIP, sensorPort);
         client_id = uniqueID.ToString();
-
-        foreach (string subscriber in sensorSubscribers)
+        foreach (string subscriber in sensorSubscribers.Keys)
         {
             string subscriberTopic = "";
-
+            keyList.Add(subscriber);
             switch (subscriber)
             {
                 default:
@@ -42,7 +42,7 @@ public class CameraSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
                     break;
             }
             Debug.Log("Camera Subscribing to : " + subscriberTopic);
-            sensorSubscriberTopics.Add(subscriberTopic);
+            sensorSubscriberTopics.Add(subscriberTopic, true);
         }
 
         ros.Connect();
@@ -76,7 +76,7 @@ public class CameraSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
     /// Returns a list of connected subscriber topics (which are unique identifiers).
     /// </summary>
     /// <returns></returns>
-    public List<string> GetSensorSubscribers()
+    public Dictionary<string, bool> GetSensorSubscribers()
     {
         return sensorSubscriberTopics;
     }
@@ -87,7 +87,7 @@ public class CameraSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
     /// <param name="subscriberID"></param>
     public void Unsubscribe(string subscriberTopic)
     {
-        if (sensorSubscriberTopics.Contains(subscriberTopic))
+        if (keyList.Contains(subscriberTopic))
         {
             sensorSubscriberTopics.Remove(subscriberTopic);
             ros.RemoveSubscriber(subscriberTopic);
@@ -105,7 +105,7 @@ public class CameraSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
     /// <param name="subscriberID"></param>
     public void Subscribe(string subscriberTopic)
     {
-        if (sensorSubscriberTopics.Contains(subscriberTopic) == false)
+        if (keyList.Contains(subscriberTopic) == false)
         {
             ros.AddSubscriber(subscriberTopic, this);
         }
