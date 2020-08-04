@@ -133,7 +133,7 @@ public class PointCloudSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubsc
     }
     public string GetMessageType(string topic)
     {
-        Debug.Log("Point Cloud message type is returned as sensor_msg/PointCloud2 by deafault");
+        Debug.Log("Point Cloud message type is returned as sensor_msg/PointCloud2 by default");
         return "sensor_msgs/PointCloud2";
     }
 

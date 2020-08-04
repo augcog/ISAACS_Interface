@@ -106,7 +106,7 @@
             MeshEarthPrefab.transform.localRotation = Quaternion.Euler(MeshRotation);
             MeshEarthPrefab.transform.localScale = MeshScale;
 
-            AddClipShader(this.transform);
+            //AddClipShader(this.transform);
         }
 
         /// <summary>

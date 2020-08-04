@@ -26,7 +26,7 @@ public class ROSManager : MonoBehaviour
     /// <summary>
     /// Sensor types supported by ISAACS System
     /// </summary>
-    public enum SensorType { PointCloud, Mesh, LAMP, PCFace };
+    public enum SensorType { PointCloud, Mesh, LAMP, PCFace, Image };
 
     /// <summary>
     /// Sensor subscribers supported by ISAACS System
@@ -35,7 +35,7 @@ public class ROSManager : MonoBehaviour
     {
         surface_pointcloud, mesh,
         colorized_points_0, colorized_points_1, colorized_points_2, colorized_points_3, colorized_points_4, colorized_points_5,
-        colorized_points_faced_0, colorized_points_faced_1, colorized_points_faced_2, colorized_points_faced_3, colorized_points_faced_4, colorized_points_faced_5
+        colorized_points_faced_0, colorized_points_faced_1, colorized_points_faced_2, colorized_points_faced_3, colorized_points_faced_4, colorized_points_faced_5, fpv_camera_images
     };
 
     /// <summary>
@@ -64,7 +64,12 @@ public class ROSManager : MonoBehaviour
         public int port;
         public SensorType sensorType;
         public List<SensorSubscribers> sensorSubscribers;
+        //public List<VideoPlayers> videoPlayers;
+        public VideoPlayers videoPlayers;
     }
+
+    [System.Serializable]
+    public enum VideoPlayers { None, LeftVideo, RightVideo, BackVideo, FrontVideo };
 
     public List<ROSDroneConnectionInput> DronesList;
     //public List<ROSSensorConnectionInput> SensorsList;
@@ -76,7 +81,7 @@ public class ROSManager : MonoBehaviour
     public int uniqueID = 0;
 
     /// <summary>
-    /// Initlizie all drones and sensors
+    /// Initialize all drones and sensors
     /// </summary>
     void Start()
     {
@@ -90,7 +95,7 @@ public class ROSManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Create a Drone gameobject and attach DroneFlightSim, required ROSDroneConnnection and initilize the ROS connection.
+    /// Create a Drone gameobject and attach DroneFlightSim, required ROSDroneConnnection and initialize the ROS connection.
     /// </summary>
     /// <param name="rosDroneConnectionInput"></param>
     private void InstantiateDrone(ROSDroneConnectionInput rosDroneConnectionInput)
@@ -159,7 +164,6 @@ public class ROSManager : MonoBehaviour
         // Create attached sensors
         foreach (ROSSensorConnectionInput rosSensorInput in rosDroneConnectionInput.attachedSensors)
         {
-            // @Jasmine: We might need a sensor properties type script to connect a sensor back to the drone?
             ROSSensorConnectionInterface sensor = InstantiateSensor(rosSensorInput);
             droneInstance.AddSensor(sensor);
         }
@@ -229,6 +233,33 @@ public class ROSManager : MonoBehaviour
                 pcFace_rosSensorConnection.InitilizeSensor(uniqueID, sensorIP, sensorPort, sensorSubscribers);
                 ROSSensorConnections.Add(uniqueID, pcFace_rosSensorConnection);
                 rosSensorConnection = pcFace_rosSensorConnection;
+                break;
+
+            case SensorType.Image:
+                Debug.Log("Camera Stream created");
+                CameraSensor_ROSSensorConnection camera_rosSensorConnection = sensor.AddComponent<CameraSensor_ROSSensorConnection>();
+                VideoPlayers videoType = rosSensorConnectionInput.videoPlayers;
+                switch (videoType)
+                {
+                    case VideoPlayers.BackVideo:
+                        camera_rosSensorConnection.SetVideoType("BackVideo");
+                        break;
+                    case VideoPlayers.FrontVideo:
+                        camera_rosSensorConnection.SetVideoType("FrontVideo");
+                        break;
+                    case VideoPlayers.LeftVideo:
+                        camera_rosSensorConnection.SetVideoType("LeftVideo");
+                        break;
+                    case VideoPlayers.RightVideo:
+                        camera_rosSensorConnection.SetVideoType("RightVideo");
+                        break;
+                    default:
+                        Debug.Log("No Video Type Selected.");
+                        return null;
+                }
+                camera_rosSensorConnection.InitilizeSensor(uniqueID, sensorIP, sensorPort, sensorSubscribers);
+                ROSSensorConnections.Add(uniqueID, camera_rosSensorConnection);
+                rosSensorConnection = camera_rosSensorConnection;
                 break;
 
             default:
