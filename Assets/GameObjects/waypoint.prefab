@@ -27,7 +27,8 @@ GameObject:
   - component: {fileID: 54895740343813164}
   - component: {fileID: 114879755666982984}
   - component: {fileID: 114755281248396062}
-  - component: {fileID: 114629310516917166}
+  - component: {fileID: 114821086697414134}
+  - component: {fileID: 114239098992051712}
   m_Layer: 0
   m_Name: waypoint
   m_TagString: waypoint
@@ -137,7 +138,7 @@ MonoBehaviour:
   modelGroundpoint: {fileID: 1072266980392874, guid: fe9c4c5a263cc4144a730d848f5fd6ad,
     type: 2}
   LineProperties: {fileID: 120057133663641978}
---- !u!114 &114629310516917166
+--- !u!114 &114239098992051712
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -145,15 +146,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 1161822125618724}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c08517e04830d6d44a13c5ea5f574181, type: 3}
+  m_Script: {fileID: 11500000, guid: abc4b5dd2be1cea4aaea2850b910d3f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  active: 1
-  unhighlightOnDisable: 1
-  thickness: 1
-  customOutlineModels: []
-  customOutlineModelPaths: []
-  enableSubmeshHighlight: 0
+  nearTouchHighlight: {r: 0.9333334, g: 0.9333334, b: 0.9333334, a: 1}
+  touchHighlight: {r: 0.9333334, g: 0.9333334, b: 0.9333334, a: 1}
+  grabHighlight: {r: 0.93333334, g: 0.93333334, b: 0.93333334, a: 1}
+  useHighlight: {r: 0.93333334, g: 0.93333334, b: 0.93333334, a: 1}
+  objectToMonitor: {fileID: 0}
+  objectToHighlight: {fileID: 0}
+  objectHighlighter: {fileID: 0}
+  objectToAffect: {fileID: 0}
 --- !u!114 &114755281248396062
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -171,6 +174,23 @@ MonoBehaviour:
   throwVelocityWithAttachDistance: 0
   throwMultiplier: 1
   onGrabCollisionDelay: 0
+--- !u!114 &114821086697414134
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1161822125618724}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c08517e04830d6d44a13c5ea5f574181, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  active: 1
+  unhighlightOnDisable: 1
+  thickness: 1
+  customOutlineModels: []
+  customOutlineModelPaths: []
+  enableSubmeshHighlight: 0
 --- !u!114 &114879755666982984
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -196,13 +216,13 @@ MonoBehaviour:
   grabAttachMechanicScript: {fileID: 114755281248396062}
   secondaryGrabActionScript: {fileID: 0}
   isUsable: 0
-  holdButtonToUse: 1
+  holdButtonToUse: 0
   useOnlyIfGrabbed: 0
   pointerActivatesUseAction: 0
   useOverrideButton: 0
   allowedUseControllers: 0
   objectHighlighter: {fileID: 0}
-  touchHighlightColor: {r: 0.72794116, g: 0.9705882, b: 0.8501014, a: 0}
+  touchHighlightColor: {r: 0, g: 0, b: 0, a: 0}
   usingState: 0
 --- !u!120 &120057133663641978
 LineRenderer:
@@ -299,7 +319,7 @@ SphereCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1161822125618724}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5

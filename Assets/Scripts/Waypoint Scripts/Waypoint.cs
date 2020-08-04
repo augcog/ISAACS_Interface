@@ -21,11 +21,10 @@
         /// </summary>
         /// <param name="myDrone"> This is the drone that the new waypoint should belong to (remember that you still need to add the waypoint to the path using this drone's methods) </param>
         /// <param name="position"> This is the 3d location at which the new waypoint gameObject should be placed. </param>
-        public Waypoint(Drone myDrone, Vector3 position)
+        public Waypoint(Drone myDrone, Vector3 position, bool takeoffWaypoint=false)
         {
             // Linking this waypoint to its drone
             referenceDrone = myDrone;
-            //this.unityLocation = position;
 
             // Setting up all the related gameObject parameters
             GameObject baseObject = (GameObject)WorldProperties.worldObject.GetComponent<WorldProperties>().waypointBaseObject;
@@ -39,20 +38,6 @@
             gameObjectPointer.transform.parent = WorldProperties.worldObject.transform;
             WorldProperties.AddClipShader(gameObjectPointer.transform);
         }
-
-        public void UpdateLineColliders()
-        {
-            gameObjectPointer.GetComponent<WaypointProperties>().SetLineCollider();
-            if (nextPathPoint != null)
-            {
-                nextPathPoint.gameObjectPointer.GetComponent<WaypointProperties>().SetLineCollider();
-            }
-        }
-
-        public void UpdateLocation(Vector3 newLocation)
-        {
-            Debug.Log("Peru TODO: IF this doesn't update the location of the waypoint what does?");
-            //this.unityLocation = newLocation;
-        }
+        
     }
 }

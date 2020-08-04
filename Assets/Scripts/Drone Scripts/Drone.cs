@@ -31,6 +31,12 @@
         // List of attached sensor gameobjects
         public List<ROSSensorConnectionInterface> attachedSensors;
 
+        // The actions taken by the user for this drone, in chronological order.
+        // place = placed a waypoint
+        // move = moved a waypoint
+        // clear = cleared all waypoints
+        private Stack<string> actions;
+
         /// <summary>
         /// Constructor method for Drone class objects
         /// </summary>
@@ -58,6 +64,8 @@
             waypoints = new List<Waypoint>(); // All waypoints held by the drone
             deletedWaypoints = new List<Waypoint>(); // All waypoints that were deleted, in case the player wants to redo them.
 
+            // Initialize the actions stack.
+            actions = new Stack<string>();
 
             // Updating the world properties to reflect a new drone being added
             id = uniqueID;
@@ -99,7 +107,6 @@
         {
             Debug.Log("Adding waypoint at: " + coordinates.ToString());
 
-            string prev_id;
             // The next waypoint, that the user placed.
             Waypoint newWaypoint = new Waypoint(this, coordinates);
             Debug.Log("Created waypoint at: " + newWaypoint.ToString());
@@ -107,46 +114,25 @@
             // Check to see if we need to add the starter waypoint
             if (isEmptyWaypointList(waypoints))
             {
-                // Creating the starter waypoint.
-                Waypoint takeoffWaypoint = new Waypoint(this, this.gameObjectPointer.transform.position + new Vector3(0,1,0));
-
-                Debug.Log("Creating take off waypoint at: " + takeoffWaypoint.ToString());
-
-                // Otherwise, this is the first waypoint.
+                // If this is the first waypoint, we need to add a starter "takeoff" waypoint before it.
+                Waypoint takeoffWaypoint = new Waypoint(this, gameObjectPointer.transform.position + new Vector3(0,1,0), true);
                 takeoffWaypoint.nextPathPoint = newWaypoint;
                 newWaypoint.prevPathPoint = takeoffWaypoint;
-
-                // Storing this for the ROS message
-                prev_id = "DRONE";
                 waypoints.Add(takeoffWaypoint);
-
-                prev_id = null;
-                waypoints.Add(newWaypoint);
-
-                Debug.Log("Added first two waypoints to the list:" + waypoints.ToString());
-
-                // Prevent the purple plane from appearing.
+                // Hide the purple plane that occurs from not having
                 takeoffWaypoint.gameObjectPointer.GetComponent<LineRenderer>().enabled = false; // TODO: fix this jank.
-
-                return newWaypoint; 
             }
             else
             {
-                // If we don't have a line selected, we default to placing the new waypoint at the end of the path
-                // Otherwise we can add as normal
+                // Otherwise, place a waypoint directly at the end of the waypoints list.
                 Waypoint prevWaypoint = (Waypoint)waypoints[waypoints.Count - 1]; // Grabbing the waypoint at the end of our waypoints path
                 newWaypoint.prevPathPoint = prevWaypoint; // setting the previous of the new waypoint
                 prevWaypoint.nextPathPoint = newWaypoint; // setting the next of the previous waypoint
-
-                prev_id = null; // TODO: change variable name
-
-                // Adding to dictionary, order, and path list
-                waypoints.Add(newWaypoint);
-                Debug.Log("Added waypoint to the list:" + waypoints.ToString());
-
-                // Make lines mesh appear. TODO: check coloring.
-                return newWaypoint; 
             }
+
+            waypoints.Add(newWaypoint);
+            Debug.Log("Added waypoint to the list:" + waypoints.ToString());
+            return newWaypoint; 
         }
 
         /// <summary>
