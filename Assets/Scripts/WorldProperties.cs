@@ -37,6 +37,7 @@
         [Header("Misc. State variables")]
         public static GameObject worldObject;
         public static GameObject placementPlane;
+        public static bool DJI_SIM = true;
 
         public static Vector3 actualScale;
         public static Vector3 currentScale;
@@ -104,6 +105,8 @@
             MeshEarthPrefab.transform.localPosition = GPSCoordToUnityCoord(new GPSCoordinate(MeshLatitude, MeshLongitude, MeshAltitude));
             MeshEarthPrefab.transform.localRotation = Quaternion.Euler(MeshRotation);
             MeshEarthPrefab.transform.localScale = MeshScale;
+
+            //AddClipShader(this.transform);
         }
 
         /// <summary>
@@ -111,10 +114,10 @@
         /// </summary>
         public static Drone SelectNextDrone()
         {
-            Debug.Log("Selection next drone");
-
             if(selectedDrone != null)
             {
+                Debug.Log("Enquing selected drone");
+                selectedDrone.gameObjectPointer.GetComponent<DroneProperties>().DeselectDrone();
                 dronesQueue.Enqueue(selectedDrone);
             }
 
@@ -123,11 +126,14 @@
                 Drone nextDrone = dronesQueue.Dequeue();
                 nextDrone.droneProperties.SelectDrone();
 
+
                 if (worldObject.GetComponent<M210_Flight_TestManager>() != null)
                 {
                     M210_Flight_TestManager flight_TestManager = worldObject.GetComponent<M210_Flight_TestManager>();
                     flight_TestManager.UpdateDrone(nextDrone.droneProperties.droneROSConnection);
                 }
+
+                selectedDrone = nextDrone;
 
                 return nextDrone;
             }
@@ -137,18 +143,6 @@
                 return null;
             }
 
-        }
-
-        /// <summary>
-        /// Update the selected drone.
-        /// </summary>
-        public static void UpdateSelectedDrone(Drone newSelectedDrone)
-        {
-            if (selectedDrone != null)
-            {
-                selectedDrone.gameObjectPointer.GetComponent<DroneProperties>().DeselectDrone();
-            }
-            selectedDrone = newSelectedDrone;
         }
         
         /// <summary>
@@ -165,6 +159,7 @@
         /// <param name="drone"></param>
         public static void AddDrone(Drone drone)
         {
+            Debug.Log("Added drone " + drone);
             dronesQueue.Enqueue(drone);
         }
 

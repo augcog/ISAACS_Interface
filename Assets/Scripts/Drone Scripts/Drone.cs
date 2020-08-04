@@ -1,10 +1,11 @@
 ﻿namespace ISAACS
 {
+    using ROSBridgeLib.interface_msgs;
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
 
-    public class Drone
+    public class Drone 
     {
         // This is the related game object
         public GameObject gameObjectPointer;
@@ -29,8 +30,6 @@
 
         // List of attached sensor gameobjects
         public List<ROSSensorConnectionInterface> attachedSensors;
-
-        //private bool 
 
         /// <summary>
         /// Constructor method for Drone class objects
@@ -87,6 +86,10 @@
             attachedSensors.Add(sensor);
         }
 
+        /******************************/
+        // User waypoint interactions //
+        /******************************/
+
         /// <summary>
         /// Use this to add a new Waypoint to the end of the drone's path
         /// </summary>
@@ -122,8 +125,9 @@
 
                 Debug.Log("Added first two waypoints to the list:" + waypoints.ToString());
 
+                // Prevent the purple plane from appearing.
                 takeoffWaypoint.gameObjectPointer.GetComponent<LineRenderer>().enabled = false; // TODO: fix this jank.
-                newWaypoint.gameObjectPointer.GetComponent<WaypointProperties>().UpdateGroundpointLine(); // TODO: fix this jank.
+
                 return newWaypoint; 
             }
             else
@@ -141,7 +145,6 @@
                 Debug.Log("Added waypoint to the list:" + waypoints.ToString());
 
                 // Make lines mesh appear. TODO: check coloring.
-                newWaypoint.gameObjectPointer.GetComponent<WaypointProperties>().UpdateGroundpointLine(); // TODO: fix this jank.
                 return newWaypoint; 
             }
         }
@@ -246,12 +249,48 @@
                 waypoints.Clear();
             }
         }
+
+        /******************************/
+        //    Waypoint Flight Logic   //
+        /******************************/
+
+        /// <summary>
+        ///  To be called by ROSConnection when waypoints have been successfully uploaded.
+        ///  Inform each waypoint that it has been uploaded for state change and user feedback.
+        /// </summary>
+        public void WaypointsUploaded(MissionWaypointMsg[] uploadedWaypoints)
+        {
+            foreach (MissionWaypointMsg waypoint in uploadedWaypoints)
+            {
+
+                Vector3 waypoint_coord = WorldProperties.GPSCoordToUnityCoord(new GPSCoordinate(waypoint.GetLatitude(), waypoint.GetLongitude(), waypoint.GetAltitude()));
+
+                // TODO: refine search to accound for order.
+                for (int i = 1; i < waypoints.Count; i++)
+                {
+                    Waypoint unityWaypoint = waypoints[i];
+                    float distance = Vector3.Distance(unityWaypoint.gameObjectPointer.transform.localPosition, waypoint_coord);
+
+                    if (distance < 0.2f)
+                    {
+                        unityWaypoint.waypointProperties.WaypointUploaded();
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// To be called by any future waypoint that is edited.
+        /// Relays the information to the ROSConnection.
+        /// </summary>
+        public void DronePathUpdated()
+        {
+            droneProperties.droneROSConnection.UpdateMission();
+        }
         
-
-
-		/******************************/
-		//       HELPER METHODS       //
-		/******************************/
+        /******************************/
+        //       HELPER METHODS       //
+        /******************************/
 
         /// <summary>
         /// Return true if waypoint list is empty and false if not
@@ -267,12 +306,18 @@
             return waypointList.Count == 0;
         }
 
+        /******************************/
+        //  WAYPOINTS GETTER METHODS  //
+        /******************************/
 
-
-
-		/******************************/
-		//  WAYPOINTS GETTER METHODS  //
-		/******************************/
+        /// <summary>
+        /// Get the list of all waypoints.
+        /// </summary>
+        /// <returns></returns>
+        public List<Waypoint> AllWaypoints()
+        {
+            return waypoints;
+        }
 
         /// <summary>
         /// The number of waypoints placed for the current drone.
@@ -299,8 +344,7 @@
             }
             return deletedWaypoints.Count; 
         }
-
-
+        
         /// <summary>
         /// TReturn the waypoint at the requested index if valid
         /// </summary>
