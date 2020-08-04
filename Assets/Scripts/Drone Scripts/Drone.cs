@@ -37,7 +37,6 @@
         // clear = cleared all waypoints
         private Stack<string> actions;
 
-
         /// <summary>
         /// Constructor method for Drone class objects
         /// </summary>
