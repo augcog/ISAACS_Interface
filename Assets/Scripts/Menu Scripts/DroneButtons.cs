@@ -30,6 +30,7 @@ public class DroneButtons : MonoBehaviour {
 
         if (startMission)
         {
+            Debug.Log("Start mission button clicked");
             droneROSConnection.StartMission();
         }
 

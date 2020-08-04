@@ -683,7 +683,7 @@ MonoBehaviour:
   MeshAltitude: 0
   MeshRotation: {x: 0, y: 0, z: 0}
   MeshScale: {x: 0, y: 0, z: 0}
-  MeshEarthPrefab: {fileID: 0}
+  MeshEarthPrefab: {fileID: 1460938711}
   MCLatitude: 37.9152
   MCLongitude: -122.338
   MCAltitude: 5
@@ -4077,6 +4077,11 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1456301587}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1460938711 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1125901207556238, guid: 4d3381740d602f043bb130adb276352f,
+    type: 2}
+  m_PrefabInternal: {fileID: 639558751}
 --- !u!1 &1480599130
 GameObject:
   m_ObjectHideFlags: 0
