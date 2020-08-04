@@ -70,6 +70,7 @@ namespace ROSBridgeLib
                 for (int i = 0; i < _mission_waypoints.Length; i++)
                 {
                     _mission_waypoints[i] = new MissionWaypointMsg(waypoints[i]);
+                    Debug.Log(_mission_waypoints[i]);
                 }
             }
 

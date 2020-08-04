@@ -14,6 +14,7 @@ public class CameraSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
     private float alpha = 0.8f;
     private List<string> sensorSubscriberTopics = new List<string>();
     private string videoType;
+    private Dictionary<string,bool> keyList = new Dictionary<string, bool>();
 
     // List of visualizers
     private Dictionary<string, ImageVisualizer> imageVisualizers = new Dictionary<string, ImageVisualizer>();
@@ -25,11 +26,9 @@ public class CameraSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
 
         ros = new ROSBridgeWebSocketConnection("ws://" + sensorIP, sensorPort);
         client_id = uniqueID.ToString();
-
         foreach (string subscriber in sensorSubscribers)
         {
             string subscriberTopic = "";
-
             switch (subscriber)
             {
                 default:
@@ -43,6 +42,7 @@ public class CameraSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
             }
             Debug.Log("Camera Subscribing to : " + subscriberTopic);
             sensorSubscriberTopics.Add(subscriberTopic);
+            keyList.Add(subscriberTopic, true);
         }
 
         ros.Connect();
@@ -76,9 +76,9 @@ public class CameraSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
     /// Returns a list of connected subscriber topics (which are unique identifiers).
     /// </summary>
     /// <returns></returns>
-    public List<string> GetSensorSubscribers()
+    public Dictionary<string, bool> GetSensorSubscribers()
     {
-        return sensorSubscriberTopics;
+        return keyList;
     }
 
     /// <summary>

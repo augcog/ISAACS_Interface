@@ -15,6 +15,7 @@
         public Waypoint prevPathPoint; // Refers to previous waypoint
         public Waypoint nextPathPoint; // Refers to next waypoint
 
+        public WaypointProperties waypointProperties; // Points to attached Waypoint Properties script
         /// <summary>
         /// Waypoint class object constructor
         /// </summary>
@@ -29,7 +30,8 @@
             GameObject baseObject = (GameObject)WorldProperties.worldObject.GetComponent<WorldProperties>().waypointBaseObject;
             gameObjectPointer = Object.Instantiate(baseObject, position, Quaternion.identity);
             gameObjectPointer.GetComponent<VRTK_InteractableObject>().ignoredColliders[0] = GameObject.Find("controller_right").GetComponent<SphereCollider>(); //Ignoring Collider from Controller so that WayPoint Zone is used
-            gameObjectPointer.GetComponent<WaypointProperties>().classPointer = this; // Connect the gameObject back to the classObject
+            waypointProperties = gameObjectPointer.GetComponent<WaypointProperties>();
+            waypointProperties.classPointer = this; // Connect the gameObject back to the classObject
             gameObjectPointer.tag = "waypoint";
             gameObjectPointer.name = baseObject.name;
             gameObjectPointer.transform.localScale = WorldProperties.actualScale / 100;

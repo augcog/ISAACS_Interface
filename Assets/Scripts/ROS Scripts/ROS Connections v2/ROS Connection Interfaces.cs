@@ -11,7 +11,7 @@ using ROSBridgeLib.interface_msgs;
 public interface ROSDroneConnectionInterface
 {
     // Initlization function
-    void InitilizeDrone(int uniqueID, string droneIP, int dronePort, List<string> droneSubscribers, bool simFlight);
+    void InitilizeDrone(int uniqueID, string droneIP, int dronePort, List<string> droneSubscribers, bool simFlight, DroneProperties droneProp);
 
     // Query state variables for Informative UI and misc. info
 
@@ -77,6 +77,11 @@ public interface ROSDroneConnectionInterface
     double GetHomeLong();
 
     /// Drone control methods 
+
+    /// <summary>
+    /// Infor the ROS Connection that the uploaded waypoint mission has been completed.
+    /// </summary>
+    void UploadedMissionCompleted();
 
     /// <summary>
     /// Start the drone mission

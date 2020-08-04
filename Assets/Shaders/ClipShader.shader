@@ -30,7 +30,7 @@
 
 		void surf(Input i, inout SurfaceOutput o) 
 		{
-			_Radius = 1;
+			_Radius = 1.5f;
 			_Origin = (0, 0, 0);
 
 			float deltaX = i.pos_ws.x - _Origin.x;
