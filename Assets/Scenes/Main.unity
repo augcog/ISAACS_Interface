@@ -678,15 +678,15 @@ MonoBehaviour:
   waypointBaseObject: {fileID: 1161822125618724, guid: c209b41633a109640bb6a3527c86c801,
     type: 2}
   sensorManagerBaseObject: {fileID: 130481553}
-  MeshLatitude: 0
-  MeshLongitude: 0
-  MeshAltitude: 0
-  MeshRotation: {x: 0, y: 0, z: 0}
-  MeshScale: {x: 0, y: 0, z: 0}
+  MeshLatitude: 37.9151805
+  MeshLongitude: -122.3379886
+  MeshAltitude: 2.522
+  MeshRotation: {x: 0, y: 270, z: 0}
+  MeshScale: {x: 39, y: 39, z: 39}
   MeshEarthPrefab: {fileID: 1460938711}
   MCLatitude: 37.9152
   MCLongitude: -122.338
-  MCAltitude: 5
+  MCAltitude: 0
 --- !u!114 &146794968
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -700,10 +700,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DronesList:
   - droneName: Perry Pepe the Platipus
-    ipAddress: 75.25.126.85
+    ipAddress: 10.0.0.2
     port: 9090
     droneType: 1
-    droneSubscribers: 0500000001000000
+    droneSubscribers: 0400000001000000
     simFlight: 1
     attachedSensors:
     - sensorName: Perry_Mesh
@@ -711,19 +711,6 @@ MonoBehaviour:
       port: 9090
       sensorType: 1
       sensorSubscribers: 01000000
-      videoPlayers: 0
-  - droneName: Apollo the Antelope
-    ipAddress: 75.25.126.85
-    port: 9090
-    droneType: 1
-    droneSubscribers: 0500000001000000
-    simFlight: 1
-    attachedSensors:
-    - sensorName: Apollo_PCFace
-      ipAddress: 75.25.126.85
-      port: 9090
-      sensorType: 3
-      sensorSubscribers: 090000000a0000000b0000000c0000000d00000008000000
       videoPlayers: 0
   success: 0
   uniqueID: 0
