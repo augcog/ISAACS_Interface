@@ -31,7 +31,103 @@ public class DroneSimulationManager : MonoBehaviour {
     private Vector3 currentDestination;
     private Vector3 homeLocation;
 
+    private Vector3 currentRotation;
+
     private int nextWaypointID = 0;
+
+
+    // Update is called once per frame
+    void Update()
+    {
+        currentLocation = this.transform.localPosition;
+        currentRotation = this.transform.localRotation;
+
+        switch (droneStatus)
+        {
+
+            case FlightStatus.FLYING:
+
+                this.transform.Translate(Vector3.Normalize(currentDestination-currentLocation)* speed * Time.deltaTime, Space.Self);
+
+                if (reachedCurrentDestination())
+                {
+                    if (updateDestination(true, false, false) == false)
+                    {
+                        Debug.Log("All waypoints completed");
+                        droneStatusPrev = FlightStatus.FLYING; 
+                        droneStatus = FlightStatus.IN_AIR_STANDBY;
+                    }
+                    
+                }
+
+                break;
+
+            case FlightStatus.FLYING_HOME:
+
+                this.transform.Translate(Vector3.Normalize(currentDestination - currentLocation) * speed * Time.deltaTime, Space.Self);
+
+                if (reachedCurrentDestination())
+                {
+                    Debug.Log("Drone reached home");
+                    droneStatusPrev = FlightStatus.FLYING_HOME;
+                    droneStatus = FlightStatus.ON_GROUND_STANDBY;
+                }
+
+                break;
+
+            case FlightStatus.LANDING:
+
+                this.transform.Translate(Vector3.Normalize(currentDestination - currentLocation) * speed * Time.deltaTime, Space.Self);
+
+                if (reachedCurrentDestination())
+                {
+                    Debug.Log("Drone landed");
+                    droneStatusPrev = FlightStatus.LANDING;
+                    droneStatus = FlightStatus.ON_GROUND_STANDBY;
+                }
+
+                break;
+        }
+    }
+
+
+    // TODO: document
+    private Vector3 InertialToBody(Vector3 inertialFrame, Quaternion rotation) {
+        // V_B = R(q) * V_I, where
+        // V_B is the reference frame,
+        // V_I is the intertial frame,
+        // q is tha quaternion (a, b, c, d),
+        // R(q) is the rotation
+
+        /*
+               | a**2 + b**2 - c**2 - d**2        2*bc - 2*ad               2*bd + 2*ac        |
+        R(q) = |        2*bc + 2*ad        a**2 - b**2 + c**2 - d**2        2*cd - 2*ab        |
+               |        2*bd - 2*ac               2*cd + 2*ab        a**2 - b**2 - c**2 + d**2 |
+        */
+
+        Vector3 bodyFrame;
+
+        float a_2 = rotation.w * rotation.w;
+        float b_2 = rotation.x * rotation.x;
+        float c_2 = rotation.y * rotation.y;
+        float d_2 = rotation.z * rotation.z;
+
+        float ab = rotation.w * rotation.x;
+        float ac = rotation.w * rotation.y;
+        float ac = rotation.w * rotation.z;
+        float bc = rotation.x * rotation.y;
+        float bd = rotation.x * rotation.z;
+        float cd = rotation.y * rotation.z;
+
+        Vector3 R1 = new Vector3(a_2 + b_2 - c_2 - d_2, 2 * (bc - ad), 2 * (bd + ac));
+        Vector3 R2 = new Vector3(2 * (bc + ad), a_2 - b_2 + c_2 - d_2, 2 * (cd - ab));
+        Vector3 R3 = new Vectir3(2 * (bd - ac), 2 * (cd + ab), a_2 - b_2 - c_2 + d_2);
+
+        bodyFrame.x = Math.dot(R1, inertialFrame);
+        bodyFrame.y = Math.dot(R2, inertialFrame);
+        bodyFrame.z = Math.dot(R3, inertialFrame);
+    }
+
 
     /// <summary>
     /// Initilize the drone sim with the required references.
@@ -282,59 +378,6 @@ public class DroneSimulationManager : MonoBehaviour {
         nextWaypointID += 1;
 
         return true;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        currentLocation = this.transform.localPosition;
-
-        switch (droneStatus)
-        {
-
-            case FlightStatus.FLYING:
-
-                this.transform.Translate(Vector3.Normalize(currentDestination-currentLocation)* speed * Time.deltaTime, Space.Self);
-
-                if (reachedCurrentDestination())
-                {
-                    if (updateDestination(true, false, false) == false)
-                    {
-                        Debug.Log("All waypoints completed");
-                        droneStatusPrev = FlightStatus.FLYING; 
-                        droneStatus = FlightStatus.IN_AIR_STANDBY;
-                    }
-                    
-                }
-
-                break;
-
-            case FlightStatus.FLYING_HOME:
-
-                this.transform.Translate(Vector3.Normalize(currentDestination - currentLocation) * speed * Time.deltaTime, Space.Self);
-
-                if (reachedCurrentDestination())
-                {
-                    Debug.Log("Drone reached home");
-                    droneStatusPrev = FlightStatus.FLYING_HOME;
-                    droneStatus = FlightStatus.ON_GROUND_STANDBY;
-                }
-
-                break;
-
-            case FlightStatus.LANDING:
-
-                this.transform.Translate(Vector3.Normalize(currentDestination - currentLocation) * speed * Time.deltaTime, Space.Self);
-
-                if (reachedCurrentDestination())
-                {
-                    Debug.Log("Drone landed");
-                    droneStatusPrev = FlightStatus.LANDING;
-                    droneStatus = FlightStatus.ON_GROUND_STANDBY;
-                }
-
-                break;
-        }
     }
 
 }
