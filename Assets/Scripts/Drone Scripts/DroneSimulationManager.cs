@@ -9,6 +9,29 @@ public class DroneSimulationManager : MonoBehaviour {
     private Drone drone;
     private float speed = 0.1f;
 
+    [Header("Motors")]
+
+	[Tooltip("TODO")]
+    public float TorqueConstant;
+	[Tooltip("TODO")]
+    public float InputCurrent;
+	[Tooltip("TODO")]
+    public float NoLoadCurrent;
+	[Tooltip("TODO")]
+    public float BackEMFGeneratedPerRMP;
+    // https://en.wikipedia.org/wiki/Motor_constants 
+	[Tooltip("TODO")]
+    public float MotorResistance;
+
+	[Tooltip("TODO")]
+    public float m;
+	[Tooltip("TODO")]
+    public Vector3 g;
+    
+	[Tooltip("TODO")]
+    public float DragConstant;
+
+    
     /// <summary>
     /// Current flight status of the drone
     /// </summary>
@@ -31,7 +54,10 @@ public class DroneSimulationManager : MonoBehaviour {
     private Vector3 currentDestination;
     private Vector3 homeLocation;
 
-    private Vector3 currentRotation;
+    // TODO: documentation
+    private Quaternion currentRotation;
+
+
 
     private int nextWaypointID = 0;
 
@@ -92,14 +118,16 @@ public class DroneSimulationManager : MonoBehaviour {
 
 
     // TODO: document
-    private Vector3 InertialToBody(Vector3 inertialFrame, Quaternion rotation) {
-        // V_B = R(q) * V_I, where
-        // V_B is the reference frame,
-        // V_I is the intertial frame,
-        // q is tha quaternion (a, b, c, d),
-        // R(q) is the rotation
+    private Vector3 InertialToBody(Vector3 inertialFrame, Quaternion rotation)
+    {
+        /* 
+        V_B = R(q) * V_I
 
-        /*
+            -> V_B is the reference frame,
+            -> V_I is the intertial frame,
+            -> q is tha quaternion (a, b, c, d),
+            -> R(q) is the rotation matrix:
+        
                | a**2 + b**2 - c**2 - d**2        2*bc - 2*ad               2*bd + 2*ac        |
         R(q) = |        2*bc + 2*ad        a**2 - b**2 + c**2 - d**2        2*cd - 2*ab        |
                |        2*bd - 2*ac               2*cd + 2*ab        a**2 - b**2 - c**2 + d**2 |
@@ -114,18 +142,55 @@ public class DroneSimulationManager : MonoBehaviour {
 
         float ab = rotation.w * rotation.x;
         float ac = rotation.w * rotation.y;
-        float ac = rotation.w * rotation.z;
+        float ad = rotation.w * rotation.z;
         float bc = rotation.x * rotation.y;
         float bd = rotation.x * rotation.z;
         float cd = rotation.y * rotation.z;
 
+        // Compute R(q)
         Vector3 R1 = new Vector3(a_2 + b_2 - c_2 - d_2, 2 * (bc - ad), 2 * (bd + ac));
         Vector3 R2 = new Vector3(2 * (bc + ad), a_2 - b_2 + c_2 - d_2, 2 * (cd - ab));
-        Vector3 R3 = new Vectir3(2 * (bd - ac), 2 * (cd + ab), a_2 - b_2 - c_2 + d_2);
+        Vector3 R3 = new Vector3(2 * (bd - ac), 2 * (cd + ab), a_2 - b_2 - c_2 + d_2);
 
-        bodyFrame.x = Math.dot(R1, inertialFrame);
-        bodyFrame.y = Math.dot(R2, inertialFrame);
-        bodyFrame.z = Math.dot(R3, inertialFrame);
+        // Compute V_B
+        bodyFrame.x = Vector3.Dot(R1, inertialFrame);
+        bodyFrame.y = Vector3.Dot(R2, inertialFrame);
+        bodyFrame.z = Vector3.Dot(R3, inertialFrame);
+
+        return bodyFrame;
+    }
+
+    // TODO: documentation
+    private float MotorPower()
+    {
+        /*
+        τ = K_t * (I - I_0)
+            -> τ is the Torque
+            -> K_t is the Torque Constant
+            -> I is the input Current
+            -> I_0 is the Current when there is no motor load
+        */ 
+        float torque = TorqueConstant * (InputCurrent - NoLoadCurrent);
+        /*
+        P = IV = (τ + K_t * I_0) * (K_t * I_0 * R_m + τ * R_m + K_t * K_v * ω) / K_t**2
+            -> P is the motor Power
+            -> I is the motor Current
+            -> V is the motor Voltage
+            -> τ is the Torque
+            -> K_t is the Torque Constant
+            -> K_v is the Back EMF generated per RPM 
+            -> R_m is the motor Resistance
+            -> ω is the Angular Velocity
+            -> I_0 is the Current when there is no motor load
+        */
+
+        float angularVelocity = 1.0f;
+
+        return (torque + TorqueConstant * InputCurrent)
+                * (TorqueConstant * InputCurrent * MotorResistance
+                   + torque * MotorResistance
+                   + TorqueConstant * BackEMFGeneratedPerRMP * angularVelocity)
+                / (TorqueConstant * TorqueConstant);  
     }
 
 
