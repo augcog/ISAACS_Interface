@@ -32,10 +32,12 @@ public class DroneSimulationTransforms : MonoBehaviour {
 		{
 			theta *= (float)Math.PI / 180.0f;
 		}
-		float cos_theta = (float)Math.Cos(theta);
+
 		float sin_theta = (float)Math.Sin(theta);
-		float z = frame.z;
+		float cos_theta = (float)Math.Cos(theta);
+
 		float y = frame.y;
+		float z = frame.z;
 
 		/*
 		|  cθ  0   sθ || z |
@@ -56,17 +58,19 @@ public class DroneSimulationTransforms : MonoBehaviour {
 		{
 			theta *= (float)Math.PI / 180.0f;
 		}
-		float cos_theta = (float)Math.Cos(theta);
+
 		float sin_theta = (float)Math.Sin(theta);
-		float z = frame.z;
+		float cos_theta = (float)Math.Cos(theta);
+
 		float x = frame.x;
+		float z = frame.z;
 		/*
 		|  cθ -sθ  0  || z |
 		|  sθ  cθ  0  || x |
 		|  0   0   1  || y |
 		*/	
-		frame.z =  z * cos_theta - x * sin_theta;
 		frame.x =  z * sin_theta + x * cos_theta;
+		frame.z =  z * cos_theta - x * sin_theta;
 		return frame;
 	}
 
@@ -79,10 +83,13 @@ public class DroneSimulationTransforms : MonoBehaviour {
 		{
 			theta *= (float)Math.PI / 180.0f;
 		}
-		float cos_theta = (float)Math.Cos(theta);
+
 		float sin_theta = (float)Math.Sin(theta);
+		float cos_theta = (float)Math.Cos(theta);
+
 		float x = frame.x;
 		float y = frame.y;
+
 		/*
 		|  1  0   0  || z |
 		|  0  cθ -sθ || x |
@@ -109,24 +116,55 @@ public class DroneSimulationTransforms : MonoBehaviour {
 			uz *= (float)Math.PI / 180.0f;
 		}
 
-		float cux = (float)Math.Cos(ux);
 		float sux = (float)Math.Sin(ux);
-		float cuy = (float)Math.Cos(uy);
+		float cux = (float)Math.Cos(ux);
 		float suy = (float)Math.Sin(uy);
-		float cuz = (float)Math.Cos(uz);
+		float cuy = (float)Math.Cos(uy);
 		float suz = (float)Math.Sin(uz);
+		float cuz = (float)Math.Cos(uz);
 
 		Vector3 rotatedFrame = frame;	
 
-		Vector3 R1 = new Vector3(suz * sux * cuy - cuz * suy,      cuz * sux * cuy + suz * suy,      cux * cuy);
-		Vector3 R2 = new Vector3(suz * sux * suy + cuz * cuy,      cuz * sux * suy - suz * cuy,      cux * suy);
-		Vector3 R3 = new Vector3(suz * cux,                        cuz * cux,                        -sux);
+		Vector3 R1 = new Vector3(suz * sux * suy + cuz * cuy,      cuz * sux * suy - suz * cuy,      cux * suy);
+		Vector3 R2 = new Vector3(suz * cux,                        cuz * cux,                        -sux);
+		Vector3 R3 = new Vector3(suz * sux * cuy - cuz * suy,      cuz * sux * cuy + suz * suy,      cux * cuy);
 
-		rotatedFrame.z = Vector3.Dot(R1, frame);
-		rotatedFrame.x = Vector3.Dot(R2, frame);
-		rotatedFrame.y = Vector3.Dot(R3, frame);
+		rotatedFrame.x = Vector3.Dot(R1, frame);
+		rotatedFrame.y = Vector3.Dot(R2, frame);
+		rotatedFrame.z = Vector3.Dot(R3, frame);
 
 		return rotatedFrame;
 	}
+
+
+	// TODO: documentation
+	public Vector3 T(Vector3 angularVelocity_B, Vector3 angularPosition_I, bool degrees=true)
+	{
+		float p = angularVelocity_B.x;
+		float r = angularVelocity_B.y;
+		float q = angularVelocity_B.z;
+
+		float X = angularPosition_I.x;
+		float Y = angularPosition_I.y;
+		float Z = angularPosition_I.z;
+
+		if (degrees)
+		{
+			X *= (float)Math.PI / 180.0f;
+			Y *= (float)Math.PI / 180.0f;
+			Z *= (float)Math.PI / 180.0f;
+		}
+
+		cosX = (float)Math.Cos(X);
+		tanX = (float)Math.Sin(X);
+		cosZ = (float)Math.Cos(Z);
+		sinZ = (float)Math.Sin(Z);
+
+		float dX = r * cosZ - p * sinZ;
+		float dY = p * (cosZ / cosX) + r * (sinZ / cosZ);
+		float dZ = q + p * cosZ * tanX + r * sinZ * tanX;
+
+		return new Vector3(dX, dY, dZ);
+	}	
 
 }
