@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using ISAACS;
@@ -9,29 +10,6 @@ public class DroneSimulationManager : MonoBehaviour {
     private Drone drone;
     private float speed = 0.1f;
 
-    [Header("Motors")]
-
-	[Tooltip("TODO")]
-    public float TorqueConstant;
-	[Tooltip("TODO")]
-    public float InputCurrent;
-	[Tooltip("TODO")]
-    public float NoLoadCurrent;
-	[Tooltip("TODO")]
-    public float BackEMFGeneratedPerRMP;
-    // https://en.wikipedia.org/wiki/Motor_constants 
-	[Tooltip("TODO")]
-    public float MotorResistance;
-
-	[Tooltip("TODO")]
-    public float m;
-	[Tooltip("TODO")]
-    public Vector3 g;
-    
-	[Tooltip("TODO")]
-    public float DragConstant;
-
-    
     /// <summary>
     /// Current flight status of the drone
     /// </summary>
@@ -46,34 +24,106 @@ public class DroneSimulationManager : MonoBehaviour {
         NULL = 7
     }
 
+    // TODO: documentation 
+    private int nextWaypointID = 0;
+
     // Drone state variables
     private FlightStatus droneStatus;
     private FlightStatus droneStatusPrev;
 
-    private Vector3 currentLocation;
-    private Vector3 currentDestination;
+    // TODO: documentation
     private Vector3 homeLocation;
 
-    // TODO: documentation
-    private Quaternion currentRotation;
+    // The current position vector
+    private Vector3 position;
+    // The desired position vector 
+    private Vector3 destination;
+
+    // The quaternion holding the current rotation;
+    // use it to rotate and avoid gimbal lock,
+    // but do not modify it directly
+    private Quaternion rotation;
+    // The roll-yaw-pitch vector
+    private Vector3 u = new Vector3(0.0f, 0.0f, 0.0f);
+    // The roll-yaw-pitch derivatives vector; not the same as w,
+    // the angular velocity, but can be used to compute it
+    private Vector3 du = new Vector3(0.0f, 0.0f, 0.0f);
+
+    // The linear velocity vector
+    private Vector3 v = new Vector3(0.0f, 0.0f, 0.0f);
+    // The linear acceleration vector
+    private Vector3 dv = new Vector3(0.0f, 0.0f, 0.0f);
+
+    // The angular velocity vector
+    private Vector3 w = new Vector3(0.0f, 0.0f, 0.0f);
+    // The angular acceleration vector
+    private Vector3 dw = new Vector3(0.0f, 0.0f, 0.0f);
 
 
+    [Header("Simulation Dynamics")]
 
-    private int nextWaypointID = 0;
+	[Tooltip("TODO")]
+    public float TargetSpeed = 1.0f; // Desired speed
+
+	[Tooltip("TODO")]
+    public float bodyMass = 5.0f;
+	[Tooltip("TODO")]
+    public float bodyRadius = 15.0f;
+	[Tooltip("TODO")]
+    public float rotorMass = 0.2f;
+	[Tooltip("TODO")]
+    public float rotorDistance = 2.0f;
+	[Tooltip("TODO")]
+    public Vector3 gravitationalAcceleration = new Vector3(0.0f, -9.81f, 0.0f);
+	[Tooltip("TODO")]
+    public Vector3 thrustConstant = new Vector3(1.0f, 1.0f, 1.0f);
+	[Tooltip("TODO")]
+    public Vector3 frictionConstant = new Vector3(1.0f, 1.0f, 1.0f);
+
+    // The total mass of the UAV
+    private float m;
+
+    // The inertia components of the UAV
+    private float Ixx;
+    private float Iyy;
+    private float Izz;
 
 
-    // Update is called once per frame
-    void Update()
+    /// <summary>
+    /// Initilize the drone sim with the required references.
+    /// </summary>
+    /// <param name="droneInit"></param>
+    public void InitDroneSim()
     {
-        currentLocation = this.transform.localPosition;
-        currentRotation = this.transform.localRotation;
+        drone = this.GetComponent<DroneProperties>().droneClassPointer;
+        
+        // The total mass of the UAV
+        m = bodyMass + 4 * rotorMass;
+
+        // Model the UAV body and rotors as spheres, and compute its inertia
+        float bodyInertia = 2.0f * bodyMass * bodyRadius * bodyRadius / 5.0f;
+        float rotorInertia = rotorDistance * rotorDistance * rotorMass;
+        Ixx = bodyInertia + 2.0f * rotorInertia;
+        Iyy = bodyInertia + 2.0f * rotorInertia;
+        Izz = bodyInertia + 4.0f * rotorInertia;
+
+        homeLocation = drone.gameObjectPointer.transform.localPosition;
+        position = drone.gameObjectPointer.transform.localPosition;
+
+        droneStatus = FlightStatus.ON_GROUND_STANDBY;
+        droneStatusPrev = FlightStatus.NULL;
+    }
+
+    // FixedUpdate is called according to the physics engine
+    void FixedUpdate()
+    {
+        position = transform.localPosition;
+        rotation = transform.localRotation;
 
         switch (droneStatus)
         {
 
             case FlightStatus.FLYING:
-
-                this.transform.Translate(Vector3.Normalize(currentDestination-currentLocation)* speed * Time.deltaTime, Space.Self);
 
                 if (reachedCurrentDestination())
                 {
@@ -86,11 +136,23 @@ public class DroneSimulationManager : MonoBehaviour {
                     
                 }
 
+                du2w(); // This updates w
+
+                dv = computeAcceleration();
+                dw = computeAngularAcceleration();
+
+                w += dw;
+                w2du(); // This updates du
+                transform.localEulerAngles += du;
+                v += dv;
+                transform.localPosition += v;
+
+                // this.transform.Translate(Vector3.Normalize(destination - position)* speed * Time.deltaTime, Space.Self);
                 break;
 
             case FlightStatus.FLYING_HOME:
 
-                this.transform.Translate(Vector3.Normalize(currentDestination - currentLocation) * speed * Time.deltaTime, Space.Self);
+                this.transform.Translate(Vector3.Normalize(destination - position) * speed * Time.deltaTime, Space.Self);
 
                 if (reachedCurrentDestination())
                 {
@@ -103,7 +165,7 @@ public class DroneSimulationManager : MonoBehaviour {
 
             case FlightStatus.LANDING:
 
-                this.transform.Translate(Vector3.Normalize(currentDestination - currentLocation) * speed * Time.deltaTime, Space.Self);
+                this.transform.Translate(Vector3.Normalize(destination - position) * speed * Time.deltaTime, Space.Self);
 
                 if (reachedCurrentDestination())
                 {
@@ -118,19 +180,70 @@ public class DroneSimulationManager : MonoBehaviour {
 
 
     // TODO: document
-    private Vector3 InertialToBody(Vector3 inertialFrame, Quaternion rotation)
+    private void du2w()
+    {
+        // Where x is the roll, y is the pitch, z is the yaw
+        Vector3 w1 = new Vector3(1.0f,  0.0f,                 -(float)Math.Sin(u.y));
+        Vector3 w2 = new Vector3(0.0f,  (float)Math.Cos(u.x),  (float)(Math.Cos(u.y) * Math.Sin(u.x)));
+        Vector3 w3 = new Vector3(0.0f, -(float)Math.Sin(u.x),  (float)(Math.Cos(u.y) * Math.Cos(u.x)));
+
+        w.x = Vector3.Dot(w1, du);
+        w.y = Vector3.Dot(w2, du);
+        w.z = Vector3.Dot(w3, du);
+    }
+
+    // TODO: document
+    private void w2du()
+    {
+        // Where x is the roll, y is the pitch, z is the yaw
+        Vector3 du1 = new Vector3(1.0f,  (float)(Math.Sin(u.x) * Math.Tan(u.y)),  (float)(Math.Cos(u.x) * Math.Tan(u.y)));
+        Vector3 du2 = new Vector3(0.0f,  (float)Math.Cos(u.x),                   -(float)Math.Sin(u.y));
+        Vector3 du3 = new Vector3(0.0f,  (float)(Math.Sin(u.x) / Math.Cos(u.y)),  (float)(Math.Cos(u.x) / Math.Cos(u.y)));
+
+        du.x = Vector3.Dot(du1, w);
+        du.y = Vector3.Dot(du2, w);
+        du.z = Vector3.Dot(du3, w);
+    }
+
+    // TODO: document
+    private Vector3 computeAcceleration()
+    {
+        // 4 rotors with equal thrust 
+        Vector3 thrust;
+        thrust.x = 4 * thrustConstant.x * w.x * w.x; 
+        thrust.y = 4 * thrustConstant.y * w.y * w.y; 
+        thrust.z = 4 * thrustConstant.z * w.z * w.z; 
+        Vector3 thrustAcceleration = R(thrust) / m;
+
+        Vector3 friction;
+        friction.x = -frictionConstant.x * v.x;
+        friction.y = -frictionConstant.y * v.y;
+        friction.z = -frictionConstant.z * v.z;
+        Vector3 frictionalAcceleration = friction / m;
+
+        return gravitationalAcceleration + thrustAcceleration + frictionalAcceleration;
+    }
+
+    // TODO: document
+    private Vector3 computeAngularAcceleration()
+    {
+        return new Vector3(0, 0, 0); // TODO: edit
+    }
+
+    // TODO: document
+    private Vector3 R(Vector3 inertialFrame)
     {
         /* 
         V_B = R(q) * V_I
 
-            -> V_B is the reference frame,
-            -> V_I is the intertial frame,
+            -> V_B is the object frame,
+            -> V_I is the inertial frame,
             -> q is tha quaternion (a, b, c, d),
             -> R(q) is the rotation matrix:
         
-               | a**2 + b**2 - c**2 - d**2        2*bc - 2*ad               2*bd + 2*ac        |
-        R(q) = |        2*bc + 2*ad        a**2 - b**2 + c**2 - d**2        2*cd - 2*ab        |
-               |        2*bd - 2*ac               2*cd + 2*ab        a**2 - b**2 - c**2 + d**2 |
+               | a**2 + b**2 - c**2 - d**2        2 * (bc - ad)                2 * (bd + ac)         |
+        R(q) = |     2 * (bc + ad)            a**2 - b**2 + c**2 - d**2        2 * (cd - ab)         |
+               |     2 * (bd - ac)                2 * (cd + ab)            a**2 - b**2 - c**2 + d**2 |
         */
 
         Vector3 bodyFrame;
@@ -160,54 +273,8 @@ public class DroneSimulationManager : MonoBehaviour {
         return bodyFrame;
     }
 
-    // TODO: documentation
-    private float MotorPower()
-    {
-        /*
-        τ = K_t * (I - I_0)
-            -> τ is the Torque
-            -> K_t is the Torque Constant
-            -> I is the input Current
-            -> I_0 is the Current when there is no motor load
-        */ 
-        float torque = TorqueConstant * (InputCurrent - NoLoadCurrent);
-        /*
-        P = IV = (τ + K_t * I_0) * (K_t * I_0 * R_m + τ * R_m + K_t * K_v * ω) / K_t**2
-            -> P is the motor Power
-            -> I is the motor Current
-            -> V is the motor Voltage
-            -> τ is the Torque
-            -> K_t is the Torque Constant
-            -> K_v is the Back EMF generated per RPM 
-            -> R_m is the motor Resistance
-            -> ω is the Angular Velocity
-            -> I_0 is the Current when there is no motor load
-        */
-
-        float angularVelocity = 1.0f;
-
-        return (torque + TorqueConstant * InputCurrent)
-                * (TorqueConstant * InputCurrent * MotorResistance
-                   + torque * MotorResistance
-                   + TorqueConstant * BackEMFGeneratedPerRMP * angularVelocity)
-                / (TorqueConstant * TorqueConstant);  
-    }
 
 
-    /// <summary>
-    /// Initilize the drone sim with the required references.
-    /// </summary>
-    /// <param name="droneInit"></param>
-    public void InitDroneSim()
-    {
-        drone = this.GetComponent<DroneProperties>().droneClassPointer;
-        
-        homeLocation = drone.gameObjectPointer.transform.localPosition;
-        currentLocation = drone.gameObjectPointer.transform.localPosition;
-
-        droneStatus = FlightStatus.ON_GROUND_STANDBY;
-        droneStatusPrev = FlightStatus.NULL;
-    }
 
     /// <summary>
     /// Start the drone mission
@@ -404,7 +471,7 @@ public class DroneSimulationManager : MonoBehaviour {
     /// <returns></returns>
     private bool reachedCurrentDestination()
     {
-        if (Vector3.Distance(currentLocation, currentDestination) < 0.1f)
+        if (Vector3.Distance(position, destination) < 0.1f)
         {
             return true;
         }
@@ -420,15 +487,15 @@ public class DroneSimulationManager : MonoBehaviour {
 
         if (home)
         {
-            currentDestination = homeLocation;
-            Debug.Log("Destination set to: " + currentDestination);
+            destination = homeLocation;
+            Debug.Log("Destination set to: " + destination);
             return true;
         }
 
         if (land)
         {
-            currentDestination = new Vector3(currentLocation.x, homeLocation.y, currentLocation.z);
-            Debug.Log("Destination set to: " + currentDestination);
+            destination = new Vector3(position.x, homeLocation.y, position.z);
+            Debug.Log("Destination set to: " + destination);
             return true;
         }
 
@@ -438,8 +505,8 @@ public class DroneSimulationManager : MonoBehaviour {
         }
 
         Waypoint nextDestination = drone.GetWaypoint(nextWaypointID);
-        currentDestination = nextDestination.gameObjectPointer.transform.localPosition;
-        Debug.Log("Destination set to: " + currentDestination);
+        destination = nextDestination.gameObjectPointer.transform.localPosition;
+        Debug.Log("Destination set to: " + destination);
         nextWaypointID += 1;
 
         return true;
