@@ -59,6 +59,18 @@ public class DroneSimulationManager : MonoBehaviour {
     // The angular acceleration vector
     private Vector3 dw = new Vector3(0.0f, 0.0f, 0.0f);
 
+    // Torques. TODO: documentation
+    private float tx; 
+    private float ty; 
+    private float tz; 
+
+    // The total mass of the UAV
+    private float m;
+
+    // The inertia components of the UAV
+    private float Ixx;
+    private float Iyy;
+    private float Izz;
 
     [Header("Simulation Dynamics")]
 
@@ -80,13 +92,6 @@ public class DroneSimulationManager : MonoBehaviour {
 	[Tooltip("TODO")]
     public Vector3 frictionConstant = new Vector3(1.0f, 1.0f, 1.0f);
 
-    // The total mass of the UAV
-    private float m;
-
-    // The inertia components of the UAV
-    private float Ixx;
-    private float Iyy;
-    private float Izz;
 
 
     /// <summary>
@@ -227,7 +232,11 @@ public class DroneSimulationManager : MonoBehaviour {
     // TODO: document
     private Vector3 computeAngularAcceleration()
     {
-        return new Vector3(0, 0, 0); // TODO: edit
+        // TODO: torques 
+        float dw1 = (tx + w.y * w.z * (Iyy - Izz)) / Ixx;
+        float dw2 = (ty + w.x * w.z * (Izz - Ixx)) / Iyy;
+        float dw3 = (tz + w.x * w.y * (Ixx - Iyy)) / Izz;
+        return new Vector3(dw1, dw2, dw3);
     }
 
     // TODO: document
