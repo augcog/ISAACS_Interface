@@ -8,12 +8,17 @@ public class DroneSimulationTransforms : MonoBehaviour {
 	// For test purposes only
 	void Update()
 	{
+        if (Input.GetKeyUp("z"))
+		{
+            this.transform.localPosition = new Vector3(2.44f, 5.61f, 4.22f);
+		}
         if (Input.GetKeyUp("x"))
         {
-			// Vector3 rotationDelta = R(this.transform.localPosition, new Vector3(0, 45, 0));
-			Vector3 rotationDelta = Rz(this.transform.position, 90);
-			Debug.Log("**************************************");
-            this.transform.position = rotationDelta;
+			Vector3 newPosition = R(this.transform.localPosition, new Vector3(45, 45, 45));
+			// Vector3 newPosition = Rx(this.transform.position, 45);
+			// Vector3 newPosition = Ry(this.transform.position, 45);
+			// Vector3 newPosition = Rz(this.transform.position, 45);
+            this.transform.localPosition = newPosition;
         }
 	}
 
@@ -113,9 +118,9 @@ public class DroneSimulationTransforms : MonoBehaviour {
 
 		Vector3 rotatedFrame = frame;	
 
-		Vector3 R1 = new Vector3(cux * cuy, suz * sux * cuy - cuz * suy, cuz * sux * cuy + suz * suy);
-		Vector3 R2 = new Vector3(cux * suy, suz * sux * suy + cuz * cuy, cuz * sux * suy - suz * cuy);
-		Vector3 R3 = new Vector3(-sux,      suz * cux,                   cuz * cux);
+		Vector3 R1 = new Vector3(suz * sux * cuy - cuz * suy,      cuz * sux * cuy + suz * suy,      cux * cuy);
+		Vector3 R2 = new Vector3(suz * sux * suy + cuz * cuy,      cuz * sux * suy - suz * cuy,      cux * suy);
+		Vector3 R3 = new Vector3(suz * cux,                        cuz * cux,                        -sux);
 
 		rotatedFrame.z = Vector3.Dot(R1, frame);
 		rotatedFrame.x = Vector3.Dot(R2, frame);
