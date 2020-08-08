@@ -602,40 +602,6 @@
 		}
 
 		/// <summary>
- 		/// The dot product of the difference in velocity between the two controllers and their distance. Can be used as a world scaling factor.
-		/// </summary>
-		/// <returns>A float that approximates a reasonable (neither too fast, nor too slow) world scaling factor.</returns>	
-		public float ScalingFactor()
-		{
-			Vector3 LeftVelocity = VRTK_DeviceFinder.GetControllerVelocity(VRTK_DeviceFinder.GetControllerReferenceLeftHand());
-			Vector3 RightVelocity = VRTK_DeviceFinder.GetControllerVelocity(VRTK_DeviceFinder.GetControllerReferenceRightHand());
-			Vector3 VelocityDelta = LeftVelocity - RightVelocity; 
-
-			Vector3 LeftPosition = VRTK_DeviceFinder.DeviceTransform(VRTK_DeviceFinder.Devices.LeftController).position;
-			Vector3 RightPosition = VRTK_DeviceFinder.DeviceTransform(VRTK_DeviceFinder.Devices.RightController).position;
-			Vector3 Distance = LeftPosition - RightPosition;
-
-			return Vector3.Dot(VelocityDelta, Distance);
-		}
-
-		/// <summary>
- 		/// The dot product of the difference in velocity between the two controllers and their local distance. Can be used as a local scaling factor.
-		/// </summary>
-		/// <returns>A float that approximates a reasonable (neither too fast, nor too slow) local scaling factor.</returns>	
-		public float LocalScalingFactor()
-		{
-			Vector3 LeftVelocity = VRTK_DeviceFinder.GetControllerVelocity(VRTK_DeviceFinder.GetControllerReferenceLeftHand());
-			Vector3 RightVelocity = VRTK_DeviceFinder.GetControllerVelocity(VRTK_DeviceFinder.GetControllerReferenceRightHand());
-			Vector3 VelocityDelta = LeftVelocity - RightVelocity; 
-
-			Vector3 LeftLocalPosition = VRTK_DeviceFinder.DeviceTransform(VRTK_DeviceFinder.Devices.LeftController).localPosition;
-			Vector3 RightLocalPosition = VRTK_DeviceFinder.DeviceTransform(VRTK_DeviceFinder.Devices.RightController).localPosition;
-			Vector3 localDistance = LeftLocalPosition - RightLocalPosition;
-
-			return Vector3.Dot(VelocityDelta, localDistance);
-		}
-
-		/// <summary>
 		/// Whether both controllers' pointers are enabled or disabled.
 		/// </summary>
 		/// <returns>True if both controllers' pointers are enabled.</returns>

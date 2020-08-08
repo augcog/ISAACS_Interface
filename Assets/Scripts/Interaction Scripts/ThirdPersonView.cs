@@ -18,12 +18,11 @@
         private enum ControllerState { IDLE, SCALING, SELECTING_DRONE, SELECTING_SENSOR, AIMING_SELECTOR, SETTING_WAYPOINT_HEIGHT, PLACING_WAYPOINT, MOVING_WAYPOINT, UNDOING, REDOING }
         private ControllerState controllerState;
 
-        public GameObject Pivot; /// pivot is the center of the table
         public GameObject World; /// The World GameObject. All its children will be scaled, rotate and move with it.
 
         private Vector3 WorldScaleInitial; ///originalScale is the original localScale of the world
-        private Vector3 WorldScaleMin; /// This is the TODO of the originalScale of the world
-        private Vector3 WorldScaleMax; /// This is the TODO times the originalScale of the world
+        private float WorldScaleMin; /// This is the TODO of the originalScale of the world
+        private float WorldScaleMax; /// This is the TODO times the originalScale of the world
 
         public float minScale = 0.1f; /// This the minimum size (with respect to the original world size) that the player can scale the world at. For example, MinimumScale = 0.1 signifies that the world can be scaled down to 1/10th of its original size.
         public float maxScale = 10.0f; /// This the maximum size (with respect to the original world size) that the player can scale the world at. For example, MaximumScale = 10 signifies that the world can be scaled up to 10 times its original size.
@@ -47,8 +46,8 @@
             // This provides us with basis to create bounds on scaling and something to return to.
             WorldScaleInitial = World.transform.localScale;
             // These are the bounds on scaling.
-            WorldScaleMin = Vector3.Scale(WorldScaleInitial, new Vector3(minScale, minScale, minScale));
-            WorldScaleMax = Vector3.Scale(WorldScaleInitial, new Vector3(maxScale, maxScale, maxScale));
+            WorldScaleMin = Vector3.Scale(WorldScaleInitial, new Vector3(minScale, minScale, minScale)).sqrMagnitude;
+            WorldScaleMax = Vector3.Scale(WorldScaleInitial, new Vector3(maxScale, maxScale, maxScale)).sqrMagnitude;
         }
 
 
@@ -286,31 +285,27 @@
 
         private void ScaleWorld()
         {
-            // Get the scaling factor, and adjust its size.
-            float ScalingFactor = 1.0f + 0.2f * controllerInput.ScalingFactor(); // TODO: scaling factor should be directly calculated here, and not computed in controller input.
+            // Compute the scaling factor.
+            Vector3 velocityDelta = controllerInput.VelocityDelta();            
+            Vector3 distance = controllerInput.Distance();            
+            float ScalingFactor = 1.0f + 0.2f * Vector3.Dot(velocityDelta, distance);
+
+            // Compute the scaling magnitude.
             Vector3 ScalingVector = Vector3.Scale(World.transform.localScale, new Vector3(ScalingFactor, ScalingFactor, ScalingFactor));
+            float scalingMagnitude =  ScalingVector.sqrMagnitude;
 
-            //Checking Scaling Bounds
-            if (ScalingVector.sqrMagnitude > WorldScaleMin.sqrMagnitude && ScalingVector.sqrMagnitude < WorldScaleMax.sqrMagnitude)
+            // Check if the scaling magnitude is withing boundaries.
+            // Otherwise, the world will become too big or too small. 
+            if (scalingMagnitude > WorldScaleMin && scalingMagnitude < WorldScaleMax)
             {
-                // FIXME: Jank. and comments.
-                Vector3 A = World.transform.position;
-                Vector3 B = Pivot.transform.position;
-                B.y = A.y;
-
                 Vector3 startScale = World.transform.localScale;
-                Vector3 endScale = World.transform.localScale * ScalingFactor;
+                Vector3 endScale = ScalingFactor * startScale;
+                // Scaling also moves the object out of place. The following is a temporary fix, but it distorts the map. 
+                endScale.y = startScale.y;
 
-                Vector3 C = A - B; // diff from object pivot to desired pivot/origin
-
-                // calc final position post-scale
-                Vector3 FinalPosition = (C * ScalingFactor) + B;
-
-                // finally, actually perform the scale/translation
+                // Finally, scale the world. 
                 World.transform.localScale = endScale;
-                World.transform.position = FinalPosition;
             }
-
         }
 
 
@@ -326,7 +321,7 @@
             {
                 angle = controllerInput.RightStickDelta().x * rotationalSpeed * 360 * Time.fixedDeltaTime;
             }
-            World.transform.RotateAround(Pivot.transform.position, Vector3.up, angle);
+            World.transform.RotateAround(World.transform.position, Vector3.up, angle);
         }
 
 
