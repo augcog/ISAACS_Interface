@@ -37,9 +37,6 @@
 		private VRTK_StraightPointerRenderer RightPointerRenderer; // The VRTK Pointer Renderer Component (script) of the right controller.
 		private VRTK_UIPointer RightUIPointer;                     // The VRTK UI Pointer Component (script) of the right controller.
 
-		private bool boolLeftPointerEnabled;  // Whether the left controller's pointer is enabled or disabled.
-		private bool boolRightPointerEnabled; // Whether the right controller's pointer is enabled or disabled.
-
 
 		// Awake is called on initialization, BEFORE Start.
 		void Awake()
@@ -50,16 +47,15 @@
             RightPointerRenderer = RightController.GetComponent<VRTK_StraightPointerRenderer>();
             RightUIPointer = RightController.GetComponent<VRTK_UIPointer>();
 
-			LeftPointerRenderer.enabled = false;
-			LeftPointer.enabled = false;
-			RightUIPointer.enabled = false;
-			RightPointerRenderer.enabled = false;
-			RightPointer.enabled = false;
+			// LeftPointerRenderer.enabled = false;
+			// LeftPointer.enabled = false;
+			// RightUIPointer.enabled = false;
+			// RightPointerRenderer.enabled = false;
+			// RightPointer.enabled = false;
 
-			LeftUI.SetActive(false);
-			RightUI.SetActive(false);
+			// LeftUI.SetActive(false);
+			// RightUI.SetActive(false);
 		}
-
 
 
 		/******************************/
@@ -267,7 +263,7 @@
 		/// <returns>True if the left controller's pointer is enabled.</returns>
 		public bool LeftPointerEnabled()
 		{
-			return boolLeftPointerEnabled;
+			return LeftPointerRenderer.enabled && LeftPointer.enabled;
 		}
 
 		/// <summary>
@@ -426,7 +422,7 @@
 			{
 				return true;
 			}
-			else if ( RightController.GetComponent<VRTK_ControllerEvents>().GetAxis(VRTK_ControllerEvents.Vector2AxisAlias.Touchpad).y != 0.0f)
+			else if (RightController.GetComponent<VRTK_ControllerEvents>().GetAxis(VRTK_ControllerEvents.Vector2AxisAlias.Touchpad).y != 0.0f)
 			{
 				return true;
 			}
@@ -503,7 +499,7 @@
 		/// <returns>True if the right controller's pointer is enabled.</returns>
 		public bool RightPointerEnabled()
 		{
-			return boolRightPointerEnabled;
+			return RightUIPointer.enabled && RightPointerRenderer.enabled && RightPointer.enabled;
 		}
 
 		/// <summary>
@@ -607,7 +603,7 @@
 		/// <returns>True if both controllers' pointers are enabled.</returns>
 		public bool BothPointerEnabled()
 		{
-			return boolLeftPointerEnabled && boolRightPointerEnabled;
+			return LeftPointerRenderer.enabled && LeftPointer.enabled && RightUIPointer.enabled && RightPointerRenderer.enabled && RightPointer.enabled;
 		}
 
 		/// <summary>
@@ -630,11 +626,13 @@
 		/// </summary>
 		public void EnableLeftPointer()
 		{
-			if (!boolLeftPointerEnabled)
+			if (!LeftPointerRenderer.enabled)
 			{
 				LeftPointerRenderer.enabled = true;
+			}	
+			if (!LeftPointer.enabled)
+			{
 				LeftPointer.enabled = true;
-				boolLeftPointerEnabled = true;
 			}	
 		}
 
@@ -654,11 +652,13 @@
 		/// </summary>
 		public void DisableLeftPointer()
 		{
-			if (boolLeftPointerEnabled)
+			if (LeftPointerRenderer.enabled)
 			{
 				LeftPointerRenderer.enabled = false;
+			}	
+			if (LeftPointer.enabled)
+			{
 				LeftPointer.enabled = false;
-				boolLeftPointerEnabled = false;
 			}	
 		}
 
@@ -684,12 +684,18 @@
 		/// </summary>
 		public void EnableRightPointer()
 		{
-			if (!boolRightPointerEnabled)
+
+			if (!RightUIPointer.enabled)
 			{
 				RightUIPointer.enabled = true;
+			}	
+			if (!RightPointerRenderer.enabled)
+			{
 				RightPointerRenderer.enabled = true;
+			}	
+			if (!RightPointer.enabled)
+			{
 				RightPointer.enabled = true;
-				boolRightPointerEnabled = true;	
 			}	
 		}
 
@@ -709,12 +715,17 @@
 		/// </summary>
 		public void DisableRightPointer()
 		{
-			if (boolRightPointerEnabled)
+			if (RightUIPointer.enabled)
 			{
 				RightUIPointer.enabled = false;
+			}	
+			if (RightPointerRenderer.enabled)
+			{
 				RightPointerRenderer.enabled = false;
+			}	
+			if (RightPointer.enabled)
+			{
 				RightPointer.enabled = false;
-				boolRightPointerEnabled = false;	
 			}	
 		}
 
@@ -740,21 +751,29 @@
 		/// </summary>
 		public void EnableBothPointers()
 		{
-			// If not already enabled, enables the left controller's pointer.
-			if (!boolLeftPointerEnabled)
+			// If not already disabled, disables the left controller's pointer.
+			if (!LeftPointerRenderer.enabled)
 			{
 				LeftPointerRenderer.enabled = true;
-				LeftPointer.enabled = true;
-				boolLeftPointerEnabled = true;
 			}	
-			// If not already enabled, enables the right controller's pointer.
-			if (!boolRightPointerEnabled)
+			if (!LeftPointer.enabled)
+			{
+				LeftPointer.enabled = true;
+			}	
+			// If not already disabled, disables the right controller's pointer.
+			if (!RightUIPointer.enabled)
 			{
 				RightUIPointer.enabled = true;
-				RightPointerRenderer.enabled = true;
-				RightPointer.enabled = true;
-				boolRightPointerEnabled = true;	
 			}	
+			if (!RightPointerRenderer.enabled)
+			{
+				RightPointerRenderer.enabled = true;
+			}	
+			if (!RightPointer.enabled)
+			{
+				RightPointer.enabled = true;
+			}	
+
 		}
 
 		/// <summary>
@@ -780,19 +799,26 @@
 		public void DisableBothPointers()
 		{
 			// If not already disabled, disables the left controller's pointer.
-			if (boolLeftPointerEnabled)
+			if (LeftPointerRenderer.enabled)
 			{
 				LeftPointerRenderer.enabled = false;
+			}	
+			if (LeftPointer.enabled)
+			{
 				LeftPointer.enabled = false;
-				boolLeftPointerEnabled = false;
 			}	
 			// If not already disabled, disables the right controller's pointer.
-			if (boolRightPointerEnabled)
+			if (RightUIPointer.enabled)
 			{
 				RightUIPointer.enabled = false;
+			}	
+			if (RightPointerRenderer.enabled)
+			{
 				RightPointerRenderer.enabled = false;
+			}	
+			if (RightPointer.enabled)
+			{
 				RightPointer.enabled = false;
-				boolRightPointerEnabled = false;	
 			}	
 		}
 

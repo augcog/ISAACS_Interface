@@ -55,8 +55,8 @@
         void Start()
         {
             // Enable the required UI elements for this interaction mode.
-            controllerInput.EnableRightPointer();
-            controllerInput.EnableBothUIs();
+            // controllerInput.EnableBothPointers();
+            // controllerInput.EnableBothUIs();
         }
 
 
