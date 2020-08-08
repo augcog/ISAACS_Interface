@@ -102,6 +102,10 @@ public class DroneSimulationTransforms : MonoBehaviour {
 
 
 	// TODO: documentation
+	// inputs:
+	// -> frame = velocity_B (velocities u, v, w in the body frame)
+	// -> rotation = angularPosition_I (phi, theta, psi)
+	// returns the velocity_I the velocity in the inertial frame
 	public Vector3 R(Vector3 frame, Vector3 rotation, bool degrees=true)
 	{
 		float ux = rotation.x;
@@ -138,6 +142,8 @@ public class DroneSimulationTransforms : MonoBehaviour {
 
 
 	// TODO: documentation
+	// phi dot, theta dot, psi dot
+	// return w = w_I = angularVelocity_I (in the inertial frame)	
 	public Vector3 T(Vector3 angularVelocity_B, Vector3 angularPosition_I, bool degrees=true)
 	{
 		float p = angularVelocity_B.x;
@@ -166,5 +172,15 @@ public class DroneSimulationTransforms : MonoBehaviour {
 
 		return new Vector3(dX, dY, dZ);
 	}	
+
+	public Vector3 dv(Vector3 , Vector3 g, float m, Vector3 F)
+	{
+
+	}
+
+	public Vector3 dw(Vector3 w, Vector3 I, Vector3 torque, degrees=true)
+	{
+
+	}
 
 }
