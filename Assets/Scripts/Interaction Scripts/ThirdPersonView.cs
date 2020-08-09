@@ -35,6 +35,7 @@
         public enum RotationalDirection { REGULAR, INVERSE }
         public RotationalDirection rotationalDirection = RotationalDirection.REGULAR;
 
+        private bool canAddWaypoint = true; // Whether a new waypoint can be placed. Useful to avoid accidental waypoint if trying to move a fixed waypoint.
         //private enum CollisionType { NOTHING, WAYPOINT, OTHER }; // These are the possible values for objects we could be colliding with
         //private CollisionPair mostRecentCollision;
         //private List<CollisionPair> currentCollisions;
@@ -112,7 +113,7 @@
                     // If the right trigger is pressed
                     // and the user is not currently touching
                     // an existing waypoint, add a new waypoint.
-                    if (controllerInput.RightTrigger() && !controllerInput.RightIsTouchingWaypoint())
+                    if (controllerInput.RightTrigger() && !controllerInput.RightIsTouchingWaypoint() && canAddWaypoint)
                     {
                         controllerState = ControllerState.ADDING_WAYPOINT;
                         controllerInput.DisableRightPointer();
@@ -234,13 +235,15 @@
                     if (!controllerInput.RightIsGrabbingWaypoint()
                         && controllerInput.RightIsTouchingWaypoint())
                     {
+                        canAddWaypoint = false; 
                         controllerInput.RightAttemptGrab();
                     }
                     // Else, if we are not grabbing something,
                     // return to the idle state. 
-                    else if (!controllerInput.RightIsGrabbingWaypoint())
+                    else if (!controllerInput.RightIsGrabbingWaypoint() && !controllerInput.RightTrigger())
                     {
                         controllerState = ControllerState.IDLE;
+                        canAddWaypoint = true; 
                         controllerInput.EnableRightPointer();
                     }
                     break;
