@@ -310,6 +310,9 @@
                 Debug.Log("Invalid command. Please check logic.");
             }
 
+            // Do not highlight waypoints when they are touched. 
+            GetComponent<VRTK_InteractObjectHighlighter>().enabled = false;
+
             prevWaypointStatus = waypointStatus;
             waypointStatus = WaypointStatus.LOCKED;
 
@@ -333,6 +336,9 @@
         /// </summary>
         public void UnlockWaypoint()
         {
+            // Highlight waypoints when they are touched. 
+            GetComponent<VRTK_InteractObjectHighlighter>().enabled = true;
+
             waypointStatus = prevWaypointStatus;
             prevWaypointStatus = WaypointStatus.STATIC;
             GetComponent<VRTK_InteractableObject>().isGrabbable = true;
