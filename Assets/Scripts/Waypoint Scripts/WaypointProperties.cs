@@ -23,7 +23,7 @@
         [Header ("Waypoint Materials")]
         public Material unpassedWaypoint;
         public Material passedWaypoint;
-        public Material touchedWaypoint;
+        public Material grabbedWaypoint;
         public Material lockedWaypoint;
         public Material uploadedWaypoint;
 
@@ -34,6 +34,7 @@
         public Material unselectedPassedLine;
         public Material selectedGroundpointLine;
         public Material unselectedGroundpointLine;
+        public Material grabbedLine;
 
         public enum WaypointStatus
         {
@@ -134,10 +135,15 @@
 
             // change the color to un grabbed
             this.GetComponent<MeshRenderer>().material = unpassedWaypoint;
+            LineProperties.material = selectedUnpassedLine;
+
+            if (nextPoint != null)
+            {
+                nextPoint.waypointProperties.LineProperties.material = selectedUnpassedLine;
+            }
 
             // Trigger UpdateWaypoints call for drone.
             referenceDrone.DronePathUpdated();
-
         }
 
         //called if an object is grabbed
@@ -150,7 +156,8 @@
             waypointStatus = WaypointStatus.GRABBED;
 
             // change the color to grabbed
-            this.GetComponent<MeshRenderer>().material = touchedWaypoint;
+            this.GetComponent<MeshRenderer>().material = grabbedWaypoint;
+            LineProperties.material = grabbedLine;
 
             if (classPointer.prevPathPoint != null)
             {
@@ -162,6 +169,7 @@
             if (classPointer.nextPathPoint != null)
             {
                 nextPoint = classPointer.nextPathPoint;
+                nextPoint.waypointProperties.LineProperties.material = grabbedLine;
             }
 
             // Start updating the line renderer.
@@ -225,7 +233,7 @@
                     LineProperties.material = unselectedUnpassedLine;
                     break;
                 case WaypointStatus.GRABBED:
-                    this.GetComponent<MeshRenderer>().material = touchedWaypoint;
+                    this.GetComponent<MeshRenderer>().material = grabbedWaypoint;
                     LineProperties.material = unselectedUnpassedLine;
                     break;
                 case WaypointStatus.PASSED:
@@ -258,7 +266,7 @@
                     LineProperties.material = selectedUnpassedLine;
                     break;
                 case WaypointStatus.GRABBED:
-                    this.GetComponent<MeshRenderer>().material = touchedWaypoint;
+                    this.GetComponent<MeshRenderer>().material = grabbedWaypoint;
                     LineProperties.material = selectedUnpassedLine;
                     break;
                 case WaypointStatus.PASSED:
