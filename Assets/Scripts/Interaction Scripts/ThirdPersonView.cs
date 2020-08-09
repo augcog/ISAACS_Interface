@@ -15,15 +15,14 @@
     {
         public ControllerInput controllerInput; /// Initiate a singleton of the ControllerState class. Assign it to the Controller GameObject.
 
-        private enum ControllerState { IDLE, SCALING, SELECTING_DRONE, SELECTING_SENSOR, AIMING_SELECTOR, SETTING_WAYPOINT_HEIGHT, PLACING_WAYPOINT, MOVING_WAYPOINT, UNDOING, REDOING }
+        private enum ControllerState { IDLE, SCALING, SELECTING_DRONE, SELECTING_SENSOR, AIMING_SELECTOR, SETTING_WAYPOINT_HEIGHT, ADDING_WAYPOINT, MOVING_WAYPOINT, UNDOING, REDOING }
         private ControllerState controllerState;
 
-        public GameObject Pivot; /// pivot is the center of the table
         public GameObject World; /// The World GameObject. All its children will be scaled, rotate and move with it.
 
         private Vector3 WorldScaleInitial; ///originalScale is the original localScale of the world
-        private Vector3 WorldScaleMin; /// This is the TODO of the originalScale of the world
-        private Vector3 WorldScaleMax; /// This is the TODO times the originalScale of the world
+        private float WorldScaleMin; /// This is the TODO of the originalScale of the world
+        private float WorldScaleMax; /// This is the TODO times the originalScale of the world
 
         public float minScale = 0.1f; /// This the minimum size (with respect to the original world size) that the player can scale the world at. For example, MinimumScale = 0.1 signifies that the world can be scaled down to 1/10th of its original size.
         public float maxScale = 10.0f; /// This the maximum size (with respect to the original world size) that the player can scale the world at. For example, MaximumScale = 10 signifies that the world can be scaled up to 10 times its original size.
@@ -36,6 +35,7 @@
         public enum RotationalDirection { REGULAR, INVERSE }
         public RotationalDirection rotationalDirection = RotationalDirection.REGULAR;
 
+        private bool canAddWaypoint = true; // Whether a new waypoint can be placed. Useful to avoid accidental waypoint if trying to move a fixed waypoint.
         //private enum CollisionType { NOTHING, WAYPOINT, OTHER }; // These are the possible values for objects we could be colliding with
         //private CollisionPair mostRecentCollision;
         //private List<CollisionPair> currentCollisions;
@@ -47,8 +47,8 @@
             // This provides us with basis to create bounds on scaling and something to return to.
             WorldScaleInitial = World.transform.localScale;
             // These are the bounds on scaling.
-            WorldScaleMin = Vector3.Scale(WorldScaleInitial, new Vector3(minScale, minScale, minScale));
-            WorldScaleMax = Vector3.Scale(WorldScaleInitial, new Vector3(maxScale, maxScale, maxScale));
+            WorldScaleMin = Vector3.Scale(WorldScaleInitial, new Vector3(minScale, minScale, minScale)).sqrMagnitude;
+            WorldScaleMax = Vector3.Scale(WorldScaleInitial, new Vector3(maxScale, maxScale, maxScale)).sqrMagnitude;
         }
 
 
@@ -56,14 +56,27 @@
         void Start()
         {
             // Enable the required UI elements for this interaction mode.
-            controllerInput.EnableRightPointer();
-            controllerInput.EnableBothUIs();
+            // controllerInput.EnableBothPointers();
+            // controllerInput.EnableBothUIs();
         }
 
 
         // Fixed update is called n times per frame, where n is the physics step (and can be different from the progression of video frames).
         void FixedUpdate()
         {
+            // If not currently scaling, allow the player to move and rotate the world.
+            if (controllerState != ControllerState.SCALING)    
+            {
+                if (controllerInput.RightStickMoved())
+                {
+                    RotateWorld();
+                }
+                if (controllerInput.LeftStickMoved())
+                {
+                    MoveWorld();
+                }
+            } 
+
             // Query for the controller state, determined by user input.
             switch(controllerState)
             {
@@ -97,12 +110,21 @@
                         break;
                     }
 
-                    if (controllerInput.RightTrigger())
+                    // If the right trigger is pressed
+                    // and the user is not currently touching
+                    // an existing waypoint, add a new waypoint.
+                    if (controllerInput.RightTrigger() && !controllerInput.RightIsTouchingWaypoint() && canAddWaypoint)
                     {
-                        controllerState = ControllerState.PLACING_WAYPOINT;
+                        controllerState = ControllerState.ADDING_WAYPOINT;
                         controllerInput.DisableRightPointer();
-                        /// TODO: start linecollider
                         break;
+                    }
+                    // Else, start moving the touched waypoint. 
+                    else if (controllerInput.RightTrigger())
+                    {
+                        controllerState = ControllerState.MOVING_WAYPOINT;
+                        controllerInput.DisableRightPointer();
+                        break; 
                     }
 
                     if (controllerInput.RightA())
@@ -121,15 +143,7 @@
                         break;
                     }
 
-                    if (controllerInput.RightStickMoved()) /// Rotate the world
-                    {
-                        RotateWorld();
-                    }
 
-                    if (controllerInput.LeftStickMoved()) /// Move the world
-                    {
-                        MoveWorld();
-                    }
 
                     if (controllerInput.LeftX()) /// Cycle through drones
                     {
@@ -201,46 +215,46 @@
                     break;
                 }
 
-                case ControllerState.PLACING_WAYPOINT:
+                case ControllerState.ADDING_WAYPOINT:
                 {
-                    if (controllerInput.RightIsGrabbingWaypoint())
-                    {
-                        controllerState = ControllerState.MOVING_WAYPOINT;
-                        break; 
-                    }
-
-                    if (controllerInput.RightGrip()) /// Cancel waypoint placement
-                    {
-                        /// TODO: stop showing line
-                        controllerState = ControllerState.IDLE;
-                        controllerInput.EnableRightPointer();
-                        break;
-                    }
-
-                    if (!controllerInput.RightTrigger())
-                    {
-                        controllerState = ControllerState.IDLE;
-                        Drone currentlySelectedDrone = WorldProperties.GetSelectedDrone();
-                        currentlySelectedDrone.AddWaypoint(controllerInput.RightUITransform().position);
-                        controllerInput.EnableRightPointer();
-                    }
-                    else
-                    {
-                        /// TODO: continue line showing and slightly faded wp
-                    }
+                    controllerState = ControllerState.MOVING_WAYPOINT;
+                    controllerInput.HideWaypointPlacementVisualizer();
+                    Drone currentlySelectedDrone = WorldProperties.GetSelectedDrone();
+                    currentlySelectedDrone.AddWaypoint(controllerInput.RightUITransform().position);
+                    controllerInput.EnableRightPointer();
                     break;
-
                 }
 
                 case ControllerState.MOVING_WAYPOINT:
                 {
-                    if (!controllerInput.RightIsGrabbingWaypoint())
+                    // If the user is currently touching a waypoint,
+                    // but is not grabbing it... grab it!
+                    // This helps avoid logic errors, and
+                    // lets the user instantly reposition
+                    // newly added waypoints.
+                    if (!controllerInput.RightIsGrabbingWaypoint()
+                        && controllerInput.RightIsTouchingWaypoint())
+                    {
+                        canAddWaypoint = false; 
+                        controllerInput.RightAttemptGrab();
+                    }
+                    // Else, if we are not grabbing something,
+                    // return to the idle state. 
+                    else if (!controllerInput.RightIsGrabbingWaypoint() && !controllerInput.RightTrigger())
                     {
                         controllerState = ControllerState.IDLE;
+                        canAddWaypoint = true; 
                         controllerInput.EnableRightPointer();
-                        break;
                     }
                     break;
+
+                    // if (controllerInput.RightGrip()) /// Cancel waypoint placement
+                    // {
+                        // / TODO: stop showing line
+                        // controllerState = ControllerState.IDLE;
+                        // controllerInput.EnableRightPointer();
+                        // break;
+                    // }
                 }
 
                 case ControllerState.UNDOING:
@@ -286,31 +300,27 @@
 
         private void ScaleWorld()
         {
-            // Get the scaling factor, and adjust its size.
-            float ScalingFactor = 1.0f + 0.2f * controllerInput.ScalingFactor(); // TODO: scaling factor should be directly calculated here, and not computed in controller input.
+            // Compute the scaling factor.
+            Vector3 velocityDelta = controllerInput.VelocityDelta();            
+            Vector3 distance = controllerInput.Distance();            
+            float ScalingFactor = 1.0f + 0.2f * Vector3.Dot(velocityDelta, distance);
+
+            // Compute the scaling magnitude.
             Vector3 ScalingVector = Vector3.Scale(World.transform.localScale, new Vector3(ScalingFactor, ScalingFactor, ScalingFactor));
+            float scalingMagnitude =  ScalingVector.sqrMagnitude;
 
-            //Checking Scaling Bounds
-            if (ScalingVector.sqrMagnitude > WorldScaleMin.sqrMagnitude && ScalingVector.sqrMagnitude < WorldScaleMax.sqrMagnitude)
+            // Check if the scaling magnitude is withing boundaries.
+            // Otherwise, the world will become too big or too small. 
+            if (scalingMagnitude > WorldScaleMin && scalingMagnitude < WorldScaleMax)
             {
-                // FIXME: Jank. and comments.
-                Vector3 A = World.transform.position;
-                Vector3 B = Pivot.transform.position;
-                B.y = A.y;
-
                 Vector3 startScale = World.transform.localScale;
-                Vector3 endScale = World.transform.localScale * ScalingFactor;
+                Vector3 endScale = ScalingFactor * startScale;
+                // Scaling also moves the object out of place. The following is a temporary fix, but it distorts the map. 
+                endScale.y = startScale.y;
 
-                Vector3 C = A - B; // diff from object pivot to desired pivot/origin
-
-                // calc final position post-scale
-                Vector3 FinalPosition = (C * ScalingFactor) + B;
-
-                // finally, actually perform the scale/translation
+                // Finally, scale the world. 
                 World.transform.localScale = endScale;
-                World.transform.position = FinalPosition;
             }
-
         }
 
 
@@ -326,7 +336,7 @@
             {
                 angle = controllerInput.RightStickDelta().x * rotationalSpeed * 360 * Time.fixedDeltaTime;
             }
-            World.transform.RotateAround(Pivot.transform.position, Vector3.up, angle);
+            World.transform.RotateAround(World.transform.position, Vector3.up, angle);
         }
 
 

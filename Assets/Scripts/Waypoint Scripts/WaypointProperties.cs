@@ -11,7 +11,6 @@
     /// </summary>
     public class WaypointProperties : MonoBehaviour
     {
-        private GameObject controller; // TODO: hardcoded, remove.
 
         [Header("Connected gameobjects")]
         public Waypoint classPointer;
@@ -23,7 +22,7 @@
         [Header ("Waypoint Materials")]
         public Material unpassedWaypoint;
         public Material passedWaypoint;
-        public Material touchedWaypoint;
+        public Material grabbedWaypoint;
         public Material lockedWaypoint;
         public Material uploadedWaypoint;
 
@@ -34,6 +33,7 @@
         public Material unselectedPassedLine;
         public Material selectedGroundpointLine;
         public Material unselectedGroundpointLine;
+        public Material grabbedLine;
 
         public enum WaypointStatus
         {
@@ -58,11 +58,9 @@
         private Vector3 WorldScaleCurrent;
         private Vector3 WorldScaleActual;
 
-        public static GameObject controller_right;
 
         void Start()
         {
-            controller = GameObject.Find("Controller");
             waypointStatus = WaypointStatus.STATIC;
             prevWaypointStatus = WaypointStatus.STATIC;
 
@@ -71,7 +69,6 @@
 
             World = GameObject.FindGameObjectWithTag("World");
             WorldScaleInitial = World.transform.localScale;
-            controller_right = GameObject.Find("controller_right");
 
             if (classPointer.prevPathPoint != null)
             {
@@ -134,10 +131,15 @@
 
             // change the color to un grabbed
             this.GetComponent<MeshRenderer>().material = unpassedWaypoint;
+            LineProperties.material = selectedUnpassedLine;
+
+            if (nextPoint != null)
+            {
+                nextPoint.waypointProperties.LineProperties.material = selectedUnpassedLine;
+            }
 
             // Trigger UpdateWaypoints call for drone.
             referenceDrone.DronePathUpdated();
-
         }
 
         //called if an object is grabbed
@@ -150,7 +152,8 @@
             waypointStatus = WaypointStatus.GRABBED;
 
             // change the color to grabbed
-            this.GetComponent<MeshRenderer>().material = touchedWaypoint;
+            this.GetComponent<MeshRenderer>().material = grabbedWaypoint;
+            LineProperties.material = grabbedLine;
 
             if (classPointer.prevPathPoint != null)
             {
@@ -162,6 +165,7 @@
             if (classPointer.nextPathPoint != null)
             {
                 nextPoint = classPointer.nextPathPoint;
+                nextPoint.waypointProperties.LineProperties.material = grabbedLine;
             }
 
             // Start updating the line renderer.
@@ -208,6 +212,8 @@
         public void UnSelected()
         {
             GetComponent<VRTK_InteractableObject>().isGrabbable = false;
+            // Do not highlight waypoints when they are touched. 
+            GetComponent<VRTK_InteractObjectHighlighter>().enabled = false;
 
             switch (waypointStatus)
             {
@@ -225,7 +231,7 @@
                     LineProperties.material = unselectedUnpassedLine;
                     break;
                 case WaypointStatus.GRABBED:
-                    this.GetComponent<MeshRenderer>().material = touchedWaypoint;
+                    this.GetComponent<MeshRenderer>().material = grabbedWaypoint;
                     LineProperties.material = unselectedUnpassedLine;
                     break;
                 case WaypointStatus.PASSED:
@@ -242,6 +248,8 @@
         public void Selected()
         {
             GetComponent<VRTK_InteractableObject>().isGrabbable = true;
+            // Highlight waypoints when they are touched. 
+            GetComponent<VRTK_InteractObjectHighlighter>().enabled = true;
 
             switch (waypointStatus)
             {
@@ -258,7 +266,7 @@
                     LineProperties.material = selectedUnpassedLine;
                     break;
                 case WaypointStatus.GRABBED:
-                    this.GetComponent<MeshRenderer>().material = touchedWaypoint;
+                    this.GetComponent<MeshRenderer>().material = grabbedWaypoint;
                     LineProperties.material = selectedUnpassedLine;
                     break;
                 case WaypointStatus.PASSED:
@@ -302,6 +310,9 @@
                 Debug.Log("Invalid command. Please check logic.");
             }
 
+            // Do not highlight waypoints when they are touched. 
+            GetComponent<VRTK_InteractObjectHighlighter>().enabled = false;
+
             prevWaypointStatus = waypointStatus;
             waypointStatus = WaypointStatus.LOCKED;
 
@@ -325,6 +336,9 @@
         /// </summary>
         public void UnlockWaypoint()
         {
+            // Highlight waypoints when they are touched. 
+            GetComponent<VRTK_InteractObjectHighlighter>().enabled = true;
+
             waypointStatus = prevWaypointStatus;
             prevWaypointStatus = WaypointStatus.STATIC;
             GetComponent<VRTK_InteractableObject>().isGrabbable = true;
@@ -396,10 +410,6 @@
                 ComputeWorldScaleActual();
                 LineProperties.startWidth = WorldScaleActual.y / 200;
                 LineProperties.endWidth = WorldScaleActual.y / 200;
-
-                // Code in master
-                // LineProperties.startWidth = controller.GetComponent<MapInteractions>().actualScale.y / 200;
-                // LineProperties.endWidth = controller.GetComponent<MapInteractions>().actualScale.y / 200;
             }
         }
         
@@ -414,9 +424,6 @@
             
             // Code in WaypointSystemUpgrade
             lineCollider.radius = WorldScaleActual.y / 50;
-
-            // Code in Master
-            // lineCollider.radius = controller.GetComponent<MapInteractions>().actualScale.y / 50;
 
             lineCollider.center = Vector3.zero;
             lineCollider.transform.position = (endpoint + this.gameObject.transform.position) / 2;
@@ -451,10 +458,6 @@
             thisGroundpoint.transform.localScale = WorldScaleActual / 100;
             thisGroundpoint.transform.parent = World.transform;
 
-            // Code in master
-            // thisGroundpoint.transform.localScale = controller.GetComponent<MapInteractions>().actualScale / 100;
-            // thisGroundpoint.transform.parent = world.transform;
-
             groundpointLine = thisGroundpoint.GetComponent<LineRenderer>();
         }
 
@@ -469,10 +472,6 @@
             // Code in WaypointSystemUpgrade
             groundpointLine.startWidth = WorldScaleActual.y / 400;
             groundpointLine.endWidth = WorldScaleActual.y / 400;
-
-            // Code in master
-            // groundpointLine.startWidth = controller.GetComponent<MapInteractions>().actualScale.y / 400;
-            // groundpointLine.endWidth = controller.GetComponent<MapInteractions>().actualScale.y / 400;
 
             if (referenceDrone.selected)
             {
