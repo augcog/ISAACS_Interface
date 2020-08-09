@@ -15,7 +15,7 @@
     {
         public ControllerInput controllerInput; /// Initiate a singleton of the ControllerState class. Assign it to the Controller GameObject.
 
-        private enum ControllerState { IDLE, SCALING, SELECTING_DRONE, SELECTING_SENSOR, AIMING_SELECTOR, SETTING_WAYPOINT_HEIGHT, PLACING_WAYPOINT, MOVING_WAYPOINT, UNDOING, REDOING }
+        private enum ControllerState { IDLE, SCALING, SELECTING_DRONE, SELECTING_SENSOR, AIMING_SELECTOR, SETTING_WAYPOINT_HEIGHT, ADDING_WAYPOINT, MOVING_WAYPOINT, UNDOING, REDOING }
         private ControllerState controllerState;
 
         public GameObject World; /// The World GameObject. All its children will be scaled, rotate and move with it.
@@ -63,6 +63,19 @@
         // Fixed update is called n times per frame, where n is the physics step (and can be different from the progression of video frames).
         void FixedUpdate()
         {
+            // If not currently scaling, allow the player to move and rotate the world.
+            if (controllerState != ControllerState.SCALING)    
+            {
+                if (controllerInput.RightStickMoved())
+                {
+                    RotateWorld();
+                }
+                if (controllerInput.LeftStickMoved())
+                {
+                    MoveWorld();
+                }
+            } 
+
             // Query for the controller state, determined by user input.
             switch(controllerState)
             {
@@ -98,7 +111,7 @@
 
                     if (controllerInput.RightTrigger())
                     {
-                        controllerState = ControllerState.PLACING_WAYPOINT;
+                        controllerState = ControllerState.ADDING_WAYPOINT;
                         controllerInput.DisableRightPointer();
                         /// TODO: start linecollider
                         break;
@@ -120,15 +133,7 @@
                         break;
                     }
 
-                    if (controllerInput.RightStickMoved()) /// Rotate the world
-                    {
-                        RotateWorld();
-                    }
 
-                    if (controllerInput.LeftStickMoved()) /// Move the world
-                    {
-                        MoveWorld();
-                    }
 
                     if (controllerInput.LeftX()) /// Cycle through drones
                     {
@@ -208,31 +213,42 @@
                         break; 
                     }
 
-                    if (controllerInput.RightGrip()) /// Cancel waypoint placement
-                    {
-                        /// TODO: stop showing line
-                        controllerState = ControllerState.IDLE;
-                        controllerInput.EnableRightPointer();
-                        break;
-                    }
+                    // if (controllerInput.RightGrip()) /// Cancel waypoint placement
+                    // {
+                        // / TODO: stop showing line
+                        // controllerState = ControllerState.IDLE;
+                        // controllerInput.EnableRightPointer();
+                        // break;
+                    // }
 
-                    if (!controllerInput.RightTrigger())
-                    {
-                        controllerState = ControllerState.IDLE;
+                    // if (!controllerInput.RightTrigger())
+                    // {
+                        controllerState = ControllerState.MOVING_WAYPOINT;
                         Drone currentlySelectedDrone = WorldProperties.GetSelectedDrone();
                         currentlySelectedDrone.AddWaypoint(controllerInput.RightUITransform().position);
                         controllerInput.EnableRightPointer();
-                    }
-                    else
-                    {
-                        /// TODO: continue line showing and slightly faded wp
-                    }
+                    // }
+                    // else
+                    // {
+                        // TODO: continue line showing and slightly faded wp
+                    // }
                     break;
 
                 }
 
                 case ControllerState.MOVING_WAYPOINT:
                 {
+                    // If we are currently touching a waypoint,
+                    // but are not grabbing it, grab it.
+                    // This helps avoid logic errors, and
+                    // lets the user instantaneously reposition
+                    // a newly-placed waypoint.
+                    if (!controllerInput.RightIsGrabbingWaypoint() && controllerInput.RightIsTouchingWaypoint)
+                    {
+
+                    } 
+
+
                     if (!controllerInput.RightIsGrabbingWaypoint())
                     {
                         controllerState = ControllerState.IDLE;
