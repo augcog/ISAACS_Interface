@@ -673,7 +673,11 @@
 			}	
 		}
 
-
+		// TODO: documentation
+		public void LeftAttemptGrab()
+		{
+			LeftController.GetComponent<VRTK_InteractGrab>().AttemptGrab();
+		}
 
 		/*******************************/
 		//  RIGHT HAND SETTER METHODS  //
@@ -740,7 +744,11 @@
 			}	
 		}
 
-
+		// TODO: documentation
+		public void RightAttemptGrab()
+		{
+			RightController.GetComponent<VRTK_InteractGrab>().AttemptGrab();
+		}
 
 		/******************************/
 		//  COMPOSITE SETTER METHODS  //

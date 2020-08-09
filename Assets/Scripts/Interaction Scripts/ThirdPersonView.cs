@@ -109,12 +109,21 @@
                         break;
                     }
 
-                    if (controllerInput.RightTrigger())
+                    // If the right trigger is pressed
+                    // and the user is not currently touching
+                    // an existing waypoint, add a new waypoint.
+                    if (controllerInput.RightTrigger() && !controllerInput.RightIsTouchingWaypoint())
                     {
                         controllerState = ControllerState.ADDING_WAYPOINT;
                         controllerInput.DisableRightPointer();
-                        /// TODO: start linecollider
                         break;
+                    }
+                    // Else, start moving the touched waypoint. 
+                    else if (controllerInput.RightTrigger())
+                    {
+                        controllerState = ControllerState.MOVING_WAYPOINT;
+                        controllerInput.DisableRightPointer();
+                        break; 
                     }
 
                     if (controllerInput.RightA())
@@ -205,13 +214,36 @@
                     break;
                 }
 
-                case ControllerState.PLACING_WAYPOINT:
+                case ControllerState.ADDING_WAYPOINT:
                 {
-                    if (controllerInput.RightIsGrabbingWaypoint())
+                    controllerState = ControllerState.MOVING_WAYPOINT;
+                    controllerInput.HideWaypointPlacementVisualizer();
+                    Drone currentlySelectedDrone = WorldProperties.GetSelectedDrone();
+                    currentlySelectedDrone.AddWaypoint(controllerInput.RightUITransform().position);
+                    controllerInput.EnableRightPointer();
+                    break;
+                }
+
+                case ControllerState.MOVING_WAYPOINT:
+                {
+                    // If the user is currently touching a waypoint,
+                    // but is not grabbing it... grab it!
+                    // This helps avoid logic errors, and
+                    // lets the user instantly reposition
+                    // newly added waypoints.
+                    if (!controllerInput.RightIsGrabbingWaypoint()
+                        && controllerInput.RightIsTouchingWaypoint())
                     {
-                        controllerState = ControllerState.MOVING_WAYPOINT;
-                        break; 
+                        controllerInput.RightAttemptGrab();
                     }
+                    // Else, if we are not grabbing something,
+                    // return to the idle state. 
+                    else if (!controllerInput.RightIsGrabbingWaypoint())
+                    {
+                        controllerState = ControllerState.IDLE;
+                        controllerInput.EnableRightPointer();
+                    }
+                    break;
 
                     // if (controllerInput.RightGrip()) /// Cancel waypoint placement
                     // {
@@ -220,42 +252,6 @@
                         // controllerInput.EnableRightPointer();
                         // break;
                     // }
-
-                    // if (!controllerInput.RightTrigger())
-                    // {
-                        controllerState = ControllerState.MOVING_WAYPOINT;
-                        Drone currentlySelectedDrone = WorldProperties.GetSelectedDrone();
-                        currentlySelectedDrone.AddWaypoint(controllerInput.RightUITransform().position);
-                        controllerInput.EnableRightPointer();
-                    // }
-                    // else
-                    // {
-                        // TODO: continue line showing and slightly faded wp
-                    // }
-                    break;
-
-                }
-
-                case ControllerState.MOVING_WAYPOINT:
-                {
-                    // If we are currently touching a waypoint,
-                    // but are not grabbing it, grab it.
-                    // This helps avoid logic errors, and
-                    // lets the user instantaneously reposition
-                    // a newly-placed waypoint.
-                    if (!controllerInput.RightIsGrabbingWaypoint() && controllerInput.RightIsTouchingWaypoint)
-                    {
-
-                    } 
-
-
-                    if (!controllerInput.RightIsGrabbingWaypoint())
-                    {
-                        controllerState = ControllerState.IDLE;
-                        controllerInput.EnableRightPointer();
-                        break;
-                    }
-                    break;
                 }
 
                 case ControllerState.UNDOING:
