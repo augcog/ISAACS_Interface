@@ -216,6 +216,8 @@
         public void UnSelected()
         {
             GetComponent<VRTK_InteractableObject>().isGrabbable = false;
+            // Do not highlight waypoints when they are touched. 
+            GetComponent<VRTK_InteractObjectHighlighter>().enabled = false;
 
             switch (waypointStatus)
             {
@@ -250,6 +252,8 @@
         public void Selected()
         {
             GetComponent<VRTK_InteractableObject>().isGrabbable = true;
+            // Highlight waypoints when they are touched. 
+            GetComponent<VRTK_InteractObjectHighlighter>().enabled = true;
 
             switch (waypointStatus)
             {
