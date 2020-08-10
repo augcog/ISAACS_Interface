@@ -61,10 +61,10 @@ public class DroneSimulationManager : MonoBehaviour {
     private Vector3 angular_acceleration_B = new Vector3(0.0f, 0.0f, 0.0f);
 
     // Torques. TODO: documentation
-    private float thrust 
-    private float torque_x; 
-    private float torque_y; 
-    private float torque_z; 
+    private float thrust = 0.0f; 
+    private float torque_x = 0.0f; 
+    private float torque_y = 0.0f; 
+    private float torque_z = 0.0f; 
 
     // The total mass of the UAV
     private float mass;
@@ -86,7 +86,11 @@ public class DroneSimulationManager : MonoBehaviour {
 	[Tooltip("TODO")]
     public float rodLength = 2.0f;
 	[Tooltip("TODO")]
-    public Vector3 gravitationalAcceleration = new Vector3(0.0f, -9.81f, 0.0f);
+    public Vector3 windDisturbance = new Vector3(0.0f, 0.0f, 0.0f);
+	[Tooltip("TODO")]
+    public Vector3 angularWindDisturbance = new Vector3(0.0f, 0.0f, 0.0f);
+	[Tooltip("TODO")]
+    public float gravitationalAcceleration = -9.81f;
 	[Tooltip("TODO")]
     public float dragFactor = 1.0f;
 	[Tooltip("TODO")]
@@ -108,14 +112,20 @@ public class DroneSimulationManager : MonoBehaviour {
 
         // Model the UAV body and rotors as spheres, and compute its inertia
         float bodyInertia = 2.0f * bodyMass * bodyRadius * bodyRadius / 5.0f;
-        float rotorInertia = rotorDistance * rotorDistance * rotorMass;
+        float rotorInertia = rodLength * rodLength * rotorMass;
         Inertia.x = bodyInertia + 2.0f * rotorInertia;
         Inertia.y = bodyInertia + 4.0f * rotorInertia;
         Inertia.z = bodyInertia + 2.0f * rotorInertia;
 
+        // Simulate disturbance in the angular velocity due to wind, etc.
+        // angular_velocity_B = windDisturbance;
+
+        // Get the quadrotor's staring position and angular position.
         homeLocation = drone.gameObjectPointer.transform.localPosition;
         position = drone.gameObjectPointer.transform.localPosition;
+        angular_position = drone.gameObjectPointer.transform.localEulerAngles;
 
+        // Initialize the flight status.
         droneStatus = FlightStatus.ON_GROUND_STANDBY;
         droneStatusPrev = FlightStatus.NULL;
     }
@@ -124,7 +134,7 @@ public class DroneSimulationManager : MonoBehaviour {
     void FixedUpdate()
     {
         position = transform.localPosition;
-        rotation = transform.localRotation;
+        angular_position = transform.localEulerAngles;
 
         switch (droneStatus)
         {
@@ -142,18 +152,7 @@ public class DroneSimulationManager : MonoBehaviour {
                     
                 }
 
-                du2w(); // This updates w
 
-                dv = computeAcceleration();
-                dw = computeAngularAcceleration();
-
-                w += dw;
-                w2du(); // This updates du
-                transform.localEulerAngles += du;
-                v += dv;
-                transform.localPosition += v;
-
-                // this.transform.Translate(Vector3.Normalize(destination - position)* speed * Time.deltaTime, Space.Self);
                 break;
 
             case FlightStatus.FLYING_HOME:
