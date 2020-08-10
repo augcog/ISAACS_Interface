@@ -33,49 +33,49 @@ public class DroneSimulationManager : MonoBehaviour {
 
     // TODO: documentation
     private Vector3 homeLocation;
-
-    // The current position vector
-    private Vector3 position;
     // The desired position vector 
     private Vector3 destination;
 
-    // The quaternion holding the current rotation;
-    // use it to rotate and avoid gimbal lock,
-    // but do not modify it directly
-    private Quaternion rotation;
-    // The roll-yaw-pitch vector
-    private Vector3 u = new Vector3(0.0f, 0.0f, 0.0f);
-    // The roll-yaw-pitch derivatives vector; not the same as w,
-    // the angular velocity, but can be used to compute it
-    private Vector3 du = new Vector3(0.0f, 0.0f, 0.0f);
-
+    // The current position vector
+    private Vector3 position;
     // The linear velocity vector
-    private Vector3 v = new Vector3(0.0f, 0.0f, 0.0f);
+    private Vector3 velocity = new Vector3(0.0f, 0.0f, 0.0f);
     // The linear acceleration vector
-    private Vector3 dv = new Vector3(0.0f, 0.0f, 0.0f);
+    private Vector3 acceleration = new Vector3(0.0f, 0.0f, 0.0f);
 
+    // The linear velocity vector in the body frame
+    private Vector3 velocity_B = new Vector3(0.0f, 0.0f, 0.0f);
+    // The linear acceleration vector in the body frame
+    private Vector3 acceleration_B = new Vector3(0.0f, 0.0f, 0.0f);
+
+    // The current rotation in Euler angles (roll, yaw, pitch)
+    private Vector3 angular_position;
     // The angular velocity vector
-    private Vector3 w = new Vector3(0.0f, 0.0f, 0.0f);
+    private Vector3 angular_velocity = new Vector3(0.0f, 0.0f, 0.0f);
     // The angular acceleration vector
-    private Vector3 dw = new Vector3(0.0f, 0.0f, 0.0f);
+    private Vector3 angular_acceleration = new Vector3(0.0f, 0.0f, 0.0f);
+
+    // The angular velocity vector in the body frame
+    private Vector3 angular_velocity_B = new Vector3(0.0f, 0.0f, 0.0f);
+    // The angular acceleration vector in the body frame
+    private Vector3 angular_acceleration_B = new Vector3(0.0f, 0.0f, 0.0f);
 
     // Torques. TODO: documentation
-    private float tx; 
-    private float ty; 
-    private float tz; 
+    private float thrust 
+    private float torque_x; 
+    private float torque_y; 
+    private float torque_z; 
 
     // The total mass of the UAV
-    private float m;
+    private float mass;
 
     // The inertia components of the UAV
-    private float Ixx;
-    private float Iyy;
-    private float Izz;
+    private Vector3 Inertia; 
 
     [Header("Simulation Dynamics")]
 
 	[Tooltip("TODO")]
-    public float TargetSpeed = 1.0f; // Desired speed
+    public float targetSpeed = 1.0f; // Desired speed
 
 	[Tooltip("TODO")]
     public float bodyMass = 5.0f;
@@ -84,14 +84,15 @@ public class DroneSimulationManager : MonoBehaviour {
 	[Tooltip("TODO")]
     public float rotorMass = 0.2f;
 	[Tooltip("TODO")]
-    public float rotorDistance = 2.0f;
+    public float rodLength = 2.0f;
 	[Tooltip("TODO")]
     public Vector3 gravitationalAcceleration = new Vector3(0.0f, -9.81f, 0.0f);
 	[Tooltip("TODO")]
-    public Vector3 thrustConstant = new Vector3(1.0f, 1.0f, 1.0f);
+    public float dragFactor = 1.0f;
 	[Tooltip("TODO")]
-    public Vector3 frictionConstant = new Vector3(1.0f, 1.0f, 1.0f);
-
+    public float thrustFactor = 1.0f;
+	[Tooltip("TODO")]
+    public float yawFactor = 1.0f;
 
 
     /// <summary>
@@ -103,14 +104,14 @@ public class DroneSimulationManager : MonoBehaviour {
         drone = this.GetComponent<DroneProperties>().droneClassPointer;
         
         // The total mass of the UAV
-        m = bodyMass + 4 * rotorMass;
+        mass = bodyMass + 4 * rotorMass;
 
         // Model the UAV body and rotors as spheres, and compute its inertia
         float bodyInertia = 2.0f * bodyMass * bodyRadius * bodyRadius / 5.0f;
         float rotorInertia = rotorDistance * rotorDistance * rotorMass;
-        Ixx = bodyInertia + 2.0f * rotorInertia;
-        Iyy = bodyInertia + 2.0f * rotorInertia;
-        Izz = bodyInertia + 4.0f * rotorInertia;
+        Inertia.x = bodyInertia + 2.0f * rotorInertia;
+        Inertia.y = bodyInertia + 4.0f * rotorInertia;
+        Inertia.z = bodyInertia + 2.0f * rotorInertia;
 
         homeLocation = drone.gameObjectPointer.transform.localPosition;
         position = drone.gameObjectPointer.transform.localPosition;
@@ -182,106 +183,6 @@ public class DroneSimulationManager : MonoBehaviour {
                 break;
         }
     }
-
-
-    // TODO: document
-    private void du2w()
-    {
-        // Where x is the roll, y is the pitch, z is the yaw
-        Vector3 w1 = new Vector3(1.0f,  0.0f,                 -(float)Math.Sin(u.y));
-        Vector3 w2 = new Vector3(0.0f,  (float)Math.Cos(u.x),  (float)(Math.Cos(u.y) * Math.Sin(u.x)));
-        Vector3 w3 = new Vector3(0.0f, -(float)Math.Sin(u.x),  (float)(Math.Cos(u.y) * Math.Cos(u.x)));
-
-        w.x = Vector3.Dot(w1, du);
-        w.y = Vector3.Dot(w2, du);
-        w.z = Vector3.Dot(w3, du);
-    }
-
-    // TODO: document
-    private void w2du()
-    {
-        // Where x is the roll, y is the pitch, z is the yaw
-        Vector3 du1 = new Vector3(1.0f,  (float)(Math.Sin(u.x) * Math.Tan(u.y)),  (float)(Math.Cos(u.x) * Math.Tan(u.y)));
-        Vector3 du2 = new Vector3(0.0f,  (float)Math.Cos(u.x),                   -(float)Math.Sin(u.y));
-        Vector3 du3 = new Vector3(0.0f,  (float)(Math.Sin(u.x) / Math.Cos(u.y)),  (float)(Math.Cos(u.x) / Math.Cos(u.y)));
-
-        du.x = Vector3.Dot(du1, w);
-        du.y = Vector3.Dot(du2, w);
-        du.z = Vector3.Dot(du3, w);
-    }
-
-    // TODO: document
-    private Vector3 computeAcceleration()
-    {
-        // 4 rotors with equal thrust 
-        Vector3 thrust;
-        thrust.x = 4 * thrustConstant.x * w.x * w.x; 
-        thrust.y = 4 * thrustConstant.y * w.y * w.y; 
-        thrust.z = 4 * thrustConstant.z * w.z * w.z; 
-        Vector3 thrustAcceleration = R(thrust) / m;
-
-        Vector3 friction;
-        friction.x = -frictionConstant.x * v.x;
-        friction.y = -frictionConstant.y * v.y;
-        friction.z = -frictionConstant.z * v.z;
-        Vector3 frictionalAcceleration = friction / m;
-
-        return gravitationalAcceleration + thrustAcceleration + frictionalAcceleration;
-    }
-
-    // TODO: document
-    private Vector3 computeAngularAcceleration()
-    {
-        // TODO: torques 
-        float dw1 = (tx + w.y * w.z * (Iyy - Izz)) / Ixx;
-        float dw2 = (ty + w.x * w.z * (Izz - Ixx)) / Iyy;
-        float dw3 = (tz + w.x * w.y * (Ixx - Iyy)) / Izz;
-        return new Vector3(dw1, dw2, dw3);
-    }
-
-    // TODO: document
-    private Vector3 R(Vector3 inertialFrame)
-    {
-        /* 
-        V_B = R(q) * V_I
-
-            -> V_B is the object frame,
-            -> V_I is the inertial frame,
-            -> q is tha quaternion (a, b, c, d),
-            -> R(q) is the rotation matrix:
-        
-               | a**2 + b**2 - c**2 - d**2        2 * (bc - ad)                2 * (bd + ac)         |
-        R(q) = |     2 * (bc + ad)            a**2 - b**2 + c**2 - d**2        2 * (cd - ab)         |
-               |     2 * (bd - ac)                2 * (cd + ab)            a**2 - b**2 - c**2 + d**2 |
-        */
-
-        Vector3 bodyFrame;
-
-        float a_2 = rotation.w * rotation.w;
-        float b_2 = rotation.x * rotation.x;
-        float c_2 = rotation.y * rotation.y;
-        float d_2 = rotation.z * rotation.z;
-
-        float ab = rotation.w * rotation.x;
-        float ac = rotation.w * rotation.y;
-        float ad = rotation.w * rotation.z;
-        float bc = rotation.x * rotation.y;
-        float bd = rotation.x * rotation.z;
-        float cd = rotation.y * rotation.z;
-
-        // Compute R(q)
-        Vector3 R1 = new Vector3(a_2 + b_2 - c_2 - d_2, 2 * (bc - ad), 2 * (bd + ac));
-        Vector3 R2 = new Vector3(2 * (bc + ad), a_2 - b_2 + c_2 - d_2, 2 * (cd - ab));
-        Vector3 R3 = new Vector3(2 * (bd - ac), 2 * (cd + ab), a_2 - b_2 - c_2 + d_2);
-
-        // Compute V_B
-        bodyFrame.x = Vector3.Dot(R1, inertialFrame);
-        bodyFrame.y = Vector3.Dot(R2, inertialFrame);
-        bodyFrame.z = Vector3.Dot(R3, inertialFrame);
-
-        return bodyFrame;
-    }
-
 
 
 
