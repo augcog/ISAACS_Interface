@@ -882,10 +882,8 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4064626513410216}
-  - component: {fileID: 95997159724389742}
+  - component: {fileID: 64056397064498588}
   - component: {fileID: 114575724737126230}
-  - component: {fileID: 54791174084844380}
-  - component: {fileID: 135519695496822468}
   - component: {fileID: 114986770307215778}
   - component: {fileID: 114857180834943994}
   m_Layer: 0
@@ -7549,38 +7547,20 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1071976474882230}
   m_Mesh: {fileID: 4300162, guid: befd745c0063a83478b2f06f6fc5d1c4, type: 3}
---- !u!54 &54791174084844380
-Rigidbody:
+--- !u!64 &64056397064498588
+MeshCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1497704686498948}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
---- !u!95 &95997159724389742
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1497704686498948}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
   m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: f85ad583803aa754d92c0dd4c0370e78, type: 3}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_SkinWidth: 0.01
+  m_Mesh: {fileID: 0}
 --- !u!102 &102231707208109916
 TextMesh:
   serializedVersion: 3
@@ -7758,6 +7738,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7787ec4cc870bae4c9e65fbfa30a4364, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetSpeed: 1
+  bodyMass: 5
+  bodyRadius: 15
+  rotorMass: 0.2
+  rodLength: 2
+  windDisturbance: {x: 0, y: 0, z: 0}
+  angularWindDisturbance: {x: 0, y: 0, z: 0}
+  gravitationalAcceleration: -9.81
+  dragFactor: 1
+  thrustFactor: 1
+  yawFactor: 1
 --- !u!114 &114914900665587038
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -7807,18 +7798,6 @@ MonoBehaviour:
   droneNameText: {fileID: 114772238858130042}
   droneAuthorityText: {fileID: 114914900665587038}
   menuCanvas: {fileID: 1479252145062286}
---- !u!135 &135519695496822468
-SphereCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1497704686498948}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.09
-  m_Center: {x: -0.007, y: 0.04, z: -0.015}
 --- !u!135 &135844951112412096
 SphereCollider:
   m_ObjectHideFlags: 1

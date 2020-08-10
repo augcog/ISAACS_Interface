@@ -44,9 +44,9 @@ public class DroneSimulationManager : MonoBehaviour {
     private Vector3 acceleration = new Vector3(0.0f, 0.0f, 0.0f);
 
     // The linear velocity vector in the body frame
-    private Vector3 velocity_B = new Vector3(0.0f, 0.0f, 0.0f);
+    private Vector3 velocity_body = new Vector3(0.0f, 0.0f, 0.0f);
     // The linear acceleration vector in the body frame
-    private Vector3 acceleration_B = new Vector3(0.0f, 0.0f, 0.0f);
+    private Vector3 acceleration_body = new Vector3(0.0f, 0.0f, 0.0f);
 
     // The current rotation in Euler angles (roll, yaw, pitch)
     private Vector3 angular_position;
@@ -56,21 +56,27 @@ public class DroneSimulationManager : MonoBehaviour {
     private Vector3 angular_acceleration = new Vector3(0.0f, 0.0f, 0.0f);
 
     // The angular velocity vector in the body frame
-    private Vector3 angular_velocity_B = new Vector3(0.0f, 0.0f, 0.0f);
+    private Vector3 angular_velocity_body = new Vector3(0.0f, 0.0f, 0.0f);
     // The angular acceleration vector in the body frame
-    private Vector3 angular_acceleration_B = new Vector3(0.0f, 0.0f, 0.0f);
+    private Vector3 angular_acceleration_body = new Vector3(0.0f, 0.0f, 0.0f);
 
     // Torques. TODO: documentation
-    private float thrust = 0.0f; 
-    private float torque_x = 0.0f; 
-    private float torque_y = 0.0f; 
-    private float torque_z = 0.0f; 
-
+    Vector4 torques;
+    
+    // The gravitational acceleration constant.
+    private float g;
     // The total mass of the UAV
     private float mass;
 
     // The inertia components of the UAV
-    private Vector3 Inertia; 
+    private Vector3 inertia; 
+
+
+    // The speed of each rotor, in the following order:
+    // w - x
+    // |   |
+    // z - y
+    Vector4 rotor_speeds = new Vector4(4.0f, 4.0f, 4.0f, 4.0f);
 
     [Header("Simulation Dynamics")]
 
@@ -113,9 +119,9 @@ public class DroneSimulationManager : MonoBehaviour {
         // Model the UAV body and rotors as spheres, and compute its inertia
         float bodyInertia = 2.0f * bodyMass * bodyRadius * bodyRadius / 5.0f;
         float rotorInertia = rodLength * rodLength * rotorMass;
-        Inertia.x = bodyInertia + 2.0f * rotorInertia;
-        Inertia.y = bodyInertia + 4.0f * rotorInertia;
-        Inertia.z = bodyInertia + 2.0f * rotorInertia;
+        inertia.x = bodyInertia + 2.0f * rotorInertia;
+        inertia.y = bodyInertia + 4.0f * rotorInertia;
+        inertia.z = bodyInertia + 2.0f * rotorInertia;
 
         // Simulate disturbance in the angular velocity due to wind, etc.
         // angular_velocity_B = windDisturbance;
@@ -152,6 +158,32 @@ public class DroneSimulationManager : MonoBehaviour {
                     
                 }
 
+                torques = QuadrotorDynamics.SpinRotors(rotor_speeds, dragFactor, thrustFactor, rodLength, yawFactor);
+
+                acceleration = QuadrotorDynamics.Acceleration(torques.w, mass, gravitationalAcceleration, angular_position);
+                angular_acceleration = QuadrotorDynamics.AngularAcceleration(torques, inertia, angular_velocity);
+
+                acceleration_body = QuadrotorDynamics.AccelerationBody(torques.w, mass, gravitationalAcceleration, windDisturbance, velocity_body, angular_velocity_body, angular_position);
+                angular_acceleration_body = QuadrotorDynamics.AngularAccelerationBody(torques, inertia, angularWindDisturbance, angular_velocity_body);
+
+                velocity_body += acceleration_body;
+                angular_velocity_body += acceleration_body;
+
+                velocity += acceleration; //QuadrotorDynamics.Rotation(velocity_body, angular_position);
+                angular_velocity += angular_acceleration; //QuadrotorDynamics.InverseJacobian(angular_velocity_body, angular_position);
+
+                position += velocity;
+                angular_position += angular_velocity;
+
+                transform.localPosition = position;
+                // If the drone "fell undergound", push it back up.
+                if (position.y < 0)
+                {
+                    position.y = 0.0f;
+                    transform.localPosition = position;
+                }
+
+                transform.localEulerAngles = angular_position;
 
                 break;
 
