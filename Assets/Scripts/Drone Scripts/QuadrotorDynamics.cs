@@ -3,28 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DroneSimulationTransforms : MonoBehaviour {
-
-	// For test purposes only
-	void Update()
-	{
-        if (Input.GetKeyUp("z"))
-		{
-            this.transform.localPosition = new Vector3(2.44f, 5.61f, 4.22f);
-		}
-        if (Input.GetKeyUp("x"))
-        {
-			// Vector3 newPosition = Rotation(this.transform.localPosition, new Vector3(45, 45, 45));
-            // this.transform.localPosition = newPosition;
-        }
-	}
+public static class QuadrotorDynamics {
 
 	// TODO: documentation
 	// inputs:
 	// -> frame = velocity_B (velocities u, v, w in the body frame)
 	// -> rotation = angularPosition_I (phi, theta, psi)
 	// returns the velocity_I the velocity in the inertial frame
-	private Vector3 Rotation(Vector3 frame, Vector3 rotation, bool degrees=true)
+	public static Vector3 Rotation(Vector3 frame, Vector3 rotation, bool degrees=true)
 	{
 		float ux = rotation.x;
 		float uy = rotation.y;
@@ -63,7 +49,7 @@ public class DroneSimulationTransforms : MonoBehaviour {
 	// -> direction = angular_velocity_B (angular_velocities p, r, q in the body frame)
 	// -> rotation = angularPosition_I (phi, theta, psi)
 	// return w = w_I = angularVelocity_I (in the inertial frame)	
-	private Vector3 InverseJacobian(Vector3 direction, Vector3 rotation, bool degrees=true)
+	public static Vector3 InverseJacobian(Vector3 direction, Vector3 rotation, bool degrees=true)
 	{
 		float p = direction.x;
 		float r = direction.y;
@@ -90,8 +76,9 @@ public class DroneSimulationTransforms : MonoBehaviour {
 		return new Vector3(dx, dy, dz);
 	}
     
+	// TODO: documentation
     // Returns the magnitude of the thrust and torques of the quadrotor for the given rotor speeds
-    private Vector4 SpinRotors(Vector4 rotor_speeds, float drag_factor, float thrust_factor, float rod_length, float yaw_factor)
+    public static Vector4 SpinRotors(Vector4 rotor_speeds, float drag_factor, float thrust_factor, float rod_length, float yaw_factor)
     {
         float f1 = rotor_speeds.w * rotor_speeds.w;
         float f2 = rotor_speeds.x * rotor_speeds.x;
@@ -107,9 +94,10 @@ public class DroneSimulationTransforms : MonoBehaviour {
         return thrust_forces;
     }
 
+	// TODO: documentation
     // Returns the acceleration in the inertial frame
     // **x, **y, **z
-    public Vector3 Acceleration(float thrust, float mass, float g, Vector3 angular_position, bool degrees=true)
+    public static Vector3 Acceleration(float thrust, float mass, float g, Vector3 angular_position, bool degrees=true)
     {
 		float ux = angular_position.x;
 		float uy = angular_position.y;
@@ -139,21 +127,22 @@ public class DroneSimulationTransforms : MonoBehaviour {
 		return acceleration;
     }    
 
-	public Vector3 AccelerationBody(float thrust, float mass, float g, Vector3 wind_disturbance, Vector3 velocity_body, Vector3 angular_velocity_body, Vector3 angular_position, bool degrees=true)
+	// TODO: documentation
+	public static Vector3 AccelerationBody(float thrust, float mass, float g, Vector3 wind_disturbance, Vector3 velocity_body, Vector3 angular_velocity_body, Vector3 angular_position, bool degrees=true)
 	{
-		float vx_b = velocity_body.x;
-		float vy_b = velocity_body.y;
-		float vz_b = velocity_body.z;
+		float dx_b = velocity_body.x;
+		float dy_b = velocity_body.y;
+		float dz_b = velocity_body.z;
 
-		float uvx_b = angular_velocity_body.x;
-		float uvy_b = angular_velocity_body.y;
-		float uvz_b = angular_velocity_body.z;
+		float dux_b = angular_velocity_body.x;
+		float duy_b = angular_velocity_body.y;
+		float duz_b = angular_velocity_body.z;
 
 		if (!degrees)
 		{
-			uvx_b *= 180.0f / (float)Math.PI;
-			uvy_b *= 180.0f / (float)Math.PI;
-			uvz_b *= 180.0f / (float)Math.PI;
+			dux_b *= 180.0f / (float)Math.PI;
+			duy_b *= 180.0f / (float)Math.PI;
+			duz_b *= 180.0f / (float)Math.PI;
 		}
 
 		float ux = angular_position.x;
@@ -172,16 +161,17 @@ public class DroneSimulationTransforms : MonoBehaviour {
 
 
 		Vector3 acceleration_body;
-		acceleration_body.x = uvz_b * vy_b - uvy_b * vz_b + g * sin_uz * cos_ux + wind_disturbance.x / mass;
-		acceleration_body.y = uvx_b * vz_b - uvz_b * vx_b + g * cos_ux * cos_uz + (wind_disturbance.y - thrust) / mass;
-		acceleration_body.z = uvy_b * vx_b - uvx_b * vy_b - g * sin_ux          + wind_disturbance.z / mass;
+		acceleration_body.x = duz_b * dy_b - duy_b * dz_b + g * sin_uz * cos_ux + wind_disturbance.x / mass;
+		acceleration_body.y = dux_b * dz_b - duz_b * dx_b + g * cos_ux * cos_uz + (wind_disturbance.y - thrust) / mass;
+		acceleration_body.z = duy_b * dx_b - dux_b * dy_b - g * sin_ux          + wind_disturbance.z / mass;
 
 		return acceleration_body;
 	}
 
+	// TODO: documentation
     // Returns the angular acceleration in the inertial frame
     // **phi, **theta, **psi
-    public Vector3 AngularAcceleration(Vector4 thrust_forces, Vector3 inertia, Vector3 angular_velocity, bool degrees=true)
+    public static Vector3 AngularAcceleration(Vector4 thrust_forces, Vector3 inertia, Vector3 angular_velocity, bool degrees=true)
     {
 
 		float Ixx = inertia.x;
@@ -200,17 +190,49 @@ public class DroneSimulationTransforms : MonoBehaviour {
 		}
 
 		Vector3 angularAcceleration;
-		angularAcceleration.x = ((Iyy - Izz) * duy * duz + forces.x) / Ixx;
-		angularAcceleration.y = ((Izz - Ixx) * duz * dux + forces.y) / Iyy;
-		angularAcceleration.z = ((Ixx - Iyy) * dux * duy + forces.z) / Izz;
+		angularAcceleration.x = ((Iyy - Izz) * duy * duz + thrust_forces.x) / Ixx;
+		angularAcceleration.y = ((Izz - Ixx) * duz * dux + thrust_forces.y) / Iyy;
+		angularAcceleration.z = ((Ixx - Iyy) * dux * duy + thrust_forces.z) / Izz;
 
 		return angularAcceleration;	
     }    
 
-
-	public Vector3 AngularAccelerationBody(Vector3 inertia, Vector3 angular_wind_disturbance)
+	// TODO: documentation
+	public static Vector3 AngularAccelerationBody(Vector4 thrust_forces, Vector3 inertia, Vector3 angular_wind_disturbance, Vector3 angular_velocity_body, bool degrees=true)
 	{
+		float torque_x = thrust_forces.x;
+		float torque_y = thrust_forces.y;
+		float torque_z = thrust_forces.z;
 
+		float Ixx = inertia.x;
+		float Iyy = inertia.y;
+		float Izz = inertia.z;
+
+		float dux_b = angular_velocity_body.x;
+		float duy_b = angular_velocity_body.y;
+		float duz_b = angular_velocity_body.z;
+
+		float wx = angular_wind_disturbance.x;
+		float wy = angular_wind_disturbance.y;
+		float wz = angular_wind_disturbance.z;
+
+		if (!degrees)
+		{
+			dux_b *= 180.0f / (float)Math.PI;
+			duy_b *= 180.0f / (float)Math.PI;
+			duz_b *= 180.0f / (float)Math.PI;
+
+			wx *= 180.0f / (float)Math.PI;
+			wy *= 180.0f / (float)Math.PI;
+			wz *= 180.0f / (float)Math.PI;
+		}
+
+		Vector3 angular_acceleration_body;
+		angular_acceleration_body.x = ((Iyy - Izz) * duy_b * duz_b + torque_x + wx) / Ixx;
+		angular_acceleration_body.y = ((Izz - Ixx) * dux_b * duz_b + torque_y + wy) / Iyy;
+		angular_acceleration_body.z = ((Ixx - Iyy) * dux_b * duy_b + torque_z + wz) / Izz;
+
+		return angular_acceleration_body;
 	}
 
 }
