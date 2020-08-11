@@ -169,7 +169,7 @@
             {
                 return true;
             }
-            Debug.Log(Vector3.Distance(currentLocation, currentDestination));
+            // Debug.Log(Vector3.Distance(currentLocation, currentDestination));
             return false;
         }
 
