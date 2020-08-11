@@ -195,6 +195,10 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
     /// </summary>
     bool home_position_set = false;
 
+    double prev_gps_msg_time = -1;
+    //double curr_gps_msg_time = -1;
+    bool connection_status = false;
+
     /// <summary>
     /// Function called by ROSManager when Drone Gameobject is initilized to start the ROS connection with requested subscribers.
     /// </summary>
@@ -865,6 +869,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
             case "/dji_sdk/gps_position":
             case "/dji_sdk/rtk_position":
                 gps_position = (parsed == null) ? new NavSatFixMsg(raw_msg) : (NavSatFixMsg)parsed;
+                prev_gps_msg_time = DateTime.Now.TimeOfDay.TotalMilliseconds;
                 result = gps_position;
                 if (gps_position.GetLatitude() == 0.0f && gps_position.GetLongitude() == 0.0f)
                 {
@@ -897,6 +902,17 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
         return result;
     }
 
+    //int prev_gps_timestamp;
+    //int curr_gps_timestamp;
+    public bool CheckConnectionStatus()
+    {
+        if (prev_gps_msg_time > -1)
+        {
+            return DateTime.Now.TimeOfDay.TotalMilliseconds - prev_gps_msg_time < 500;
+        }
+        return false;
+
+    }
     /// <summary>
     /// Get ROS message type for a valid topic.
     /// </summary>
