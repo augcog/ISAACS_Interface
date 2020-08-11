@@ -61,7 +61,7 @@ public class DroneSimulationManager : MonoBehaviour {
     private Vector3 angular_acceleration_body = new Vector3(0.0f, 0.0f, 0.0f);
 
     // Torques. TODO: documentation
-    Vector4 torques;
+    private Vector4 torques;
     
     // The gravitational acceleration constant.
     private float g;
@@ -71,12 +71,14 @@ public class DroneSimulationManager : MonoBehaviour {
     // The inertia components of the UAV
     private Vector3 inertia; 
 
-
     // The speed of each rotor, in the following order:
     // w - x
     // |   |
     // z - y
-    Vector4 rotor_speeds = new Vector4(4.0f, 4.0f, 4.0f, 4.0f);
+    private Vector4 rotor_speeds = new Vector4(4.0f, 4.0f, 4.0f, 4.0f);
+
+    // TODO: documentation
+    private Vector4 estimatedTorques;
 
     [Header("Simulation Dynamics")]
 
@@ -158,19 +160,23 @@ public class DroneSimulationManager : MonoBehaviour {
                     
                 }
 
+                rotor_speeds = QuadrotorDynamics.TargetRotorSpeeds(targetSpeed, destination, position,
+                                                                   velocity, mass, gravitationalAcceleration,
+                                                                   inertia, angular_velocity,
+                                                                   dragFactor, thrustFactor, rodLength, yawFactor);
                 torques = QuadrotorDynamics.SpinRotors(rotor_speeds, dragFactor, thrustFactor, rodLength, yawFactor);
 
                 acceleration = QuadrotorDynamics.Acceleration(torques.w, mass, gravitationalAcceleration, angular_position);
                 angular_acceleration = QuadrotorDynamics.AngularAcceleration(torques, inertia, angular_velocity);
 
-                acceleration_body = QuadrotorDynamics.AccelerationBody(torques.w, mass, gravitationalAcceleration, windDisturbance, velocity_body, angular_velocity_body, angular_position);
-                angular_acceleration_body = QuadrotorDynamics.AngularAccelerationBody(torques, inertia, angularWindDisturbance, angular_velocity_body);
-
-                velocity_body += acceleration_body;
-                angular_velocity_body += acceleration_body;
+                // acceleration_body = QuadrotorDynamics.AccelerationBody(torques.w, mass, gravitationalAcceleration, windDisturbance, velocity_body, angular_velocity_body, angular_position);
+                // angular_acceleration_body = QuadrotorDynamics.AngularAccelerationBody(torques, inertia, angularWindDisturbance, angular_velocity_body);
 
                 velocity += acceleration; //QuadrotorDynamics.Rotation(velocity_body, angular_position);
                 angular_velocity += angular_acceleration; //QuadrotorDynamics.InverseJacobian(angular_velocity_body, angular_position);
+
+                // velocity_body += acceleration_body;
+                // angular_velocity_body += acceleration_body;
 
                 position += velocity;
                 angular_position += angular_velocity;

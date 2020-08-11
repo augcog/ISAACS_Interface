@@ -79,6 +79,51 @@
 			return new Vector3(dx, dy, dz);
 		}
 		
+		public static Vector4 TargetRotorSpeeds(float target_speed, Vector3 destination, Vector3 position,
+										    	Vector3 velocity, float mass, float g,
+												Vector3 inertia, Vector3 angular_velocity,
+												float drag_factor, float thrust_factor, float rod_length, float yaw_factor
+												bool degrees=true)
+		{
+                float targetVelocity = targetSpeed * (destination - position).normalized;
+                float targetAcceleration = targetVelocity - velocity;
+
+				float thrust = (mass * targetAcceleration).magnitude;
+				Vector4 targetTorques;
+                targetTorques.w = thrust;
+
+				float thrust_acceleration = thrust / mass;
+				float kX = acceleration.x / thrust_acceleration;
+				float kY = (acceleration.y - g) / thrust_acceleration;
+				float kZ = acceleration.z / thrust_acceleration;
+
+				// Find the constants of the quadratic equation
+				float a = 1.0f - kY;
+				float b = kX + kY - 1.0f;
+				float c = (kX + kY + kZ - 1.0f) / 2.0f;
+
+				Vector3 estimatedAccelerations;
+                // from targetAcceleration, find target angular_position to get a target angularAcceleration 
+				estimatedAccelerations.y = -b + Math.Sqrt(b * b - 4 * a * c) / (2 * a);
+				estimatedAccelerations.z = kX + targetTorques.y + kY - kY * targetTorques.y;	
+				estimatedAccelerations.x = kY / targetTorques.z;	
+
+
+
+				float W = targetTorques.w / (drag_factor * thrust_factor);
+				float X = targetTorques.x / (rod_length * thrust_factor);
+				float Y = targetTorques.y / yaw_factor;
+				float Z = targetTorques.z / (rod_length * thrust_factor);
+
+				Vector4 targetRotorSpeeds;
+				targetRotorSpeeds.x = (W - Y - 2.0f * X) / 4.0f;
+				targetRotorSpeeds.y = X + targetRotorSpeeds.x;
+				targetRotorSpeeds.z = (W - Z - targetRotorSpeeds.x - targetRotorSpeeds.y) / 2.0f;
+				targetRotorSpeeds.w = Z + targetRotorSpeeds.z;
+
+				return targetRotorSpeeds;
+		}	
+
 		// TODO: documentation
 		// Returns the magnitude of the thrust and torques of the quadrotor for the given rotor speeds
 		public static Vector4 SpinRotors(Vector4 rotor_speeds, float drag_factor, float thrust_factor, float rod_length, float yaw_factor)
