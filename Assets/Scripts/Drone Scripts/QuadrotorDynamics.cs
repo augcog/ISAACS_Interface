@@ -81,35 +81,63 @@
 		
 		public static Vector4 TargetRotorSpeeds(float target_speed, Vector3 destination, Vector3 position,
 										    	Vector3 velocity, float mass, float g,
-												Vector3 inertia, Vector3 angular_velocity,
-												float drag_factor, float thrust_factor, float rod_length, float yaw_factor
+												Vector3 inertia, Vector3 angular_position, Vector3 angular_velocity,
+												float drag_factor, float thrust_factor, float rod_length, float yaw_factor,
 												bool degrees=true)
 		{
-                float targetVelocity = targetSpeed * (destination - position).normalized;
-                float targetAcceleration = targetVelocity - velocity;
+				if (!degrees)
+				{
+					angular_position.x *= 180.0f / (float)Math.PI;
+					angular_position.y *= 180.0f / (float)Math.PI;
+					angular_position.z *= 180.0f / (float)Math.PI;
+					
+					angular_velocity.x *= 180.0f / (float)Math.PI;
+					angular_velocity.y *= 180.0f / (float)Math.PI;
+					angular_velocity.z *= 180.0f / (float)Math.PI;
+				}	
+
+                Vector3 targetVelocity = target_speed * (destination - position).normalized;
+                Vector3 targetAcceleration = targetVelocity - velocity;
 
 				float thrust = (mass * targetAcceleration).magnitude;
 				Vector4 targetTorques;
                 targetTorques.w = thrust;
 
 				float thrust_acceleration = thrust / mass;
-				float kX = acceleration.x / thrust_acceleration;
-				float kY = (acceleration.y - g) / thrust_acceleration;
-				float kZ = acceleration.z / thrust_acceleration;
+				float kX = targetAcceleration.x / thrust_acceleration;
+				float kY = (targetAcceleration.y - g) / thrust_acceleration;
+				float kZ = targetAcceleration.z / thrust_acceleration;
 
 				// Find the constants of the quadratic equation
 				float a = 1.0f - kY;
 				float b = kX + kY - 1.0f;
 				float c = (kX + kY + kZ - 1.0f) / 2.0f;
 
-				Vector3 estimatedAccelerations;
                 // from targetAcceleration, find target angular_position to get a target angularAcceleration 
-				estimatedAccelerations.y = -b + Math.Sqrt(b * b - 4 * a * c) / (2 * a);
-				estimatedAccelerations.z = kX + targetTorques.y + kY - kY * targetTorques.y;	
-				estimatedAccelerations.x = kY / targetTorques.z;	
+				double cos_uy = -b + Math.Sqrt(b * b - 4 * a * c) / (2 * a);	
+				double cos_uz = kX + cos_uy + kY - kY * cos_uy;
+				double cos_ux = kY / cos_uz;
 
+				// Target angular position
+				Vector3 targetAngularPosition;
+				targetAngularPosition.x = (float)Math.Acos(cos_ux) * 180.0f / (float)Math.PI;
+				targetAngularPosition.y = (float)Math.Acos(cos_uy) * 180.0f / (float)Math.PI;
+				targetAngularPosition.z = (float)Math.Acos(cos_uz) * 180.0f / (float)Math.PI;
 
+				Vector3 targetAngularVelocity = targetAngularPosition - angular_position;
+				Vector3 targetAngularAcceleration = targetAngularVelocity - angular_velocity;
 
+				float Ixx = inertia.x;
+				float Iyy = inertia.y;
+				float Izz = inertia.z;
+				float dux = angular_velocity.x;
+				float duy = angular_velocity.y;
+				float duz = angular_velocity.z;
+				targetTorques.x = targetAngularAcceleration.x * Ixx	- (Iyy - Izz) * duy * duz;
+				targetTorques.y = targetAngularAcceleration.y * Iyy	- (Izz - Ixx) * duz * dux;
+				targetTorques.z = targetAngularAcceleration.z * Izz	- (Ixx - Iyy) * dux * duy;
+
+				// Find the constants needed to compute the target rotor speeds
 				float W = targetTorques.w / (drag_factor * thrust_factor);
 				float X = targetTorques.x / (rod_length * thrust_factor);
 				float Y = targetTorques.y / yaw_factor;

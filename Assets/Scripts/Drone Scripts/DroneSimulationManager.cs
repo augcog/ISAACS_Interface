@@ -162,7 +162,7 @@ public class DroneSimulationManager : MonoBehaviour {
 
                 rotor_speeds = QuadrotorDynamics.TargetRotorSpeeds(targetSpeed, destination, position,
                                                                    velocity, mass, gravitationalAcceleration,
-                                                                   inertia, angular_velocity,
+                                                                   inertia, angular_position, angular_velocity,
                                                                    dragFactor, thrustFactor, rodLength, yawFactor);
                 torques = QuadrotorDynamics.SpinRotors(rotor_speeds, dragFactor, thrustFactor, rodLength, yawFactor);
 
