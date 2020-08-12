@@ -124,6 +124,7 @@
 				// targetAngularPosition = targetAngularPosition.normalized;
 
 				// Vector3 targetAngularPosition = targetAcceleration.normalized;
+
 				Vector3 targetAngularAcceleration = targetAcceleration.normalized;
 
 				float Ixx = inertia.x;
@@ -152,10 +153,10 @@
                 Debug.Log("CONSTANTS W: " + W + " x: " + X + " y: " + Y + " z: " + Z);
 
 				Vector4 targetRotorSpeeds;
-				float f1 = (W - Y - 2.0f * Z) / 4.0f;
-				float f3 = Z + f1;
-				float f2 = (Y - X + f1 + f3) / 2.0f;
-				float f4 = X + f2;
+				float f1 = (W - Y - 2.0f * X) / 4.0f;
+				float f3 = X + f1;
+				float f2 = (Y - Z + f1 + f3) / 2.0f;
+				float f4 = Z + f2;
 				// if (f1 < 0)
 				// {
 				// 	f2 += f1 / 2.0f;
@@ -201,20 +202,42 @@
 				return targetRotorSpeeds;
 		}	
 
-		// TODO: documentation
-		// Returns the magnitude of the thrust and torques of the quadrotor for the given rotor speeds
-		public static Vector4 SpinRotors(Vector4 rotor_speeds, float drag_factor, float thrust_factor, float rod_length, float yaw_factor)
-		{
-			float f1 = rotor_speeds.w;// * rotor_speeds.w;
-			float f2 = rotor_speeds.x;// * rotor_speeds.x;
-			float f3 = rotor_speeds.y;// * rotor_speeds.y;
-			float f4 = rotor_speeds.z;// * rotor_speeds.z;
+		/*
+				f1
+				O-->	
+			  /   \
+		  f4 O-->  O--> f2     
+			  \   /
+				O-->
+				f3	
+
+		x-axis: f2 to f4
+		y-axis: out of the page
+		z-axis: f1 to f3
+		*/	
+		/// <summary>
+        /// Given the individual thrust of each rotor ("rotor forces"), this method returns the quadrotor's total thrust and torques.
+		/// To simplify things, only the sign and magnitude of each rotor force is required, and only the sign and magnitude of 
+		/// the total thrust and torques is returned.
+        /// </summary>
+        /// <param name="rotorForces">The signed magnitude of the force exterted by each rotor, in the order shown in the diagram above.</param>
+        /// <param name="dragFactor">A damping factor for the thrust, representing resistance by the drag.</param>
+        /// <param name="thrustFactor">The contribution of each rotor force to the total thrust, as well as its x-torque ("roll force") and z-torque ("pitch force").</param>
+        /// <param name="rodLength">The distance between two opposing rotors, such as O(f1) and O(f3). It is assumed that O(f1)->O(f3) and O(f2)->O(f4) are equal.</param>
+        /// <param name="yawFactor">The contribution of each rotor force to the y-torque ("yaw force").</param>
+        /// <returns>The signed mangitudes of the quadrotor's total thrust and torques, for the given rotor forces.</returns>
+		public static Vector4 SpinRotors(Vector4 rotorForces, float dragFactor, float thrustFactor, float rodLength, float yawFactor)
+		{	
+			float f1 = rotorForces.w;
+			float f2 = rotorForces.x;
+			float f3 = rotorForces.y;
+			float f4 = rotorForces.z;
 
 			Vector4 torques;
-			torques.w = drag_factor * thrust_factor * (f1 + f2 + f3 + f4); // thrust
-			torques.x = rod_length  * thrust_factor * (f4 - f2);           // x_torque
-			torques.y = yaw_factor  * (f2 + f4 - f1 - f3);                 // y_torque
-			torques.z = rod_length  * thrust_factor * (f3 - f1);           // z_torque
+			torques.w = dragFactor * thrustFactor * (f1 + f2 + f3 + f4); // thrust from all four rotors, accelerating the quadrotor in the direction of its y-axis
+			torques.x = rodLength  * thrustFactor * (f3 - f1);           // torque rotating the quadrotor around its x-axis ("roll force")
+			torques.y = yawFactor  * (f2 + f4 - f1 - f3);                // torque rotating the quadrotor around its y-axis ("yaw force")
+			torques.z = rodLength  * thrustFactor * (f4 - f2);           // torque rotating the quadrotor around its z-axis ("pitch force")
 
 			return torques;
 		}

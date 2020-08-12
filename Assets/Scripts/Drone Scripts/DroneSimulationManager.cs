@@ -75,7 +75,7 @@ public class DroneSimulationManager : MonoBehaviour {
     // w - x
     // |   |
     // z - y
-    private Vector4 rotor_speeds = new Vector4(4.0f, 4.0f, 4.0f, 4.0f);
+    private Vector4 rotor_speeds = new Vector4(4.0f, 3.0f, 4.0f, 6.0f);
 
 
     [Header("Simulation Dynamics")]
@@ -135,8 +135,6 @@ public class DroneSimulationManager : MonoBehaviour {
         droneStatus = FlightStatus.ON_GROUND_STANDBY;
         droneStatusPrev = FlightStatus.NULL;
 
-        // transform.up = new Vector3(1, 0, 0);
-        // transform.position = new Vector3(0, 1, 0);
     }
 
     // FixedUpdate is called according to the physics engine

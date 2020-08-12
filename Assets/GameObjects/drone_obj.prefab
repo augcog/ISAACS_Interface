@@ -7738,7 +7738,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7787ec4cc870bae4c9e65fbfa30a4364, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetSpeed: 1
+  targetSpeed: 0.1
   bodyMass: 5
   bodyRadius: 15
   rotorMass: 0.2
