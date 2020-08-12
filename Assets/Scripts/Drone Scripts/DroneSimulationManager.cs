@@ -77,13 +77,11 @@ public class DroneSimulationManager : MonoBehaviour {
     // z - y
     private Vector4 rotor_speeds = new Vector4(4.0f, 4.0f, 4.0f, 4.0f);
 
-    // TODO: documentation
-    private Vector4 estimatedTorques;
 
     [Header("Simulation Dynamics")]
 
 	[Tooltip("TODO")]
-    public float targetSpeed = 1.0f; // Desired speed
+    public float targetSpeed = 0.1f; // Desired speed
 
 	[Tooltip("TODO")]
     public float bodyMass = 5.0f;
@@ -114,7 +112,7 @@ public class DroneSimulationManager : MonoBehaviour {
     public void InitDroneSim()
     {
         drone = this.GetComponent<DroneProperties>().droneClassPointer;
-        
+
         // The total mass of the UAV
         mass = bodyMass + 4 * rotorMass;
 
@@ -139,10 +137,13 @@ public class DroneSimulationManager : MonoBehaviour {
     }
 
     // FixedUpdate is called according to the physics engine
-    void FixedUpdate()
+    void Update()
     {
         position = transform.localPosition;
-        angular_position = transform.localEulerAngles;
+        angular_position = transform.up;
+        Debug.Log("&&&&&&&&&&&&&& angular position: " + angular_position);
+        Debug.Log("&&&&&&&&&&&&&& forward : " + transform.forward);
+        Debug.Log("&&&&&&&&&&&&&& right : " + transform.right);
 
         switch (droneStatus)
         {
@@ -160,36 +161,52 @@ public class DroneSimulationManager : MonoBehaviour {
                     
                 }
 
+                Debug.Log("========= DESTINATION ========== x:" + destination.x + "y" + destination.y + "z" + destination.z);
+
                 rotor_speeds = QuadrotorDynamics.TargetRotorSpeeds(targetSpeed, destination, position,
-                                                                   velocity, mass, gravitationalAcceleration,
+                                                                   velocity, acceleration, mass, gravitationalAcceleration,
                                                                    inertia, angular_position, angular_velocity,
                                                                    dragFactor, thrustFactor, rodLength, yawFactor);
+
+                Debug.Log("*****ROTOR_SPEEDS****** w: " + rotor_speeds.w + " x: " + rotor_speeds.x + " y: " + rotor_speeds.y + " z: " + rotor_speeds.z);
+
                 torques = QuadrotorDynamics.SpinRotors(rotor_speeds, dragFactor, thrustFactor, rodLength, yawFactor);
 
                 acceleration = QuadrotorDynamics.Acceleration(torques.w, mass, gravitationalAcceleration, angular_position);
+                Debug.Log("====== Acceleration x:" + acceleration.x + " y: " + acceleration.y + " z: " + acceleration.z);
                 angular_acceleration = QuadrotorDynamics.AngularAcceleration(torques, inertia, angular_velocity);
+                Debug.Log("====== Angular Acceleration x:" + angular_acceleration.x + " y: " + angular_acceleration.y + " z: " + angular_acceleration.z);
 
                 // acceleration_body = QuadrotorDynamics.AccelerationBody(torques.w, mass, gravitationalAcceleration, windDisturbance, velocity_body, angular_velocity_body, angular_position);
                 // angular_acceleration_body = QuadrotorDynamics.AngularAccelerationBody(torques, inertia, angularWindDisturbance, angular_velocity_body);
 
                 velocity += acceleration; //QuadrotorDynamics.Rotation(velocity_body, angular_position);
+                // if (velocity.magnitude > targetSpeed) 
+                // {
+                //     velocity = targetSpeed * velocity.normalized;
+                // }
+                Debug.Log("====== Velocity: " + velocity);
                 angular_velocity += angular_acceleration; //QuadrotorDynamics.InverseJacobian(angular_velocity_body, angular_position);
+                Debug.Log("====== Angular Velocity: " + angular_velocity);
 
                 // velocity_body += acceleration_body;
                 // angular_velocity_body += acceleration_body;
 
                 position += velocity;
-                angular_position += angular_velocity;
+                Debug.Log("====== Position: " + position);
 
-                transform.localPosition = position;
+                angular_position += angular_velocity;
+                angular_position = angular_position.normalized; 
+
                 // If the drone "fell undergound", push it back up.
                 if (position.y < 0)
                 {
                     position.y = 0.0f;
-                    transform.localPosition = position;
                 }
-
-                transform.localEulerAngles = angular_position;
+                transform.localPosition = position;
+                // float ux = Vector3.Angle(Vector3.); 
+                // transform.localEulerAngles =  ;
+                transform.up = angular_position;
 
                 break;
 
