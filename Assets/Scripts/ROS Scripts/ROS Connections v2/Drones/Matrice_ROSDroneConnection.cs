@@ -284,8 +284,15 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
                         Waypoint waypoint = droneProperties.droneClassPointer.GetWaypoint(i);
                         Vector3 unityCoord = waypoint.gameObjectPointer.transform.localPosition;
                         GPSCoordinate rosCoord = WorldProperties.UnityCoordToGPSCoord(unityCoord);
-
-                        MissionWaypointMsg new_waypoint = new MissionWaypointMsg(rosCoord.Lat, rosCoord.Lng, (float)(rosCoord.Alt - home_position.GetAltitude()), 3.0f, 0, 0, MissionWaypointMsg.TurnMode.CLOCKWISE, 0, 30, new MissionWaypointActionMsg(0, command_list, command_params));
+                        MissionWaypointMsg new_waypoint;
+                        if (WorldProperties.DJI_SIM)
+                        {
+                            new_waypoint = new MissionWaypointMsg(rosCoord.Lat, rosCoord.Lng, (float)(rosCoord.Alt), 3.0f, 0, 0, MissionWaypointMsg.TurnMode.CLOCKWISE, 0, 30, new MissionWaypointActionMsg(0, command_list, command_params));
+                        }
+                        else
+                        {
+                            new_waypoint = new MissionWaypointMsg(rosCoord.Lat, rosCoord.Lng, (float)(rosCoord.Alt - home_position.GetAltitude()), 3.0f, 0, 0, MissionWaypointMsg.TurnMode.CLOCKWISE, 0, 30, new MissionWaypointActionMsg(0, command_list, command_params));
+                        }
                         Debug.Log("Adding waypoint at: " + new_waypoint);
                         missionMsgList.Add(new_waypoint);
                     }
@@ -885,7 +892,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
 
                     if (WorldProperties.DJI_SIM)
                     {
-                        this.transform.localPosition += new Vector3(0, -100.0f, 0);
+                        this.transform.localPosition += new Vector3(0, -97.0f, 0);
                     }
                 }
 
