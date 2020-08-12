@@ -85,16 +85,16 @@
 												float drag_factor, float thrust_factor, float rod_length, float yaw_factor,
 												bool degrees=true)
 		{
-				if (!degrees)
-				{
-					angular_position.x *= 180.0f / (float)Math.PI;
-					angular_position.y *= 180.0f / (float)Math.PI;
-					angular_position.z *= 180.0f / (float)Math.PI;
+				// if (!degrees)
+				// {
+				// 	angular_position.x *= 180.0f / (float)Math.PI;
+				// 	angular_position.y *= 180.0f / (float)Math.PI;
+				// 	angular_position.z *= 180.0f / (float)Math.PI;
 					
-					angular_velocity.x *= 180.0f / (float)Math.PI;
-					angular_velocity.y *= 180.0f / (float)Math.PI;
-					angular_velocity.z *= 180.0f / (float)Math.PI;
-				}	
+				// 	angular_velocity.x *= 180.0f / (float)Math.PI;
+				// 	angular_velocity.y *= 180.0f / (float)Math.PI;
+				// 	angular_velocity.z *= 180.0f / (float)Math.PI;
+				// }	
 
 
                 Vector3 targetVelocity = (destination - position).normalized;
@@ -106,7 +106,6 @@
                 Debug.Log("targetAcceleration x: " + targetAcceleration.x + " y: " + targetAcceleration.y + " z: " + targetAcceleration.z);
 
 				// Cosines and sines cancel out, to give thrust_acceleration
-				// TODO: plus/minus!!!!!	
 				float thrust_acceleration = Mathf.Sqrt(targetAcceleration.x * targetAcceleration.x
 													  + (targetAcceleration.y - g) * (targetAcceleration.y - g)
 													  + targetAcceleration.z * targetAcceleration.z);
@@ -118,111 +117,28 @@
 				Vector4 targetTorques;
                 targetTorques.w = thrust;
 
-				Vector3 targetAngularPosition = targetAcceleration.normalized;
 				// targetAngularPosition.x /= thrust_acceleration;
 				// targetAngularPosition.y -= g;
 				// targetAngularPosition.y /= thrust_acceleration;
 				// targetAngularPosition.z /= thrust_acceleration;
 				// targetAngularPosition = targetAngularPosition.normalized;
-				Vector3 targetAngularVelocity = targetAngularPosition - angular_position;
-				Vector3 targetAngularAcceleration = targetAngularVelocity - angular_velocity;
-				// float kX = targetAcceleration.x / thrust_acceleration;
-				// float kY = (targetAcceleration.y - g) / thrust_acceleration;
-				// float kZ = targetAcceleration.z / thrust_acceleration;
-                // Debug.Log("kX: " + kX + " kY: " + kY + " kZ: " + kZ);
 
-				// Find the constants of the quadratic equation
-				// float a = 1.0f - kY;
-				// float b = kX + kY - 1.0f;
-				// float c = (kX + kY + kZ - 1.0f) / 2.0f;
-                // Debug.Log("a: " + a + " b: " + b + " c: " + c);
-
-                // from targetAcceleration, find target angular_position to get a target angularAcceleration 
-				// double cos_uy = -b + Math.Sqrt(b * b - 4 * a * c) / (2 * a);	
-				// double cos_uz = kX + cos_uy + kY - kY * cos_uy;
-				// double cos_ux = kY / cos_uz;
-                // Debug.Log("cos_ux: " + cos_ux + " cos_uy: " + cos_uy + " cos_uz: " + cos_uz);
-
-				// Target angular position
-				// Vector3 targetAngularPosition;
-				// targetAngularPosition.x = (float)Math.Acos(cos_ux) * 180.0f / (float)Math.PI;
-				// targetAngularPosition.y = (float)Math.Acos(cos_uy) * 180.0f / (float)Math.PI;
-				// targetAngularPosition.z = (float)Math.Acos(cos_uz) * 180.0f / (float)Math.PI;
-                // Debug.Log("targetAngularPosition x: " + targetAngularPosition.x + " y: " + targetAngularPosition.y + " z: " + targetAngularPosition.z);
-
-				// Vector3 x_acceleration = targetAcceleration.normalized;
-				// x_acceleration.x = acceleration.normalized.x;
-				// Vector3 y_acceleration = targetAcceleration.normalized;
-				// y_acceleration.y = acceleration.normalized.y;
-				// Vector3 z_acceleration = targetAcceleration.normalized;
-				// z_acceleration.z = acceleration.normalized.z;
-
-				// Vector3 targetAngularVelocity;
-				// Vector3 targetAngularAcceleration;// = targetAngularPosition - angular_position;
-				// targetAngularVelocity.x = Vector3.SignedAngle(x_acceleration, targetAcceleration.normalized, Vector3.up);
-				// targetAngularVelocity.y = Vector3.SignedAngle(y_acceleration, targetAcceleration.normalized, Vector3.up);
-				// targetAngularVelocity.z = Vector3.SignedAngle(z_acceleration, targetAcceleration.normalized, Vector3.up);
-				// targetAngularAcceleration = targetAngularVelocity - angular_velocity;
-
-                // Debug.Log("targetAngularAcceleration x: " + targetAngularAcceleration.x + " y: " + targetAngularAcceleration.y + " z: " + targetAngularAcceleration.z);
-                // Debug.Log("targetAngularVelocity x: " + targetAngularVelocity.x + " y: " + targetAngularVelocity.y + " z: " + targetAngularVelocity.z);
-
-				// float kx = targetAcceleration.x / thrust_acceleration;
-				// float ky = (targetAcceleration.y - g) / thrust_acceleration;
-				// float kz = targetAcceleration.z / thrust_acceleration;
-				// float cos_ux = 0.0f;
-				// float cos_uy = 0.0f;
-				// float cos_uz = 0.0f;
-				// Vector3 error;
-				// Vector3 smallest_error = new Vector3(Mathf.Infinity, Mathf.Infinity, Mathf.Infinity);
-				// for (float x = 0.0f; x <= 1.0f; x += 0.02f)
-				// {
-				// 	for (float y = 0.0f; y <= 1.0f; y += 0.02f)
-				// 	{
-				// 		for (float z = 0.0f; z <= 1.0f; z += 0.02f)
-				// 		{
-				// 			error.x = kx - z * Mathf.Sqrt(1.0f - y * y) * Mathf.Sqrt(1.0f - x * x) + y * Mathf.Sqrt(1 - z * z);
-				// 			// Take the square of the error	
-				// 			error.x *= error.x;	
-				// 			error.y = ky - z * x;
-				// 			// Take the square of the error	
-				// 			error.y *= error.y;
-				// 			error.z = kz - Mathf.Sqrt(1 - z * z) * Mathf.Sqrt(1 - y * y) - z * y * Mathf.Sqrt(1 - x * x);
-				// 			// Take the square of the error	
-				// 			error.z *= error.z;
-
-				// 			if (error.magnitude < smallest_error.magnitude)
-				// 			{
-				// 				smallest_error = error;
-				// 				cos_ux = x;
-				// 				cos_uy = y;
-				// 				cos_uz = z;
-				// 			}
-
-				// 		}
-				// 	}
-				// }
-				// Vector3 targetAngularPosition;
-				// targetAngularPosition.x = Mathf.Acos(cos_ux) * 180.0f / Mathf.PI;
-				// targetAngularPosition.y = Mathf.Acos(cos_uy) * 180.0f / Mathf.PI;
-				// targetAngularPosition.z = Mathf.Acos(cos_uz) * 180.0f / Mathf.PI;
-                // Debug.Log("--------- targetAngularPosition x: " + targetAngularPosition.x + " y: " + targetAngularPosition.y + " z: " + targetAngularPosition.z);
-				
-				// Vector3 targetAngularVelocity = targetAngularPosition - angular_position;
-                // Debug.Log("--------- targetAngularVelocity x: " + targetAngularVelocity.x + " y: " + targetAngularVelocity.y + " z: " + targetAngularVelocity.z);
-				// Vector3 targetAngularAcceleration = targetAngularVelocity - angular_velocity;
-                // Debug.Log("--------- targetAngularAcceleration x: " + targetAngularAcceleration.x + " y: " + targetAngularAcceleration.y + " z: " + targetAngularAcceleration.z);
+				// Vector3 targetAngularPosition = targetAcceleration.normalized;
+				Vector3 targetAngularAcceleration = targetAcceleration.normalized;
 
 				float Ixx = inertia.x;
 				float Iyy = inertia.y;
 				float Izz = inertia.z;
                 Debug.Log("++++++++INERTIA++++++++++++ Ixx: " + inertia.x + " Iyy: " + inertia.y + " Izz: " + inertia.z);
-				float dux = angular_velocity.x;
-				float duy = angular_velocity.y;
-				float duz = angular_velocity.z;
-				targetTorques.x = targetAngularAcceleration.x * Ixx	- (Iyy - Izz) * dux;
-				targetTorques.y = targetAngularAcceleration.y * Iyy	- (Izz - Ixx) * duy;
-				targetTorques.z = targetAngularAcceleration.z * Izz	- (Ixx - Iyy) * duz;
+				// float dux = angular_velocity.x;
+				// float duy = angular_velocity.y;
+				// float duz = angular_velocity.z;
+				targetTorques.x = targetAngularAcceleration.x * Ixx;
+				targetTorques.y = targetAngularAcceleration.y * Iyy;
+				targetTorques.z = targetAngularAcceleration.z * Izz;
+				// targetTorques.x = targetAngularAcceleration.x * Ixx	- (Iyy - Izz) * dux;
+				// targetTorques.y = targetAngularAcceleration.y * Iyy	- (Izz - Ixx) * duy;
+				// targetTorques.z = targetAngularAcceleration.z * Izz	- (Ixx - Iyy) * duz;
 				// targetTorques.x = targetAngularAcceleration.x * Ixx	- (Iyy - Izz) * duy * duz;
 				// targetTorques.y = targetAngularAcceleration.y * Iyy	- (Izz - Ixx) * duz * dux;
 				// targetTorques.z = targetAngularAcceleration.z * Izz	- (Ixx - Iyy) * dux * duy;
@@ -319,19 +235,22 @@
 			// 	uz *= (float)Math.PI / 180.0f;
 			// }
 
-			float sin_ux = (float)Math.Sin(ux);
-			float cos_ux = (float)Math.Cos(ux);
-			float sin_uy = (float)Math.Sin(uy);
-			float cos_uy = (float)Math.Cos(uy);
-			float sin_uz = (float)Math.Sin(uz);
-			float cos_uz = (float)Math.Cos(uz);
+			// float sin_ux = (float)Math.Sin(ux);
+			// float cos_ux = (float)Math.Cos(ux);
+			// float sin_uy = (float)Math.Sin(uy);
+			// float cos_uy = (float)Math.Cos(uy);
+			// float sin_uz = (float)Math.Sin(uz);
+			// float cos_uz = (float)Math.Cos(uz);
 
 			float thrust_acceleration = thrust / mass;
 
 			Vector3 acceleration;
-			acceleration.x =     thrust_acceleration * ux;//* (cos_uz * sin_uy * sin_ux - cos_uy * sin_uz);
-			acceleration.y = g + thrust_acceleration * uy;//* (cos_uz * cos_ux);
-			acceleration.z =     thrust_acceleration * uz;//* (sin_uz * sin_uy + cos_uz * cos_uy * sin_ux);
+			// acceleration.x =     thrust_acceleration * (cos_uz * sin_uy * sin_ux - cos_uy * sin_uz);
+			// acceleration.y = g + thrust_acceleration * (cos_uz * cos_ux);
+			// acceleration.z =     thrust_acceleration * (sin_uz * sin_uy + cos_uz * cos_uy * sin_ux);
+			acceleration.x =     thrust_acceleration * ux;
+			acceleration.y = g + thrust_acceleration * uy;
+			acceleration.z =     thrust_acceleration * uz;
 
 			return acceleration;
 		}    
@@ -345,9 +264,9 @@
 			float Iyy = inertia.y;
 			float Izz = inertia.z;
 
-			float dux = angular_velocity.x;
-			float duy = angular_velocity.y;
-			float duz = angular_velocity.z;
+			// float dux = angular_velocity.x;
+			// float duy = angular_velocity.y;
+			// float duz = angular_velocity.z;
 
 			// if (!degrees)
 			// {
@@ -357,9 +276,12 @@
 			// }
 
 			Vector3 angularAcceleration;
-			angularAcceleration.x = ((Iyy - Izz) * dux + torques.x) / Ixx;
-			angularAcceleration.y = ((Izz - Ixx) * duy + torques.y) / Iyy;
-			angularAcceleration.z = ((Ixx - Iyy) * duz + torques.z) / Izz;
+			// angularAcceleration.x = ((Iyy - Izz) * dux + torques.x) / Ixx;
+			// angularAcceleration.y = ((Izz - Ixx) * duy + torques.y) / Iyy;
+			// angularAcceleration.z = ((Ixx - Iyy) * duz + torques.z) / Izz;
+			angularAcceleration.x = torques.x / Ixx;
+			angularAcceleration.y = torques.y / Iyy;
+			angularAcceleration.z = torques.z / Izz;
 			// angularAcceleration.x = ((Iyy - Izz) * duy * duz + torques.x) / Ixx;
 			// angularAcceleration.y = ((Izz - Ixx) * duz * dux + torques.y) / Iyy;
 			// angularAcceleration.z = ((Ixx - Iyy) * dux * duy + torques.z) / Izz;

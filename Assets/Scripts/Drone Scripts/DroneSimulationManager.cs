@@ -134,6 +134,9 @@ public class DroneSimulationManager : MonoBehaviour {
         // Initialize the flight status.
         droneStatus = FlightStatus.ON_GROUND_STANDBY;
         droneStatusPrev = FlightStatus.NULL;
+
+        // transform.up = new Vector3(1, 0, 0);
+        // transform.position = new Vector3(0, 1, 0);
     }
 
     // FixedUpdate is called according to the physics engine
@@ -172,31 +175,20 @@ public class DroneSimulationManager : MonoBehaviour {
 
                 torques = QuadrotorDynamics.SpinRotors(rotor_speeds, dragFactor, thrustFactor, rodLength, yawFactor);
 
-                acceleration = QuadrotorDynamics.Acceleration(torques.w, mass, gravitationalAcceleration, angular_position);
-                Debug.Log("====== Acceleration x:" + acceleration.x + " y: " + acceleration.y + " z: " + acceleration.z);
                 angular_acceleration = QuadrotorDynamics.AngularAcceleration(torques, inertia, angular_velocity);
-                Debug.Log("====== Angular Acceleration x:" + angular_acceleration.x + " y: " + angular_acceleration.y + " z: " + angular_acceleration.z);
+                    Debug.Log("====== Angular Acceleration x:" + angular_acceleration.x + " y: " + angular_acceleration.y + " z: " + angular_acceleration.z);
 
-                // acceleration_body = QuadrotorDynamics.AccelerationBody(torques.w, mass, gravitationalAcceleration, windDisturbance, velocity_body, angular_velocity_body, angular_position);
-                // angular_acceleration_body = QuadrotorDynamics.AngularAccelerationBody(torques, inertia, angularWindDisturbance, angular_velocity_body);
+                acceleration = QuadrotorDynamics.Acceleration(torques.w, mass, gravitationalAcceleration, angular_acceleration);
+                    Debug.Log("====== Acceleration x:" + acceleration.x + " y: " + acceleration.y + " z: " + acceleration.z);
 
                 velocity += acceleration; //QuadrotorDynamics.Rotation(velocity_body, angular_position);
-                // if (velocity.magnitude > targetSpeed) 
-                // {
-                //     velocity = targetSpeed * velocity.normalized;
-                // }
-                Debug.Log("====== Velocity: " + velocity);
-                angular_velocity += angular_acceleration; //QuadrotorDynamics.InverseJacobian(angular_velocity_body, angular_position);
-                Debug.Log("====== Angular Velocity: " + angular_velocity);
-
-                // velocity_body += acceleration_body;
-                // angular_velocity_body += acceleration_body;
+                    Debug.Log("====== Velocity: " + velocity);
+                // angular_velocity += angular_acceleration; //QuadrotorDynamics.InverseJacobian(angular_velocity_body, angular_position);
+                    // Debug.Log("====== Angular Velocity: " + angular_velocity);
 
                 position += velocity;
-                Debug.Log("====== Position: " + position);
-
-                angular_position += angular_velocity;
-                angular_position = angular_position.normalized; 
+                    Debug.Log("====== Position: " + position);
+                // angular_position += angular_velocity;
 
                 // If the drone "fell undergound", push it back up.
                 if (position.y < 0)
@@ -204,9 +196,10 @@ public class DroneSimulationManager : MonoBehaviour {
                     position.y = 0.0f;
                 }
                 transform.localPosition = position;
-                // float ux = Vector3.Angle(Vector3.); 
-                // transform.localEulerAngles =  ;
+
+                angular_position = velocity.normalized;
                 transform.up = angular_position;
+                // transform.up = velocity.normalized;
 
                 break;
 
