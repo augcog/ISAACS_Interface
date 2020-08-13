@@ -11,7 +11,7 @@ public class CameraSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
     // Private connection variables
     private ROSBridgeWebSocketConnection ros = null;
     private string client_id;
-    private float alpha = 0.8f;
+    //private float alpha = 0.8f;
     private List<string> sensorSubscriberTopics = new List<string>();
     private string videoType;
     private Dictionary<string,bool> keyList = new Dictionary<string, bool>();
