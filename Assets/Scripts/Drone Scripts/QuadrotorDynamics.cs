@@ -30,7 +30,7 @@
 
 		/// <summary>
         /// Given the individual thrust of each rotor ("rotor forces"), this method computes the quadrotor's total thrust and torques.
-		/// To simplify things, only the sign and magnitude of each rotor force is required, and only the sign and magnitude of the total thrust and torques is returned.
+		/// For simplicity, only the sign and magnitude of each rotor force is required, and only the sign and magnitude of the total thrust and torques is returned.
         /// </summary>
         /// <param name="rotorForces">The signed magnitude of the force exterted by each rotor, in the order shown in the diagram above.</param>
         /// <param name="dragFactor">A damping factor for the thrust, representing resistance by the drag.</param>
@@ -88,25 +88,19 @@
 			// Otherwise, the direction vector represents angles along the x, y, and z axes.
 			else
 			{
-				float ux = direction.x;
-				float uy = direction.y;
-				float uz = direction.z;
-
 				// The trigonometric functions of the Mathf library only accept radians.
 				// Therefore, check if the given angles are in radians, and if not, convert them.
 				if (degrees)
 				{
-				 	ux *= Mathf.PI / 180.0f;
-				 	uy *= Mathf.PI / 180.0f;
-				 	uz *= Mathf.PI / 180.0f;
+					direction *= Mathf.PI / 180.0f;
 				}
 
-				float sin_ux = Mathf.Sin(ux);
-				float cos_ux = Mathf.Cos(ux);
-				float sin_uy = Mathf.Sin(uy);
-				float cos_uy = Mathf.Cos(uy);
-				float sin_uz = Mathf.Sin(uz);
-				float cos_uz = Mathf.Cos(uz);
+				float sin_ux = Mathf.Sin(direction.x);
+				float cos_ux = Mathf.Cos(direction.x);
+				float sin_uy = Mathf.Sin(direction.y);
+				float cos_uy = Mathf.Cos(direction.y);
+				float sin_uz = Mathf.Sin(direction.z);
+				float cos_uz = Mathf.Cos(direction.z);
 
 				// Compute the unit vector from the given angles, and scale it by the thrust acceleration.
 				acceleration.x = thrustAccelerationMagnitude * (cos_uz * sin_uy * sin_ux - cos_uy * sin_uz);
@@ -122,118 +116,19 @@
 
 
 
-		// TODO: documentation
-		// Returns the angular acceleration in the inertial frame
-		// **phi, **theta, **psi
-		public static Vector3 AngularAcceleration(Vector4 torques, Vector3 inertia, Vector3 angular_velocity, bool degrees = true)
+		/// <summary>
+        /// Given the quadrotor's torques and moments of inertia, this method computes its angular acceleration in the inertial frame.
+		/// For simplicity, it is assumed that the coriolis effect is negligible; hence, the result is the element-wise division of the torques by the inertia.
+        /// </summary>
+        /// <param name="torques">The torques acting on the quadrotor, around its x, y, and z axes.</param>
+        /// <param name="inertia">The non-zero moments of inertia of the quadrotor, commonly referred to as Ixx, Iyy, and Izz.</param>
+        /// <returns>The angular acceleration of the quadrotor in the inertial frame.</returns>
+		public static Vector3 AngularAcceleration(Vector3 torques, Vector3 inertia)
 		{
-			float Ixx = inertia.x;
-			float Iyy = inertia.y;
-			float Izz = inertia.z;
-
-			// float dux = angular_velocity.x;
-			// float duy = angular_velocity.y;
-			// float duz = angular_velocity.z;
-
-			// if (!degrees)
-			// {
-			// 	dux *= 180.0f / (float)Math.PI;
-			// 	duy *= 180.0f / (float)Math.PI;
-			// 	duz *= 180.0f / (float)Math.PI;
-			// }
-
-			Vector3 angularAcceleration;
-			// angularAcceleration.x = ((Iyy - Izz) * dux + torques.x) / Ixx;
-			// angularAcceleration.y = ((Izz - Ixx) * duy + torques.y) / Iyy;
-			// angularAcceleration.z = ((Ixx - Iyy) * duz + torques.z) / Izz;
-			angularAcceleration.x = torques.x / Ixx;
-			angularAcceleration.y = torques.y / Iyy;
-			angularAcceleration.z = torques.z / Izz;
-			// angularAcceleration.x = ((Iyy - Izz) * duy * duz + torques.x) / Ixx;
-			// angularAcceleration.y = ((Izz - Ixx) * duz * dux + torques.y) / Iyy;
-			// angularAcceleration.z = ((Ixx - Iyy) * dux * duy + torques.z) / Izz;
-
-			return angularAcceleration;	
+			return Vector3.Scale(torques, 1.0f / inertia);
 		}    
 
-		// TODO: documentation
-		public static Vector3 AccelerationBody(float thrust, float mass, float g, Vector3 wind_disturbance, Vector3 velocity_body, Vector3 angular_velocity_body, Vector3 angular_position, bool degrees=true)
-		{
-			float dx_b = velocity_body.x;
-			float dy_b = velocity_body.y;
-			float dz_b = velocity_body.z;
 
-			float dux_b = angular_velocity_body.x;
-			float duy_b = angular_velocity_body.y;
-			float duz_b = angular_velocity_body.z;
-
-			if (!degrees)
-			{
-				dux_b *= 180.0f / (float)Math.PI;
-				duy_b *= 180.0f / (float)Math.PI;
-				duz_b *= 180.0f / (float)Math.PI;
-			}
-
-			float ux = angular_position.x;
-			float uz = angular_position.z;
-
-			if (degrees)
-			{
-				ux *= (float)Math.PI / 180.0f;
-				uz *= (float)Math.PI / 180.0f;
-			}
-
-			float sin_ux = (float)Math.Sin(ux);
-			float cos_ux = (float)Math.Cos(ux);
-			float sin_uz = (float)Math.Sin(uz);
-			float cos_uz = (float)Math.Cos(uz);
-
-
-			Vector3 acceleration_body;
-			acceleration_body.x = duz_b * dy_b - duy_b * dz_b + g * sin_uz * cos_ux + wind_disturbance.x / mass;
-			acceleration_body.y = dux_b * dz_b - duz_b * dx_b + g * cos_ux * cos_uz + (wind_disturbance.y - thrust) / mass;
-			acceleration_body.z = duy_b * dx_b - dux_b * dy_b - g * sin_ux          + wind_disturbance.z / mass;
-
-			return acceleration_body;
-		}
-
-		// TODO: documentation
-		public static Vector3 AngularAccelerationBody(Vector4 torques, Vector3 inertia, Vector3 angular_wind_disturbance, Vector3 angular_velocity_body, bool degrees=true)
-		{
-			float torque_x = torques.x;
-			float torque_y = torques.y;
-			float torque_z = torques.z;
-
-			float Ixx = inertia.x;
-			float Iyy = inertia.y;
-			float Izz = inertia.z;
-
-			float dux_b = angular_velocity_body.x;
-			float duy_b = angular_velocity_body.y;
-			float duz_b = angular_velocity_body.z;
-
-			float wx = angular_wind_disturbance.x;
-			float wy = angular_wind_disturbance.y;
-			float wz = angular_wind_disturbance.z;
-
-			if (!degrees)
-			{
-				dux_b *= 180.0f / (float)Math.PI;
-				duy_b *= 180.0f / (float)Math.PI;
-				duz_b *= 180.0f / (float)Math.PI;
-
-				wx *= 180.0f / (float)Math.PI;
-				wy *= 180.0f / (float)Math.PI;
-				wz *= 180.0f / (float)Math.PI;
-			}
-
-			Vector3 angular_acceleration_body;
-			angular_acceleration_body.x = ((Iyy - Izz) * duy_b * duz_b + torque_x + wx) / Ixx;
-			angular_acceleration_body.y = ((Izz - Ixx) * dux_b * duz_b + torque_y + wy) / Iyy;
-			angular_acceleration_body.z = ((Ixx - Iyy) * dux_b * duy_b + torque_z + wz) / Izz;
-
-			return angular_acceleration_body;
-		}
 
 
 		public static Vector4 TargetRotorSpeeds(float target_speed, Vector3 destination, Vector3 position,
@@ -259,13 +154,15 @@
 				Debug.Log("targetSpeed: " + target_speed);
 				targetVelocity *= target_speed;
                 Debug.Log("targetVelocity x: " + targetVelocity.x + " y: " + targetVelocity.y + " z: " + targetVelocity.z);
-                Vector3 targetAcceleration = targetVelocity - velocity;
+                Vector3 targetAcceleration = targetVelocity - velocity - g;
                 Debug.Log("targetAcceleration x: " + targetAcceleration.x + " y: " + targetAcceleration.y + " z: " + targetAcceleration.z);
 
+
 				// Cosines and sines cancel out, to give thrust_acceleration
-				float thrust_acceleration = Mathf.Sqrt(targetAcceleration.x * targetAcceleration.x
-													  + (targetAcceleration.y - g) * (targetAcceleration.y - g)
-													  + targetAcceleration.z * targetAcceleration.z);
+				// float thrust_acceleration = Mathf.Sqrt(targetAcceleration.x * targetAcceleration.x
+													//   + targetAcceleration.y * targetAcceleration.y
+													//   + targetAcceleration.z * targetAcceleration.z);
+				float thrust_acceleration = targetAcceleration.magnitude;
 
 				Debug.Log("thrust_acceleration: " + thrust_acceleration);
 				float thrust = mass * thrust_acceleration;
@@ -282,7 +179,9 @@
 
 				// Vector3 targetAngularPosition = targetAcceleration.normalized;
 
-				Vector3 targetAngularAcceleration = targetAcceleration.normalized;
+				Vector3 targetDirection = targetAcceleration.normalized;
+
+				Vector3 targetAngularAcceleration = targetDirection;
 
 				float Ixx = inertia.x;
 				float Iyy = inertia.y;

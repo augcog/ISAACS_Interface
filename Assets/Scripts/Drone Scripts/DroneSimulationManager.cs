@@ -77,12 +77,7 @@ public class DroneSimulationManager : MonoBehaviour {
     // z - y
     private Vector4 rotor_speeds = new Vector4(4.0f, 3.0f, 4.0f, 6.0f);
 
-
-    [Header("Simulation Dynamics")]
-
-	[Tooltip("TODO")]
-    public float targetSpeed = 0.1f; // Desired speed
-
+    [Header("Drone Properties")]
 	[Tooltip("TODO")]
     public float bodyMass = 5.0f;
 	[Tooltip("TODO")]
@@ -92,17 +87,26 @@ public class DroneSimulationManager : MonoBehaviour {
 	[Tooltip("TODO")]
     public float rodLength = 2.0f;
 	[Tooltip("TODO")]
-    public Vector3 windDisturbance = new Vector3(0.0f, 0.0f, 0.0f);
-	[Tooltip("TODO")]
-    public Vector3 angularWindDisturbance = new Vector3(0.0f, 0.0f, 0.0f);
-	[Tooltip("TODO")]
-    public float gravitationalAcceleration = -9.81f;
-	[Tooltip("TODO")]
     public float dragFactor = 1.0f;
 	[Tooltip("TODO")]
     public float thrustFactor = 1.0f;
 	[Tooltip("TODO")]
     public float yawFactor = 1.0f;
+
+
+    [Header("Simulation Dynamics")]
+	[Tooltip("TODO")]
+    public Vector3 gravitationalAcceleration = new Vector3(0.0f, -9.81f, 0.0f);
+	[Tooltip("TODO")]
+    public Vector3 windDisturbance = new Vector3(0.0f, 0.0f, 0.0f);
+
+    [Header("Control Parameters")]
+	[Tooltip("TODO")]
+    public float targetSpeed = 0.1f; // Desired speed
+    public float maximumAccelerationMagnitude = 0.1f;
+    public float decelerationDistance = 1.0f;
+
+
 
 
     /// <summary>
