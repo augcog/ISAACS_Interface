@@ -27,12 +27,12 @@
 		/// For simplicity, only the sign and magnitude of each rotor force is required, and only the sign and magnitude of the total thrust and torques is returned.
         /// </summary>
         /// <param name="rotorForces">The signed magnitude of the force exterted by each rotor, in the order shown in the diagram above.</param>
-        /// <param name="dragFactor">A damping factor for the thrust, representing resistance by the drag.</param>
-        /// <param name="thrustFactor">The contribution of each rotor force to the total thrust, as well as its x-torque ("roll force") and z-torque ("pitch force").</param>
-        /// <param name="rodLength">The distance between two opposing rotors, such as O(f1) and O(f3). It is assumed that O(f1)->O(f3) and O(f2)->O(f4) are equal.</param>
-        /// <param name="yawFactor">The contribution of each rotor force to the y-torque ("yaw force").</param>
+        /// <param name="dragFactor">(Optional) A damping factor for the thrust, representing resistance by the drag.</param>
+        /// <param name="thrustFactor">(Optional) The contribution of each rotor force to the total thrust, as well as its x-torque ("roll force") and z-torque ("pitch force").</param>
+        /// <param name="rodLength">(Optional) The distance between two opposing rotors, such as O(f1) and O(f3). It is assumed that O(f1)->O(f3) and O(f2)->O(f4) are equal.</param>
+        /// <param name="yawFactor">(Optional) The contribution of each rotor force to the y-torque ("yaw force").</param>
         /// <returns>The signed mangitudes of the quadrotor's total thrust and torques, for the given rotor forces.</returns>
-		public static Vector4 SpinRotors(Vector4 rotorForces, float rodLength, float dragFactor, float thrustFactor, float yawFactor)
+		public static Vector4 SpinRotors(Vector4 rotorForces, float rodLength=1.0f, float dragFactor=1.0f, float thrustFactor=1.0f, float yawFactor=1.0f)
 		{
 			float f1 = rotorForces.w;
 			float f2 = rotorForces.x;
@@ -44,7 +44,7 @@
 			torques.x = rodLength  * thrustFactor * (f3 - f1);           // Torque rotating the quadrotor around its x-axis ("roll force").
 			torques.y = yawFactor  * (f2 + f4 - f1 - f3);                // Torque rotating the quadrotor around its y-axis ("yaw force").
 			torques.z = rodLength  * thrustFactor * (f4 - f2);           // Torque rotating the quadrotor around its z-axis ("pitch force").
-			Debug.Log("====+====+===== TORQUES: " + torques);
+
 			return torques;
 		}			
 
@@ -57,60 +57,13 @@
         /// </summary>
         /// <param name="thrust">The signed magnitude of the total thrust exerted by the quadrotor.</param>
         /// <param name="mass">The total mass of the quadrotor.</param>
-        /// <param name="direction">The direction of acceleration. Can either be the coordinates of a point in the desired direction, or the desired angular position in the inertial frame.</param>
+        /// <param name="direction">The direction of acceleration (for example, the desired velocity subtracted by the current velocity).</param>
         /// <param name="gravitationalAcceleration">The acceleration due to gravity. Approximately equal to (0, -9.81, 0) on the Earth's surface.</param>
-        /// <param name="angles">Whether the direction vector holds angles, rather than the coordinates of a desired direction.</param>
-        /// <param name="degrees">Whether the angles of the direction vector are in degrees, or radians.</param>
-        /// <returns>The unit direction vector of the acceleration required to point the velocity vector towards the destination.</returns>
-		public static Vector3 RotateNormal(Vector3 normal, Vector3 position, Vector3 destination, Vector3 angularVelocity, Vector3 windDisturbance, float windDisturbanceDeviation=1.0f)
-		{
-			Vector3 targetNormal = (destination - position).normalized;	
-			targetNormal += (windDisturbance +  UnityEngine.Random.Range(-1.0f, 1.0f) * windDisturbanceDeviation * windDisturbance);
-
-			Vector3 targetVelocityDirection = (destination - position).normalized;
-			return (targetVelocityDirection - normal).normalized;
-		}
-
-
-
-
-		/// <summary>
-        /// Given the quadrotor's thrust and mass, this method computes its acceleration in the inertial frame.
-		/// Since Unity transforms refer to the inertial frame, the result can be directly integrated to solve for velocity and position.
-        /// </summary>
-        /// <param name="thrust">The signed magnitude of the total thrust exerted by the quadrotor.</param>
-        /// <param name="mass">The total mass of the quadrotor.</param>
-        /// <param name="direction">The direction of acceleration. Can either be the coordinates of a point in the desired direction, or the desired angular position in the inertial frame.</param>
-        /// <param name="gravitationalAcceleration">The acceleration due to gravity. Approximately equal to (0, -9.81, 0) on the Earth's surface.</param>
-        /// <param name="angles">Whether the direction vector holds angles, rather than the coordinates of a desired direction.</param>
-        /// <param name="degrees">Whether the angles of the direction vector are in degrees, or radians.</param>
         /// <returns>The acceleration of the quadrotor in the inertial frame.</returns>
-		public static Vector3 Acceleration(float thrust, float mass, Vector3 direction, Vector3 gravitationalAcceleration, bool angles=false, bool degrees=true)
+		public static Vector3 Acceleration(float thrust, float mass, Vector3 direction, Vector3 gravitationalAcceleration)
 		{
-			// Check if the direction vector holds angles, rather than coordinates.
-			if (angles)	
-			{
-				// The trigonometric functions of the Mathf library only accept radians.
-				// Therefore, check if the given angles are in radians, and if not, convert them.
-				if (degrees)
-				{
-					direction *= Mathf.PI / 180.0f;
-				}
-
-				float sin_ux = Mathf.Sin(direction.x);
-				float cos_ux = Mathf.Cos(direction.x);
-				float sin_uy = Mathf.Sin(direction.y);
-				float cos_uy = Mathf.Cos(direction.y);
-				float sin_uz = Mathf.Sin(direction.z);
-				float cos_uz = Mathf.Cos(direction.z);
-
-				// Compute the direction vector from the given angles.
-				direction.x = cos_uz * sin_uy * sin_ux - cos_uy * sin_uz;
-				direction.y = cos_uz * cos_ux;
-				direction.z = sin_uz * sin_uy + cos_uz * cos_uy * sin_ux;
-			}
-			// Else, if the direction vector is not a unit vector, normalize it.	
-			else if (!Vector3.Equals(direction, direction.normalized))
+			// If the direction vector is not a unit vector, normalize it.	
+			if (!Vector3.Equals(direction, direction.normalized))
 			{
 				direction = direction.normalized;
 			}
@@ -129,6 +82,33 @@
 
 
 		/// <summary>
+        /// Given the quadrotor's thrust and mass, this method computes its acceleration in the inertial frame.
+		/// Since Unity transforms refer to the inertial frame, the result can be directly integrated to solve for velocity and position.
+        /// </summary>
+        /// <param name="thrust">The signed magnitude of the total thrust exerted by the quadrotor.</param>
+        /// <param name="mass">The total mass of the quadrotor.</param>
+        /// <param name="velocity">The direction of acceleration (for example, the desired unit velocity subtracted by the current unit velocity).</param>
+        /// <param name="velocity">The current velocity of the quadrotor.</param>
+        /// <param name="gravitationalAcceleration">The acceleration due to gravity. Approximately equal to (0, -9.81, 0) on the Earth's surface.</param>
+        /// <returns>The acceleration of the quadrotor in the inertial frame.</returns>
+		public static Vector3 Acceleration(float thrust, float mass, Vector3 normal, Vector3 velocity, Vector3 gravitationalAcceleration)
+		{
+			Vector3 acceleration;
+
+			// The direction of acceleration is from the direction of the (previous) velocity towards the direction of the quadrotor's normal (which is the direction of the new velocity).
+			Vector3 direction = (velocity.magnitude * normal - velocity - gravitationalAcceleration).normalized;
+			// From Newton's law (F = ma), the acceleration of an object from an external force is equal to the force divided by the object's mass (a = F/m).
+			float thrustAccelerationMagnitude = thrust / mass;
+			// Scale the direction of the thrust acceleration by its magnitude, and sum it up with the gravitational acceleration.
+			acceleration = gravitationalAcceleration + thrustAccelerationMagnitude * direction;
+
+			return acceleration;
+		}
+
+	
+
+
+		/// <summary>
         /// Given the quadrotor's torques and moments of inertia, this method computes its angular acceleration in the inertial frame.
 		/// For simplicity, it is assumed that the coriolis effect is negligible; hence, the result is the element-wise division of the torques by the inertia.
         /// </summary>
@@ -141,6 +121,31 @@
 			inverseInertia.x = 1.0f / inertia.x;
 			inverseInertia.y = 1.0f / inertia.y;
 			inverseInertia.z = 1.0f / inertia.z;
+			return Vector3.Scale(torques, inverseInertia);
+		}
+
+
+
+
+		/// <summary>
+        /// Given the quadrotor's torques and moments of inertia, this method computes its angular acceleration in the inertial frame.
+		/// For simplicity, it is assumed that the coriolis effect is negligible; hence, the result is the element-wise division of the torques by the inertia.
+        /// </summary>
+        /// <param name="thrustForces">A vector holding the thrust (.w) and torques (.x, .y, .z) acting on the quadrotor.</param>
+        /// <param name="inertia">The non-zero moments of inertia of the quadrotor, commonly referred to as Ixx, Iyy, and Izz.</param>
+        /// <returns>The angular acceleration of the quadrotor in the inertial frame.</returns>
+		public static Vector3 AngularAcceleration(Vector4 thrustForces, Vector3 inertia)
+		{
+			Vector3 torques;
+			torques.x = thrustForces.x;
+			torques.y = thrustForces.y;
+			torques.z = thrustForces.z;
+
+			Vector3 inverseInertia;
+			inverseInertia.x = 1.0f / inertia.x;
+			inverseInertia.y = 1.0f / inertia.y;
+			inverseInertia.z = 1.0f / inertia.z;
+
 			return Vector3.Scale(torques, inverseInertia);
 		}
 
@@ -205,19 +210,15 @@
 				targetAngularVelocity.z = 180.0f / Mathf.PI * Mathf.Atan2(x * Mathf.Sin(angle) - y * z * (1.0f - Mathf.Cos(angle)), 1.0f - (x * x + z * z) * (1.0f - Mathf.Cos(angle)));
 			}
 			
-			// Vector3 targetAngularVelocity = targetVelocity - velocity;
-			// Vector3 targetAngularAcceleration = Quaternion.FromToRotation(velocity, targetVelocity).eulerAngles;
+			targetAngularVelocity = Quaternion.FromToRotation(velocity, targetVelocity).eulerAngles;
+			// Vector3 targetAngularVelocity = Quaternion.FromToRotation(velocity, targetVelocity).eulerAngles;
 
 			// Vector3 targetAngularAcceleration = targetAngularVelocity;// = targetDirection; // TODO
                     // Debug.Log("&&&&&& TARGET Angular Acceleration: " + targetAngularAcceleration);
 
-			Vector3 targetAngularAcceleration = targetAngularVelocity;
+			Vector3 targetAngularAcceleration = targetAngularVelocity - angularVelocity;
 			// Compute the desired acceleration TODO
-			Vector3 targetAcceleration = targetVelocity - velocity;// - gravitationalAcceleration;
-                    Debug.Log("&&&&&& TARGET Acceleration: " + targetAcceleration);
-
-			// Vector3 targetAngularAcceleration = targetAcceleration.normalized;
-                    // Debug.Log("&&&&&& TARGET Angular Acceleration: " + targetAcceleration);
+			Vector3 targetAcceleration = targetVelocity - velocity - gravitationalAcceleration;
 
 			//	
 			float thrustAcceleration = targetAcceleration.magnitude;
