@@ -87,7 +87,7 @@
         /// </summary>
         /// <param name="thrust">The signed magnitude of the total thrust exerted by the quadrotor.</param>
         /// <param name="mass">The total mass of the quadrotor.</param>
-        /// <param name="velocity">The direction of acceleration (for example, the desired unit velocity subtracted by the current unit velocity).</param>
+        /// <param name="normal">The normal vector coming out of the quadrotor (if the quadrotor is rotated correctly, then `transform.up` returns this vector).</param>
         /// <param name="velocity">The current velocity of the quadrotor.</param>
         /// <param name="gravitationalAcceleration">The acceleration due to gravity. Approximately equal to (0, -9.81, 0) on the Earth's surface.</param>
         /// <returns>The acceleration of the quadrotor in the inertial frame.</returns>
@@ -152,82 +152,86 @@
 
 
 
-        /// <returns>An estimate for the rotor forces that will TODO the quadrotor towards its destination.</returns>
-		public static Vector4 TargetRotorForces(float targetSpeed, Vector3 destination, Vector3 position,
-										    	Vector3 velocity, Vector3 angularVelocity, float mass, Vector3 inertia,
-												float rodLength, float dragFactor, float thrustFactor, float yawFactor,
-												Vector3 gravitationalAcceleration, bool degrees=true)
+        /// <returns>An estimate for the rotor forces that will move the quadrotor closer to its destination.</returns>
+		public static Vector4 TargetRotorForces(
+												Vector3 destination,
+												Vector3 position,
+												float targetSpeed,
+												Vector3 velocity,
+												Vector3 angularVelocity,
+												Vector3 inertia,
+												float mass,
+												Vector3 gravitationalAcceleration,
+												float rodLength=1.0f,
+												float dragFactor=1.0f,
+												float thrustFactor=1.0f,
+												float yawFactor=1.0f,
+												bool degrees=true,
+												bool manual=false
+												)
 		{
-			// Compute the desired velocity by scaling the direction from the quadrotor's position to its destination by the desired speed.
+			// Compute the desired linear velocity.
 			Vector3 targetVelocity = targetSpeed * (destination - position).normalized;
 
-
-			/*
-				 d
- 				 —>
-			     \      /
-				  \    /
-			    v1 \  / v2
-				    \/
-
-				d: targetDirection (unit vector)
-				v1:	velocity
-				v2:	targetVelocity
-			*/
-
-			/*
-			
-			*/
-			//
-
-			Vector3 axis = Vector3.Cross(velocity, targetVelocity);
-			axis = axis.normalized;
-			float x = axis.x;
-			float y = axis.y;
-			float z = axis.z;
-			float angle = Vector3.SignedAngle(velocity, targetVelocity, axis) * Mathf.PI / 180.0f;
-			// float angle = Vector3.Angle(targetVelocity, velocity) * Mathf.PI / 180.0f;
-
+			// Compute the desired angular velocity, using the specified method (manual, or Unity built-in).
 			Vector3 targetAngularVelocity;
+			if (manual)
+			{
+				// Compute the orthogonal axis to the velocity and the desired velocity.
+				Vector3 axis = Vector3.Cross(velocity, targetVelocity).normalized;
+				float x = axis.x;
+				float y = axis.y;
+				float z = axis.z;
+				// Compute the angle between the velocity and the desired velocity, along the orthogonal axis.
+				float angle = Vector3.SignedAngle(velocity, targetVelocity, axis) * Mathf.PI / 180.0f;
 
-			float singularity =	x * y * (1.0f - Mathf.Cos(angle)) + z * Mathf.Sin(angle);
-			if (singularity > 0.999f)
-			{
-				targetAngularVelocity.x = 180.0f / Mathf.PI * 2.0f * Mathf.Atan2(x * Mathf.Sin(angle / 2.0f), Mathf.Cos(angle / 2.0f));
-				targetAngularVelocity.y = 180.0f / Mathf.PI * Mathf.Asin(x * y * (1.0f - Mathf.Cos(angle)) + z * Mathf.Sin(angle));
-				targetAngularVelocity.z = 0.0f;
-			}
-			else if (singularity < -0.999f)
-			{
-				targetAngularVelocity.x = 180.0f / Mathf.PI * -2.0f * Mathf.Atan2(x * Mathf.Sin(angle / 2.0f), Mathf.Cos(angle / 2.0f));
-				targetAngularVelocity.y = 180.0f / Mathf.PI * Mathf.Asin(x * y * (1.0f - Mathf.Cos(angle)) + z * Mathf.Sin(angle));
-				targetAngularVelocity.z = 0.0f;
+				// Compute where the 1D axis-angle function maps to the 2D "Euler plane".
+				float spot = x * y * (1.0f - Mathf.Cos(angle)) + z * Mathf.Sin(angle);
+
+				// Check if the mapped spot corresponds to a North pole singularity, and calculate the Euler angles between the current and desired velocities accordingly.
+				if (spot > 0.999f)
+				{
+					targetAngularVelocity.x = 180.0f / Mathf.PI * 2.0f * Mathf.Atan2(x * Mathf.Sin(angle / 2.0f), Mathf.Cos(angle / 2.0f));
+					targetAngularVelocity.y = 180.0f / Mathf.PI * Mathf.Asin(x * y * (1.0f - Mathf.Cos(angle)) + z * Mathf.Sin(angle));
+					targetAngularVelocity.z = 0.0f;
+				}
+				// Check if the mapped spot corresponds to a South pole singularity, and calculate the Euler angles between the current and desired velocities accordingly.
+				else if (spot < -0.999f)
+				{
+					targetAngularVelocity.x = 180.0f / Mathf.PI * -2.0f * Mathf.Atan2(x * Mathf.Sin(angle / 2.0f), Mathf.Cos(angle / 2.0f));
+					targetAngularVelocity.y = 180.0f / Mathf.PI * Mathf.Asin(x * y * (1.0f - Mathf.Cos(angle)) + z * Mathf.Sin(angle));
+					targetAngularVelocity.z = 0.0f;
+				}
+				// Otherwise, this is a regular spot, meaning that the Euler angles can be calculated using the standard formula.
+				else
+				{
+					targetAngularVelocity.x = 180.0f / Mathf.PI * Mathf.Atan2(y * Mathf.Sin(angle) - x * z * (1.0f - Mathf.Cos(angle)), 1.0f - (y * y + z * z) * (1.0f - Mathf.Cos(angle)));
+					targetAngularVelocity.y = 180.0f / Mathf.PI * Mathf.Asin(x * y * (1.0f - Mathf.Cos(angle)) + z * Mathf.Sin(angle));
+					targetAngularVelocity.z = 180.0f / Mathf.PI * Mathf.Atan2(x * Mathf.Sin(angle) - y * z * (1.0f - Mathf.Cos(angle)), 1.0f - (x * x + z * z) * (1.0f - Mathf.Cos(angle)));
+				}
 			}
 			else
 			{
-				targetAngularVelocity.x = 180.0f / Mathf.PI * Mathf.Atan2(y * Mathf.Sin(angle) - x * z * (1.0f - Mathf.Cos(angle)), 1.0f - (y * y + z * z) * (1.0f - Mathf.Cos(angle)));
-				targetAngularVelocity.y = 180.0f / Mathf.PI * Mathf.Asin(x * y * (1.0f - Mathf.Cos(angle)) + z * Mathf.Sin(angle));
-				targetAngularVelocity.z = 180.0f / Mathf.PI * Mathf.Atan2(x * Mathf.Sin(angle) - y * z * (1.0f - Mathf.Cos(angle)), 1.0f - (x * x + z * z) * (1.0f - Mathf.Cos(angle)));
+				// Use the Unity built-in.	
+				targetAngularVelocity = Quaternion.FromToRotation(velocity, targetVelocity).eulerAngles;
 			}
-			
-			targetAngularVelocity = Quaternion.FromToRotation(velocity, targetVelocity).eulerAngles;
-			// Vector3 targetAngularVelocity = Quaternion.FromToRotation(velocity, targetVelocity).eulerAngles;
 
-			// Vector3 targetAngularAcceleration = targetAngularVelocity;// = targetDirection; // TODO
-                    // Debug.Log("&&&&&& TARGET Angular Acceleration: " + targetAngularAcceleration);
 
-			Vector3 targetAngularAcceleration = targetAngularVelocity - angularVelocity;
-			// Compute the desired acceleration TODO
+			// Compute the desired linear acceleration.
 			Vector3 targetAcceleration = targetVelocity - velocity - gravitationalAcceleration;
 
-			//	
+			// Compute the desired angular acceleration.
+			Vector3 targetAngularAcceleration = targetAngularVelocity - angularVelocity;
+
+
+			// The desired acceleration from thrust is the magnitude of the desired acceleration vector.
 			float thrustAcceleration = targetAcceleration.magnitude;
-			Debug.Log("Thrust Accel: " + thrustAcceleration);
-			// Compute the thrust, by TODO: Newton's Law
+			// Compute the desired total thrust to be generated by the rotors, using Newton's Law (F = ma).
 			float thrust = mass * thrustAcceleration;
-			Debug.Log("Thrust: " + thrust);	
-			// Compute the target torques, by inverting the equation of the angular acceleration.
+
+			// Compute the target torques to be generated by the torques, by inverting the equation of angular acceleration.
 			Vector3 torques = Vector3.Scale(targetAngularAcceleration, inertia);
+
 
 			// Compute the constants needed to solve for the rotor forces.
 			float W = thrust / (dragFactor * thrustFactor);
@@ -248,7 +252,7 @@
 			forces.z = f4;
 
 			return forces;
-		}	
+		}
 
 	}
 }
