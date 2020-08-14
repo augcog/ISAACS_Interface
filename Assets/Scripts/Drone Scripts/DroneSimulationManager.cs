@@ -60,31 +60,31 @@ public class DroneSimulationManager : MonoBehaviour {
     private Vector4 thrustForces;
 
     [Header("Control Parameters")]
-	[Tooltip("TODO")]
+	[Tooltip("The desired speed to maintain while flying.")]
     public float targetSpeed = 0.1f;
-	[Tooltip("TODO")]
+	[Tooltip("The distance from a destination from which the drone must start decelerating before it reaches it. Use it to slow down the drone as it reaches a waypoint, or lands.")]
     public float decelerationDistance = 10.0f;
 
     [Header("Simulation Parameters")]
-	[Tooltip("TODO")]
+	[Tooltip("The acceleration due to gravity. On the Earth's surface, it is approximately equal to (0, -9.81, 0).")]
     public Vector3 gravitationalAcceleration = new Vector3(0.0f, 9.81f, 0.0f);
-	[Tooltip("TODO")]
-    public Vector3 wind = new Vector3(0.01f, 0.01f, 0.01f);
+	[Tooltip("A vector representing the direction and magnitude of acceleration due to wind. As a general rule, keep its magnitude smaller than the target speed.")]
+    public Vector3 wind = new Vector3(0.05f, 0.05f, 0.05f);
 
     [Header("Drone Properties")]
-	[Tooltip("TODO")]
+	[Tooltip("The mass of the sphere modelling the body of the drone.")]
     public float bodyMass = 5.0f;
-	[Tooltip("TODO")]
-    public float bodyRadius = 15.0f;
-	[Tooltip("TODO")]
-    public float rotorMass = 0.2f;
-	[Tooltip("TODO")]
+	[Tooltip("The radius of the sphere modelling the body of the drone.")]
+    public float bodyRadius = 10.0f;
+	[Tooltip("The mass of each individual rotor attached to the drone.")]
+    public float rotorMass = 0.4f;
+	[Tooltip("The distance between two opposing rotors. It is assumed that the two rods present on the quadrotor are equal.")]
     public float rodLength = 2.0f;
-	[Tooltip("TODO")]
+	[Tooltip("A damping factor for the thrust, representing resistance by the drag.")]
     public float dragFactor = 1.0f;
-	[Tooltip("TODO")]
+	[Tooltip("The contribution of each rotor force to the total thrust, as well as its x-torque (\"roll force\") and z-torque (\"pitch force\").")]
     public float thrustFactor = 1.0f;
-	[Tooltip("TODO")]
+	[Tooltip("The contribution of each rotor force to the y-torque (\"yaw force\").")]
     public float yawFactor = 1.0f;
 
 
@@ -96,7 +96,7 @@ public class DroneSimulationManager : MonoBehaviour {
     /// <param name="droneInit"></param>
     public void InitDroneSim()
     {
-        // TODO 
+        // TODO
         drone = this.GetComponent<DroneProperties>().droneClassPointer;
 
         // Compute the total mass of the quadrotor.
@@ -168,13 +168,10 @@ public class DroneSimulationManager : MonoBehaviour {
                 angularPosition += angularVelocity;
                 transform.localEulerAngles = angularPosition;
 
-                Vector3 targetVelocity = targetSpeed * (destination - position).normalized;
-                Vector3 direction = (targetVelocity - velocity - gravitationalAcceleration).normalized;
-
                 acceleration = QuadrotorDynamics.Acceleration(transform.up, thrustForces.w, totalMass, gravitationalAcceleration);
                 // TODO: documentation
                 transform.up = (acceleration - gravitationalAcceleration).normalized;
-                acceleration += QuadrotorDynamics.WindDisturbance(acceleration, wind);
+                acceleration += QuadrotorDynamics.WindDisturbance(wind, transform.up, totalMass);
 
                 velocity += acceleration;
                 position += velocity;
@@ -190,9 +187,10 @@ public class DroneSimulationManager : MonoBehaviour {
 
             case FlightStatus.FLYING_HOME:
 
+                // TODO, next: make landing also a function in QuadrotorDynamics, and adjust according to the deceleration distance.
                 // Readjust the quadrotor's angular position: since it's landing, it must be facing upwards.
                 transform.up = Vector3.up;
-                transform.Translate(targetSpeed * (destination - position).normalized, Space.Self);
+                transform.Translate(0.02f * targetSpeed * (destination - position).normalized, Space.Self);
 
                 if (reachedCurrentDestination())
                 {
@@ -205,9 +203,10 @@ public class DroneSimulationManager : MonoBehaviour {
 
             case FlightStatus.LANDING:
 
+                // TODO, next: make landing also a function in QuadrotorDynamics, and adjust according to the deceleration distance.
                 // Readjust the quadrotor's angular position: since it's landing, it must be facing upwards.
                 transform.up = Vector3.up;
-                transform.Translate(targetSpeed * (destination - position).normalized, Space.Self);
+                transform.Translate(0.02f * targetSpeed * (destination - position).normalized, Space.Self);
 
                 if (reachedCurrentDestination())
                 {

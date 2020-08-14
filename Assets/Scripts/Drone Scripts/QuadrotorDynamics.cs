@@ -30,9 +30,9 @@
 		/// For simplicity, only the sign and magnitude of each rotor force is required, and only the sign and magnitude of the total thrust and torques is returned.
         /// </summary>
         /// <param name="rotorForces">The signed magnitude of the force exterted by each rotor, in the order shown in the diagram above.</param>
+        /// <param name="rodLength">(Optional) The distance between two opposing rotors, such as O(f1) and O(f3). It is assumed that O(f1)->O(f3) and O(f2)->O(f4) are equal. Defaults to `1.0f`.</param>
         /// <param name="dragFactor">(Optional) A damping factor for the thrust, representing resistance by the drag. Defaults to `1.0f`.</param>
         /// <param name="thrustFactor">(Optional) The contribution of each rotor force to the total thrust, as well as its x-torque ("roll force") and z-torque ("pitch force"). Defaults to `1.0f`.</param>
-        /// <param name="rodLength">(Optional) The distance between two opposing rotors, such as O(f1) and O(f3). It is assumed that O(f1)->O(f3) and O(f2)->O(f4) are equal. Defaults to `1.0f`.</param>
         /// <param name="yawFactor">(Optional) The contribution of each rotor force to the y-torque ("yaw force"). Defaults to `1.0f`.</param>
         /// <returns>The signed mangitudes of the quadrotor's total thrust and torques, for the given rotor forces.</returns>
 		public static Vector4 SpinRotors(Vector4 rotorForces, float rodLength=1.0f, float dragFactor=1.0f, float thrustFactor=1.0f, float yawFactor=1.0f)
@@ -113,13 +113,14 @@
         /// Given the quadrotor's torques and moments of inertia, this method computes its angular acceleration in the inertial frame.
 		/// For simplicity, it is assumed that the coriolis effect is negligible; hence, the result is the element-wise division of the torques by the inertia.
         /// </summary>
-        /// <param name="acceleration">The current acceleration of the quadrotor.</param>
         /// <param name="wind">A vector representing the direction and magnitude of acceleration due to wind.</param>
+        /// <param name="normal">The normal vector to the plane defined by the quadrotor's rods (ie. its y-axis).</param>
+        /// <param name="mass">The total mass of the quadrotor.</param>
         /// <returns>The wind disturbance to be added to the linear acceleration in the inertial frame.</returns>documentation
-		public static Vector3 WindDisturbance(Vector3 acceleration, Vector3 wind)
+		public static Vector3 WindDisturbance(Vector3 wind, Vector3 normal, float mass)
 		{
-			float angle = Vector3.Angle(acceleration, wind); 
-			return angle / 180.0f * wind;
+			float angle = Vector3.Angle(wind, normal); 
+			return angle / 180.0f * wind / mass;
 		}
 
 	
@@ -181,9 +182,9 @@
         /// <param name="inertia">The non-zero moments of inertia of the quadrotor, commonly referred to as Ixx, Iyy, and Izz.</param>
         /// <param name="mass">The total mass of the quadrotor.</param>
         /// <param name="gravitationalAcceleration">(Optional) The acceleration due to gravity. Defaults to (0, -9.81, 0), as on the Earth's surface.</param>
+        /// <param name="rodLength">(Optional) The distance between two opposing rotors, such as O(f1) and O(f3). It is assumed that O(f1)->O(f3) and O(f2)->O(f4) are equal. Defaults to `1.0f`.</param>
         /// <param name="dragFactor">(Optional) A damping factor for the thrust, representing resistance by the drag. Defaults to `1.0f`.</param>
         /// <param name="thrustFactor">(Optional) The contribution of each rotor force to the total thrust, as well as its x-torque ("roll force") and z-torque ("pitch force"). Defaults to `1.0f`.</param>
-        /// <param name="rodLength">(Optional) The distance between two opposing rotors, such as O(f1) and O(f3). It is assumed that O(f1)->O(f3) and O(f2)->O(f4) are equal. Defaults to `1.0f`.</param>
         /// <param name="yawFactor">(Optional) The contribution of each rotor force to the y-torque ("yaw force"). Defaults to `1.0f`.</param>
         /// <param name="degrees">(Optional) Whether the angular velocity and angular acceleration are in degrees, or radians. Default to `true` (degrees).</param>
         /// <returns>An estimate (using Euler's method) for the rotor forces that will move the quadrotor closer to its destination.</returns>
@@ -282,9 +283,9 @@
         /// <param name="inertia">The non-zero moments of inertia of the quadrotor, commonly referred to as Ixx, Iyy, and Izz.</param>
         /// <param name="mass">The total mass of the quadrotor.</param>
         /// <param name="gravitationalAcceleration">(Optional) The acceleration due to gravity. Defaults to (0, -9.81, 0), as on the Earth's surface.</param>
+        /// <param name="rodLength">(Optional) The distance between two opposing rotors, such as O(f1) and O(f3). It is assumed that O(f1)->O(f3) and O(f2)->O(f4) are equal. Defaults to `1.0f`.</param>
         /// <param name="dragFactor">(Optional) A damping factor for the thrust, representing resistance by the drag. Defaults to `1.0f`.</param>
         /// <param name="thrustFactor">(Optional) The contribution of each rotor force to the total thrust, as well as its x-torque ("roll force") and z-torque ("pitch force"). Defaults to `1.0f`.</param>
-        /// <param name="rodLength">(Optional) The distance between two opposing rotors, such as O(f1) and O(f3). It is assumed that O(f1)->O(f3) and O(f2)->O(f4) are equal. Defaults to `1.0f`.</param>
         /// <param name="yawFactor">(Optional) The contribution of each rotor force to the y-torque ("yaw force"). Defaults to `1.0f`.</param>
         /// <param name="degrees">(Optional) Whether the angular velocity and angular acceleration are in degrees, or radians. Default to `true` (degrees).</param>
         /// <returns>An estimate (using Euler's method) for the rotor forces that will move the quadrotor closer to its destination.</returns>
