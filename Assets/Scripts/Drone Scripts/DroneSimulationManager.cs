@@ -85,13 +85,14 @@ public class DroneSimulationManager : MonoBehaviour {
 	[Tooltip("TODO")]
     public Vector3 gravitationalAcceleration = new Vector3(0.0f, 9.81f, 0.0f);
 	[Tooltip("TODO")]
-    public Vector3 windDisturbance = new Vector3(0.0f, 0.0f, 0.0f);
+    public Vector3 windDirection = new Vector3(0.0f, 0.0f, 0.0f);
+	[Tooltip("TODO")]
+    public float windMagnitude = 1.0f;
 
     [Header("Control Parameters")]
 	[Tooltip("TODO")]
-    public float targetSpeed = 0.1f; // Desired speed
-    public float maximumAccelerationMagnitude = 0.1f;
-    public float decelerationDistance = 1.0f;
+    public float targetSpeed = 0.1f;
+    public float decelerationDistance = 10.0f;
 
 
 
@@ -146,10 +147,11 @@ public class DroneSimulationManager : MonoBehaviour {
                         droneStatusPrev = FlightStatus.FLYING; 
                         droneStatus = FlightStatus.IN_AIR_STANDBY;
                     }
-                    
+
                 }
 
                 rotorForces = QuadrotorDynamics.TargetRotorForces(
+                                                                  transform.up,
                                                                   destination,
                                                                   position,
                                                                   targetSpeed,
@@ -158,6 +160,7 @@ public class DroneSimulationManager : MonoBehaviour {
                                                                   inertia,
                                                                   totalMass,
                                                                   gravitationalAcceleration,
+                                                                  decelerationDistance,
                                                                   rodLength,
                                                                   dragFactor,
                                                                   thrustFactor,
@@ -172,7 +175,12 @@ public class DroneSimulationManager : MonoBehaviour {
                 angularPosition += angularVelocity;
                 transform.localEulerAngles = angularPosition;
 
-                acceleration = QuadrotorDynamics.Acceleration(thrustForces.w, totalMass, transform.up, velocity, gravitationalAcceleration);
+                Vector3 targetVelocity = targetSpeed * (destination - position).normalized;
+                Vector3 direction = (targetVelocity - velocity - gravitationalAcceleration).normalized;
+
+                acceleration = QuadrotorDynamics.Acceleration(transform.up, thrustForces.w, totalMass, gravitationalAcceleration);
+                // TODO: documentation
+                transform.up = (acceleration - gravitationalAcceleration).normalized;
 
                 velocity += acceleration;
                 position += velocity;

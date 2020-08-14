@@ -3181,7 +3181,7 @@ MonoBehaviour:
   gravitationalAcceleration: {x: 0, y: -9.81, z: 0}
   windDisturbance: {x: 0, y: 0, z: 0}
   targetSpeed: 0.1
-  maximumAccelerationMagnitude: 0.1
+  maximumAccelerationMagnitude: 0.01
   decelerationDistance: 1
 --- !u!114 &114530801091702064
 MonoBehaviour:
