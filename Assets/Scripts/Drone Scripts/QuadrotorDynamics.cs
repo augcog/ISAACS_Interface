@@ -79,6 +79,15 @@
 			return acceleration;
 		}
 
+
+
+
+		public static Vector3 WindDisturbance(Vector3 acceleration, Vector3 wind)
+		{
+			float angle = Vector3.Angle(acceleration, wind); 
+			return angle / 180.0f * wind;
+		}
+
 	
 
 

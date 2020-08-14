@@ -85,13 +85,12 @@ public class DroneSimulationManager : MonoBehaviour {
 	[Tooltip("TODO")]
     public Vector3 gravitationalAcceleration = new Vector3(0.0f, 9.81f, 0.0f);
 	[Tooltip("TODO")]
-    public Vector3 windDirection = new Vector3(0.0f, 0.0f, 0.0f);
-	[Tooltip("TODO")]
-    public float windMagnitude = 1.0f;
+    public Vector3 wind = new Vector3(0.01f, 0.01f, 0.01f);
 
     [Header("Control Parameters")]
 	[Tooltip("TODO")]
     public float targetSpeed = 0.1f;
+	[Tooltip("TODO")]
     public float decelerationDistance = 10.0f;
 
 
@@ -181,6 +180,9 @@ public class DroneSimulationManager : MonoBehaviour {
                 acceleration = QuadrotorDynamics.Acceleration(transform.up, thrustForces.w, totalMass, gravitationalAcceleration);
                 // TODO: documentation
                 transform.up = (acceleration - gravitationalAcceleration).normalized;
+
+                acceleration += QuadrotorDynamics.WindDisturbance(acceleration, wind);
+
 
                 velocity += acceleration;
                 position += velocity;
