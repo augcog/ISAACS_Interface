@@ -64,6 +64,9 @@ public class DroneSimulationManager : MonoBehaviour {
     public float targetSpeed = 0.1f;
 	[Tooltip("The distance from a destination from which the drone must start decelerating before it reaches it. Use it to slow down the drone as it reaches a waypoint, or lands.")]
     public float decelerationDistance = 10.0f;
+	[Tooltip("When the drone approaches a waypoint, it will measure its distance from the waypoint against this radius to determine whether it has reached it.")]
+    public float destinationConfidenceRadius = 0.5f;
+
 
     [Header("Simulation Parameters")]
 	[Tooltip("The acceleration due to gravity. On the Earth's surface, it is approximately equal to (0, -9.81, 0).")]
@@ -382,7 +385,7 @@ public class DroneSimulationManager : MonoBehaviour {
 
             case FlightStatus.FLYING:
             case FlightStatus.PAUSED_IN_AIR:
-                nextWaypointID -= 1;
+                nextWaypointID--;
                 updateDestination(false, true, false);
                 droneStatusPrev = droneStatus;
                 droneStatus = FlightStatus.FLYING_HOME;
@@ -400,7 +403,7 @@ public class DroneSimulationManager : MonoBehaviour {
 
 
     /// <summary>
-    /// Land the drone at the current point
+    /// Land the drone at the current point.
     /// </summary>
     public void landDrone()
     {
@@ -415,7 +418,7 @@ public class DroneSimulationManager : MonoBehaviour {
 
             case FlightStatus.FLYING:
             case FlightStatus.PAUSED_IN_AIR:
-                nextWaypointID -= 1;
+                nextWaypointID--;
                 updateDestination(false, false, true);
                 droneStatusPrev = droneStatus;
                 droneStatus = FlightStatus.LANDING;
@@ -433,12 +436,12 @@ public class DroneSimulationManager : MonoBehaviour {
 
 
     /// <summary>
-    /// Check if the drone has reached the current destination
+    /// Check if the drone has reached the current destination.
     /// </summary>
     /// <returns></returns>
     private bool reachedCurrentDestination()
     {
-        if (Vector3.Distance(position, destination) < 0.1f)
+        if (Vector3.Distance(position, destination) < Mathf.Abs(destinationConfidenceRadius))
         {
             return true;
         }
@@ -449,9 +452,9 @@ public class DroneSimulationManager : MonoBehaviour {
 
 
     /// <summary>
-    /// Update the destination to the next waypoint if possible
+    /// Update the destination to the next waypoint if possible.
     /// </summary>
-    /// <returns>True if updated, false if no more waypoints available</returns>
+    /// <returns>True if updated, false if no more waypoints available.</returns>
     private bool updateDestination(bool waypoint, bool home, bool land)
     {
 
@@ -477,7 +480,7 @@ public class DroneSimulationManager : MonoBehaviour {
         Waypoint nextDestination = drone.GetWaypoint(nextWaypointID);
         destination = nextDestination.gameObjectPointer.transform.localPosition;
         Debug.Log("Destination set to: " + destination);
-        nextWaypointID += 1;
+        nextWaypointID++;
 
         return true;
     }
