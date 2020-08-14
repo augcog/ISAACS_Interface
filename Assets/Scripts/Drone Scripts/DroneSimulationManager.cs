@@ -6,63 +6,58 @@ using ISAACS;
 
 public class DroneSimulationManager : MonoBehaviour {
 
-    [Header("Selected drone and simulation speed")]
+    // The drone simulated by this script.
     private Drone drone;
-    private float speed = 0.1f;
 
-    /// <summary>
-    /// Current flight status of the drone
-    /// </summary>
-    public enum FlightStatus
-    {
-        ON_GROUND_STANDBY = 1,
-        IN_AIR_STANDBY =2,
-        FLYING = 3,
-        FLYING_HOME = 4,
-        PAUSED_IN_AIR = 5,
-        LANDING = 6,
-        NULL = 7
-    }
-
-    // TODO: documentation 
+    // A uniques identifier for each waypoint.
     private int nextWaypointID = 0;
 
-    // Drone state variables
+    // Flight status variables.
     private FlightStatus droneStatus;
     private FlightStatus droneStatusPrev;
 
-    // TODO: documentation
+    // The starting position vector.
     private Vector3 homeLocation;
-    // The desired position vector 
+    // The desired position vector.
     private Vector3 destination;
 
-    // The current position vector
+    // The current position vector.
     private Vector3 position;
-    // The linear velocity vector
+    // The linear velocity vector.
     private Vector3 velocity;
-    // The linear acceleration vector
+    // The linear acceleration vector.
     private Vector3 acceleration;
 
-    // The current rotation in Euler angles (roll, yaw, pitch)
+    // The current rotation in Euler angles (roll, yaw, pitch).
     private Vector3 angularPosition;
-    // The angular velocity vector
+    // The angular velocity vector in Euler angles.
     private Vector3 angularVelocity;
-    // The angular acceleration vector
+    // The angular acceleration vector in Euler angles.
     private Vector3 angularAcceleration;
 
-    // The total mass of the quadrotor.
+    // The mass of the quadrotor.
     private float totalMass;
 
-    // TODO The inertia components of the UAV
-    private Vector3 inertia; 
+    // The non-zero moments of inertia of the quadrotor (Ixx, Iyy, Izz).
+    private Vector3 inertia;
 
-    // TODO The speed of each rotor, in the following order:
+    // The force exerted by each rotor. Refer to QuadrotorDynamics (or the equivalent dynamics script) for the correct order.
     private Vector4 rotorForces;
+
+    // A vector holding the thrust (.w) and torques (.x, .y, .z) acting on the quadrotor.
     private Vector4 thrustForces;
 
-    // Torques. TODO: documentation
-    private Vector3 targetVelocity;
-    private Vector3 direction;
+    [Header("Control Parameters")]
+	[Tooltip("TODO")]
+    public float targetSpeed = 0.1f;
+	[Tooltip("TODO")]
+    public float decelerationDistance = 10.0f;
+
+    [Header("Simulation Parameters")]
+	[Tooltip("TODO")]
+    public Vector3 gravitationalAcceleration = new Vector3(0.0f, 9.81f, 0.0f);
+	[Tooltip("TODO")]
+    public Vector3 wind = new Vector3(0.01f, 0.01f, 0.01f);
 
     [Header("Drone Properties")]
 	[Tooltip("TODO")]
@@ -79,20 +74,17 @@ public class DroneSimulationManager : MonoBehaviour {
     public float thrustFactor = 1.0f;
 	[Tooltip("TODO")]
     public float yawFactor = 1.0f;
-
-
-    [Header("Simulation Dynamics")]
-	[Tooltip("TODO")]
-    public Vector3 gravitationalAcceleration = new Vector3(0.0f, 9.81f, 0.0f);
-	[Tooltip("TODO")]
-    public Vector3 wind = new Vector3(0.01f, 0.01f, 0.01f);
-
-    [Header("Control Parameters")]
-	[Tooltip("TODO")]
-    public float targetSpeed = 0.1f;
-	[Tooltip("TODO")]
-    public float decelerationDistance = 10.0f;
-
+	[Tooltip("Whether the drone is flying, landing, or waiting, among other things.")]
+    public enum FlightStatus
+    {
+        ON_GROUND_STANDBY = 1,
+        IN_AIR_STANDBY = 2,
+        FLYING = 3,
+        FLYING_HOME = 4,
+        PAUSED_IN_AIR = 5,
+        LANDING = 6,
+        NULL = 7
+    }
 
 
 
@@ -180,9 +172,7 @@ public class DroneSimulationManager : MonoBehaviour {
                 acceleration = QuadrotorDynamics.Acceleration(transform.up, thrustForces.w, totalMass, gravitationalAcceleration);
                 // TODO: documentation
                 transform.up = (acceleration - gravitationalAcceleration).normalized;
-
                 acceleration += QuadrotorDynamics.WindDisturbance(acceleration, wind);
-
 
                 velocity += acceleration;
                 position += velocity;
@@ -198,7 +188,9 @@ public class DroneSimulationManager : MonoBehaviour {
 
             case FlightStatus.FLYING_HOME:
 
-                this.transform.Translate(Vector3.Normalize(destination - position) * speed * Time.deltaTime, Space.Self);
+                // Readjust the quadrotor's angular position: since it's landing, it must be facing upwards.
+                transform.up = Vector3.up;
+                transform.Translate(targetSpeed * (destination - position).normalized, Space.Self);
 
                 if (reachedCurrentDestination())
                 {
@@ -211,7 +203,9 @@ public class DroneSimulationManager : MonoBehaviour {
 
             case FlightStatus.LANDING:
 
-                this.transform.Translate(Vector3.Normalize(destination - position) * speed * Time.deltaTime, Space.Self);
+                // Readjust the quadrotor's angular position: since it's landing, it must be facing upwards.
+                transform.up = Vector3.up;
+                transform.Translate(targetSpeed * (destination - position).normalized, Space.Self);
 
                 if (reachedCurrentDestination())
                 {
