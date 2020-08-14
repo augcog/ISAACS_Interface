@@ -120,7 +120,7 @@
 		public static Vector3 WindDisturbance(Vector3 wind, Vector3 normal, float mass)
 		{
 			float angle = Vector3.Angle(wind, normal);
-			return Mathf.Abs(Mathf.Cos(angle)) * wind / mass;
+			return Mathf.Abs(Mathf.Sin(angle)) * Mathf.Abs(Mathf.Cos(angle)) * wind / mass + wind / mass / 2.0f;
 		}
 
 	
