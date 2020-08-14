@@ -3171,18 +3171,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7787ec4cc870bae4c9e65fbfa30a4364, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetSpeed: 0.1
+  decelerationDistance: 10
+  gravitationalAcceleration: {x: 0, y: -9.81, z: 0}
+  wind: {x: 0.2, y: 0.2, z: 0.2}
   bodyMass: 5
-  bodyRadius: 15
-  rotorMass: 0.2
-  rodLength: 2
+  bodyRadius: 10
+  rotorMass: 0.4
+  rodLength: 1
   dragFactor: 1
   thrustFactor: 1
   yawFactor: 1
-  gravitationalAcceleration: {x: 0, y: -9.81, z: 0}
-  windDisturbance: {x: 0, y: 0, z: 0}
-  targetSpeed: 0.1
-  maximumAccelerationMagnitude: 0.01
-  decelerationDistance: 1
 --- !u!114 &114530801091702064
 MonoBehaviour:
   m_ObjectHideFlags: 1

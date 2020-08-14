@@ -68,13 +68,13 @@ public class DroneSimulationManager : MonoBehaviour {
     [Header("Simulation Parameters")]
 	[Tooltip("The acceleration due to gravity. On the Earth's surface, it is approximately equal to (0, -9.81, 0).")]
     public Vector3 gravitationalAcceleration = new Vector3(0.0f, 9.81f, 0.0f);
-	[Tooltip("A vector representing the direction and magnitude of acceleration due to wind. As a general rule, keep its magnitude smaller than the target speed.")]
-    public Vector3 wind = new Vector3(0.05f, 0.05f, 0.05f);
+	[Tooltip("A vector representing the direction and magnitude of acceleration due to wind. As a general rule, keep its magnitude smaller than the target speed times the total mass.")]
+    public Vector3 wind = new Vector3(0.2f, 0.2f, 0.2f);
 
     [Header("Drone Properties")]
-	[Tooltip("The mass of the sphere modelling the body of the drone.")]
+	[Tooltip("The mass of the sphere modeling the body of the drone.")]
     public float bodyMass = 5.0f;
-	[Tooltip("The radius of the sphere modelling the body of the drone.")]
+	[Tooltip("The radius of the sphere modeling the body of the drone.")]
     public float bodyRadius = 10.0f;
 	[Tooltip("The mass of each individual rotor attached to the drone.")]
     public float rotorMass = 0.4f;
@@ -96,22 +96,21 @@ public class DroneSimulationManager : MonoBehaviour {
     /// <param name="droneInit"></param>
     public void InitDroneSim()
     {
-        // TODO
-        drone = this.GetComponent<DroneProperties>().droneClassPointer;
+        // Load the drone simulated by this script.
+        drone = GetComponent<DroneProperties>().droneClassPointer;
 
         // Compute the total mass of the quadrotor.
         totalMass = bodyMass + 4 * rotorMass;
 
-        // TODO Model the quadrotor body and rotors as spheres, and compute its inertia
+        // Model the quadrotor's body and its rotors as spheres, and compute its moments of inertia.
         float bodyInertia = 2.0f * bodyMass * bodyRadius * bodyRadius / 5.0f;
         float rotorInertia = rodLength * rodLength * rotorMass;
         inertia.x = bodyInertia + 2.0f * rotorInertia;
         inertia.y = bodyInertia + 4.0f * rotorInertia;
         inertia.z = bodyInertia + 2.0f * rotorInertia;
 
-        // TODO Get the quadrotor's staring position.
+        // Store the quadrotor's staring position.
         homeLocation = drone.gameObjectPointer.transform.localPosition;
-        position = drone.gameObjectPointer.transform.localPosition;
 
         // Initialize the flight status.
         droneStatus = FlightStatus.ON_GROUND_STANDBY;
@@ -121,7 +120,7 @@ public class DroneSimulationManager : MonoBehaviour {
 
 
 
-    // FixedUpdate is called according to the physics engine
+    // Update is called once per frame.
     void Update()
     {
         position = transform.localPosition;
@@ -143,6 +142,7 @@ public class DroneSimulationManager : MonoBehaviour {
 
                 }
 
+                // Compute the rotor forces needed to fly the drone to the next waypoint at the given target speed.
                 rotorForces = QuadrotorDynamics.TargetRotorForces(
                                                                   transform.up,
                                                                   destination,
@@ -160,34 +160,41 @@ public class DroneSimulationManager : MonoBehaviour {
                                                                   yawFactor
                                                                   );
 
+                // Compute the thrust and torques resulting from the above rotor forces.
                 thrustForces = QuadrotorDynamics.SpinRotors(rotorForces, rodLength, dragFactor, thrustFactor, yawFactor);
 
+                // Compute the angular acceleration using the torques, and update the angular velocity and angular position of the drone, using Euler's method.
                 angularAcceleration = QuadrotorDynamics.AngularAcceleration(thrustForces, inertia);
-
                 angularVelocity += angularAcceleration;
                 angularPosition += angularVelocity;
                 transform.localEulerAngles = angularPosition;
 
+                // As the angular position has been adjusted, it is possible to compute the linear acceleration.
                 acceleration = QuadrotorDynamics.Acceleration(transform.up, thrustForces.w, totalMass, gravitationalAcceleration);
-                // TODO: documentation
+                // Readjust the angular position to fit the direction of the linear acceleration that was computed.
+                // This should not make a tremendous difference, but helps stabilize the system.
                 transform.up = (acceleration - gravitationalAcceleration).normalized;
+                // Add the acceleration due to wind to the linear acceleration.
                 acceleration += QuadrotorDynamics.WindDisturbance(wind, transform.up, totalMass);
 
+                // Update the linear velocity and position of the drone, using Euler's method.
+                // Although chaotic, at 90 FPS the system should be extremely stable.
                 velocity += acceleration;
                 position += velocity;
 
-                // If the drone "fell undergound", push it back up.
-                if (position.y < 0)
+                // Finally, if the drone "fell undergound", push it back up (ground collision).
+                if (position.y < 0.0f)
                 {
                     position.y = 0.0f;
                 }
+                // And... this is where the visual magic happens.
                 transform.localPosition = position;
 
                 break;
 
             case FlightStatus.FLYING_HOME:
 
-                // TODO, next: make landing also a function in QuadrotorDynamics, and adjust according to the deceleration distance.
+                // TODO, next: make landing also a function in QuadrotorDynamics, and adjust according to the deceleration distance. Also, the landing may be at an angle: check the ground first.
                 // Readjust the quadrotor's angular position: since it's landing, it must be facing upwards.
                 transform.up = Vector3.up;
                 transform.Translate(0.02f * targetSpeed * (destination - position).normalized, Space.Self);
@@ -203,7 +210,7 @@ public class DroneSimulationManager : MonoBehaviour {
 
             case FlightStatus.LANDING:
 
-                // TODO, next: make landing also a function in QuadrotorDynamics, and adjust according to the deceleration distance.
+                // TODO, next: make landing also a function in QuadrotorDynamics, and adjust according to the deceleration distance. Also, the landing may be at an angle: check the ground first.
                 // Readjust the quadrotor's angular position: since it's landing, it must be facing upwards.
                 transform.up = Vector3.up;
                 transform.Translate(0.02f * targetSpeed * (destination - position).normalized, Space.Self);
