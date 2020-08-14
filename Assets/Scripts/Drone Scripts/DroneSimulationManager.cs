@@ -9,6 +9,18 @@ public class DroneSimulationManager : MonoBehaviour {
     // The drone simulated by this script.
     private Drone drone;
 
+    // The current flight status (whether the drone is flying, waiting, landing, and so on).
+    private enum FlightStatus
+    {
+        ON_GROUND_STANDBY = 1,
+        IN_AIR_STANDBY = 2,
+        FLYING = 3,
+        FLYING_HOME = 4,
+        PAUSED_IN_AIR = 5,
+        LANDING = 6,
+        NULL = 7
+    }
+
     // A uniques identifier for each waypoint.
     private int nextWaypointID = 0;
 
@@ -74,17 +86,7 @@ public class DroneSimulationManager : MonoBehaviour {
     public float thrustFactor = 1.0f;
 	[Tooltip("TODO")]
     public float yawFactor = 1.0f;
-	[Tooltip("Whether the drone is flying, landing, or waiting, among other things.")]
-    public enum FlightStatus
-    {
-        ON_GROUND_STANDBY = 1,
-        IN_AIR_STANDBY = 2,
-        FLYING = 3,
-        FLYING_HOME = 4,
-        PAUSED_IN_AIR = 5,
-        LANDING = 6,
-        NULL = 7
-    }
+
 
 
 
