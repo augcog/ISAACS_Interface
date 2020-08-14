@@ -119,8 +119,8 @@
         /// <returns>The wind disturbance to be added to the linear acceleration in the inertial frame.</returns>documentation
 		public static Vector3 WindDisturbance(Vector3 wind, Vector3 normal, float mass)
 		{
-			float angle = Vector3.Angle(wind, normal); 
-			return angle / 180.0f * wind / mass;
+			float angle = Vector3.Angle(wind, normal);
+			return Mathf.Abs(Mathf.Cos(angle)) * wind / mass;
 		}
 
 	
