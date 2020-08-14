@@ -27,10 +27,10 @@
 		/// For simplicity, only the sign and magnitude of each rotor force is required, and only the sign and magnitude of the total thrust and torques is returned.
         /// </summary>
         /// <param name="rotorForces">The signed magnitude of the force exterted by each rotor, in the order shown in the diagram above.</param>
-        /// <param name="dragFactor">(Optional) A damping factor for the thrust, representing resistance by the drag.</param>
-        /// <param name="thrustFactor">(Optional) The contribution of each rotor force to the total thrust, as well as its x-torque ("roll force") and z-torque ("pitch force").</param>
-        /// <param name="rodLength">(Optional) The distance between two opposing rotors, such as O(f1) and O(f3). It is assumed that O(f1)->O(f3) and O(f2)->O(f4) are equal.</param>
-        /// <param name="yawFactor">(Optional) The contribution of each rotor force to the y-torque ("yaw force").</param>
+        /// <param name="dragFactor">(Optional) A damping factor for the thrust, representing resistance by the drag. Defaults to `1.0f`.</param>
+        /// <param name="thrustFactor">(Optional) The contribution of each rotor force to the total thrust, as well as its x-torque ("roll force") and z-torque ("pitch force"). Defaults to `1.0f`.</param>
+        /// <param name="rodLength">(Optional) The distance between two opposing rotors, such as O(f1) and O(f3). It is assumed that O(f1)->O(f3) and O(f2)->O(f4) are equal. Defaults to `1.0f`.</param>
+        /// <param name="yawFactor">(Optional) The contribution of each rotor force to the y-torque ("yaw force"). Defaults to `1.0f`.</param>
         /// <returns>The signed mangitudes of the quadrotor's total thrust and torques, for the given rotor forces.</returns>
 		public static Vector4 SpinRotors(Vector4 rotorForces, float rodLength=1.0f, float dragFactor=1.0f, float thrustFactor=1.0f, float yawFactor=1.0f)
 		{
@@ -152,7 +152,24 @@
 
 
 
-        /// <returns>An estimate for the rotor forces that will move the quadrotor closer to its destination.</returns>
+		/// <summary>
+        /// This method inverts the dynamics equations, to solve for the rotor forces that will accelerate the quadrotor towards its destination, keeping its speed as close to the target speed as possible.
+        /// </summary>
+        /// <param name="destination">The destination of the quadrotor (for example, the coordinates of the next waypoint).</param>
+        /// <param name="position">The current position of the quadrotor.</param>
+        /// <param name="targetSpeed">The target speed to maintain throughout the flight.</param>
+        /// <param name="velocity">The current velocity of the quadrotor.</param>
+        /// <param name="angularVelocity">The current angular velocity of the quadrotor.</param>
+        /// <param name="inertia">The non-zero moments of inertia of the quadrotor, commonly referred to as Ixx, Iyy, and Izz.</param>
+        /// <param name="mass">The total mass of the quadrotor.</param>
+        /// <param name="gravitationalAcceleration">The acceleration due to gravity. Approximately equal to (0, -9.81, 0) on the Earth's surface.</param>
+        /// <param name="dragFactor">(Optional) A damping factor for the thrust, representing resistance by the drag. Defaults to `1.0f`.</param>
+        /// <param name="thrustFactor">(Optional) The contribution of each rotor force to the total thrust, as well as its x-torque ("roll force") and z-torque ("pitch force"). Defaults to `1.0f`.</param>
+        /// <param name="rodLength">(Optional) The distance between two opposing rotors, such as O(f1) and O(f3). It is assumed that O(f1)->O(f3) and O(f2)->O(f4) are equal. Defaults to `1.0f`.</param>
+        /// <param name="yawFactor">(Optional) The contribution of each rotor force to the y-torque ("yaw force"). Defaults to `1.0f`.</param>
+        /// <param name="degrees">(Optional) Whether the angular velocity and angular acceleration are in degrees, or radians. Default to `true` (degrees).</param>
+        /// <param name="degrees">(Optional) Whether to use a manual or built-in method for the approximation of the Euler angles between two vectors. Defaults to `false` (built-in).</param>
+        /// <returns>An estimate (using Euler's method) for the rotor forces that will move the quadrotor closer to its destination.</returns>
 		public static Vector4 TargetRotorForces(
 												Vector3 destination,
 												Vector3 position,
@@ -173,7 +190,7 @@
 			// Compute the desired linear velocity.
 			Vector3 targetVelocity = targetSpeed * (destination - position).normalized;
 
-			// Compute the desired angular velocity, using the specified method (manual, or Unity built-in).
+			// Compute the desired angular velocity, using the specified method (manual, or built-in).
 			Vector3 targetAngularVelocity;
 			if (manual)
 			{
@@ -191,29 +208,39 @@
 				// Check if the mapped spot corresponds to a North pole singularity, and calculate the Euler angles between the current and desired velocities accordingly.
 				if (spot > 0.999f)
 				{
-					targetAngularVelocity.x = 180.0f / Mathf.PI * 2.0f * Mathf.Atan2(x * Mathf.Sin(angle / 2.0f), Mathf.Cos(angle / 2.0f));
-					targetAngularVelocity.y = 180.0f / Mathf.PI * Mathf.Asin(x * y * (1.0f - Mathf.Cos(angle)) + z * Mathf.Sin(angle));
+					targetAngularVelocity.x = 2.0f * Mathf.Atan2(x * Mathf.Sin(angle / 2.0f), Mathf.Cos(angle / 2.0f));
+					targetAngularVelocity.y = Mathf.Asin(x * y * (1.0f - Mathf.Cos(angle)) + z * Mathf.Sin(angle));
 					targetAngularVelocity.z = 0.0f;
 				}
 				// Check if the mapped spot corresponds to a South pole singularity, and calculate the Euler angles between the current and desired velocities accordingly.
 				else if (spot < -0.999f)
 				{
-					targetAngularVelocity.x = 180.0f / Mathf.PI * -2.0f * Mathf.Atan2(x * Mathf.Sin(angle / 2.0f), Mathf.Cos(angle / 2.0f));
-					targetAngularVelocity.y = 180.0f / Mathf.PI * Mathf.Asin(x * y * (1.0f - Mathf.Cos(angle)) + z * Mathf.Sin(angle));
+					targetAngularVelocity.x = -2.0f * Mathf.Atan2(x * Mathf.Sin(angle / 2.0f), Mathf.Cos(angle / 2.0f));
+					targetAngularVelocity.y = Mathf.Asin(x * y * (1.0f - Mathf.Cos(angle)) + z * Mathf.Sin(angle));
 					targetAngularVelocity.z = 0.0f;
 				}
 				// Otherwise, this is a regular spot, meaning that the Euler angles can be calculated using the standard formula.
 				else
 				{
-					targetAngularVelocity.x = 180.0f / Mathf.PI * Mathf.Atan2(y * Mathf.Sin(angle) - x * z * (1.0f - Mathf.Cos(angle)), 1.0f - (y * y + z * z) * (1.0f - Mathf.Cos(angle)));
-					targetAngularVelocity.y = 180.0f / Mathf.PI * Mathf.Asin(x * y * (1.0f - Mathf.Cos(angle)) + z * Mathf.Sin(angle));
-					targetAngularVelocity.z = 180.0f / Mathf.PI * Mathf.Atan2(x * Mathf.Sin(angle) - y * z * (1.0f - Mathf.Cos(angle)), 1.0f - (x * x + z * z) * (1.0f - Mathf.Cos(angle)));
+					targetAngularVelocity.x = Mathf.Atan2(y * Mathf.Sin(angle) - x * z * (1.0f - Mathf.Cos(angle)), 1.0f - (y * y + z * z) * (1.0f - Mathf.Cos(angle)));
+					targetAngularVelocity.y = Mathf.Asin(x * y * (1.0f - Mathf.Cos(angle)) + z * Mathf.Sin(angle));
+					targetAngularVelocity.z = Mathf.Atan2(x * Mathf.Sin(angle) - y * z * (1.0f - Mathf.Cos(angle)), 1.0f - (x * x + z * z) * (1.0f - Mathf.Cos(angle)));
+				}
+				// If the angular velocity and angular acceleration are in degrees, covnert the result to degrees.
+				if (degrees)
+				{
+					targetAngularVelocity *= 180.0f / Mathf.PI;
 				}
 			}
 			else
 			{
-				// Use the Unity built-in.	
+				// This is the built-in method.	
 				targetAngularVelocity = Quaternion.FromToRotation(velocity, targetVelocity).eulerAngles;
+				// If the angular velocity and angular acceleration are in radians, covnert the result to radians.
+				if (!degrees)	
+				{
+					targetAngularVelocity *= Mathf.PI / 180.0f;
+				}	
 			}
 
 

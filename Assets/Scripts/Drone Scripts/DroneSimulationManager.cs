@@ -122,8 +122,6 @@ public class DroneSimulationManager : MonoBehaviour {
         // Initialize the flight status.
         droneStatus = FlightStatus.ON_GROUND_STANDBY;
         droneStatusPrev = FlightStatus.NULL;
-
-        // velocity = targetSpeed * transform.up;
     }
 
 
@@ -151,10 +149,20 @@ public class DroneSimulationManager : MonoBehaviour {
                     
                 }
 
-                rotorForces = QuadrotorDynamics.TargetRotorForces(targetSpeed, destination, position,
-                                                                  velocity, angularVelocity, totalMass, inertia,
-                                                                  rodLength, dragFactor, thrustFactor, yawFactor,
-                                                                  gravitationalAcceleration);
+                rotorForces = QuadrotorDynamics.TargetRotorForces(
+                                                                  destination,
+                                                                  position,
+                                                                  targetSpeed,
+                                                                  velocity,
+                                                                  angularVelocity,
+                                                                  inertia,
+                                                                  totalMass,
+                                                                  gravitationalAcceleration,
+                                                                  rodLength,
+                                                                  dragFactor,
+                                                                  thrustFactor,
+                                                                  yawFactor
+                                                                  );
 
                 thrustForces = QuadrotorDynamics.SpinRotors(rotorForces, rodLength, dragFactor, thrustFactor, yawFactor);
 
