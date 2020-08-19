@@ -892,7 +892,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
 
                     if (WorldProperties.DJI_SIM)
                     {
-                        this.transform.localPosition += new Vector3(0, -97.0f, 0);
+                        this.transform.localPosition += new Vector3(0, -100.0f, 0);
                     }
                 }
 
