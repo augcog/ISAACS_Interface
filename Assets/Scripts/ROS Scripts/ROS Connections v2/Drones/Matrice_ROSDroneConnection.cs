@@ -290,10 +290,16 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
                         missionMsgList.Add(new_waypoint);
                     }
 
-                    MissionWaypointTaskMsg Task = new MissionWaypointTaskMsg(15.0f, 15.0f, MissionWaypointTaskMsg.ActionOnFinish.NO_ACTION, 1, MissionWaypointTaskMsg.YawMode.AUTO, MissionWaypointTaskMsg.TraceMode.POINT, MissionWaypointTaskMsg.ActionOnRCLost.FREE, MissionWaypointTaskMsg.GimbalPitchMode.FREE, missionMsgList.ToArray());
+                    MissionWaypointTaskMsg Task = new MissionWaypointTaskMsg(5.0f, 5.0f, MissionWaypointTaskMsg.ActionOnFinish.NO_ACTION, 1, MissionWaypointTaskMsg.YawMode.AUTO, MissionWaypointTaskMsg.TraceMode.POINT, MissionWaypointTaskMsg.ActionOnRCLost.FREE, MissionWaypointTaskMsg.GimbalPitchMode.FREE, missionMsgList.ToArray());
                     Debug.Log("Uploading waypoint mission");
                     UploadWaypointsTask(Task);
                     
+                    # This might work
+                    string service_name = "/dji_sdk/mission_waypoint_setSpeed";
+                    float task = 5.0f;
+                    Debug.LogFormat("ROS Call: {0} {1}  Arguments: {2}", client_id, service_name, task);
+                    ros.CallService(HandleTaskResponse, service_name, string.Format("{0} {1}", client_id, service_name), string.Format("[{0}]", task));
+                          
                     prev_flight_status = flight_status;
                     flight_status = FlightStatus.FLYING;
 
@@ -478,7 +484,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
                     missionMsgList.Add(new_waypoint);
                 }
 
-                MissionWaypointTaskMsg Task = new MissionWaypointTaskMsg(15.0f, 15.0f, MissionWaypointTaskMsg.ActionOnFinish.NO_ACTION, 1, MissionWaypointTaskMsg.YawMode.AUTO, MissionWaypointTaskMsg.TraceMode.POINT, MissionWaypointTaskMsg.ActionOnRCLost.FREE, MissionWaypointTaskMsg.GimbalPitchMode.FREE, missionMsgList.ToArray());
+                MissionWaypointTaskMsg Task = new MissionWaypointTaskMsg(5.0f, 5.0f, MissionWaypointTaskMsg.ActionOnFinish.NO_ACTION, 1, MissionWaypointTaskMsg.YawMode.AUTO, MissionWaypointTaskMsg.TraceMode.POINT, MissionWaypointTaskMsg.ActionOnRCLost.FREE, MissionWaypointTaskMsg.GimbalPitchMode.FREE, missionMsgList.ToArray());
                 Debug.Log("Uploading continuing waypoint mission");
                 UploadWaypointsTask(Task);
 
