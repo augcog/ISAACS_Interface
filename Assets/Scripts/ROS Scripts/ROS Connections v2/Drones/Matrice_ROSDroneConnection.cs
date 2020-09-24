@@ -277,7 +277,6 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
                     }
 
                     //If the following leads to a null pointer reference, then use instead: Drone currentlySelectedDrone = this.GetComponent<DroneProperties>().droneClassPointer;
-
                     // Start from 1 instead of 0, as takeoff is automatic.
                     for (int i = 1; i < droneProperties.droneClassPointer.WaypointsCount(); i++)
                     {
@@ -294,7 +293,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
                     Debug.Log("Uploading waypoint mission");
                     UploadWaypointsTask(Task);
                     
-                    # This might work
+                   // This might work
                     string service_name = "/dji_sdk/mission_waypoint_setSpeed";
                     float task = 5.0f;
                     Debug.LogFormat("ROS Call: {0} {1}  Arguments: {2}", client_id, service_name, task);
@@ -492,7 +491,6 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
                 flight_status = FlightStatus.FLYING;
 
                 droneProperties.StartCheckingFlightProgress(continueFromWaypointID, missionMsgList.Count);
-                
                 break;
 
             case UpdateMissionAction.END_AND_HOVER:
@@ -529,7 +527,6 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
                 flight_status = FlightStatus.FLYING;
 
                 droneProperties.StartCheckingFlightProgress(continueFromWaypointID, missionMsgList.Count);
-                
                 break;
 
             default:
@@ -575,7 +572,6 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
 
                 prev_flight_status = flight_status;
                 flight_status = FlightStatus.FLYING_HOME;
-
                 break;
 
             case FlightStatus.FLYING:
