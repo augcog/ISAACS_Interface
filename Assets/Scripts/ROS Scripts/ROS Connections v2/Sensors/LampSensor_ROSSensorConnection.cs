@@ -36,11 +36,10 @@ public class LampSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
     private Dictionary<string, bool> sensorSubscriberTopicsDict = new Dictionary<string, bool>();
 
     // Initilize the sensor
-    public void InitilizeSensor(int uniqueID, string sensorIP, int sensorPort, List<string> sensorSubscribers)
+    public void InitilizeSensor(int uniqueID, string sensorURL, int sensorPort, List<string> sensorSubscribers)
     {
-        Debug.Log("Init LAMP Connection at IP " + sensorIP + " Port " + sensorPort.ToString());
-
-        ros = new ROSBridgeWebSocketConnection("ws://" + sensorIP, sensorPort);
+        Debug.Log("Init LAMP Connection at " + sensorURL + ":" + sensorPort.ToString());
+        ros = new ROSBridgeWebSocketConnection(sensorURL, sensorPort);
         client_id = uniqueID.ToString();
 
         foreach (string subscriber in sensorSubscribers)
