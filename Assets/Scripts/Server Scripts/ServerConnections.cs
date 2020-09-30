@@ -30,79 +30,79 @@ public class ServerConnections : MonoBehaviour
 	}
 
 	//TODO: Implement this (What does this do?)
-	void addDroneCallback() {
+	public static void addDroneCallback() {
 
 	}
 
 	//TODO
 	//what still be passed into waypoints? strings or waypoint objects or something else?
-	void uploadMission(string ID, string[] waypoints)
+	public static void uploadMission(Drone drone, string ID, string[] waypoints)
     {
 
     }
 
 	//TODO: Implement this (What does this do?)
-	void uploadMissionCallback()
+	public static void uploadMissionCallback()
     {
 
     }
 
 	//TODO
-	void startMission(string ID)
+	public static void startMission(Drone drone, string ID)
     {
 
     }
 
 	//TODO
-	void startMissionCallback()
+	public static void startMissionCallback()
     {
 
     }
 
 	//TODO
-	void pauseMission(string ID)
+	public static void pauseMission(Drone drone, string ID)
     {
 
     }
 
 	//TODO
-	void pauseMissionCallback()
+	public static void pauseMissionCallback()
 	{
 
 	}
 
 	//TODO
-	void resumeMission(string ID)
+	public static void resumeMission(Drone drone, string ID)
     {
 
     }
 
 	//TODO
-	void resumeMissionCallback()
+	public static void resumeMissionCallback()
     {
 
     }
 
 	//TODO
-	void landDrone(string ID)
+	public static void landDrone(Drone drone, string ID)
     {
 
     }
 
 	//TODO
-	void landDroneCallback()
+	public static void landDroneCallback()
     {
 
     }
 
 	//TODO
-	void flyHome(string ID)
+	public static void flyHome(Drone drone, string ID)
     {
 
     }
 
 	//TODO
-	void flyHomeCallback()
+	public static void flyHomeCallback()
     {
 
     }
