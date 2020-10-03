@@ -20,7 +20,7 @@
         public bool selected;
 
         // All waypoints held by the drone
-        private List<Waypoint> waypoints;
+        List<Waypoint> waypoints;
 
         // All waypoints that were deleted, in case the player wants to redo them.
         private List<Waypoint> deletedWaypoints;

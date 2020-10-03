@@ -604,6 +604,7 @@ GameObject:
   - component: {fileID: 146794967}
   - component: {fileID: 146794968}
   - component: {fileID: 146794964}
+  - component: {fileID: 146794965}
   m_Layer: 0
   m_Name: World
   m_TagString: World
@@ -662,6 +663,17 @@ MonoBehaviour:
   unsubscribe: z
   stopMission: l
   rosDroneConnection: {fileID: 0}
+--- !u!114 &146794965
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 146794962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40e7d7093c2734491a88a14d7b9f412d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &146794967
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -699,6 +711,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DronesList:
+  - droneName: Perry Pepe the Platipus
+    ipAddress: 10.0.0.2
+    port: 9090
+    droneType: 1
+    droneSubscribers: 0600000001000000
+    simFlight: 0
+    attachedSensors: []
   - droneName: Perry Pepe the Platipus
     ipAddress: 10.0.0.2
     port: 9090
