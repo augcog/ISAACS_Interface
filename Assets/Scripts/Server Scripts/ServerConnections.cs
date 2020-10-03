@@ -9,43 +9,45 @@
     using UnityEditor;
     using System.IO;
     using ISAACS;
+    using SimpleJSON;
 
     public class ServerConnections : MonoBehaviour
     {
 
-        /// <summary>
-        /// Drone Types supported by ISAACS System
-        /// </summary>
-        // Note: Currently not public because we don't want a front-facing dropdown
-        enum DroneType { M100, M210, M600, Sprite };
+        [Header("Server Connection information")]
+        private static string serverIP;
+        private static int serverPort;
 
-        //TODO: Store/Pull drone list from WorldProperties instead
-        private Dictionary<int, ROSDroneConnectionInterface> ROSDroneConnections = new Dictionary<int, ROSDroneConnectionInterface>();
+        [Header("ros server connection")]
+        private static ROSBridgeWebSocketConnection rosServerConnection = null;
 
-        /// <summary>
-        /// TODO: create a drone object by adding to dict ROSDroneConnections 
-        /// </summary>
-        void AddDrone(string ID, string IP, string port, DroneType droneType)
+
+        void Start()
         {
-
-            //TODO: What exactly are we sending to server (and how)?
+            rosServerConnection = new ROSBridgeWebSocketConnection("ws://" + serverIP, serverPort);
         }
 
-        //TODO: Implement this (What does this do?)
-        public static void addDroneCallback()
+        void GetAllDrones()
         {
-
+            string service_name = "/isaacs_server/getalldrones";
+            //Debug.LogFormat();
+            //rosServerConnection.CallService(GetAllDronesCallback, service_name, params);
         }
 
-        //TODO
-        //what still be passed into waypoints? strings or waypoint objects or something else?
+        public static void GetAllDronesCallback(JSONNode response)
+        {
+            //TODO : @Newman
+        }
+
         public static void uploadMission(Drone drone, string ID, string[] waypoints)
         {
-
+            string service_name = "/isaacs_server/ TODO ";
+            //Debug.LogFormat();
+            //rosServerConnection.CallService( TODO , service_name, params);
         }
 
         //TODO: Implement this (What does this do?)
-        public static void uploadMissionCallback()
+        public static void uploadMissionCallback(JSONNode response)
         {
 
         }
@@ -53,11 +55,13 @@
         //TODO
         public static void startMission(Drone drone, string ID)
         {
-
+            string service_name = "/isaacs_server/ TODO ";
+            //Debug.LogFormat();
+            //rosServerConnection.CallService( TODO , service_name, params);
         }
 
         //TODO
-        public static void startMissionCallback()
+        public static void startMissionCallback(JSONNode response)
         {
 
         }
@@ -65,11 +69,13 @@
         //TODO
         public static void pauseMission(Drone drone, string ID)
         {
-
+            string service_name = "/isaacs_server/ TODO ";
+            //Debug.LogFormat();
+            //rosServerConnection.CallService( TODO , service_name, params);
         }
 
         //TODO
-        public static void pauseMissionCallback()
+        public static void pauseMissionCallback(JSONNode response)
         {
 
         }
@@ -77,11 +83,13 @@
         //TODO
         public static void resumeMission(Drone drone, string ID)
         {
-
+            string service_name = "/isaacs_server/ TODO ";
+            //Debug.LogFormat();
+            //rosServerConnection.CallService( TODO , service_name, params);
         }
 
         //TODO
-        public static void resumeMissionCallback()
+        public static void resumeMissionCallback(JSONNode response)
         {
 
         }
@@ -89,11 +97,13 @@
         //TODO
         public static void landDrone(Drone drone, string ID)
         {
-
+            string service_name = "/isaacs_server/ TODO ";
+            //Debug.LogFormat();
+            //rosServerConnection.CallService( TODO , service_name, params);
         }
 
         //TODO
-        public static void landDroneCallback()
+        public static void landDroneCallback(JSONNode response)
         {
 
         }
@@ -101,11 +111,13 @@
         //TODO
         public static void flyHome(Drone drone, string ID)
         {
-
+            string service_name = "/isaacs_server/ TODO ";
+            //Debug.LogFormat();
+            //rosServerConnection.CallService( TODO , service_name, params);
         }
 
         //TODO
-        public static void flyHomeCallback()
+        public static void flyHomeCallback(JSONNode response)
         {
 
         }
