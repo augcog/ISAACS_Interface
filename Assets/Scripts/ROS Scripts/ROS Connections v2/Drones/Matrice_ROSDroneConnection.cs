@@ -203,9 +203,9 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
     /// <param name="dronePort"> Drone Port value for ROS connection</param>
     /// <param name="droneSubscribers"> List of subscibers to connect to and display in the informative UI</param>
     /// <param name="simFlight"> Boolean value to active or deactive DroneFlightSim</param>
-    public void InitilizeDrone(int uniqueID, string droneIP, int dronePort, List<string> droneSubscribers, bool simFlight, DroneProperties droneProp)
+    public void InitilizeDrone(int uniqueID, string droneURL, int dronePort, List<string> droneSubscribers, bool simFlight, DroneProperties droneProp)
     {
-        ros = new ROSBridgeWebSocketConnection("ws://" + droneIP, dronePort);
+        ros = new ROSBridgeWebSocketConnection(droneURL, dronePort);
         client_id = uniqueID.ToString();
         simDrone = simFlight;
         droneProperties = droneProp;

@@ -690,8 +690,8 @@ MonoBehaviour:
   waypointBaseObject: {fileID: 1161822125618724, guid: c209b41633a109640bb6a3527c86c801,
     type: 2}
   sensorManagerBaseObject: {fileID: 130481553}
-  MeshLatitude: 37.9151805
-  MeshLongitude: -122.3379886
+  MeshLatitude: 37.91513
+  MeshLongitude: -122.33793
   MeshAltitude: 20
   MeshRotation: {x: 0, y: 270, z: 0}
   MeshScale: {x: 39, y: 39, z: 39}
@@ -712,7 +712,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DronesList:
   - droneName: Perry Pepe the Platipus
-    ipAddress: 10.0.0.2
+    url: ws://10.0.0.7
+    port: 9090
+    droneType: 1
+    droneSubscribers: 0600000001000000
+    simFlight: 0
+    attachedSensors: []
+  - droneName: Merry Manny the Manifold
+    url: ws://10.0.0.4
     port: 9090
     droneType: 1
     droneSubscribers: 0600000001000000

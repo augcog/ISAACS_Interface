@@ -11,7 +11,7 @@ using ROSBridgeLib.interface_msgs;
 public interface ROSDroneConnectionInterface
 {
     // Initlization function
-    void InitilizeDrone(int uniqueID, string droneIP, int dronePort, List<string> droneSubscribers, bool simFlight, DroneProperties droneProp);
+    void InitilizeDrone(int uniqueID, string droneURL, int dronePort, List<string> droneSubscribers, bool simFlight, DroneProperties droneProp);
 
     // Query state variables for Informative UI and misc. info
 
@@ -126,7 +126,7 @@ public interface ROSDroneConnectionInterface
 public interface ROSSensorConnectionInterface
 {
     // Initlization function
-    void InitilizeSensor(int uniqueID, string sensorIP, int sensorPort, List<string> sensorSubscribers);
+    void InitilizeSensor(int uniqueID, string sensorURL, int sensorPort, List<string> sensorSubscribers);
 
     /// <summary>
     /// Disconnect the ROS connection
