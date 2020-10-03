@@ -37,6 +37,17 @@
         public static void GetAllDronesCallback(JSONNode response)
         {
             //TODO : @Newman
+            // the actual data returned from the server is undecided
+            // for each drone insantiate a drone_v2 obj
+            List<object> droneInfo = response["data"];
+
+            foreach (object drone in droneInfo) {
+
+                Drone_v2 newDrone = new Drone_v2(position, uniqueID);
+                Debug.Log("Drone that was just made " + uniqueID);
+
+                WorldProperties.AddDrone(newDrone);
+            }
         }
 
         public static void uploadMission(Drone_v2 drone, string ID, string[] waypoints)
