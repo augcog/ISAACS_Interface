@@ -1,71 +1,78 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿namespace ISAACS
+{
+    using ROSBridgeLib.interface_msgs;
+    using System.Collections;
+    using System.Collections.Generic;
+    using UnityEngine;
 
-public class Drone_v2 : Drone {
-    /// <summary>
-    /// Class for drone interactions with the server
-    /// Server calls are stateless so this class will hold drone state information
-    /// </summary>
-
-    private string _id;
-
-    public void uploadMission()
+    public class Drone_v2 : Drone
     {
-        ServerConnection.uploadMission(this, _id, this.waypoints);
-    }
+        /// <summary>
+        /// Class for drone interactions with the server
+        /// Server calls are stateless so this class will hold drone state information
+        /// </summary>
 
-    public void startMission()
-    {
-        ServerConnection.startMission(this, _id);
-    }
+        private string _id;
 
-    public void pauseMission()
-    {
-        ServerConnection.pauseMission(this, _id);
-    }
+        public Drone_v2(Vector3 position, int uniqueID) : base(position, uniqueID) { }
 
-    public void resumeMission()
-    {
-        ServerConnection.resumeMission(this, _id);
-    }
+        public void uploadMission()
+        {
+            //ServerConnection.uploadMission(this, _id, this.waypoints);
+        }
 
-    public void landDrone()
-    {
-        ServerConnection.landDrone(this, _id);
-    }
+        public void startMission()
+        {
+            //ServerConnection.startMission(this, _id);
+        }
 
-    public void flyHome()
-    {
-        ServerConnection.flyHome(this, _id);
-    }
+        public void pauseMission()
+        {
+            //ServerConnection.pauseMission(this, _id);
+        }
 
-    /******************************/
-    //    Callback Functions      //
-    /******************************/
+        public void resumeMission()
+        {
+           // ServerConnection.resumeMission(this, _id);
+        }
 
-    public void onStartMission()
-    {
+        public void landDrone()
+        {
+            //ServerConnection.landDrone(this, _id);
+        }
 
-    }
+        public void flyHome()
+        {
+            //ServerConnection.flyHome(this, _id);
+        }
 
-    public void onPauseMission()
-    {
+        /******************************/
+        //    Callback Functions      //
+        /******************************/
 
-    }
+        public void onStartMission()
+        {
 
-    public void onResumeMission()
-    {
+        }
 
-    }
+        public void onPauseMission()
+        {
 
-    public void onLandDronoe()
-    {
+        }
 
-    }
+        public void onResumeMission()
+        {
 
-    public void onFlyHome()
-    {
+        }
 
+        public void onLandDronoe()
+        {
+
+        }
+
+        public void onFlyHome()
+        {
+
+        }
     }
 }
