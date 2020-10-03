@@ -27,8 +27,7 @@
         /// </summary>
         void AddDrone(string ID, string IP, string port, DroneType droneType)
         {
-
-            //TODO: What exactly are we sending to server (and how)?
+          
         }
 
         //TODO: Implement this (What does this do?)
@@ -39,7 +38,7 @@
 
         //TODO
         //what still be passed into waypoints? strings or waypoint objects or something else?
-        public static void uploadMission(Drone drone, string ID, string[] waypoints)
+        public static void uploadMission(Drone_v2 drone, string ID, string[] waypoints)
         {
 
         }
@@ -51,7 +50,7 @@
         }
 
         //TODO
-        public static void startMission(Drone drone, string ID)
+        public static void startMission(Drone_v2 drone, string ID)
         {
 
         }
@@ -63,7 +62,7 @@
         }
 
         //TODO
-        public static void pauseMission(Drone drone, string ID)
+        public static void pauseMission(Drone_v2 drone, string ID)
         {
 
         }
@@ -75,7 +74,7 @@
         }
 
         //TODO
-        public static void resumeMission(Drone drone, string ID)
+        public static void resumeMission(Drone_v2 drone, string ID)
         {
 
         }
@@ -87,7 +86,7 @@
         }
 
         //TODO
-        public static void landDrone(Drone drone, string ID)
+        public static void landDrone(Drone_v2 drone, string ID)
         {
 
         }
@@ -99,7 +98,7 @@
         }
 
         //TODO
-        public static void flyHome(Drone drone, string ID)
+        public static void flyHome(Drone_v2 drone, string ID)
         {
 
         }
