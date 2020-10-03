@@ -21,10 +21,10 @@
         [Header("ros server connection")]
         private static ROSBridgeWebSocketConnection rosServerConnection = null;
 
-
         void Start()
         {
             rosServerConnection = new ROSBridgeWebSocketConnection("ws://" + serverIP, serverPort);
+            GetAllDrones();
         }
 
         void GetAllDrones()
@@ -39,7 +39,7 @@
             //TODO : @Newman
         }
 
-        public static void uploadMission(Drone drone, string ID, string[] waypoints)
+        public static void uploadMission(Drone_v2 drone, string ID, string[] waypoints)
         {
             string service_name = "/isaacs_server/ TODO ";
             //Debug.LogFormat();
@@ -53,7 +53,7 @@
         }
 
         //TODO
-        public static void startMission(Drone drone, string ID)
+        public static void startMission(Drone_v2 drone, string ID)
         {
             string service_name = "/isaacs_server/ TODO ";
             //Debug.LogFormat();
@@ -67,7 +67,7 @@
         }
 
         //TODO
-        public static void pauseMission(Drone drone, string ID)
+        public static void pauseMission(Drone_v2 drone, string ID)
         {
             string service_name = "/isaacs_server/ TODO ";
             //Debug.LogFormat();
@@ -81,7 +81,7 @@
         }
 
         //TODO
-        public static void resumeMission(Drone drone, string ID)
+        public static void resumeMission(Drone_v2 drone, string ID)
         {
             string service_name = "/isaacs_server/ TODO ";
             //Debug.LogFormat();
@@ -95,7 +95,7 @@
         }
 
         //TODO
-        public static void landDrone(Drone drone, string ID)
+        public static void landDrone(Drone_v2 drone, string ID)
         {
             string service_name = "/isaacs_server/ TODO ";
             //Debug.LogFormat();
@@ -109,7 +109,7 @@
         }
 
         //TODO
-        public static void flyHome(Drone drone, string ID)
+        public static void flyHome(Drone_v2 drone, string ID)
         {
             string service_name = "/isaacs_server/ TODO ";
             //Debug.LogFormat();

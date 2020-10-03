@@ -26,8 +26,8 @@
         public SensorManager sensorManagerBaseObject;
 
         [Header("Drone variables")]
-        private static Drone selectedDrone;
-        private static Queue<Drone> dronesQueue;
+        private static Drone_v2 selectedDrone;
+        private static Queue<Drone_v2> dronesQueue;
 
         [Header("Sensor variables")]
         public static GameObject selectedSensor;
@@ -83,7 +83,7 @@
         {
             selectedDrone = null;
 
-            dronesQueue = new Queue<Drone>();
+            dronesQueue = new Queue<Drone_v2>();
 
             selectedSensor = null;
             sensorDict = new Dictionary<int, GameObject>();
@@ -196,7 +196,7 @@
         /// <summary>
         /// Cycle through the connected drones
         /// </summary>
-        public static Drone SelectNextDrone()
+        public static Drone_v2 SelectNextDrone()
         {
             if(selectedDrone != null)
             {
@@ -207,7 +207,7 @@
 
             if (dronesQueue.Count > 0)
             {
-                Drone nextDrone = dronesQueue.Dequeue();
+                Drone_v2 nextDrone = dronesQueue.Dequeue();
                 nextDrone.droneProperties.SelectDrone();
 
 
@@ -232,7 +232,7 @@
         /// <summary>
         /// Get the selected drone
         /// </summary>
-        public static Drone GetSelectedDrone()
+        public static Drone_v2 GetSelectedDrone()
         {
             return selectedDrone;
         }
@@ -241,7 +241,7 @@
         /// Add a drone to the drones dictionary
         /// </summary>
         /// <param name="drone"></param>
-        public static void AddDrone(Drone drone)
+        public static void AddDrone(Drone_v2 drone)
         {
             Debug.Log("Added drone " + drone);
             dronesQueue.Enqueue(drone);

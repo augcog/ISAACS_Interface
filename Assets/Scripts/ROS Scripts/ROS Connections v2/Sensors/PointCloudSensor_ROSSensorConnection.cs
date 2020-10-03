@@ -21,9 +21,11 @@ public class PointCloudSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubsc
     private Dictionary<string, PointCloudVisualizer> pcVisualizers = new Dictionary<string, PointCloudVisualizer>();
 
     // Initilize the sensor
-    public void InitilizeSensor(int uniqueID, string sensorIP, int sensorPort, List<string> sensorSubscribers)
+    public void InitilizeSensor(int uniqueID, string sensorURL, int sensorPort, List<string> sensorSubscribers)
     {
-        ros = new ROSBridgeWebSocketConnection("ws://" + sensorIP, sensorPort);
+        Debug.Log("Init PointCloud Connection at " + sensorURL + ":" + sensorPort.ToString());
+        // Figure out if we need secure or non secure websockets. OR better yet, make the sensorIP and sensorPort and the address header the same field that user enters.
+        ros = new ROSBridgeWebSocketConnection(sensorURL, sensorPort);
         client_id = uniqueID.ToString();
 
         foreach (string subscriber in sensorSubscribers)
@@ -40,6 +42,7 @@ public class PointCloudSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubsc
             ros.AddSubscriber(subscriberTopic, this);
         }
         ros.Connect();
+        Debug.LogWarning("Connected to Sensors");
     }
 
     // Update is called once per frame in Unity

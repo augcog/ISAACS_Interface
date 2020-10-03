@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.17302507, g: 0.21624431, b: 0.298236, a: 1}
+  m_IndirectSpecularColor: {r: 0.17302455, g: 0.2162439, b: 0.2982352, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -589,10 +589,6 @@ RectTransform:
   m_PrefabParentObject: {fileID: 224621352338123660, guid: b87ec9a2eb86c452cac627011628e828,
     type: 2}
   m_PrefabInternal: {fileID: 130481552}
---- !u!1 &142337252 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 109308, guid: 126d619cf4daa52469682f85c1378b4a, type: 2}
-  m_PrefabInternal: {fileID: 242895466}
 --- !u!1 &146794962
 GameObject:
   m_ObjectHideFlags: 0
@@ -690,8 +686,8 @@ MonoBehaviour:
   waypointBaseObject: {fileID: 1161822125618724, guid: c209b41633a109640bb6a3527c86c801,
     type: 2}
   sensorManagerBaseObject: {fileID: 130481553}
-  MeshLatitude: 37.9151805
-  MeshLongitude: -122.3379886
+  MeshLatitude: 37.91513
+  MeshLongitude: -122.33793
   MeshAltitude: 20
   MeshRotation: {x: 0, y: 270, z: 0}
   MeshScale: {x: 39, y: 39, z: 39}
@@ -712,14 +708,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DronesList:
   - droneName: Perry Pepe the Platipus
-    ipAddress: 10.0.0.2
+    url: ws://10.0.0.7
+    port: 9090
+    droneType: 1
+    droneSubscribers: 0600000001000000
+    simFlight: 0
+    attachedSensors: []
+  - droneName: Merry Manny the Manifold
+    url: ws://10.0.0.4
     port: 9090
     droneType: 1
     droneSubscribers: 0600000001000000
     simFlight: 0
     attachedSensors: []
   - droneName: Perry Pepe the Platipus
-    ipAddress: 10.0.0.2
+    url: 
     port: 9090
     droneType: 1
     droneSubscribers: 0600000001000000
@@ -731,10 +734,6 @@ MonoBehaviour:
 Transform:
   m_PrefabParentObject: {fileID: 400172, guid: 804ac96ebacbb37488605e7a96725e34, type: 3}
   m_PrefabInternal: {fileID: 343138670}
---- !u!1 &204674103 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 100002, guid: 126d619cf4daa52469682f85c1378b4a, type: 2}
-  m_PrefabInternal: {fileID: 242895466}
 --- !u!1001 &242895466
 Prefab:
   m_ObjectHideFlags: 0
@@ -2427,12 +2426,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoPopulateObjectReferences: 1
-  actualBoundaries: {fileID: 1578342133}
-  actualHeadset: {fileID: 204674103}
-  actualLeftController: {fileID: 142337252}
-  actualRightController: {fileID: 2024528288}
-  modelAliasLeftController: {fileID: 283578732}
-  modelAliasRightController: {fileID: 665289476}
+  actualBoundaries: {fileID: 0}
+  actualHeadset: {fileID: 0}
+  actualLeftController: {fileID: 0}
+  actualRightController: {fileID: 0}
+  modelAliasLeftController: {fileID: 0}
+  modelAliasRightController: {fileID: 0}
   cachedSystemSDKInfo:
     baseTypeName: VRTK.SDK_BaseSystem
     fallbackTypeName: VRTK.SDK_FallbackSystem
@@ -5800,10 +5799,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1953593573}
---- !u!1 &2024528288 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 113768, guid: 126d619cf4daa52469682f85c1378b4a, type: 2}
-  m_PrefabInternal: {fileID: 242895466}
 --- !u!1 &2053542333
 GameObject:
   m_ObjectHideFlags: 0
