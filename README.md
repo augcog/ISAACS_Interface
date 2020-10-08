@@ -173,7 +173,7 @@ _**TODO: Add pictures**_ <br>
 [Eric Wang](https://www.linkedin.com/in/erwang01), Data Visualization Engineer <br>
 Varun Saran, Network and Streaming Data Engineer <br>
 [Shreyas Krishnaswamy](https://www.linkedin.com/in/shreyas-krishnaswamy), Localization Engineer <br>
-[Newman Hu](https://newmanhu.com/), Controls Engineer <br>
+[Newman Hu](https://www.linkedin.com/in/newmanhu/), Controls Engineer <br>
 Rithvik Chuppala, System Administrator <br>
 Arya Anand, 3D Artist <br>
 ### Alumni
