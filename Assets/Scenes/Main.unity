@@ -720,6 +720,19 @@ MonoBehaviour:
       sensorType: 4
       sensorSubscribers: 0e000000
       videoPlayers: 1
+  - droneName: Merry Manny the Manifold
+    url: 192.168.18.240
+    port: 9090
+    droneType: 1
+    droneSubscribers: 0600000001000000
+    simFlight: 1
+    attachedSensors:
+    - sensorName: PC Face
+      url: 192.168.18.240
+      port: 9090
+      sensorType: 3
+      sensorSubscribers: 0a000000
+      videoPlayers: 0
   success: 0
   uniqueID: 0
 --- !u!4 &167235401 stripped

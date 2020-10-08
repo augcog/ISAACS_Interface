@@ -201,25 +201,31 @@
         /// </summary>
         public static Drone SelectNextDrone()
         {
+            Debug.Log("Dictionary right now: " + droneDict.Count);
             Drone nextDrone;
             if (selectedDrone != null)
             {
                 Debug.Log("Enquing selected drone");
                 int prevDroneID = selectedDrone.id;
+                Debug.Log("Prev Drone ID is: " + prevDroneID);
                 selectedDrone.gameObjectPointer.GetComponent<DroneProperties>().DeselectDrone();
                 //dronesQueue.Enqueue(selectedDrone);
-                droneDict.Add(selectedDrone.id, selectedDrone);
-                int index = 0;
-                if (prevDroneID == droneDict.Count - 1)
+                if (((prevDroneID/2)+1) == droneDict.Count)
                 {
-                    index = droneDict.Count - 1;
+                    nextDrone = (Drone)droneDict[0];
+                } else
+                {
+                    Debug.Log("adds two correctly");
+                    nextDrone = (Drone)droneDict[prevDroneID + 1];
                 }
-                nextDrone = (Drone)droneDict[index];
+               
             } else
             {
+                Debug.Log("Hitting here!");
                 nextDrone = (Drone)droneDict[0];
             }
 
+            
             //if (dronesQueue.Count > 0) {
             if (droneDict.Count > 0)
             {
@@ -233,6 +239,7 @@
                     flight_TestManager.UpdateDrone(nextDrone.droneProperties.droneROSConnection);
                 }
 
+                Debug.Log("changes the drone here!!");
                 selectedDrone = nextDrone;
 
                 return nextDrone;
@@ -261,6 +268,7 @@
         {
             Debug.Log("Added drone " + drone);
             //dronesQueue.Enqueue(drone);
+            Debug.Log("Print Drone.ID added to dict is: " + drone.id);
             droneDict.Add(drone.id, drone);
         }
 
