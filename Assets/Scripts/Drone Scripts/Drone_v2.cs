@@ -1,6 +1,7 @@
 ﻿namespace ISAACS
 {
     using ROSBridgeLib.interface_msgs;
+    using SimpleJSON;
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;

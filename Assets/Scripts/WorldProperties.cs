@@ -199,7 +199,7 @@
         /// <summary>
         /// Cycle through the connected drones
         /// </summary>
-        public static Drone SelectNextDrone()
+        public static Drone_v2 SelectNextDrone()
         {
             Debug.Log("Dictionary right now: " + droneDict.Count);
             Drone nextDrone;
@@ -230,7 +230,6 @@
             if (droneDict.Count > 0)
             {
                 //Drone nextDrone = dronesQueue.Dequeue();  
-
                 nextDrone.droneProperties.SelectDrone();
 
                 if (worldObject.GetComponent<M210_Flight_TestManager>() != null)
@@ -255,7 +254,7 @@
         /// <summary>
         /// Get the selected drone
         /// </summary>
-        public static Drone GetSelectedDrone()
+        public static Drone_v2 GetSelectedDrone()
         {
             return selectedDrone;
         }
@@ -264,7 +263,7 @@
         /// Add a drone to the drones dictionary
         /// </summary>
         /// <param name="drone"></param>
-        public static void AddDrone(Drone drone)
+        public static void AddDrone(Drone_v2 drone)
         {
             Debug.Log("Added drone " + drone);
             //dronesQueue.Enqueue(drone);
