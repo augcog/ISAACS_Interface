@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.17302455, g: 0.2162439, b: 0.2982352, a: 1}
+  m_IndirectSpecularColor: {r: 0.17302507, g: 0.21624431, b: 0.298236, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -630,7 +630,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 146794962}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b00dbd53d3f787e479e60d37c5c3af6b, type: 3}
   m_Name: 
@@ -701,7 +701,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 146794962}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dac87ae293d0bd348a6bcb090e69c517, type: 3}
   m_Name: 
@@ -713,13 +713,7 @@ MonoBehaviour:
     droneType: 1
     droneSubscribers: 0600000001000000
     simFlight: 1
-    attachedSensors:
-    - sensorName: thing
-      url: 192.168.18.240
-      port: 9090
-      sensorType: 4
-      sensorSubscribers: 0e000000
-      videoPlayers: 1
+    attachedSensors: []
   - droneName: Merry Manny the Manifold
     url: 192.168.18.240
     port: 9090
