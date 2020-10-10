@@ -111,7 +111,7 @@
         public void StopCheckingFlightProgress()
         {
             StopCoroutine(CheckTargetWaypoint());
-            droneROSConnection.UploadedMissionCompleted();
+            //droneROSConnection.UploadedMissionCompleted();
             Debug.Log("Mission Completed!");
         }
         
