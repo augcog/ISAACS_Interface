@@ -69,7 +69,7 @@
 
             // Updating the world properties to reflect a new drone being added
             id = uniqueID;
-            WorldProperties.AddDrone(this);
+            //WorldProperties.AddDrone(this);
             Debug.Log("Created new drone with id: " + id);
 
             // Initilize the sensor list
