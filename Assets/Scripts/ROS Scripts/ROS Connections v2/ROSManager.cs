@@ -113,7 +113,7 @@ public class ROSManager : MonoBehaviour
         }
 
         // Create a new drone
-        Drone droneInstance = new Drone(WorldProperties.worldObject.transform.position, uniqueID);
+        Drone_v2 droneInstance = new Drone_v2(WorldProperties.worldObject.transform.position, uniqueID);
         Debug.Log("Drone that was just made " + droneInstance.gameObjectPointer.name);
         DroneProperties droneProperties = droneInstance.droneProperties;
         GameObject droneGameObject = droneInstance.gameObjectPointer;

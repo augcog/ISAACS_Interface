@@ -15,7 +15,10 @@
 
         private string _id;
 
-        public Drone_v2(Vector3 position, int uniqueID) : base(position, uniqueID) { WorldProperties.AddDrone(this); }
+        public Drone_v2(Vector3 position, int uniqueID) : base(position, uniqueID) {
+            Debug.Log("instantiates new drone_V2");
+            WorldProperties.AddDrone(this);
+        }
 
         public void uploadMission()
         {
