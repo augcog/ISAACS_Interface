@@ -3,6 +3,7 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Collections.Specialized;
     using System.IO;
     using UnityEditor;
     using UnityEngine;
@@ -26,8 +27,9 @@
         public SensorManager sensorManagerBaseObject;
 
         [Header("Drone variables")]
-        private static Drone_v2 selectedDrone;
-        private static Queue<Drone_v2> dronesQueue;
+        private static Drone selectedDrone;
+        private static OrderedDictionary droneDict;
+        //private static Queue<Drone> dronesQueue;
 
         [Header("Sensor variables")]
         public static GameObject selectedSensor;
@@ -83,7 +85,8 @@
         {
             selectedDrone = null;
 
-            dronesQueue = new Queue<Drone_v2>();
+            //dronesQueue = new Queue<Drone>();
+            droneDict = new OrderedDictionary();
 
             selectedSensor = null;
             sensorDict = new Dictionary<int, GameObject>();
@@ -198,18 +201,36 @@
         /// </summary>
         public static Drone_v2 SelectNextDrone()
         {
-            if(selectedDrone != null)
+            Debug.Log("Dictionary right now: " + droneDict.Count);
+            Drone nextDrone;
+            if (selectedDrone != null)
             {
                 Debug.Log("Enquing selected drone");
+                int prevDroneID = selectedDrone.id;
+                Debug.Log("Prev Drone ID is: " + prevDroneID);
                 selectedDrone.gameObjectPointer.GetComponent<DroneProperties>().DeselectDrone();
-                dronesQueue.Enqueue(selectedDrone);
+                //dronesQueue.Enqueue(selectedDrone);
+                if (((prevDroneID/2)+1) == droneDict.Count)
+                {
+                    nextDrone = (Drone)droneDict[0];
+                } else
+                {
+                    Debug.Log("adds two correctly");
+                    nextDrone = (Drone)droneDict[prevDroneID + 1];
+                }
+               
+            } else
+            {
+                Debug.Log("Hitting here!");
+                nextDrone = (Drone)droneDict[0];
             }
 
-            if (dronesQueue.Count > 0)
+            
+            //if (dronesQueue.Count > 0) {
+            if (droneDict.Count > 0)
             {
-                Drone_v2 nextDrone = dronesQueue.Dequeue();
+                //Drone nextDrone = dronesQueue.Dequeue();  
                 nextDrone.droneProperties.SelectDrone();
-
 
                 if (worldObject.GetComponent<M210_Flight_TestManager>() != null)
                 {
@@ -217,6 +238,7 @@
                     flight_TestManager.UpdateDrone(nextDrone.droneProperties.droneROSConnection);
                 }
 
+                Debug.Log("changes the drone here!!");
                 selectedDrone = nextDrone;
 
                 return nextDrone;
@@ -244,7 +266,9 @@
         public static void AddDrone(Drone_v2 drone)
         {
             Debug.Log("Added drone " + drone);
-            dronesQueue.Enqueue(drone);
+            //dronesQueue.Enqueue(drone);
+            Debug.Log("Print Drone.ID added to dict is: " + drone.id);
+            droneDict.Add(drone.id, drone);
         }
 
         /// <summary>

@@ -25,7 +25,8 @@ public class DroneButtons : MonoBehaviour {
 
     void OnClickEvent()
     {
-        Drone_v2 selectedDrone = WorldProperties.GetSelectedDrone();
+        Drone_v2 selectedDrone = (Drone_v2) WorldProperties.GetSelectedDrone();
+        // Drone_v2 selectedDrone = WorldProperties.GetSelectedDrone();
         //ROSDroneConnectionInterface droneROSConnection = selectedDrone.droneProperties.droneROSConnection;
 
         if (startMission)

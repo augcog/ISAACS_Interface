@@ -75,10 +75,5 @@
         {
 
         }
-
-        public void setDroneID()
-        {
-            //_id = drone_id;
-        }
     }
 }
