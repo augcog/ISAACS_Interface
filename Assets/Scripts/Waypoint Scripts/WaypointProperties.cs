@@ -483,76 +483,7 @@
             }
         }
 
-        //will delete
-        // Changes the colors of waypoints and lines based on their selected and passed states
-        //public void ChangeColor()
-        //{
-            
-        //    switch (waypointStatus)
-        //    {
-        //        case WaypointStatus.STATIC:
-        //            this.GetComponent<MeshRenderer>().material = unpassedWaypoint;
-        //            if (referenceDrone.selected)
-        //            {
-        //                LineProperties.material = selectedUnpassedLine;
-        //            }
-        //            else
-        //            {
-        //                LineProperties.material = unselectedUnpassedLine;
-        //            }
-        //            break;
-        //        case WaypointStatus.PASSED:
-        //            this.GetComponent<MeshRenderer>().material = passedWaypoint;
-        //            if (referenceDrone.selected)
-        //            {
-        //                LineProperties.material = selectedPassedLine;
-        //            }
-        //            else
-        //            {
-        //                LineProperties.material = unselectedPassedLine;
-        //            }
-        //            break;
-        //        case WaypointStatus.GRABBED:
-        //            this.GetComponent<MeshRenderer>().material = touchedWaypoint;
-        //            break;
-        //        case WaypointStatus.LOCKED:
-        //            this.GetComponent<MeshRenderer>().material = lockedWaypoint;
-        //            break;
-        //        case WaypointStatus.UPLOADED:
-        //            this.GetComponent<MeshRenderer>().material = uploadedWaypoint;
-        //            break;
-        //    }
-
-        //    switch (waypointStatus)
-        //    {
-        //        case WaypointStatus.STATIC:
-        //        case WaypointStatus.GRABBED:
-        //        case WaypointStatus.LOCKED:
-        //        case WaypointStatus.UPLOADED:
-
-        //            if (referenceDrone.selected)
-        //            {
-        //                LineProperties.material = selectedUnpassedLine;
-        //            }
-        //            else
-        //            {
-        //                LineProperties.material = unselectedUnpassedLine;
-        //            }
-        //            break;
-
-        //        case WaypointStatus.PASSED:
-        //            if (referenceDrone.selected)
-        //            {
-        //                LineProperties.material = selectedPassedLine;
-        //            }
-        //            else
-        //            {
-        //                LineProperties.material = unselectedPassedLine;
-        //            }
-        //            break;
-        //    }
-
-        //}
+       
 
         // Destroys groundpoint when waypoint is destroyed
         public void OnDestroy()

@@ -271,7 +271,8 @@
         /// </summary>
         public void DronePathUpdated()
         {
-            droneProperties.droneROSConnection.UpdateMission();
+            //should never be called - overrode in Drone_v2
+            ServerConnections.updateMission();
         }
         
         /******************************/

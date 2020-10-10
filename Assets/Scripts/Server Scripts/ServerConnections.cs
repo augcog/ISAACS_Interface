@@ -148,6 +148,22 @@
 
         }
 
+
+        //TODO
+        public static void updateMission(Drone_v2 drone, string ID, Waypoint[] updatedWaypoints)
+        {
+            string service_name = "/isaacs_server/ TODO ";
+            //Debug.LogFormat();
+            //rosServerConnection.CallService( TODO , service_name, params);
+
+            //all computation on server to see what has been changed and stuff
+        }
+
+        //TODO
+        public static void updateMissionCallback(JSONNode response)
+        {
+
+        }
         //TODO
         public static void startMission(Drone_v2 drone, string ID)
         {

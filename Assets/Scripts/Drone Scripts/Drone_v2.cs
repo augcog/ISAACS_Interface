@@ -15,39 +15,45 @@
 
         private string _id;
 
-        public Drone_v2(Vector3 position, int uniqueID) : base(position, uniqueID) {
+        public Drone_v2(Vector3 position, string uniqueID) : base(position, (int) uniqueID) {
             Debug.Log("instantiates new drone_V2");
             WorldProperties.AddDrone(this);
+            _id = uniqueID;
         }
 
         public void uploadMission()
         {
-            //ServerConnection.uploadMission(this, _id, this.waypoints);
+            ServerConnections.uploadMission(this, _id, this.AllWaypoints();
+        }
+
+        public void updateMission()
+        {
+            ServerConnections.updateMission(this, _id, this.AllWaypoints());
         }
 
         public void startMission()
         {
-            //ServerConnection.startMission(this, _id);
+            ServerConnections.startMission(this, _id);
         }
 
         public void pauseMission()
         {
-            //ServerConnection.pauseMission(this, _id);
+            ServerConnections.pauseMission(this, _id);
         }
 
         public void resumeMission()
         {
-           // ServerConnection.resumeMission(this, _id);
+            ServerConnections.resumeMission(this, _id);
         }
 
         public void landDrone()
         {
-            //ServerConnection.landDrone(this, _id);
+            ServerConnections.landDrone(this, _id);
         }
 
         public void flyHome()
         {
-            //ServerConnection.flyHome(this, _id);
+            ServerConnections.flyHome(this, _id);
         }
 
         /******************************/
