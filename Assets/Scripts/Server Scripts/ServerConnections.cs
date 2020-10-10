@@ -10,6 +10,7 @@
     using System.IO;
     using ISAACS;
     using SimpleJSON;
+    using System;
 
     public class ServerConnections : MonoBehaviour
     {
@@ -20,6 +21,48 @@
 
         [Header("ros server connection")]
         private static ROSBridgeWebSocketConnection rosServerConnection = null;
+
+        /// Drone Subscribers supported by ISAACS System
+        private enum DroneSubscribers { attitude, battery_state, flight_status, gimbal_angle, gps_health, gps_position, rtk_position, imu, rc, velocity, height_above_takeoff, local_position };
+
+        /// Sensor types supported by ISAACS System
+        private enum SensorType { PointCloud, Mesh, LAMP, PCFace, Image };
+
+        // Sensor video players
+        private enum VideoPlayers { None, LeftVideo, RightVideo, BackVideo, FrontVideo };
+
+        /// Sensor subscribers supported by ISAACS System
+        private enum SensorSubscribers
+        {
+            surface_pointcloud, mesh,
+            colorized_points_0, colorized_points_1, colorized_points_2, colorized_points_3, colorized_points_4, colorized_points_5,
+            colorized_points_faced_0, colorized_points_faced_1, colorized_points_faced_2, colorized_points_faced_3, colorized_points_faced_4, colorized_points_faced_5, fpv_camera_images
+        };
+
+        // The Drone Information provided by the server
+        private class DroneInformation
+        {
+            public string droneName;
+            public int id;
+            //public List<DroneSubscribers> droneSubscribers;
+            //public bool simFlight;
+            //public List<SensorInformation> attachedSensors;
+
+            public DroneInformation(JSONNode msg)
+            {
+                droneName = msg["droneName"].ToString();
+                id = msg["droneID"].AsInt;
+            }
+        }
+
+        // The Sensor information provided by the server
+        private class SensorInformation
+        {
+            public string sensorName;
+            public SensorType sensorType;
+            public List<SensorSubscribers> sensorSubscribers;
+            public VideoPlayers videoPlayers;
+        }
 
         void Start()
         {
@@ -36,23 +79,61 @@
 
         public static void GetAllDronesCallback(JSONNode response)
         {
-            //TODO : @Newman
-            // the actual data returned from the server is undecided
-            // for each drone insantiate a drone_v2 obj
+            JSONArray droneArray = response["droneArray"].AsArray;
+
+            foreach (JSONNode droneInfoJSON in droneArray)
+            {
+                DroneInformation droneInfo = new DroneInformation(droneInfoJSON);
+                InstantiateDrone(droneInfo);
+            }
+        }
+
+        private static void InstantiateDrone(DroneInformation droneInformation)
+        {
+            int drone_id = droneInformation.id;
+            string drone_name = droneInformation.droneName;
+            
+            /*
+            List<string> droneSubscribers = new List<string>();
+
+            foreach (DroneSubscribers subscriber in droneInformation.droneSubscribers)
+            {
+                droneSubscribers.Add(subscriber.ToString());
+            }
+            */
+
+            // Create a new drone
+            Drone_v2 droneInstance = new Drone_v2(WorldProperties.worldObject.transform.position, drone_id);
+            Debug.Log("Drone Created: " + droneInstance.gameObjectPointer.name);
+
+            DroneProperties droneProperties = droneInstance.droneProperties;
+            GameObject droneGameObject = droneInstance.gameObjectPointer;
+
+            droneGameObject.name = drone_name;
 
             /*
-            List<object> droneInfo = response["data"];
+            // Added optional funtionality we can implement as we go.
 
-            foreach (object drone in droneInfo) {
-
-                Drone_v2 newDrone = new Drone_v2(position, uniqueID);
-                Debug.Log("Drone that was just made " + uniqueID);
-
-                WorldProperties.AddDrone(newDrone);
+            // Create attached sensors
+            foreach (ROSSensorConnectionInput rosSensorInput in rosDroneConnectionInput.attachedSensors)
+            {
+                ROSSensorConnectionInterface sensor = InstantiateSensor(rosSensorInput);
+                droneInstance.AddSensor(sensor);
             }
 
+            // Initilize drone sim manager script on the drone
+            DroneSimulationManager droneSim = droneGameObject.GetComponent<DroneSimulationManager>();
+            droneSim.InitDroneSim();
+            droneProperties.droneSimulationManager = droneSim;
+
+            // Get DroneMenu and instansiate.
+            DroneMenu droneMenu = droneGameObject.GetComponent<DroneMenu>();
+            droneMenu.InitDroneMenu(droneInformation, droneSubscribers);
+            droneGameObject.GetComponent<DroneProperties>().droneMenu = droneMenu;
             */
         }
+
+
 
         public static void uploadMission(Drone_v2 drone, string ID, string[] waypoints)
         {
