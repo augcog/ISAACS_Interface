@@ -23,10 +23,10 @@
 
         public void uploadMission()
         {
-            ServerConnections.uploadMission(this, _id, this.AllWaypoints();
+            ServerConnections.uploadMission(this, _id, this.AllWaypoints());
         }
 
-        public void updateMission()
+        public override void DronePathUpdated()
         {
             ServerConnections.updateMission(this, _id, this.AllWaypoints());
         }
