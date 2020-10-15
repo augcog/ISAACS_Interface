@@ -15,10 +15,10 @@
 
         private string _id;
 
-        public Drone_v2(Vector3 position, string uniqueID) : base(position, (int) uniqueID) {
+        public Drone_v2(Vector3 position, int uniqueID) : base(position, uniqueID) {
             Debug.Log("instantiates new drone_V2");
             WorldProperties.AddDrone(this);
-            _id = uniqueID;
+            _id = uniqueID.ToString();
         }
 
         public void uploadMission()
@@ -26,7 +26,7 @@
             ServerConnections.uploadMission(this, _id, this.AllWaypoints());
         }
 
-        public override void DronePathUpdated()
+        public void DronePathUpdated()
         {
             ServerConnections.updateMission(this, _id, this.AllWaypoints());
         }

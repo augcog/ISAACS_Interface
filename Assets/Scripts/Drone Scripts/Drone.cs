@@ -269,11 +269,11 @@
         /// To be called by any future waypoint that is edited.
         /// Relays the information to the ROSConnection.
         /// </summary>
-        public void DronePathUpdated()
+        /*public void DronePathUpdated()
         {
             //should never be called - overrode in Drone_v2
             ServerConnections.updateMission();
-        }
+        }*/
         
         /******************************/
         //       HELPER METHODS       //

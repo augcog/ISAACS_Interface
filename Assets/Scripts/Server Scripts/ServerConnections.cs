@@ -135,7 +135,7 @@
 
 
 
-        public static void uploadMission(Drone_v2 drone, string ID, string[] waypoints)
+        public static void uploadMission(Drone_v2 drone, string ID, List<Waypoint> waypoints)
         {
             string service_name = "/isaacs_server/ TODO ";
             //Debug.LogFormat();
@@ -150,7 +150,7 @@
 
 
         //TODO
-        public static void updateMission(Drone_v2 drone, string ID, Waypoint[] updatedWaypoints)
+        public static void updateMission(Drone_v2 drone, string ID, List<Waypoint> updatedWaypoints)
         {
             string service_name = "/isaacs_server/ TODO ";
             //Debug.LogFormat();

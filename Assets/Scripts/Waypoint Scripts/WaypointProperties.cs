@@ -15,7 +15,7 @@
 
         [Header("Connected gameobjects")]
         public Waypoint classPointer;
-        public Drone referenceDrone;
+        public Drone_v2 referenceDrone;
         public GameObject referenceDroneGameObject;
         private GameObject prevPoint;
         private Waypoint nextPoint;

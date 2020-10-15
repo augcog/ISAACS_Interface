@@ -7,7 +7,7 @@
 
     public class Waypoint
     {
-        public Drone referenceDrone; // The drone whose path this waypoint belongs to
+        public Drone_v2 referenceDrone; // The drone whose path this waypoint belongs to
         public GameObject gameObjectPointer; // This is the related game object
 
         // The PathPoints are used by the line renderer to connect the full path.
@@ -24,7 +24,8 @@
         public Waypoint(Drone myDrone, Vector3 position, bool takeoffWaypoint=false)
         {
             // Linking this waypoint to its drone
-            referenceDrone = myDrone;
+            // Temporary cast
+            referenceDrone = (Drone_v2)myDrone;
 
             // Setting up all the related gameObject parameters
             GameObject baseObject = (GameObject)WorldProperties.worldObject.GetComponent<WorldProperties>().waypointBaseObject;
