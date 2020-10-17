@@ -99,7 +99,8 @@ public class DroneMenu : MonoBehaviour {
             GPSCoordinate gps =  WorldProperties.UnityCoordToGPSCoord(dronePosition);
             dronePosText.text = "Lat:   " + String.Format("{0:0.0000000}", gps.Lat) + "\nLon: " + String.Format("{0:0.0000000}", gps.Lng);
 
-            if (connection.HasAuthority())
+            // not using hasAuthority?
+            /*if (connection.HasAuthority())
             {
                 droneAuthorityText.text = "Controllable";
                 droneAuthorityText.color = Color.green;
@@ -108,7 +109,7 @@ public class DroneMenu : MonoBehaviour {
             {
                 droneAuthorityText.text = "Request Authority";
                 droneAuthorityText.color = Color.white;
-            }
+            }*/
 
             // Make canvas always face the user as drone moves
             headsetTransform = VRTK_DeviceFinder.HeadsetTransform();

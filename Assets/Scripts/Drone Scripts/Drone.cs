@@ -69,6 +69,7 @@
 
             // Updating the world properties to reflect a new drone being added
             id = uniqueID;
+
             //WorldProperties.AddDrone(this);
             Debug.Log("Created new drone with id: " + id);
 
@@ -103,6 +104,7 @@
         /// </summary>
         /// <param name="coordinates">The coordinates of the waypoint which is to be added to the end of path.</param>        
         /// <returns>The waypoint which is to be added to the end of path.</returns>        
+
         public Waypoint AddWaypoint(Vector3 coordinates)
         {
             Debug.Log("Adding waypoint at: " + coordinates.ToString());

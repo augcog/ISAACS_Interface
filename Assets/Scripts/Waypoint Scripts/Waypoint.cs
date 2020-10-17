@@ -24,8 +24,13 @@
         public Waypoint(Drone myDrone, Vector3 position, bool takeoffWaypoint=false)
         {
             // Linking this waypoint to its drone
-            // Temporary cast
-            referenceDrone = (Drone_v2)myDrone;
+            // Temporary cast - https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/operators/type-testing-and-cast
+            // Might lose information on instantiation of new Waypoint
+            referenceDrone = (myDrone as Drone_v2);
+            if (referenceDrone == null)
+            {
+                Debug.Log("Couldn't convert Drone to Drone_v2 in Waypoint.cs");
+            }
 
             // Setting up all the related gameObject parameters
             GameObject baseObject = (GameObject)WorldProperties.worldObject.GetComponent<WorldProperties>().waypointBaseObject;
