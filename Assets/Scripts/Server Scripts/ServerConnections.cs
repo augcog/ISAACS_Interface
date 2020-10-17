@@ -15,12 +15,13 @@
     public class ServerConnections : MonoBehaviour
     {
 
+        //Cant be static to have it show up in editor??
         [Header("Server Connection information")]
-        private static string serverIP;
-        private static int serverPort;
+        public string serverIP = "0";
+        public int serverPort = 0;
 
         [Header("ros server connection")]
-        private static ROSBridgeWebSocketConnection rosServerConnection = null;
+        public ROSBridgeWebSocketConnection rosServerConnection = null;
 
         /// Drone Subscribers supported by ISAACS System
         private enum DroneSubscribers { attitude, battery_state, flight_status, gimbal_angle, gps_health, gps_position, rtk_position, imu, rc, velocity, height_above_takeoff, local_position };
@@ -42,16 +43,23 @@
         // The Drone Information provided by the server
         private class DroneInformation
         {
-            public string droneName;
+
+            public string drone_name;
             public int id;
+
+
             //public List<DroneSubscribers> droneSubscribers;
             //public bool simFlight;
             //public List<SensorInformation> attachedSensors;
 
             public DroneInformation(JSONNode msg)
             {
-                droneName = msg["droneName"].ToString();
-                id = msg["droneID"].AsInt;
+     
+                message = msg["drone_name"].ToString();
+                success = msg["id"].ToBool();
+
+                //droneName = msg["droneName"].ToString();
+                //id = msg["droneID"].AsInt;
             }
         }
 
@@ -72,17 +80,24 @@
 
         void GetAllDrones()
         {
-            string service_name = "/isaacs_server/getalldrones";
-            //Debug.LogFormat();
-            //rosServerConnection.CallService(GetAllDronesCallback, service_name, params);
+            string service_name = "/all_drones_avaliable";
+
+           // rosServerConnection.CallService(GetAllDronesCallback, service_name, params);
         }
 
         public static void GetAllDronesCallback(JSONNode response)
         {
-            JSONArray droneArray = response["droneArray"].AsArray;
+
+            //get all_drones of objects
+            //those objects have everything below
+            //fields: id, drones, subs
+            //we define subs object for all subscribers
+               //fields: subid, messagetype
+            JSONArray droneArray = response["drones_available"].AsArray;
 
             foreach (JSONNode droneInfoJSON in droneArray)
             {
+
                 DroneInformation droneInfo = new DroneInformation(droneInfoJSON);
                 InstantiateDrone(droneInfo);
             }
@@ -90,8 +105,8 @@
 
         private static void InstantiateDrone(DroneInformation droneInformation)
         {
-            int drone_id = droneInformation.id;
-            string drone_name = droneInformation.droneName;
+            int drone_id = droneInformation.drone_id;
+            string drone_name = droneInformation.drone_name;
             
             /*
             List<string> droneSubscribers = new List<string>();
