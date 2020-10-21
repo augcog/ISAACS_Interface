@@ -294,7 +294,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
                     Debug.Log("Uploading waypoint mission");
                     UploadWaypointsTask(Task);
                     
-                    # This might work
+                    // This might work
                     string service_name = "/dji_sdk/mission_waypoint_setSpeed";
                     float task = 5.0f;
                     Debug.LogFormat("ROS Call: {0} {1}  Arguments: {2}", client_id, service_name, task);
@@ -825,7 +825,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
                     // Localize sensors when both orientation and gps position is set
                     if (home_position_set)
                     {
-                        LocalizeSensors();
+                        LocalizeSensors(); // called once when home orientation is set (other time is when home gps is set)
                     }
                 }
 
@@ -882,13 +882,14 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
                 {
                     home_position = gps_position;
                     home_position_set = true;
+                    LocalizeSensors(); // called once when home position is set (other time is when home orientation is set)
+
                 }
 
                 // TODO: Complete function in World properties.
                 if (home_position_set)
                 {
                     this.transform.localPosition = WorldProperties.ROSCoordToUnityCoord(gps_position);
-
                     if (WorldProperties.DJI_SIM)
                     {
                         this.transform.localPosition += new Vector3(0, -100.0f, 0);

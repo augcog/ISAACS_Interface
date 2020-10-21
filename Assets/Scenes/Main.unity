@@ -705,7 +705,13 @@ MonoBehaviour:
     droneType: 1
     droneSubscribers: 0600000001000000
     simFlight: 0
-    attachedSensors: []
+    attachedSensors:
+    - sensorName: deede
+      ipAddress: 
+      port: 0
+      sensorType: 3
+      sensorSubscribers: 08000000090000000a000000
+      videoPlayers: 0
   success: 0
   uniqueID: 0
 --- !u!4 &167235401 stripped
