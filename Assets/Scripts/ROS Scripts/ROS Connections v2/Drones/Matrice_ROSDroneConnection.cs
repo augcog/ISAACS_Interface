@@ -294,7 +294,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
                     Debug.Log("Uploading waypoint mission");
                     UploadWaypointsTask(Task);
                     
-                    # This might work
+                    // This might work
                     string service_name = "/dji_sdk/mission_waypoint_setSpeed";
                     float task = 5.0f;
                     Debug.LogFormat("ROS Call: {0} {1}  Arguments: {2}", client_id, service_name, task);

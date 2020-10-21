@@ -700,12 +700,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DronesList:
   - droneName: Perry Pepe the Platipus
-    ipAddress: 10.0.0.2
+    ipAddress: 10.42.0.1
     port: 9090
-    droneType: 1
+    droneType: 2
     droneSubscribers: 0600000001000000
     simFlight: 0
-    attachedSensors: []
+    attachedSensors:
+    - sensorName: labrlamp
+      ipAddress: 10.42.0.1
+      port: 9090
+      sensorType: 1
+      sensorSubscribers: 0100000008000000090000000a0000000b0000000c0000000d000000
+      videoPlayers: 0
   success: 0
   uniqueID: 0
 --- !u!4 &167235401 stripped
