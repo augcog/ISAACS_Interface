@@ -145,7 +145,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
     /// <summary>
     /// Offset used to convert drone attitude to Unity axis.
     /// </summary>
-    Quaternion offset = Quaternion.Euler(90, 180, 0);
+    Quaternion offset = Quaternion.Euler(0, 135, 0);
 
     /// <summary>
     /// IMU data including raw gyro reading in FLU body frame, raw accelerometer reading in FLU body frame, and attitude estimation, 
@@ -811,7 +811,8 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
         {
             case "/dji_sdk/attitude":
                 QuaternionMsg attitudeMsg = (parsed == null) ? new QuaternionMsg(raw_msg["quaternion"]) : (QuaternionMsg)parsed;
-                attitude = offset * (new Quaternion(attitudeMsg.GetX(), attitudeMsg.GetY(), attitudeMsg.GetZ(), attitudeMsg.GetW()));
+                attitude =  (new Quaternion(attitudeMsg.GetX(), attitudeMsg.GetZ(), attitudeMsg.GetY(), attitudeMsg.GetW())) * offset;
+                //quaternion has X,Y,Z, but attitudeMsg uses ROS Coords, and we want Unity coords, so we flip Y and Z
 
                 // Update drone transform to new quaternion
                 this.transform.rotation = attitude;
@@ -821,10 +822,11 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
                 {
                     home_attitude = attitude;
                     home_attitude_set = true;
-
+                    Debug.Log("attitude just set");
                     // Localize sensors when both orientation and gps position is set
                     if (home_position_set)
                     {
+                        Debug.Log("Attitude just set, (Home position already) , localizing sensors");
                         LocalizeSensors(); // called once when home orientation is set (other time is when home gps is set)
                     }
                 }
@@ -882,6 +884,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
                 {
                     home_position = gps_position;
                     home_position_set = true;
+                    Debug.Log("home pos just set");
                     LocalizeSensors(); // called once when home position is set (other time is when home orientation is set)
 
                 }
@@ -889,7 +892,8 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
                 // TODO: Complete function in World properties.
                 if (home_position_set)
                 {
-                    this.transform.localPosition = WorldProperties.ROSCoordToUnityCoord(gps_position);
+                    // subtracting home altitude to take into account non-zero initial altitude (maybe bc RTK basestation is higher than drone)
+                    this.transform.localPosition = WorldProperties.ROSCoordToUnityCoord(gps_position) - new Vector3(0, WorldProperties.ROSCoordToUnityCoord(home_position).y - (float)3.5,0);
                     if (WorldProperties.DJI_SIM)
                     {
                         this.transform.localPosition += new Vector3(0, -100.0f, 0);
@@ -955,10 +959,12 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
     /// </summary>
     public void LocalizeSensors()
     {
+        Debug.Log("localize sensors CALLED");
         if (home_attitude_set == false || home_position_set == false)
         {
             return;
         }
+        Debug.Log("localize sensors RUN SUCCESSS");
 
         Quaternion orientation = home_attitude; 
         Vector3 position = WorldProperties.ROSCoordToUnityCoord(home_position);
