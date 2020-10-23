@@ -966,6 +966,9 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
         }
         Debug.Log("localize sensors RUN SUCCESSS");
 
+        Debug.Log("DRONE HOME ATTITUDE:");
+        Debug.Log(home_attitude);
+
         Quaternion orientation = home_attitude; 
         Vector3 position = WorldProperties.ROSCoordToUnityCoord(home_position);
         this.GetComponent<DroneProperties>().LocalizeSensors(position, orientation);

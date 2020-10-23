@@ -79,7 +79,13 @@
             foreach (ROSSensorConnectionInterface sensor in droneClassPointer.attachedSensors)
             {
                 sensor.SetLocalOrientation(home_oritentation);
+
+                //Hardcording +3.5 to accound for the drone's hardcoded height
+                home_position.y += 3.5f;
                 sensor.SetLocalPosition(home_position);
+
+                sensor.SetLocalScale(new Vector3(1.0f, 1.0f, 1.0f));
+
             }
         }
 
