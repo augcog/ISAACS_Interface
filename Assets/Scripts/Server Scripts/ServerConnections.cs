@@ -41,7 +41,7 @@
         };
 
         // The Drone Information provided by the server
-        private class DroneInformation
+        public class DroneInformation
         {
 
             public string drone_name;
@@ -51,6 +51,12 @@
             //public List<DroneSubscribers> droneSubscribers;
             //public bool simFlight;
             //public List<SensorInformation> attachedSensors;
+
+            public DroneInformation(string _name, int _id)
+            {
+                drone_name = _name;
+                id = _id;
+            }
 
             public DroneInformation(JSONNode msg)
             {
@@ -103,7 +109,7 @@
             }
         }
 
-        private static void InstantiateDrone(DroneInformation droneInformation)
+        public static void InstantiateDrone(DroneInformation droneInformation)
         {
             int drone_id = droneInformation.id;
             string drone_name = droneInformation.drone_name;
@@ -125,6 +131,7 @@
             GameObject droneGameObject = droneInstance.gameObjectPointer;
 
             droneGameObject.name = drone_name;
+            WorldProperties.AddDrone(droneInstance);
 
             /*
             // Added optional funtionality we can implement as we go.
@@ -245,6 +252,20 @@
 
         //TODO
         public static void flyHomeCallback(JSONNode response)
+        {
+
+        }
+
+        //TODO
+        public static void stopDrone(Drone_v2 drone, string ID)
+        {
+            string service_name = "/isaacs_server/ TODO ";
+            //Debug.LogFormat();
+            //rosServerConnection.CallService( TODO , service_name, params);
+        }
+
+        //TODO
+        public static void stopDroneCallback(JSONNode response)
         {
 
         }

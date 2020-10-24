@@ -56,6 +56,11 @@
             ServerConnections.flyHome(this, _id);
         }
 
+        public void stopMission()
+        {
+            ServerConnections.stopDrone(this, _id);
+        }
+
         /******************************/
         //    Callback Functions      //
         /******************************/
