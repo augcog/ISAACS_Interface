@@ -22,7 +22,7 @@ namespace ROSBridgeLib
 
 		public static string getMessageType()
 		{
-			return "issacs_server/topic_types";
+			return "isaacs_server/topic_types";
 		}
 
 		public string getName()

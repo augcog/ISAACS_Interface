@@ -21,7 +21,7 @@ namespace ROSBridgeLib
 
 		public static string getMessageType()
 		{
-			return "issacs_server/client";
+			return "isaacs_server/client";
 		}
 
 		public int getParentDroneId()

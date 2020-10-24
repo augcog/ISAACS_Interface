@@ -19,13 +19,12 @@ namespace ROSBridgeLib
 
 		public static string getMessageType()
 		{
-			return "issacs_server/drone";
+			return "isaacs_server/drone";
 		}
 
 		public ClientMsg getDrone()
         {
 			return _drone;
         }
-
 	}		
 }

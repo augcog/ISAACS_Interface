@@ -10,7 +10,6 @@ namespace ROSBridgeLib
 
 	public class AllDronesAvailableMsg : ROSBridgeMsg
 	{
-
 		private DroneMsg[] _drones_available;
 
 		public AllDronesAvailableMsg(JSONNode msg)
@@ -34,6 +33,5 @@ namespace ROSBridgeLib
         {
 			return _drones_available;
         }
-
 	}
 }
