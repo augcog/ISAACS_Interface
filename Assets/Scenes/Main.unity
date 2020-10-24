@@ -679,7 +679,7 @@ MonoBehaviour:
     type: 2}
   sensorManagerBaseObject: {fileID: 130481553}
   MeshLatitude: 37.915209
-  MeshLongitude: -122.338035
+  MeshLongitude: -122.33797
   MeshAltitude: 20
   MeshRotation: {x: 0, y: 270, z: 0}
   MeshScale: {x: 39, y: 39, z: 39}
