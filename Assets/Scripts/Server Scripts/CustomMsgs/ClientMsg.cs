@@ -8,10 +8,10 @@ using UnityEngine;
 namespace ROSBridgeLib
 {
 
-	public class ClientMsg : ROSBridgeLib
+	public class ClientMsg : ROSBridgeMsg
 	{
 
-		private int32 _id;
+		private int _id;
 		private string _name;
 		private string _type;
 		private TopicTypesMsg[] _topics;
@@ -19,7 +19,7 @@ namespace ROSBridgeLib
 			
 		public ClientMsg(JSONNode msg)
 		{
-			_id = Int32.Parse(msg["_id"]);
+			_id = int.Parse(msg["_id"]);
 			_name = msg["_name"].ToString();
 			_type = msg["_type"].ToString();
 
@@ -29,12 +29,12 @@ namespace ROSBridgeLib
 			_topics = new TopicTypesMsg[temp1.Count];
 			_services = new TopicTypesMsg[temp2.Count];
 
-			for (int i = 0; i < _topics.length; i++)
+			for (int i = 0; i < _topics.Length; i++)
             {
 				_topics[i] = new TopicTypesMsg(temp1[i]);
             }
 
-			for (int i = 0; i < _services.length; i++)
+			for (int i = 0; i < _services.Length; i++)
 			{
 				_services[i] = new TopicTypesMsg(temp2[i]);
 			}
@@ -45,7 +45,7 @@ namespace ROSBridgeLib
 			return "issacs_server/client";
 		}
 
-		public int32 getId()
+		public int getId()
         {
 			return _id;
         }
@@ -60,12 +60,12 @@ namespace ROSBridgeLib
 			return _type;
         }
 
-		public TopicsTypeMsg[] getTopics()
+		public TopicTypesMsg[] getTopics()
         {
 			return _topics;
         }
 
-		public TopicsTypeMsg[] getServices()
+		public TopicTypesMsg[] getServices()
         {
 			return _services;
         }

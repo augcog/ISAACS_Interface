@@ -8,7 +8,7 @@ using UnityEngine;
 namespace ROSBridgeLib
 {
 
-	public class AllDronesAvailableMsg : ROSBridgeLib
+	public class AllDronesAvailableMsg : ROSBridgeMsg
 	{
 
 		private DroneMsg[] _drones_available;
@@ -26,16 +26,14 @@ namespace ROSBridgeLib
 
 		public static string getMessageType()
         {
-			return "/server/all_drones_avaliable";
+			return "/server/all_drones_available";
 
 		}
 
-		public DroneMsg getDronesAvailable()
+		public DroneMsg[] getDronesAvailable()
         {
 			return _drones_available;
         }
 
 	}
-	
-
 }

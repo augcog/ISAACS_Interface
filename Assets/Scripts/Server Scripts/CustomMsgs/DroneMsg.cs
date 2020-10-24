@@ -8,7 +8,7 @@ using UnityEngine;
 namespace ROSBridgeLib
 {
 
-	public class DroneMsg : ROSBridgeLib
+	public class DroneMsg : ROSBridgeMsg
 	{
 		private ClientMsg _drone;
 
