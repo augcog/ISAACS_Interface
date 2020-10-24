@@ -15,26 +15,11 @@ namespace ROSBridgeLib
 		private bool _success;
 		private string _meta_data;
 
-		private DroneMsg drone;
-
 		public UploadMissionMsg(JSONNode msg)
         {
 			_drone_id = int.Parse(msg["_drone_id"]);
 			_success = Convert.ToBoolean(msg["_sucess"]);
-			_meta_data = msg["_meta_data"];
-
-			DroneMsg[] temp = new AllDronesAvailableMsg(msg).getDronesAvailable();
-			for (int i = 0; i < temp.Length; i++)
-            {
-				if (temp[i].getDrone().getId() == _drone_id)
-                {
-					drone = temp[i];
-					break;
-				}
-            }
-
-			// Call UploadMission method in drone instance
-			// Add drone_id to UploadMissionCallback and return
+			_meta_data = msg["_meta_data"].ToString();
 		}
 
 		public static string getMessageType()
@@ -42,9 +27,19 @@ namespace ROSBridgeLib
 			return "/server/upload_mission";
 		}
 
-		public DroneMsg getDrone()
+        public int getDroneId()
         {
-			return drone;
+            return _drone_id;
         }
-	}
+
+        public bool getSuccess()
+        {
+            return _success;
+        }
+
+        public string getMetaData()
+        {
+            return _meta_data;
+        }
+    }
 }

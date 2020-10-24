@@ -35,7 +35,10 @@
             // Setting up all the related gameObject parameters
             GameObject baseObject = (GameObject)WorldProperties.worldObject.GetComponent<WorldProperties>().waypointBaseObject;
             gameObjectPointer = Object.Instantiate(baseObject, position, Quaternion.identity);
-            gameObjectPointer.GetComponent<VRTK_InteractableObject>().ignoredColliders[0] = GameObject.Find("controller_right").GetComponent<SphereCollider>(); //Ignoring Collider from Controller so that WayPoint Zone is used
+
+            // @Apollo: Why is VRTK being referenced here?
+            //gameObjectPointer.GetComponent<VRTK_InteractableObject>().ignoredColliders[0] = GameObject.Find("controller_right").GetComponent<SphereCollider>(); //Ignoring Collider from Controller so that WayPoint Zone is used
+
             waypointProperties = gameObjectPointer.GetComponent<WaypointProperties>();
             waypointProperties.classPointer = this; // Connect the gameObject back to the classObject
             gameObjectPointer.tag = "waypoint";

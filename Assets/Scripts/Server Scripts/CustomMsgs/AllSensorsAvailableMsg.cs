@@ -25,7 +25,7 @@ namespace ROSBridgeLib
 
 		public static string getMessageType()
 		{
-			return "/server/all_drones_available";
+			return "/server/all_sensors_available";
 
 		}
 

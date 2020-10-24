@@ -166,9 +166,10 @@
         /// <param name="drone"></param>
         public static void AddDrone(Drone_v2 drone)
         {
-            Debug.Log("Added drone " + drone);
+
+            Debug.Log("ADDING DRONE " + drone.gameObjectPointer.name + ", ID:" + drone.id.ToString());
             dronesQueue.Enqueue(drone);
-            Debug.Log("Print Drone.ID added to dict is: " + drone.id);
+            //Debug.Log("Print Drone.ID added to dict is: " + drone.id);
             droneDict.Add(drone.id, drone);
         }
 

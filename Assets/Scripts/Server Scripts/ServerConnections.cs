@@ -47,7 +47,6 @@
             public string drone_name;
             public int id;
 
-
             //public List<DroneSubscribers> droneSubscribers;
             //public bool simFlight;
             //public List<SensorInformation> attachedSensors;
@@ -61,11 +60,8 @@
             public DroneInformation(JSONNode msg)
             {
      
-                string message = msg["drone_name"].ToString();
-                //bool success = msg["id"].ToBool();
-
-                //droneName = msg["droneName"].ToString();
-                //id = msg["droneID"].AsInt;
+                drone_name = msg["_name"].ToString();
+                id = msg["_id"].AsInt;
             }
         }
 
@@ -167,7 +163,7 @@
         //TODO: Implement this (What does this do?)
         public static void uploadMissionCallback(JSONNode response)
         {
-
+            //UploadMissionMsg result = new UploadMissionMsg(response);
         }
 
 

@@ -8,7 +8,7 @@ using UnityEngine;
 namespace ROSBridgeLib
 {
 
-	public class TopicTypesMsg : ROSBridgeLib
+	public class TopicTypesMsg : ROSBridgeMsg
 	{
 
 		private string _name;

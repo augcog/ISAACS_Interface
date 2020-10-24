@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.17302455, g: 0.2162439, b: 0.2982352, a: 1}
+  m_IndirectSpecularColor: {r: 0.17302507, g: 0.21624431, b: 0.298236, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -601,6 +601,7 @@ GameObject:
   - component: {fileID: 146794968}
   - component: {fileID: 146794964}
   - component: {fileID: 146794965}
+  - component: {fileID: 146794966}
   m_Layer: 0
   m_Name: World
   m_TagString: World
@@ -672,6 +673,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   serverIP: 0
   serverPort: 0
+--- !u!114 &146794966
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 146794962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1db9e6b61669a246a9786e3ce83b1fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  initTestDrones: 0
+  cycleDrone: q
+  cycleSensor: w
+  landDrone: t
+  pauseMission: u
+  resumeMission: i
+  stopMission: s
+  flyHome: o
+  uploadTestMission: p
+  uploadUserMission: a
+  runMission: s
 --- !u!114 &146794967
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -710,21 +733,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DronesList:
   - droneName: Perry Pepe the Platipus
-    url: 192.168.18.240
+    url: 
     port: 9090
     droneType: 1
     droneSubscribers: 0600000001000000
     simFlight: 1
     attachedSensors: []
   - droneName: Merry Manny the Manifold
-    url: 192.168.18.240
+    url: 
     port: 9090
     droneType: 1
     droneSubscribers: 0600000001000000
     simFlight: 1
     attachedSensors:
     - sensorName: PC Face
-      url: 192.168.18.240
+      url: 
       port: 9090
       sensorType: 3
       sensorSubscribers: 0a000000

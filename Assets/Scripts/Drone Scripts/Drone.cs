@@ -43,11 +43,13 @@
         /// <param name="drone_obj"> We pass in a Gameobject for the drone -- this will be phased out and the new drone_obj gameObject will be instantiated in this method </param>
         public Drone(Vector3 position, int uniqueID)
         {
+            Debug.Log("Drone V1 Constructor: " + uniqueID.ToString());
+
             // Create gameObject at position
             GameObject baseObject = (GameObject)WorldProperties.worldObject.GetComponent<WorldProperties>().droneBaseObject;
             gameObjectPointer = Object.Instantiate(baseObject, position, Quaternion.identity);
 
-            Debug.Log("Position init: " + position.ToString());
+            //Debug.Log("Position init: " + position.ToString());
             droneProperties = gameObjectPointer.GetComponent<DroneProperties>();
             droneProperties.enabled = true;
             droneProperties.droneClassPointer = this; // Connect the gameObject back to the classObject
@@ -71,18 +73,15 @@
             id = uniqueID;
 
             //WorldProperties.AddDrone(this);
-            Debug.Log("Created new drone with id: " + id);
+            //Debug.Log("Created new drone with id: " + id);
 
             // Initilize the sensor list
-            // @Jasmine: this is populated by ROS Manager when initilzing the drone and can be used for the UI
-            // @Jasmine: feel free to add/remove functionality as needed, it's a very rough structure right now
             attachedSensors = new List<ROSSensorConnectionInterface>();
 
             // Init as unselected
             gameObjectPointer.transform.Find("group3/Outline").GetComponent<MeshRenderer>().material = droneProperties.deselectedMaterial;
             selected = false;
 
-            Debug.Log("Created new drone with id: " + id);
         }
         
         /// <summary>
