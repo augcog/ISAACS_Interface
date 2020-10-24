@@ -55,8 +55,8 @@
             public DroneInformation(JSONNode msg)
             {
      
-                message = msg["drone_name"].ToString();
-                success = msg["id"].ToBool();
+                string message = msg["drone_name"].ToString();
+                //bool success = msg["id"].ToBool();
 
                 //droneName = msg["droneName"].ToString();
                 //id = msg["droneID"].AsInt;
@@ -105,7 +105,7 @@
 
         private static void InstantiateDrone(DroneInformation droneInformation)
         {
-            int drone_id = droneInformation.drone_id;
+            int drone_id = droneInformation.id;
             string drone_name = droneInformation.drone_name;
             
             /*
