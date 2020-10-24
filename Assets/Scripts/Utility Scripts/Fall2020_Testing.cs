@@ -15,7 +15,7 @@ public class Fall2020_Testing : MonoBehaviour {
     /// </summary>
 
     [Header("Initialize")]
-    public string init = "0";
+    public string initTestDrones = "0";
 
     [Header("Drone/Sensor Selection Tests")]
     public string cycleDrone = "q";
@@ -46,17 +46,14 @@ public class Fall2020_Testing : MonoBehaviour {
     void Update()
     {
 
-        if (Input.GetKeyDown(init))
+        if (Input.GetKeyDown(initTestDrones))
         {
             // Call server connection create drone function.
-
             ServerConnections.DroneInformation test_drone_1 = new ServerConnections.DroneInformation("jazzy", 0);
-            //ServerConnections.DroneInformation test_drone_2 = new ServerConnections.DroneInformation("banana", 1);
+            ServerConnections.DroneInformation test_drone_2 = new ServerConnections.DroneInformation("banana", 1);
 
             ServerConnections.InstantiateDrone(test_drone_1);
-            //ServerConnections.InstantiateDrone(test_drone_2);
-
-            drone = WorldProperties.SelectNextDrone();
+            ServerConnections.InstantiateDrone(test_drone_2);
         }
 
         if (Input.GetKeyUp(cycleDrone))
