@@ -217,7 +217,7 @@ public class MeshSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
     public void SetLocalOrientation(Quaternion quaternion)
     {
         this.transform.localRotation = quaternion;
-        this.transform.Rotate(Vector3.up, -60.0f);
+        // Hardcoded transform depreciated: this.transform.Rotate(Vector3.up, -60.0f);
     }
     public void SetLocalPosition(Vector3 position)
     {

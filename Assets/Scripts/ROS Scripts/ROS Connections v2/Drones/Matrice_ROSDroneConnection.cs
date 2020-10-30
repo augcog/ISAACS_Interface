@@ -476,7 +476,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
                 for (int i = continueFromWaypointID; i < droneProperties.droneClassPointer.WaypointsCount(); i++)
                 {
                     Waypoint waypoint = droneProperties.droneClassPointer.GetWaypoint(i);
-                    Vector3 unityCoord = waypoint.gameObjectPointer.transform.localPosition - new Vector3(0,(float)3.5,0);
+                    Vector3 unityCoord = waypoint.gameObjectPointer.transform.localPosition;
                     GPSCoordinate rosCoord = WorldProperties.UnityCoordToGPSCoord(unityCoord);
 
                     MissionWaypointMsg new_waypoint = new MissionWaypointMsg(rosCoord.Lat, rosCoord.Lng, (float)(rosCoord.Alt - home_position.GetAltitude()), 3.0f, 0, 0, MissionWaypointMsg.TurnMode.CLOCKWISE, 0, 30, new MissionWaypointActionMsg(0, command_list, command_params));

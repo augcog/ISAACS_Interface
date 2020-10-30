@@ -38,6 +38,7 @@ public class LampSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
     // Initilize the sensor
     public void InitilizeSensor(int uniqueID, string sensorIP, int sensorPort, List<string> sensorSubscribers)
     {
+        Debug.LogWarning("Depreciated. Please use PC Face type messages");
         Debug.Log("Init LAMP Connection at IP " + sensorIP + " Port " + sensorPort.ToString());
 
         ros = new ROSBridgeWebSocketConnection("ws://" + sensorIP, sensorPort);
