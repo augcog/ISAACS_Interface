@@ -145,7 +145,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
     /// <summary>
     /// Offset used to convert drone attitude to Unity axis.
     /// </summary>
-    Quaternion offset = Quaternion.Euler(0, 122, 0);
+    Quaternion offset = Quaternion.Euler(0,0,0);//Quaternion.Euler(0, 122, 0);
 
     /// <summary>
     /// IMU data including raw gyro reading in FLU body frame, raw accelerometer reading in FLU body frame, and attitude estimation, 
@@ -813,6 +813,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
                 QuaternionMsg attitudeMsg = (parsed == null) ? new QuaternionMsg(raw_msg["quaternion"]) : (QuaternionMsg)parsed;
                 attitude =  (new Quaternion(attitudeMsg.GetX(), attitudeMsg.GetZ(), attitudeMsg.GetY(), attitudeMsg.GetW())) * offset;
                 //quaternion has X,Y,Z, but attitudeMsg uses ROS Coords, and we want Unity coords, so we flip Y and Z
+		//Check to see if this is the same XYZ axes?
 
                 // Update drone transform to new quaternion
                 this.transform.rotation = attitude;
@@ -893,7 +894,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
                 if (home_position_set)
                 {
                     // subtracting home altitude to take into account non-zero initial altitude (maybe bc RTK basestation is higher than drone)
-                    this.transform.localPosition = WorldProperties.ROSCoordToUnityCoord(gps_position) - new Vector3(0, WorldProperties.ROSCoordToUnityCoord(home_position).y - (float)3.5,0);
+                    this.transform.localPosition = WorldProperties.ROSCoordToUnityCoord(gps_position); // - new Vector3(0, WorldProperties.ROSCoordToUnityCoord(home_position).y - (float)3.5,0);
                     if (WorldProperties.DJI_SIM)
                     {
                         this.transform.localPosition += new Vector3(0, -100.0f, 0);

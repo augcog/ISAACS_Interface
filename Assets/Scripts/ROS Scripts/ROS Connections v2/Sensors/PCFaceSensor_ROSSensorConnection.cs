@@ -56,7 +56,7 @@ public class PCFaceSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
         // Hardcode Parent transform
         //SetLocalPosition(new Vector3(1.98f, 0f, -6.65f));
         //SetLocalOrientation(Quaternion.Euler(0f, 124.654f ,0f));
-        SetLocalScale(new Vector3(0.505388f, 0.505388f, 0.505388f));
+        //SetLocalScale(new Vector3(0.505388f, 0.505388f, 0.505388f));
 
     }
     // Update is called once per frame in Unity
