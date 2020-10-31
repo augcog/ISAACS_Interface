@@ -129,7 +129,7 @@ public class MeshSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
             DateTime startTime = DateTime.Now;
             Dictionary<long[], MeshArray> mesh_dict = meshDicts.Dequeue();
             visualizer.SetMesh(mesh_dict);
-            //Debug.Log("Set Mesh: " + DateTime.Now.Subtract(startTime).TotalMilliseconds.ToString() + "ms");
+            Debug.Log("Set Mesh: " + DateTime.Now.Subtract(startTime).TotalMilliseconds.ToString() + "ms");
         }
 
     }
