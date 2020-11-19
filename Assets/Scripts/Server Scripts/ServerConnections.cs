@@ -59,31 +59,45 @@
 
             public DroneInformation(JSONNode msg)
             {
-     
+
                 drone_name = msg["_name"].ToString();
                 id = msg["_id"].AsInt;
             }
         }
 
-        // The Sensor information provided by the server
-        private class SensorInformation
+
+        // The Sensor information provided by the server (utilized for unity)
+        public class SensorInformation
         {
             public string sensorName;
             public SensorType sensorType;
             public List<SensorSubscribers> sensorSubscribers;
             public VideoPlayers videoPlayers;
+
+            //TODO set info with set name/type/subscribers/SetColor
+            public SensorInformation(//TODO)
+            {
+              //TODO
+            }
+
+            //TODO: parse through raw msg
+            public SensorInformation(JSONNode msg)
+            {
+              //TODO:
+            }
         }
 
         void Start()
         {
             rosServerConnection = new ROSBridgeWebSocketConnection("ws://" + serverIP, serverPort);
             GetAllDrones();
+            //TODO: Get all sensors
+            GetAllSensors();
         }
 
         void GetAllDrones()
         {
             string service_name = "/all_drones_avaliable";
-
            // rosServerConnection.CallService(GetAllDronesCallback, service_name, params);
         }
 
@@ -105,11 +119,27 @@
             }
         }
 
+        //TODO: void GetAllSensors() : will set service name similarly to GetAllDrones
+        public void GetAllSensors() {
+          //TODO
+        }
+
+        //TODO: static void GetAllSensorsCallback(JSONNode response): will set up json array, for each, return info, similarly to above
+        public static void GetAllSensorsCallback(JSONNode response) {
+          //TODO
+        }
+
+        //TODO: InstantiateSensor(SensorInformation SensorInformation): similar to instatiatedrone below
+        public static void InstantiateSensor(SensorInformation sensorInformation) {
+          //TODO
+        }
+
+
         public static void InstantiateDrone(DroneInformation droneInformation)
         {
             int drone_id = droneInformation.id;
             string drone_name = droneInformation.drone_name;
-            
+
             /*
             List<string> droneSubscribers = new List<string>();
 
