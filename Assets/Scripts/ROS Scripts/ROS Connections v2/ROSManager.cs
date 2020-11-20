@@ -200,9 +200,9 @@ public class ROSManager : MonoBehaviour
 
         GameObject sensor = new GameObject(rosSensorConnectionInput.sensorName);
         sensor.transform.parent = this.transform;
-        sensor.transform.localPosition = new Vector3(7.33f, 3.387f, 15.27f);
-        sensor.transform.localRotation = Quaternion.Euler(new Vector3(-5.811f,-208.85f,1.375f));
-        sensor.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+        //sensor.transform.localPosition = new Vector3(7.33f, 3.387f, 15.27f);
+        //sensor.transform.localRotation = Quaternion.Euler(new Vector3(-5.811f,-208.85f,1.375f));
+        //sensor.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
 
         switch (sensorType)
         {
