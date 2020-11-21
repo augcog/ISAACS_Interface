@@ -67,29 +67,32 @@
 
 
         // The Sensor information provided by the server (utilized for unity)
-        public class SensorInformation
-        {
-            public string sensorName;
-            public SensorType sensorType;
-            public List<SensorSubscribers> sensorSubscribers;
-            public VideoPlayers videoPlayers;
+        //public class SensorInformation
+        //{
+        //    public string sensorName;
+        //    public SensorType sensorType;
+        //    public List<SensorSubscribers> sensorSubscribers;
+        //    public VideoPlayers videoPlayers;
 
-            //TODO set info with set name/type/subscribers/SetColor
-            public SensorInformation(//TODO)
-            {
-              //TODO
-            }
+        //    //TODO set info with set name/type/subscribers/SetColor
+        //    public SensorInformation()
+        //    {
+        //      //TODO
+        //    }
 
-            //TODO: parse through raw msg
-            public SensorInformation(JSONNode msg)
-            {
-              //TODO:
-            }
-        }
+        //    //TODO: parse through raw msg
+        //    public SensorInformation(JSONNode msg)
+        //    {
+        //      //TODO:
+        //    }
+        //}
 
         void Start()
         {
             rosServerConnection = new ROSBridgeWebSocketConnection("ws://" + serverIP, serverPort);
+            rosServerConnection.Connect();
+            System.Threading.Thread.Sleep(5000);
+            Debug.Log("created connection with: " + serverIP + " " + serverPort);
             GetAllDrones();
             //TODO: Get all sensors
             GetAllSensors();
@@ -97,13 +100,15 @@
 
         void GetAllDrones()
         {
-            string service_name = "/all_drones_avaliable";
-           // rosServerConnection.CallService(GetAllDronesCallback, service_name, params);
+
+            string service_name = "/isaacs_server/all_drones_available";
+            rosServerConnection.CallService(GetAllDronesCallback, service_name, "","[]");
+            Debug.Log("called service");
         }
 
         public static void GetAllDronesCallback(JSONNode response)
         {
-
+            Debug.Log(response);
             //get all_drones of objects
             //those objects have everything below
             //fields: id, drones, subs
@@ -129,10 +134,10 @@
           //TODO
         }
 
-        //TODO: InstantiateSensor(SensorInformation SensorInformation): similar to instatiatedrone below
-        public static void InstantiateSensor(SensorInformation sensorInformation) {
-          //TODO
-        }
+        ////TODO: InstantiateSensor(SensorInformation SensorInformation): similar to instatiatedrone below
+        //public static void InstantiateSensor(SensorInformation sensorInformation) {
+        //  //TODO
+        //}
 
 
         public static void InstantiateDrone(DroneInformation droneInformation)
