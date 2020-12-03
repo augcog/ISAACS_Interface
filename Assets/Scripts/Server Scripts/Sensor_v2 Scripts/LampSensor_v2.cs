@@ -32,7 +32,7 @@ public class LampSensor_v2 : MonoBehaviour, ROSSensorConnectionInterface, LampSe
 
     // Private connection variables
     //private ROSBridgeWebSocketConnection ros = null;
-    private boolean setup = false;
+    private Boolean setup = false;
     private string client_id;
     private Dictionary<string, bool> sensorSubscriberTopicsDict = new Dictionary<string, bool>();
 
@@ -62,11 +62,13 @@ public class LampSensor_v2 : MonoBehaviour, ROSSensorConnectionInterface, LampSe
             pcVisualizers.Add(subscriberTopic, pcVisualizer);
             Debug.Log(" LAMP Subscribing to : " + subscriberTopic);
             sensorSubscriberTopicsDict.Add(subscriberTopic, true);
-            ros.AddSubscriber(subscriberTopic, this);
+            //ros.AddSubscriber(subscriberTopic, this);
+            Subscribe(subscriberTopic);
         }
 
         Debug.Log("Lamp Connection Established");
         ros.Connect();
+        //ServerConnections.rosServerConnection.Connect();
     }
     // Update is called once per frame in Unity
     void Update()
@@ -74,6 +76,7 @@ public class LampSensor_v2 : MonoBehaviour, ROSSensorConnectionInterface, LampSe
         if (setup)
         {
             ros.Render();
+            //ServerConnections.rosServerConnection.Render();
         }
     }
 
@@ -211,6 +214,7 @@ public class LampSensor_v2 : MonoBehaviour, ROSSensorConnectionInterface, LampSe
     public void DisconnectROSConnection()
     {
         ros.Disconnect();
+        //ServerConnections.rosServerConnection.Disconnect();
     }
 
     public void SetLocalOrientation(Quaternion quaternion)

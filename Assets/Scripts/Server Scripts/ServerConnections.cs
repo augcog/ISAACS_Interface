@@ -21,6 +21,7 @@
         public int serverPort = 0;
 
         [Header("ros server connection")]
+        //Can we make this static to call it from Sensor_v2 scripts?
         public ROSBridgeWebSocketConnection rosServerConnection = null;
 
         /// Drone Subscribers supported by ISAACS System
@@ -75,7 +76,7 @@
             public VideoPlayers videoPlayers;
 
             //TODO set info with set name/type/subscribers/SetColor
-            public SensorInformation(//TODO)
+            public SensorInformation() //TODO
             {
               //TODO
             }
