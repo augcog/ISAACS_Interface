@@ -68,7 +68,7 @@
 
 
         // The Sensor information provided by the server (utilized for unity)
-        public class SensorInformation
+        /*public class SensorInformation
         {
             public string sensorName;
             public SensorType sensorType;
@@ -86,7 +86,7 @@
             {
               //TODO:
             }
-        }
+        }*/
 
         void Start()
         {

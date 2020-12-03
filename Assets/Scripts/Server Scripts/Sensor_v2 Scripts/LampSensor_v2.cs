@@ -1,4 +1,4 @@
-using System;
+/*using System;
 using UnityEngine;
 using System.Collections.Generic;
 using SimpleJSON;
@@ -209,7 +209,7 @@ public class LampSensor_v2 : MonoBehaviour, ROSSensorConnectionInterface, LampSe
         return "";
 
         **/
-    }
+/*    }
 
     public void DisconnectROSConnection()
     {
@@ -231,4 +231,4 @@ public class LampSensor_v2 : MonoBehaviour, ROSSensorConnectionInterface, LampSe
     {
         this.transform.localScale = scale;
     }
-}
+}*/
