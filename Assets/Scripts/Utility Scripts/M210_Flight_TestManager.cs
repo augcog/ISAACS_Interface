@@ -65,6 +65,9 @@ public class M210_Flight_TestManager : MonoBehaviour
     public string selectGamma = "z";
     public string selectNeutron = "x";
 
+    [Header("106A Stuff")]
+    public string testLocationDrop = "c";
+
     [Header("Drone Variable")]
     public Matrice_ROSDroneConnection rosDroneConnection;
 
@@ -265,5 +268,17 @@ public class M210_Flight_TestManager : MonoBehaviour
             WorldProperties.radiationDataType = WorldProperties.RadiationDataType.neutron;
         }
 
+        if (Input.GetKeyDown(testLocationDrop))
+        {
+            GameObject drone = WorldProperties.GetSelectedDrone().gameObjectPointer;
+            Vector3 droneLocation = drone.transform.localPosition;
+
+            Vector3 dropOffLocation = droneLocation + new Vector3(6.0f, 8.0f, 13.0f);
+            GameObject dropOffPointer = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+
+            dropOffPointer.transform.parent = drone.transform.parent;
+            dropOffPointer.transform.localPosition = dropOffLocation;
+            dropOffPointer.transform.localScale = new Vector3(0.5f, 1.0f, 0.5f);
+        }
     }
 }
