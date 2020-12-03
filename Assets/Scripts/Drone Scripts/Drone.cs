@@ -5,7 +5,7 @@
     using System.Collections.Generic;
     using UnityEngine;
 
-    public class Drone 
+    public class Drone
     {
         // This is the related game object
         public GameObject gameObjectPointer;
@@ -36,6 +36,17 @@
         // move = moved a waypoint
         // clear = cleared all waypoints
         private Stack<string> actions;
+
+
+        // Search Radius
+        private float searchRadius = 1.0f;
+
+        // Search Waypoint
+        private Waypoint searchWaypoint;
+
+        // Search UI
+        private GameObject searchViz;
+
 
         /// <summary>
         /// Constructor method for Drone class objects
@@ -83,7 +94,7 @@
 
             Debug.Log("Created new drone with id: " + id);
         }
-        
+
         /// <summary>
         /// Add a sensor attached to this drone instance.
         /// </summary>
@@ -115,7 +126,7 @@
             if (isEmptyWaypointList(waypoints))
             {
                 // If this is the first waypoint, we need to add a starter "takeoff" waypoint before it.
-                Waypoint takeoffWaypoint = new Waypoint(this, gameObjectPointer.transform.position + new Vector3(0,1,0), true);
+                Waypoint takeoffWaypoint = new Waypoint(this, gameObjectPointer.transform.position + new Vector3(0, 1, 0), true);
                 takeoffWaypoint.nextPathPoint = newWaypoint;
                 newWaypoint.prevPathPoint = takeoffWaypoint;
                 waypoints.Add(takeoffWaypoint);
@@ -132,7 +143,7 @@
 
             waypoints.Add(newWaypoint);
             Debug.Log("Added waypoint to the list:" + waypoints.ToString());
-            return newWaypoint; 
+            return newWaypoint;
         }
 
         /// <summary>
@@ -150,7 +161,7 @@
             // Inserting into the path linked list by adjusting the next and previous pointers of the surrounding waypoints
             newWaypoint.prevPathPoint = prevWaypoint;
             newWaypoint.nextPathPoint = prevWaypoint.nextPathPoint;
-            
+
             newWaypoint.prevPathPoint.nextPathPoint = newWaypoint;
             newWaypoint.nextPathPoint.prevPathPoint = newWaypoint;
         }
@@ -216,7 +227,7 @@
                 deletedWaypoints.Remove(restoredWaypoint);
             }
         }
-        
+
         /// <summary>
         /// Removes all waypoints from this drone (including the first one).
         /// </summary>
@@ -273,7 +284,7 @@
         {
             droneProperties.droneROSConnection.UpdateMission();
         }
-        
+
         /******************************/
         //       HELPER METHODS       //
         /******************************/
@@ -328,9 +339,9 @@
             {
                 return 0;
             }
-            return deletedWaypoints.Count; 
+            return deletedWaypoints.Count;
         }
-        
+
         /// <summary>
         /// TReturn the waypoint at the requested index if valid
         /// </summary>
@@ -345,6 +356,59 @@
             return (Waypoint)waypoints[index];
         }
 
+        /******************************/
+        //  SEARCH ALGO METHODS       //
+        /******************************/
+
+        public void DefineSearch()
+        {
+            if (waypoints.Count < 1)
+            {
+                Debug.Log("No Waypoints Defined");
+                return;
+            }
+
+            searchWaypoint = waypoints[waypoints.Count-1];
+            RenderSearchRadius();
+        }
+
+        public void IncreaseRadius()
+        {
+            searchRadius += 0.5f;
+            RenderSearchRadius();
+        }
+
+        public void DecreaseRadius()
+        {
+            searchRadius -= 0.5f;
+            RenderSearchRadius();
+        }
+
+        public float GetRadius()
+        {
+            return searchRadius;
+        }
+
+        public Waypoint GetSearchWaypoint()
+        {
+            return searchWaypoint;
+        }
+
+        private void RenderSearchRadius()
+        {
+            if (searchViz == null)
+            {
+                Debug.Log("Search Viz is null");
+                searchViz = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                searchViz.transform.parent = searchWaypoint.gameObjectPointer.transform.parent;
+                searchViz.name = "SEARCH AREA";
+                Debug.Log("Created: "+ searchViz.name);
+
+            }
+
+            searchViz.transform.localPosition = searchWaypoint.gameObjectPointer.transform.localPosition;
+            searchViz.transform.localScale = new Vector3(searchRadius, 0.5f, searchRadius);
+        }
 
     }
 }

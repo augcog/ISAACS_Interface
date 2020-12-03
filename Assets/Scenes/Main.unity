@@ -661,6 +661,8 @@ MonoBehaviour:
   cycleSensor: k
   unsubscribe: z
   stopMission: l
+  selectGamma: z
+  selectNeutron: x
   rosDroneConnection: {fileID: 0}
 --- !u!114 &146794967
 MonoBehaviour:
@@ -700,20 +702,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DronesList:
   - droneName: Perry Pepe the Platipus
-    ipAddress: 10.42.0.1
+    ipAddress: 192.168.0.27
     port: 9090
     droneType: 1
-    droneSubscribers: 060000000100000000000000
-    simFlight: 0
+    droneSubscribers: 
+    simFlight: 1
     attachedSensors:
     - sensorName: LIDAR
-      ipAddress: 10.42.0.1
+      ipAddress: 192.168.0.27
       port: 9090
       sensorType: 1
       sensorSubscribers: 01000000
       videoPlayers: 0
     - sensorName: LabrLAMP
-      ipAddress: 10.42.0.1
+      ipAddress: 192.168.0.27
       port: 9090
       sensorType: 3
       sensorSubscribers: 08000000090000000a0000000b0000000c0000000d000000

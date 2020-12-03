@@ -16,6 +16,11 @@ public class DroneButtons : MonoBehaviour {
     public bool landDrone = false;
     public bool homeDrone = false;
 
+    // Search Buttons
+    public bool defineSearch = false;
+    public bool increaseRadius = false;
+    public bool decreaseRadius = false;
+    public bool startSearch = false;
 
     void Awake()
     {
@@ -62,6 +67,25 @@ public class DroneButtons : MonoBehaviour {
             droneROSConnection.FlyHome();        
         }
 
+        if (defineSearch)
+        {
+            selectedDrone.DefineSearch();
+        }
+
+        if (increaseRadius)
+        {
+            selectedDrone.IncreaseRadius();
+        }
+
+        if (decreaseRadius)
+        {
+            selectedDrone.DecreaseRadius();
+        }
+
+        if (startSearch)
+        {
+            droneROSConnection.StartSearch();
+        }
 
     }
 }

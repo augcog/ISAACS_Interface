@@ -983,6 +983,24 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
     /// All responses are currently printed out to the console. 
     /// Logical code implementation will be build as required.
     /// </para>
+    
+    public void StartSearch()
+    {
+        string service_name = "TODO: apollo/start_search";
+
+        float _radius = droneProperties.droneClassPointer.GetRadius();
+        Waypoint _waypoint = droneProperties.droneClassPointer.GetSearchWaypoint();
+        GPSCoordinate _gps = WorldProperties.UnityCoordToGPSCoord(_waypoint.gameObjectPointer.transform.localPosition);
+        SearchMissionTaskMsg task = new SearchMissionTaskMsg(_gps.Lat, _gps.Lng, _radius);
+
+        ros.CallService(StartSearchResponse, service_name, string.Format("{0} {1}", client_id, service_name), string.Format("[{0}]", task.ToYAMLString()));
+    }
+
+    public void StartSearchResponse(JSONNode response)
+    {
+        response = response["values"];
+        Debug.LogFormat("Drone: {0} (Version {1})", response["hardware"].Value, response["version"].AsInt);
+    }
 
     /// <summary>
     /// Query drone version
