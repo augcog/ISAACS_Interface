@@ -437,7 +437,7 @@
 
             // True: create full grid search mission
             // False: service call to varun's algo
-            bool EECS106A_GridSearch = false;
+            bool EECS106A_GridSearch = true;
 
             if (EECS106A_GridSearch)
             {
