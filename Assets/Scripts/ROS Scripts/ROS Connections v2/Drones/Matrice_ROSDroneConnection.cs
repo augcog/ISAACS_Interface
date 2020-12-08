@@ -1018,7 +1018,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
     
     public void StartSearch()
     {
-        string service_name = "isaacs_autonomy/start_search";
+        string service_name = "/isaacs_autonomy/start_search";
 
         int _radius = (int)droneProperties.droneClassPointer.GetRadius();
         //Waypoint _waypoint = droneProperties.droneClassPointer.GetSearchWaypoint();
