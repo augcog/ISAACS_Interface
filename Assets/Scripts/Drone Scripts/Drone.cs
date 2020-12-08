@@ -374,13 +374,13 @@
 
         public void IncreaseRadius()
         {
-            searchRadius += 0.5f;
+            searchRadius += 1.0f;
             RenderSearchRadius();
         }
 
         public void DecreaseRadius()
         {
-            searchRadius -= 0.5f;
+            searchRadius -= 1.0f;
             RenderSearchRadius();
         }
 
@@ -410,5 +410,45 @@
             searchViz.transform.localScale = new Vector3(searchRadius, 0.5f, searchRadius);
         }
 
+        public void TestGridSearch()
+        {
+
+            // Get the dimensions of the square
+            Vector3 searchCenter = searchWaypoint.gameObjectPointer.transform.localPosition;
+            float search_height = searchCenter.y;
+
+            float grid_start_x = searchCenter.x - searchRadius/2;
+            float grid_end_x = searchCenter.x + searchRadius / 2;
+
+            float grid_start_z = searchCenter.z - searchRadius / 2;
+            float grid_end_z = searchCenter.z + searchRadius / 2;
+
+            // Start from one corner and move along
+            // - Make a waypoint at x,y,z
+            // - Add this waypoint to the drone
+
+            Debug.Log("CREATING SEARCH GRID with radius:" + searchRadius.ToString());
+
+            float curr_x = grid_start_x;
+            float curr_z = grid_start_z;
+
+            for(int i = 0; i < searchRadius+1; i += 1)
+            {
+                // Make waypoint 1
+                Waypoint wp = this.AddWaypoint(new Vector3(curr_x, search_height, curr_z));
+                wp.gameObjectPointer.transform.localPosition = new Vector3(curr_x, search_height, curr_z);
+
+                curr_z += 2 * searchRadius / 2;
+                // Make waypoint 2
+                wp = this.AddWaypoint(new Vector3(curr_x, search_height, curr_z));
+                wp.gameObjectPointer.transform.localPosition = new Vector3(curr_x, search_height, curr_z);
+
+
+                curr_z -= 2 * searchRadius / 2;
+                curr_x += 1;
+            }
+
+            // Trigger the Start Mission?
+        }
     }
 }

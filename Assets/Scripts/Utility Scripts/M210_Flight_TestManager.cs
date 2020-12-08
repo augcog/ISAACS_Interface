@@ -7,6 +7,7 @@ using ROSBridgeLib.interface_msgs;
 using UnityEditor;
 using System.IO;
 using ISAACS;
+using UnityEngine.UI;
 using ROSBridgeLib.sensor_msgs;
 
 public class M210_Flight_TestManager : MonoBehaviour
@@ -22,7 +23,7 @@ public class M210_Flight_TestManager : MonoBehaviour
 
     [Header("Subscriber Tests")]
     public string viewHomeLat = "q";
-    public string viewHomeLong = "w";
+    public string viewHomeLong = "1";
     public bool printLatLong = false;
     public bool printGPSHealth = false;
 
@@ -41,11 +42,11 @@ public class M210_Flight_TestManager : MonoBehaviour
 
     [Header("Safe Mission Test (Hardcoded)")]
     public string uploadTestMission = "p";
-    public string missionInfo = "a";
-    public string executeUploadedMission = "s";
+    public string missionInfo = "2";
+    public string executeUploadedMission = "3";
 
     [Header("Safe Mission Test (User Set)")]
-    public string viewSafeWaypointMission = "d";
+    public string viewSafeWaypointMission = "4";
     public string uploadUserMission = "f";
 
     [Header("Pause/Resume Mission Tests")]
@@ -67,6 +68,17 @@ public class M210_Flight_TestManager : MonoBehaviour
 
     [Header("106A Stuff")]
     public string testLocationDrop = "c";
+    public string testGridSearch = "v";
+
+    public string forward = "w";
+    public string left = "a";
+    public string back = "s";
+    public string right = "d";
+
+    public string changeStatus_toSearching = "b";
+    public string changeStatus_toFound = "n";
+    public UnityEngine.UI.Text SearchStatus;
+
 
     [Header("Drone Variable")]
     public Matrice_ROSDroneConnection rosDroneConnection;
@@ -279,6 +291,41 @@ public class M210_Flight_TestManager : MonoBehaviour
             dropOffPointer.transform.parent = drone.transform.parent;
             dropOffPointer.transform.localPosition = dropOffLocation;
             dropOffPointer.transform.localScale = new Vector3(0.5f, 1.0f, 0.5f);
+        }
+
+        if (Input.GetKeyDown(testGridSearch))
+        {
+            rosDroneConnection.droneProperties.droneClassPointer.TestGridSearch();
+        }
+
+        if (Input.GetKeyDown(forward))
+        {
+            rosDroneConnection.FlyForward();
+        }
+
+        if (Input.GetKeyDown(left))
+        {
+            rosDroneConnection.FlyLeft();
+        }
+
+        if (Input.GetKeyDown(back))
+        {
+            rosDroneConnection.FlyBack();
+        }
+
+        if (Input.GetKeyDown(right))
+        {
+            rosDroneConnection.FlyRight();
+        }
+
+        if (Input.GetKeyDown(changeStatus_toFound))
+        {
+            SearchStatus.text = "Search Status: Found";
+        }
+
+        if (Input.GetKeyDown(changeStatus_toSearching))
+        {
+            SearchStatus.text = "Search Status: Searching";
         }
     }
 }

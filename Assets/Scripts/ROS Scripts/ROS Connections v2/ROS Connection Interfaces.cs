@@ -121,10 +121,13 @@ public interface ROSDroneConnectionInterface
     // Optional in the future
     // void DoTask()
 
-
     // Search Algo Functions
     void StartSearch();
 
+    void FlyForward();
+    void FlyBack();
+    void FlyRight();
+    void FlyLeft();
 }
 
 public interface ROSSensorConnectionInterface

@@ -594,6 +594,38 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
         }
     }
 
+    public void FlyForward()
+    {
+        //TODO
+        string service_name = "/dji_sdk/mission_waypoint_upload";
+        //Debug.LogFormat("ROS Call: {0} {1}  Arguments: {2}", client_id, service_name, task);
+        //ros.CallService(HandleUploadWaypointsTaskResponse, service_name, string.Format("{0} {1}", client_id, service_name), args: string.Format("[{0}]", task.ToYAMLString()));
+    }
+
+    public void FlyBack()
+    {
+        //TODO
+        string service_name = "/dji_sdk/mission_waypoint_upload";
+        //Debug.LogFormat("ROS Call: {0} {1}  Arguments: {2}", client_id, service_name, task);
+        //ros.CallService(HandleUploadWaypointsTaskResponse, service_name, string.Format("{0} {1}", client_id, service_name), args: string.Format("[{0}]", task.ToYAMLString()));
+    }
+
+    public void FlyRight()
+    {
+        //TODO
+        string service_name = "/dji_sdk/mission_waypoint_upload";
+        //Debug.LogFormat("ROS Call: {0} {1}  Arguments: {2}", client_id, service_name, task);
+        //ros.CallService(HandleUploadWaypointsTaskResponse, service_name, string.Format("{0} {1}", client_id, service_name), args: string.Format("[{0}]", task.ToYAMLString()));
+    }
+
+    public void FlyLeft()
+    {
+        //TODO
+        string service_name = "/dji_sdk/mission_waypoint_upload";
+        //Debug.LogFormat("ROS Call: {0} {1}  Arguments: {2}", client_id, service_name, task);
+        //ros.CallService(HandleUploadWaypointsTaskResponse, service_name, string.Format("{0} {1}", client_id, service_name), args: string.Format("[{0}]", task.ToYAMLString()));
+    }
+
     /// <para>
     /// Public methods to query state variables of the drone
     /// The Informative UI should only query these methods
