@@ -66,7 +66,7 @@
 
             gameObjectPointer.tag = "Drone";
             gameObjectPointer.name = baseObject.name;
-            gameObjectPointer.transform.localScale = WorldProperties.actualScale / 5;
+            gameObjectPointer.transform.localScale = WorldProperties.actualScale / 3;
             gameObjectPointer.transform.parent = WorldProperties.worldObject.transform;
 
             WorldProperties.AddClipShader(gameObjectPointer.transform);
@@ -434,19 +434,38 @@
             float curr_z = grid_start_z;
 
             // Disable search waypoint
+            this.DeleteWaypoint(searchWaypoint);
             //searchWaypoint.gameObjectPointer.active = false;
+
+
+            // TO only move the current waypoint to the corner:
+            /*
+            Waypoint wp = this.AddWaypoint(new Vector3(curr_x, search_height, curr_z));
+            wp.gameObjectPointer.transform.localPosition = new Vector3(curr_x, search_height, curr_z);
+            wp.waypointProperties.modelGroundpoint.active = false;
+            wp.gameObjectPointer.GetComponent<Renderer>().enabled = false;
+            wp.gameObjectPointer.GetComponent<LineRenderer>().enabled = false;
+            */
+
+            // To create a full grid search waypoints
+            bool jankFix = true;
 
             for(int i = 0; i < searchRadius+1; i += 1)
             {
                 // Make waypoint 1
                 Waypoint wp = this.AddWaypoint(new Vector3(curr_x, search_height, curr_z));
                 wp.gameObjectPointer.transform.localPosition = new Vector3(curr_x, search_height, curr_z);
-                wp.waypointProperties.modelGroundpoint.active = false;
-                wp.gameObjectPointer.GetComponent<Renderer>().enabled = false;
-                wp.gameObjectPointer.GetComponent<LineRenderer>().enabled = false;
-                //wp.waypointProperties.thisGroundpoint.active = false;
-                //wp.gameObjectPointer.active = false;
 
+                if (jankFix)
+                {
+                    jankFix = false;
+                }
+                else
+                {
+                    wp.waypointProperties.modelGroundpoint.active = false;
+                    wp.gameObjectPointer.GetComponent<Renderer>().enabled = false;
+                    wp.gameObjectPointer.GetComponent<LineRenderer>().enabled = false;
+                }
 
                 curr_z += 2 * searchRadius / 2;
                 // Make waypoint 2
@@ -456,16 +475,10 @@
                 wp.gameObjectPointer.GetComponent<Renderer>().enabled = false;
                 wp.gameObjectPointer.GetComponent<LineRenderer>().enabled = false;
 
-
-                //wp.waypointProperties.thisGroundpoint.active = false;
-                //wp.gameObjectPointer.active = false;
-
-
                 curr_z -= 2 * searchRadius / 2;
                 curr_x += 1;
             }
 
-            // Trigger the Start Mission?
         }
     }
 }

@@ -20,6 +20,7 @@ public class DroneButtons : MonoBehaviour {
     public bool defineSearch = false;
     public bool increaseRadius = false;
     public bool decreaseRadius = false;
+    public bool finalizeSearch = false;
     public bool startSearch = false;
 
     void Awake()
@@ -36,6 +37,7 @@ public class DroneButtons : MonoBehaviour {
         if (startMission)
         {
             Debug.Log("Start mission button clicked");
+            selectedDrone.droneProperties.droneMenu.ChangeStatus("Flying to Search Area");
             droneROSConnection.StartMission();
         }
 
@@ -82,9 +84,16 @@ public class DroneButtons : MonoBehaviour {
             selectedDrone.DecreaseRadius();
         }
 
+        if (finalizeSearch)
+        {
+            selectedDrone.TestGridSearch();
+            selectedDrone.droneProperties.droneMenu.ChangeStatus("Search Grid Uploaded");
+        }
+
         if (startSearch)
         {
-            droneROSConnection.StartSearch();
+            selectedDrone.droneProperties.droneMenu.ChangeStatus("Searching...");
+            selectedDrone.droneProperties.droneROSConnection.StartSearch();
         }
 
     }

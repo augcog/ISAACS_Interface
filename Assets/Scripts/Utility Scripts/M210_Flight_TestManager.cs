@@ -75,8 +75,7 @@ public class M210_Flight_TestManager : MonoBehaviour
     public string back = "s";
     public string right = "d";
 
-    public string changeStatus_toSearching = "b";
-    public string changeStatus_toFound = "n";
+    public string searchFinished = "b";
     public UnityEngine.UI.Text SearchStatus;
     public Material searchMaterial;
 
@@ -321,14 +320,11 @@ public class M210_Flight_TestManager : MonoBehaviour
             rosDroneConnection.FlyRight();
         }
 
-        if (Input.GetKeyDown(changeStatus_toFound))
+        if (Input.GetKeyDown(searchFinished))
         {
-            SearchStatus.text = "Search Status: Found";
+            rosDroneConnection.droneProperties.droneMenu.ChangeStatus("Search Successfull!!");
+            rosDroneConnection.LandDrone();
         }
 
-        if (Input.GetKeyDown(changeStatus_toSearching))
-        {
-            SearchStatus.text = "Search Status: Searching";
-        }
     }
 }

@@ -24,6 +24,8 @@ public class DroneMenu : MonoBehaviour {
     public Font menuFont;
     // The Text UI component attached to the drone prefab for displaying the drone position
     public Text dronePosText;
+    // The Text UI component attached to the drone prefab for displaying the drone status
+    public Text droneStatusText;
     // The Text UI component attached to the drone prefab for displaying the drone name
     public Text droneNameText;
     // The Text UI component attached to the drone prefab for displaying the drone authority status
@@ -51,6 +53,7 @@ public class DroneMenu : MonoBehaviour {
         offsetY += droneSubscribers.Count * 60; // displacing top text position based on num subscribers
         droneNameText.rectTransform.anchoredPosition = new Vector3(0, offsetY, 0); // top text box is drone name
         droneNameText.text = this.name;
+        droneStatusText.text = "Standby";
 
         foreach (string subscriber in droneSubscribers)
         {
@@ -81,6 +84,11 @@ public class DroneMenu : MonoBehaviour {
         }
 
         initialized = true;
+    }
+
+    public void ChangeStatus(string newStatus)
+    {
+        this.droneStatusText.text = newStatus;
     }
 
 
