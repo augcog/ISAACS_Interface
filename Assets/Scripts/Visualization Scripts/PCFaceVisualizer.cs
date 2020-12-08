@@ -45,7 +45,7 @@ public class PCFaceVisualizer : MonoBehaviour
     public void SetColor(Color color)
     {
         MeshRenderer meshRenderer = meshParent.GetComponent<MeshRenderer>();
-        meshRenderer.sharedMaterial = new Material(Shader.Find("Oculus/Unlit Transparent Color"));
+        meshRenderer.sharedMaterial = new Material("Oculus/Unlit Transparent Color");
         meshRenderer.sharedMaterial.color = color;
     }
 

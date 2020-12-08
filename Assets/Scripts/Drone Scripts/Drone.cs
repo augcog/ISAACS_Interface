@@ -401,6 +401,7 @@
                 Debug.Log("Search Viz is null");
                 searchViz = GameObject.CreatePrimitive(PrimitiveType.Sphere);
                 searchViz.transform.parent = searchWaypoint.gameObjectPointer.transform.parent;
+                searchViz.GetComponent<Renderer>().material = GameObject.Find("World").GetComponent<M210_Flight_TestManager>().searchMaterial;
                 searchViz.name = "SEARCH AREA";
                 Debug.Log("Created: "+ searchViz.name);
 
