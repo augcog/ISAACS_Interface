@@ -1018,14 +1018,14 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
     
     public void StartSearch()
     {
-        string service_name = "/start_search";
+        string service_name = "isaacs_autonomy/start_search";
 
-        float _radius = droneProperties.droneClassPointer.GetRadius();
-        Waypoint _waypoint = droneProperties.droneClassPointer.GetSearchWaypoint();
-        GPSCoordinate _gps = WorldProperties.UnityCoordToGPSCoord(_waypoint.gameObjectPointer.transform.localPosition);
-        SearchMissionTaskMsg task = new SearchMissionTaskMsg(_gps.Lat, _gps.Lng, _radius);
-
-        ros.CallService(StartSearchResponse, service_name, string.Format("{0} {1}", client_id, service_name), string.Format("[{0}]", task.ToYAMLString()));
+        int _radius = (int)droneProperties.droneClassPointer.GetRadius();
+        //Waypoint _waypoint = droneProperties.droneClassPointer.GetSearchWaypoint();
+        //GPSCoordinate _gps = WorldProperties.UnityCoordToGPSCoord(_waypoint.gameObjectPointer.transform.localPosition);
+        //SearchMissionTaskMsg task = new SearchMissionTaskMsg(_gps.Lat, _gps.Lng, _radius);
+  
+        ros.CallService(StartSearchResponse, service_name, string.Format("{0} {1}", client_id, service_name), string.Format("[{0}]", _radius));
     }
 
     public void StartSearchResponse(JSONNode response)
