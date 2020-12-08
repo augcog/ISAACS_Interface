@@ -47,8 +47,8 @@
         public WaypointStatus prevWaypointStatus;
 
         public GameObject modelGroundpoint; // Refers to the groundpoint object being instantiated
-        private GameObject thisGroundpoint; // groundpoint instantiated under current waypoint
-        private LineRenderer groundpointLine; // Connects the groundpoint to the waypoint
+        public GameObject thisGroundpoint; // groundpoint instantiated under current waypoint
+        public LineRenderer groundpointLine; // Connects the groundpoint to the waypoint
 
         public LineRenderer LineProperties;
         private CapsuleCollider lineCollider;

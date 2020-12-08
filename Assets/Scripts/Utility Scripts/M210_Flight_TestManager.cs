@@ -291,6 +291,13 @@ public class M210_Flight_TestManager : MonoBehaviour
             dropOffPointer.transform.parent = drone.transform.parent;
             dropOffPointer.transform.localPosition = dropOffLocation;
             dropOffPointer.transform.localScale = new Vector3(0.5f, 1.0f, 0.5f);
+
+            // I don't know how to make this transparent
+            MeshFilter meshFilter = dropOffPointer.AddComponent<MeshFilter>();
+            MeshRenderer meshRenderer = dropOffPointer.AddComponent<MeshRenderer>();
+            meshRenderer.sharedMaterial = new Material(Shader.Find("Oculus/Unlit Transparent Color"));
+            meshRenderer.sharedMaterial.SetColor(1, new Color(153.0f, 51.0f, 255.0f, 0.3f));
+  
         }
 
         if (Input.GetKeyDown(testGridSearch))

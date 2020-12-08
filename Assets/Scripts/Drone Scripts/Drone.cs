@@ -432,16 +432,32 @@
             float curr_x = grid_start_x;
             float curr_z = grid_start_z;
 
+            // Disable search waypoint
+            //searchWaypoint.gameObjectPointer.active = false;
+
             for(int i = 0; i < searchRadius+1; i += 1)
             {
                 // Make waypoint 1
                 Waypoint wp = this.AddWaypoint(new Vector3(curr_x, search_height, curr_z));
                 wp.gameObjectPointer.transform.localPosition = new Vector3(curr_x, search_height, curr_z);
+                wp.waypointProperties.modelGroundpoint.active = false;
+                wp.gameObjectPointer.GetComponent<Renderer>().enabled = false;
+                wp.gameObjectPointer.GetComponent<LineRenderer>().enabled = false;
+                //wp.waypointProperties.thisGroundpoint.active = false;
+                //wp.gameObjectPointer.active = false;
+
 
                 curr_z += 2 * searchRadius / 2;
                 // Make waypoint 2
                 wp = this.AddWaypoint(new Vector3(curr_x, search_height, curr_z));
                 wp.gameObjectPointer.transform.localPosition = new Vector3(curr_x, search_height, curr_z);
+                wp.waypointProperties.modelGroundpoint.active = false;
+                wp.gameObjectPointer.GetComponent<Renderer>().enabled = false;
+                wp.gameObjectPointer.GetComponent<LineRenderer>().enabled = false;
+
+
+                //wp.waypointProperties.thisGroundpoint.active = false;
+                //wp.gameObjectPointer.active = false;
 
 
                 curr_z -= 2 * searchRadius / 2;
