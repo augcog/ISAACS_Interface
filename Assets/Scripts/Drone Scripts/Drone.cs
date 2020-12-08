@@ -428,8 +428,6 @@
             // - Make a waypoint at x,y,z
             // - Add this waypoint to the drone
 
-            Debug.Log("CREATING SEARCH GRID with radius:" + searchRadius.ToString());
-
             float curr_x = grid_start_x;
             float curr_z = grid_start_z;
 
@@ -437,46 +435,48 @@
             this.DeleteWaypoint(searchWaypoint);
             //searchWaypoint.gameObjectPointer.active = false;
 
+            // True: create full grid search mission
+            // False: service call to varun's algo
+            bool EECS106A_GridSearch = false;
 
-            // TO only move the current waypoint to the corner:
-            /*
-            Waypoint wp = this.AddWaypoint(new Vector3(curr_x, search_height, curr_z));
-            wp.gameObjectPointer.transform.localPosition = new Vector3(curr_x, search_height, curr_z);
-            wp.waypointProperties.modelGroundpoint.active = false;
-            wp.gameObjectPointer.GetComponent<Renderer>().enabled = false;
-            wp.gameObjectPointer.GetComponent<LineRenderer>().enabled = false;
-            */
-
-            // To create a full grid search waypoints
-            bool jankFix = true;
-
-            for(int i = 0; i < searchRadius+1; i += 1)
+            if (EECS106A_GridSearch)
             {
-                // Make waypoint 1
-                Waypoint wp = this.AddWaypoint(new Vector3(curr_x, search_height, curr_z));
-                wp.gameObjectPointer.transform.localPosition = new Vector3(curr_x, search_height, curr_z);
+                // To create a full grid search waypoints
+                bool jankFix = true;
 
-                if (jankFix)
+                for (int i = 0; i < searchRadius + 1; i += 1)
                 {
-                    jankFix = false;
-                }
-                else
-                {
+                    // Make waypoint 1
+                    Waypoint wp = this.AddWaypoint(new Vector3(curr_x, search_height, curr_z));
+                    wp.gameObjectPointer.transform.localPosition = new Vector3(curr_x, search_height, curr_z);
+
+                    if (jankFix)
+                    {
+                        jankFix = false;
+                    }
+                    else
+                    {
+                        wp.waypointProperties.modelGroundpoint.active = false;
+                        wp.gameObjectPointer.GetComponent<Renderer>().enabled = false;
+                        wp.gameObjectPointer.GetComponent<LineRenderer>().enabled = false;
+                    }
+
+                    curr_z += 2 * searchRadius / 2;
+                    // Make waypoint 2
+                    wp = this.AddWaypoint(new Vector3(curr_x, search_height, curr_z));
+                    wp.gameObjectPointer.transform.localPosition = new Vector3(curr_x, search_height, curr_z);
                     wp.waypointProperties.modelGroundpoint.active = false;
                     wp.gameObjectPointer.GetComponent<Renderer>().enabled = false;
                     wp.gameObjectPointer.GetComponent<LineRenderer>().enabled = false;
+
+                    curr_z -= 2 * searchRadius / 2;
+                    curr_x += 1;
                 }
-
-                curr_z += 2 * searchRadius / 2;
-                // Make waypoint 2
-                wp = this.AddWaypoint(new Vector3(curr_x, search_height, curr_z));
+            }
+            else
+            {
+                Waypoint wp = this.AddWaypoint(new Vector3(curr_x, search_height, curr_z));
                 wp.gameObjectPointer.transform.localPosition = new Vector3(curr_x, search_height, curr_z);
-                wp.waypointProperties.modelGroundpoint.active = false;
-                wp.gameObjectPointer.GetComponent<Renderer>().enabled = false;
-                wp.gameObjectPointer.GetComponent<LineRenderer>().enabled = false;
-
-                curr_z -= 2 * searchRadius / 2;
-                curr_x += 1;
             }
 
         }
