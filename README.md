@@ -198,6 +198,6 @@ We would like to thank [Dr. Allen Yang](https://people.eecs.berkeley.edu/~yang/)
 
 <a name="licensing"></a>
 ## 8. Licensing
-This repository contains four types of files: program files, assets created by us (such as UAV models), Unity prefabs, and SDK files (DJI and MapBox). All program files, unless otherwise stated, are distributed under the GNU General Public License version 3. All media files are distributed under the Creative Commons Attribution-ShareAlike 4.0 International license. For Unity prefabs and SDK files, please refer to their respective licenses. A license notice is included within all files created by us. <br>
+This repository is distributed under the Apache 2.0 license. All media files are distributed under the Creative Commons Attribution-ShareAlike 4.0 International license. <br>
 <br>
 In case of doubt on whether you can use an asset, or on how to correctly attribute its authors, please e-mail us at: isaacs@xr.berkeley.edu.
