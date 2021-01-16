@@ -19,12 +19,12 @@ namespace ROSBridgeLib
 			
 		public ClientMsg(JSONNode msg)
 		{
-			_id = int.Parse(msg["_id"]);
-			_name = msg["_name"].ToString();
-			_type = msg["_type"].ToString();
+			_id = int.Parse(msg["id"]);
+			_name = msg["name"].ToString();
+			_type = msg["type"].ToString();
 
-			JSONArray temp1 = msg["_topics"].AsArray;
-			JSONArray temp2 = msg["_services"].AsArray;
+			JSONArray temp1 = msg["topics"].AsArray;
+			JSONArray temp2 = msg["services"].AsArray;
 
 			_topics = new TopicTypesMsg[temp1.Count];
 			_services = new TopicTypesMsg[temp2.Count];

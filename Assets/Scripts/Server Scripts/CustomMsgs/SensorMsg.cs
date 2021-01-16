@@ -15,7 +15,7 @@ namespace ROSBridgeLib
 
 		public SensorMsg(JSONNode msg)
 		{
-			_parent_drone_id = int.Parse(msg["_parent_drone_id"]);
+			_parent_drone_id = int.Parse(msg["id"]);
 			_sensor = new ClientMsg(msg);
 		}
 

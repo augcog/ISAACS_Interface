@@ -95,7 +95,6 @@
             System.Threading.Thread.Sleep(5000);
             Debug.Log("created connection with: " + serverIP + " " + serverPort);
             GetAllDrones();
-            //TODO: Get all sensors
             GetAllSensors();
         }
 
@@ -184,6 +183,7 @@
             DroneMenu droneMenu = droneGameObject.GetComponent<DroneMenu>();
             droneMenu.InitDroneMenu(droneInformation, droneSubscribers);
             droneGameObject.GetComponent<DroneProperties>().droneMenu = droneMenu;
+            
             */
         }
 
@@ -191,113 +191,56 @@
 
         public static void uploadMission(Drone_v2 drone, string ID, List<Waypoint> waypoints)
         {
-            string service_name = "/isaacs_server/ TODO ";
-            //Debug.LogFormat();
-            //rosServerConnection.CallService( TODO , service_name, params);
+            string service_name = "/isaacs_server/upload_mission ";
+
+            NavSatFixMsg[] waypointMsgs = new NavSatFixMsg[waypoints.Count];
+            //change each waypoint to navsatros messages
+            int count = 0;
+            for each (Waypoint x in waypoints) {
+                Vector3 unityCoord = x.gameObjectPointer.transform.localPosition;
+                GPSCoordinate rosCoord = WorldProperties.UnityCoordToGPSCoord(unityCoord);
+                NavSatFixMsg msg = new NavSatFixMsg("[]");
+                msg._latitude = rosCoord.Lat;
+                msg._longitutde = rosCoord.Lng;
+                msg._altitude = rosCoord.Alt;
+                waypointMsgs[0] = msg;
+                count++;
+            }
+            //TODO: might not work bc array.toString is diff than navsatfixmsg.toString
+            rosServerConnection.CallService(uploadMissionCallback, service_name, string.Format("{0} {1}", drone_id, service_name), args: string.Format("[{0}]", waypointMsgs.ToString())) ;
+
         }
 
-        //TODO: Implement this (What does this do?)
         public static void uploadMissionCallback(JSONNode response)
         {
-            //UploadMissionMsg result = new UploadMissionMsg(response);
+            UploadMissionMsg result = new UploadMissionMsg(response);
+            int drone_id = result.getDroneId();
+            bool success = result.getSuccess();
+            string meta_data = result.getMetaData();
+            if (success)
+            {
+                Drone_v2 drone = WorldProperties.GetDroneDict[drone_id];
+                for each (Waypoint way in drone.WaypointsUploaded(drone.AllWaypoints())) {
+                    way.WaypointProperties.WaypointUploaded();
+                }
+
+            }
+
+
         }
 
 
-        //TODO
-        public static void updateMission(Drone_v2 drone, string ID, List<Waypoint> updatedWaypoints)
+        public static void controlDrone(Drone_v2 drone, string ID, string command)
         {
-            string service_name = "/isaacs_server/ TODO ";
+            string service_name = "/isaacs_server/control_drone";
             //Debug.LogFormat();
-            //rosServerConnection.CallService( TODO , service_name, params);
-
-            //all computation on server to see what has been changed and stuff
+            DroneCommandMsg msg = new DroneCommandMsg("[]");
+            msg._command = command;
+            rosServerConnection.CallService(controlDroneCallback, service_name, string.Format("{0} {1}", drone_id, service_name), args: string.Format("[{0}]", msg.ToString));
         }
 
         //TODO
-        public static void updateMissionCallback(JSONNode response)
-        {
-
-        }
-        //TODO
-        public static void startMission(Drone_v2 drone, string ID)
-        {
-            string service_name = "/isaacs_server/ TODO ";
-            //Debug.LogFormat();
-            //rosServerConnection.CallService( TODO , service_name, params);
-        }
-
-        //TODO
-        public static void startMissionCallback(JSONNode response)
-        {
-
-        }
-
-        //TODO
-        public static void pauseMission(Drone_v2 drone, string ID)
-        {
-            string service_name = "/isaacs_server/ TODO ";
-            //Debug.LogFormat();
-            //rosServerConnection.CallService( TODO , service_name, params);
-        }
-
-        //TODO
-        public static void pauseMissionCallback(JSONNode response)
-        {
-
-        }
-
-        //TODO
-        public static void resumeMission(Drone_v2 drone, string ID)
-        {
-            string service_name = "/isaacs_server/ TODO ";
-            //Debug.LogFormat();
-            //rosServerConnection.CallService( TODO , service_name, params);
-        }
-
-        //TODO
-        public static void resumeMissionCallback(JSONNode response)
-        {
-
-        }
-
-        //TODO
-        public static void landDrone(Drone_v2 drone, string ID)
-        {
-            string service_name = "/isaacs_server/ TODO ";
-            //Debug.LogFormat();
-            //rosServerConnection.CallService( TODO , service_name, params);
-        }
-
-        //TODO
-        public static void landDroneCallback(JSONNode response)
-        {
-
-        }
-
-        //TODO
-        public static void flyHome(Drone_v2 drone, string ID)
-        {
-            string service_name = "/isaacs_server/ TODO ";
-            //Debug.LogFormat();
-            //rosServerConnection.CallService( TODO , service_name, params);
-        }
-
-        //TODO
-        public static void flyHomeCallback(JSONNode response)
-        {
-
-        }
-
-        //TODO
-        public static void stopDrone(Drone_v2 drone, string ID)
-        {
-            string service_name = "/isaacs_server/ TODO ";
-            //Debug.LogFormat();
-            //rosServerConnection.CallService( TODO , service_name, params);
-        }
-
-        //TODO
-        public static void stopDroneCallback(JSONNode response)
+        public static void controlDroneCallback(JSONNode response)
         {
 
         }

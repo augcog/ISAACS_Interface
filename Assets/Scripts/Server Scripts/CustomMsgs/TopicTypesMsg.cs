@@ -16,8 +16,8 @@ namespace ROSBridgeLib
 
 		public TopicTypesMsg(JSONNode msg)
 		{
-			_name = msg["_name"].ToString();
-			_type = msg["_type"].ToString();
+			_name = msg["name"].ToString();
+			_type = msg["type"].ToString();
 		}
 
 		public static string getMessageType()

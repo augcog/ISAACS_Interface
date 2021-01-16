@@ -11,15 +11,13 @@ namespace ROSBridgeLib
 
 	public class DroneCommandMsg : ROSBridgeMsg
 	{
-		private int _drone_id;
-		private bool _success;
-		private string _meta_data;
+		int _id;
+		string _command;
 
 		public DroneCommandMsg(JSONNode msg)
-        {
-			_drone_id = int.Parse(msg["_drone_id"]);
-			_success = Convert.ToBoolean(msg["_sucess"]);
-			_meta_data = msg["_meta_data"].ToString();
+		{
+			_id = int.Parse(msg["id"]);
+			_meta_data = msg["control_task"].ToString();
 		}
 
 		public static string getMessageType()
@@ -27,19 +25,20 @@ namespace ROSBridgeLib
 			return "/server/drone_command";
 		}
 
-		public int getDroneId()
+		public int getCommand()
+		{
+			return _command;
+		}
+
+		public int getID()
         {
-			return _drone_id;
+			return _id;
         }
 
-        public bool getSuccess()
+		public string toString()
         {
-            return _success;
-        }
+			return string.Format("Latitude: {0}", _command);
 
-        public string getMetaData()
-        {
-            return _meta_data;
-        }
+		}
 	}
 }

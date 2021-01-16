@@ -18,6 +18,7 @@
         public Drone_v2(Vector3 position, int uniqueID) : base(position, uniqueID) {
             Debug.Log("Drone V2 Constructor: " + uniqueID.ToString());
             _id = uniqueID.ToString();
+            WorldProperties.AddDrone(this);
         }
 
         public void uploadMission()
@@ -27,42 +28,44 @@
 
         public void DronePathUpdated()
         {
-            ServerConnections.updateMission(this, _id, this.AllWaypoints());
+            ServerConnections.uploadMission(this, _id, this.AllWaypoints());
         }
 
         public void startMission()
         {
-            ServerConnections.startMission(this, _id);
+            ServerConnections.controlDrone(this, _id, "start_mission");
         }
 
         public void pauseMission()
         {
-            ServerConnections.pauseMission(this, _id);
+            ServerConnections.controlDrone(this, _id, "pause_mission");
         }
 
         public void resumeMission()
         {
-            ServerConnections.resumeMission(this, _id);
+            ServerConnections.controlDrone(this, _id, "resume_mission");
         }
 
         public void landDrone()
         {
-            ServerConnections.landDrone(this, _id);
+            ServerConnections.controlDrone(this, _id, "land_drone");
         }
 
         public void flyHome()
         {
-            ServerConnections.flyHome(this, _id);
+            ServerConnections.controlDrone(this, _id, "fly_home");
         }
 
         public void stopMission()
         {
-            ServerConnections.stopDrone(this, _id);
+            ServerConnections.controlDrone(this, _id, "stop_mission");
         }
 
         /******************************/
         //    Callback Functions      //
         /******************************/
+
+        //we do these in serverconnections.cs
 
         public void onStartMission()
         {
