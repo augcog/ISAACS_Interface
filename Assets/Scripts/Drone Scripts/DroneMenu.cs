@@ -84,6 +84,51 @@ public class DroneMenu : MonoBehaviour {
     }
 
 
+    //public void InitDroneMenu(DroneInformation droneInformation, List<string> droneSubscribers)
+    //{
+
+    //    connection = rosDroneConnection;
+    //    droneSubscriberTopics = droneSubscribers;
+    //    infoTextsDict = new Dictionary<Text, string>();
+
+    //    // Creating Text label for each subscriber of the drone
+    //    float offsetY = -190; // text position displacement from anchor location (top center)
+    //    offsetY += droneSubscribers.Count * 60; // displacing top text position based on num subscribers
+    //    droneNameText.rectTransform.anchoredPosition = new Vector3(0, offsetY, 0); // top text box is drone name
+    //    droneNameText.text = this.name;
+
+    //    foreach (string subscriber in droneSubscribers)
+    //    {
+    //        offsetY -= 60f;
+
+    //        // create text box
+    //        GameObject placeholder = new GameObject("text of " + subscriber);
+    //        placeholder.transform.SetParent(menuCanvas.transform);
+    //        placeholder.transform.localScale = new Vector3(1, 1, 1);
+
+    //        //text location
+    //        Text infoText = placeholder.AddComponent<Text>();
+    //        infoText.rectTransform.anchorMax = new Vector2(0.5f, 1); // top-center anchor location
+    //        infoText.rectTransform.anchorMin = new Vector2(0.5f, 1); // top-center anchor location
+    //        infoText.rectTransform.anchoredPosition = new Vector3(0, offsetY, 0);
+
+    //        // text content & stylizing
+    //        infoText.text = "Lorem Ipsum";
+    //        infoText.alignment = TextAnchor.MiddleCenter;
+    //        infoText.verticalOverflow = VerticalWrapMode.Overflow;
+    //        infoText.horizontalOverflow = HorizontalWrapMode.Overflow;
+    //        infoText.font = menuFont;
+    //        infoText.fontSize = 80;
+    //        infoText.fontStyle = FontStyle.Bold;
+    //        infoText.color = Color.green;
+
+    //        infoTextsDict.Add(infoText, subscriber);
+    //    }
+
+    //    initialized = true;
+    //}
+
+
     /// <summary>
     /// Updates data of each text box
     /// </summary>e

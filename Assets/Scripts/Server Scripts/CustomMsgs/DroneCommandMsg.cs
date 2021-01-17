@@ -17,7 +17,7 @@ namespace ROSBridgeLib
 		public DroneCommandMsg(JSONNode msg)
 		{
 			_id = int.Parse(msg["id"]);
-			_meta_data = msg["control_task"].ToString();
+			_command = msg["control_task"].ToString();
 		}
 
 		public static string getMessageType()
@@ -25,7 +25,7 @@ namespace ROSBridgeLib
 			return "/server/drone_command";
 		}
 
-		public int getCommand()
+		public string getCommand()
 		{
 			return _command;
 		}

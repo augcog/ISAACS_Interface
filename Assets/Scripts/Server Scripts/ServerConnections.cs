@@ -98,6 +98,7 @@
             GetAllSensors();
         }
 
+        //Calls the server and returns every drone in the current state
         void GetAllDrones()
         {
 
@@ -113,14 +114,23 @@
             //those objects have everything below
             //fields: id, drones, subs
             //we define subs object for all subscribers
-               //fields: subid, messagetype
-            JSONArray droneArray = response["drones_available"].AsArray;
+            //fields: subid, messagetype
+            //JSONArray droneArray = response["drones_available"].AsArray;
 
-            foreach (JSONNode droneInfoJSON in droneArray)
+            //foreach (JSONNode droneInfoJSON in droneArray)
+            //{
+
+            //    DroneInformation droneInfo = new DroneInformation(droneInfoJSON);
+            //    InstantiateDrone(droneInfo);
+            //}
+
+            AllDronesAvailableMsg result = new AllDronesAvailableMsg(response);
+            DroneMsg[] lst = result.getDronesAvailable();
+            foreach (DroneMsg x in lst)
             {
-
-                DroneInformation droneInfo = new DroneInformation(droneInfoJSON);
-                InstantiateDrone(droneInfo);
+                ClientMsg drone = x.getDrone();
+                DroneInformation droneInfo = new DroneInformation(drone.getName(), drone.getId());
+                InstantiateDrone(droneInfo, drone);
             }
         }
 
@@ -139,8 +149,8 @@
         //  //TODO
         //}
 
-
-        public static void InstantiateDrone(DroneInformation droneInformation)
+        // Creates a Drone_v2 object based on "droneInformation"
+        public static void InstantiateDrone(DroneInformation droneInformation, ClientMsg msg)
         {
             int drone_id = droneInformation.id;
             string drone_name = droneInformation.drone_name;
@@ -163,6 +173,23 @@
 
             droneGameObject.name = drone_name;
             WorldProperties.AddDrone(droneInstance);
+
+
+            // Get DroneMenu and instansiate. (OPTIONAL)
+            TopicTypesMsg[] lst = msg.getTopics();
+            List<string> droneSubscribers = new List<string>();
+            //TODO: Is the topic types + their names the list of drone subscribers???
+            foreach (TopicTypesMsg x in lst)
+            {
+                droneSubscribers.Add(x.getName());
+            }
+            
+            //TODO: init dronemenu without ros connection
+
+            //DroneMenu droneMenu = droneGameObject.GetComponent<DroneMenu>();
+            //droneMenu.InitDroneMenu(droneInformation, droneSubscribers);
+            //droneGameObject.GetComponent<DroneProperties>().droneMenu = droneMenu;
+
 
             /*
             // Added optional funtionality we can implement as we go.
@@ -188,7 +215,7 @@
         }
 
 
-
+        //calls server to upload a new or changed mission
         public static void uploadMission(Drone_v2 drone, string ID, List<Waypoint> waypoints)
         {
             string service_name = "/isaacs_server/upload_mission ";
@@ -196,7 +223,7 @@
             NavSatFixMsg[] waypointMsgs = new NavSatFixMsg[waypoints.Count];
             //change each waypoint to navsatros messages
             int count = 0;
-            for each (Waypoint x in waypoints) {
+            foreach (Waypoint x in waypoints) {
                 Vector3 unityCoord = x.gameObjectPointer.transform.localPosition;
                 GPSCoordinate rosCoord = WorldProperties.UnityCoordToGPSCoord(unityCoord);
                 NavSatFixMsg msg = new NavSatFixMsg("[]");
@@ -220,7 +247,7 @@
             if (success)
             {
                 Drone_v2 drone = WorldProperties.GetDroneDict[drone_id];
-                for each (Waypoint way in drone.WaypointsUploaded(drone.AllWaypoints())) {
+                foreach (Waypoint way in drone.WaypointsUploaded(drone.AllWaypoints())) {
                     way.WaypointProperties.WaypointUploaded();
                 }
 
@@ -229,20 +256,29 @@
 
         }
 
-
+        //calls the server for any control calls regarding the mission
         public static void controlDrone(Drone_v2 drone, string ID, string command)
         {
             string service_name = "/isaacs_server/control_drone";
             //Debug.LogFormat();
             DroneCommandMsg msg = new DroneCommandMsg("[]");
             msg._command = command;
+            //hopefully this works!
             rosServerConnection.CallService(controlDroneCallback, service_name, string.Format("{0} {1}", drone_id, service_name), args: string.Format("[{0}]", msg.ToString));
         }
 
         //TODO
         public static void controlDroneCallback(JSONNode response)
         {
+            DroneCommandMsg result = new DroneCommandMsg(respond);
+            int drone_id = result.getDroneId();
+            bool success = result.getSuccess();
+            string meta_data = result.getMetaData();
 
+            if (success)
+            {
+                //
+            }
         }
     }
 }
