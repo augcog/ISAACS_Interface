@@ -65,8 +65,6 @@
         //    Callback Functions      //
         /******************************/
 
-        //we do these in serverconnections.cs
-
         public void onStartMission()
         {
 
@@ -82,7 +80,7 @@
 
         }
 
-        public void onLandDronoe()
+        public void onLandDrone()
         {
 
         }

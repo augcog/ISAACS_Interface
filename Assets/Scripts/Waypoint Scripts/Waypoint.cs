@@ -47,6 +47,6 @@
             gameObjectPointer.transform.parent = WorldProperties.worldObject.transform;
             WorldProperties.AddClipShader(gameObjectPointer.transform);
         }
-        
+
     }
 }

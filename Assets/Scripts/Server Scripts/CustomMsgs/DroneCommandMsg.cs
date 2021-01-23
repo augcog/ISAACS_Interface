@@ -35,6 +35,16 @@ namespace ROSBridgeLib
 			return _id;
         }
 
+		public void setCommand(string command)
+        {
+			_command = command;
+        }
+
+		public void setID(int id)
+        {
+			_id = id;
+        }
+
 		public string toString()
         {
 			return string.Format("Latitude: {0}", _command);

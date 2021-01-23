@@ -6,12 +6,14 @@
     using ROSBridgeLib;
     using ROSBridgeLib.std_msgs;
     using ROSBridgeLib.interface_msgs;
+    using ROSBridgeLib.sensor_msgs;
     using UnityEditor;
     using System.IO;
     using ISAACS;
     using SimpleJSON;
     using System;
 
+    //author: Jasmine Bae + Akhil + Peru
     public class ServerConnections : MonoBehaviour
     {
 
@@ -22,7 +24,7 @@
 
         [Header("ros server connection")]
         //Can we make this static to call it from Sensor_v2 scripts?
-        public ROSBridgeWebSocketConnection rosServerConnection = null;
+        public static ROSBridgeWebSocketConnection rosServerConnection = null;
 
         /// Drone Subscribers supported by ISAACS System
         private enum DroneSubscribers { attitude, battery_state, flight_status, gimbal_angle, gps_health, gps_position, rtk_position, imu, rc, velocity, height_above_takeoff, local_position };
@@ -103,26 +105,13 @@
         {
 
             string service_name = "/isaacs_server/all_drones_available";
-            rosServerConnection.CallService(GetAllDronesCallback, service_name, "","[]");
+            rosServerConnection.CallService(GetAllDronesCallback, service_name, "hi","[]");
             Debug.Log("called service");
         }
 
         public static void GetAllDronesCallback(JSONNode response)
         {
             Debug.Log(response);
-            //get all_drones of objects
-            //those objects have everything below
-            //fields: id, drones, subs
-            //we define subs object for all subscribers
-            //fields: subid, messagetype
-            //JSONArray droneArray = response["drones_available"].AsArray;
-
-            //foreach (JSONNode droneInfoJSON in droneArray)
-            //{
-
-            //    DroneInformation droneInfo = new DroneInformation(droneInfoJSON);
-            //    InstantiateDrone(droneInfo);
-            //}
 
             AllDronesAvailableMsg result = new AllDronesAvailableMsg(response);
             DroneMsg[] lst = result.getDronesAvailable();
@@ -154,7 +143,7 @@
         {
             int drone_id = droneInformation.id;
             string drone_name = droneInformation.drone_name;
-
+            Debug.Log("made drone: " + drone_name);
             /*
             List<string> droneSubscribers = new List<string>();
 
@@ -223,18 +212,16 @@
             NavSatFixMsg[] waypointMsgs = new NavSatFixMsg[waypoints.Count];
             //change each waypoint to navsatros messages
             int count = 0;
-            foreach (Waypoint x in waypoints) {
+            foreach (Waypoint x in waypoints)
+            {
                 Vector3 unityCoord = x.gameObjectPointer.transform.localPosition;
                 GPSCoordinate rosCoord = WorldProperties.UnityCoordToGPSCoord(unityCoord);
-                NavSatFixMsg msg = new NavSatFixMsg("[]");
-                msg._latitude = rosCoord.Lat;
-                msg._longitutde = rosCoord.Lng;
-                msg._altitude = rosCoord.Alt;
-                waypointMsgs[0] = msg;
+                NavSatFixMsg msg = new NavSatFixMsg(rosCoord.Lat, rosCoord.Lng, rosCoord.Alt);
+                waypointMsgs[count] = msg;
                 count++;
             }
             //TODO: might not work bc array.toString is diff than navsatfixmsg.toString
-            rosServerConnection.CallService(uploadMissionCallback, service_name, string.Format("{0} {1}", drone_id, service_name), args: string.Format("[{0}]", waypointMsgs.ToString())) ;
+            rosServerConnection.CallService(uploadMissionCallback, service_name, string.Format("{0} {1}", ID, service_name), args: string.Format("[{0}]", waypointMsgs.ToString()));
 
         }
 
@@ -246,14 +233,21 @@
             string meta_data = result.getMetaData();
             if (success)
             {
-                Drone_v2 drone = WorldProperties.GetDroneDict[drone_id];
-                foreach (Waypoint way in drone.WaypointsUploaded(drone.AllWaypoints())) {
-                    way.WaypointProperties.WaypointUploaded();
+                Drone_v2 drone = WorldProperties.GetDroneDict()[drone_id];
+                int continueFromWaypointID = drone.droneProperties.CurrentWaypointTargetID() + 1;
+                List<Waypoint> ways = drone.AllWaypoints();
+                foreach (Waypoint way in ways) {
+                    Vector3 waypoint_coord = way.gameObjectPointer.transform.localPosition;
+                    float distance = Vector3.Distance(way.gameObjectPointer.transform.localPosition, waypoint_coord);
+
+                    if (distance < 0.2f)
+                    {
+                        way.waypointProperties.WaypointUploaded();
+                    }
                 }
+                drone.droneProperties.StartCheckingFlightProgress(continueFromWaypointID, ways.Count);
 
             }
-
-
         }
 
         //calls the server for any control calls regarding the mission
@@ -262,23 +256,48 @@
             string service_name = "/isaacs_server/control_drone";
             //Debug.LogFormat();
             DroneCommandMsg msg = new DroneCommandMsg("[]");
-            msg._command = command;
+            msg.setCommand(command);
+            msg.setID(int.Parse(ID));
             //hopefully this works!
-            rosServerConnection.CallService(controlDroneCallback, service_name, string.Format("{0} {1}", drone_id, service_name), args: string.Format("[{0}]", msg.ToString));
+
+            rosServerConnection.CallService(controlDroneCallback, service_name, string.Format("{0} {1}", ID, service_name), args: string.Format("[{0}]", msg.ToString()));
         }
 
         //TODO
         public static void controlDroneCallback(JSONNode response)
         {
-            DroneCommandMsg result = new DroneCommandMsg(respond);
-            int drone_id = result.getDroneId();
-            bool success = result.getSuccess();
-            string meta_data = result.getMetaData();
-
-            if (success)
+            DroneCommandMsg result = new DroneCommandMsg(response);
+            int drone_id = result.getID();
+            string command = result.getCommand();
+            Drone_v2 drone = WorldProperties.GetDroneDict()[drone_id];
+            //do the command stuff
+            switch (command)
             {
-                //
+                case "start_mission":
+                    drone.onStartMission();
+                    break;
+
+                case "pause_mission":
+                    drone.onPauseMission();
+                    break;
+
+                case "resume_mission":
+                    drone.onResumeMission();
+                    break;
+
+                case "land_drone":
+                    drone.onLandDrone();
+                    break;
+
+                case "fly_home":
+                    drone.onFlyHome();
+                    break;
+
+                default:
+                    Debug.Log("Wrong drone callback!");
+                    break;
             }
+
         }
     }
 }

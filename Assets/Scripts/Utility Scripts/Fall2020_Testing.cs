@@ -52,8 +52,8 @@ public class Fall2020_Testing : MonoBehaviour {
             ServerConnections.DroneInformation test_drone_1 = new ServerConnections.DroneInformation("jazzy", 0);
             ServerConnections.DroneInformation test_drone_2 = new ServerConnections.DroneInformation("banana", 1);
 
-            ServerConnections.InstantiateDrone(test_drone_1);
-            ServerConnections.InstantiateDrone(test_drone_2);
+            //ServerConnections.InstantiateDrone(test_drone_1);
+            //ServerConnections.InstantiateDrone(test_drone_2);
         }
 
         if (Input.GetKeyUp(cycleDrone))

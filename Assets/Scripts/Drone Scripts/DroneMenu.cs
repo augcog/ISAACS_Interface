@@ -83,7 +83,7 @@ public class DroneMenu : MonoBehaviour {
         initialized = true;
     }
 
-
+    //TODO: Init drone menu w/o ros connection
     //public void InitDroneMenu(DroneInformation droneInformation, List<string> droneSubscribers)
     //{
 
