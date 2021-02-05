@@ -40,7 +40,7 @@ public class Fall2020_Testing : MonoBehaviour {
 
 
     [Header("Drone Variable")]
-    public Drone_v2 drone;
+    public Drone_v2 drone = WorldProperties.GetSelectedDrone();
 
     // Update is called once per frame
     void Update()
@@ -49,8 +49,8 @@ public class Fall2020_Testing : MonoBehaviour {
         if (Input.GetKeyDown(initTestDrones))
         {
             // Call server connection create drone function.
-            ServerConnections.DroneInformation test_drone_1 = new ServerConnections.DroneInformation("jazzy", 0);
-            ServerConnections.DroneInformation test_drone_2 = new ServerConnections.DroneInformation("banana", 1);
+            //ServerConnections.DroneInformation test_drone_1 = new ServerConnections.DroneInformation("jazzy", 1);
+            ////ServerConnections.DroneInformation test_drone_2 = new ServerConnections.DroneInformation("banana", 2);
 
             //ServerConnections.InstantiateDrone(test_drone_1);
             //ServerConnections.InstantiateDrone(test_drone_2);

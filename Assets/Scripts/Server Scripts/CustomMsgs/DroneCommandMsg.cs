@@ -13,12 +13,21 @@ namespace ROSBridgeLib
 	{
 		int _id;
 		string _command;
+		bool _success;
 
 		public DroneCommandMsg(JSONNode msg)
 		{
+			msg = msg["values"];
 			_id = int.Parse(msg["id"]);
 			_command = msg["control_task"].ToString();
+			_success = msg["success"].AsBool;
 		}
+
+		public DroneCommandMsg(String thing)
+        {
+			_id = 0;
+			_command = "sample";
+        }
 
 		public static string getMessageType()
 		{
@@ -34,6 +43,12 @@ namespace ROSBridgeLib
         {
 			return _id;
         }
+
+		public bool getSuccess()
+        {
+			return _success;
+        }
+
 
 		public void setCommand(string command)
         {

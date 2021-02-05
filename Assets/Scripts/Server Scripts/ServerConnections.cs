@@ -93,11 +93,23 @@
         void Start()
         {
             rosServerConnection = new ROSBridgeWebSocketConnection("ws://" + serverIP, serverPort);
+            Debug.Log("created connection with: " + serverIP + " " + serverPort);
             rosServerConnection.Connect();
             System.Threading.Thread.Sleep(5000);
-            Debug.Log("created connection with: " + serverIP + " " + serverPort);
+            //rosServerConnection.AddSubscriber("/isaacs_server/client_count", this);
             GetAllDrones();
             GetAllSensors();
+        }
+
+        // Update is called once per frame in Unity
+        void Update()
+        {
+            if (rosServerConnection != null)
+            {
+                //Debug.Log("rendered!");
+                rosServerConnection.Render();
+            }
+
         }
 
         //Calls the server and returns every drone in the current state
@@ -111,16 +123,23 @@
 
         public static void GetAllDronesCallback(JSONNode response)
         {
-            Debug.Log(response);
+            Debug.Log("response gotten");
+            //Debug.Log(response);
 
             AllDronesAvailableMsg result = new AllDronesAvailableMsg(response);
-            DroneMsg[] lst = result.getDronesAvailable();
-            foreach (DroneMsg x in lst)
-            {
-                ClientMsg drone = x.getDrone();
-                DroneInformation droneInfo = new DroneInformation(drone.getName(), drone.getId());
-                InstantiateDrone(droneInfo, drone);
-            }
+            //Debug.Log(result.getSuccess());
+            //if (result.getSuccess())
+            //{
+                DroneMsg[] lst = result.getDronesAvailable();
+                Debug.Log("DroneList" + lst);
+                foreach (DroneMsg x in lst)
+                {
+                    ClientMsg drone = x.getDrone();
+                    //Debug.Log("hits here");
+                    DroneInformation droneInfo = new DroneInformation(drone.getName(), drone.getId());
+                    InstantiateDrone(droneInfo, drone);
+                }
+            //}
         }
 
         //TODO: void GetAllSensors() : will set service name similarly to GetAllDrones
@@ -162,7 +181,7 @@
 
             droneGameObject.name = drone_name;
             WorldProperties.AddDrone(droneInstance);
-
+            Debug.Log("hit here");
 
             // Get DroneMenu and instansiate. (OPTIONAL)
             TopicTypesMsg[] lst = msg.getTopics();
@@ -203,12 +222,29 @@
             */
         }
 
+        public static void InstantiateDrone(DroneInformation droneInformation)
+        {
+            int drone_id = droneInformation.id;
+            string drone_name = droneInformation.drone_name;
+            Debug.Log("made drone: " + drone_name);
+
+            // Create a new drone
+            Drone_v2 droneInstance = new Drone_v2(WorldProperties.worldObject.transform.position, drone_id);
+            Debug.Log("Drone Created: " + droneInstance.gameObjectPointer.name);
+
+            DroneProperties droneProperties = droneInstance.droneProperties;
+            GameObject droneGameObject = droneInstance.gameObjectPointer;
+
+            droneGameObject.name = drone_name;
+            WorldProperties.AddDrone(droneInstance);
+        }
+
 
         //calls server to upload a new or changed mission
         public static void uploadMission(Drone_v2 drone, string ID, List<Waypoint> waypoints)
         {
-            string service_name = "/isaacs_server/upload_mission ";
-
+            string service_name = "/isaacs_server/upload_mission";
+            Debug.Log("called service");
             NavSatFixMsg[] waypointMsgs = new NavSatFixMsg[waypoints.Count];
             //change each waypoint to navsatros messages
             int count = 0;
@@ -227,6 +263,7 @@
 
         public static void uploadMissionCallback(JSONNode response)
         {
+            Debug.Log(response);
             UploadMissionMsg result = new UploadMissionMsg(response);
             int drone_id = result.getDroneId();
             bool success = result.getSuccess();
@@ -255,7 +292,7 @@
         {
             string service_name = "/isaacs_server/control_drone";
             //Debug.LogFormat();
-            DroneCommandMsg msg = new DroneCommandMsg("[]");
+            DroneCommandMsg msg = new DroneCommandMsg("");
             msg.setCommand(command);
             msg.setID(int.Parse(ID));
             //hopefully this works!
@@ -271,6 +308,10 @@
             string command = result.getCommand();
             Drone_v2 drone = WorldProperties.GetDroneDict()[drone_id];
             //do the command stuff
+            if (!result.getSuccess())
+            {
+                Debug.Log("Wrong drone callback/Failure to complete!");
+            }
             switch (command)
             {
                 case "start_mission":
