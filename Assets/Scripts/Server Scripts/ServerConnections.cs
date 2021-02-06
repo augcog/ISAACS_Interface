@@ -12,8 +12,9 @@
     using ISAACS;
     using SimpleJSON;
     using System;
+    using System.Linq;
 
-    //author: Jasmine Bae + Akhil + Peru
+    //author: Jasmine + Akhil + Peru
     public class ServerConnections : MonoBehaviour
     {
 
@@ -128,8 +129,8 @@
 
             AllDronesAvailableMsg result = new AllDronesAvailableMsg(response);
             //Debug.Log(result.getSuccess());
-            //if (result.getSuccess())
-            //{
+            if (result.getSuccess())
+            {
                 DroneMsg[] lst = result.getDronesAvailable();
                 Debug.Log("DroneList" + lst);
                 foreach (DroneMsg x in lst)
@@ -139,7 +140,7 @@
                     DroneInformation droneInfo = new DroneInformation(drone.getName(), drone.getId());
                     InstantiateDrone(droneInfo, drone);
                 }
-            //}
+            }
         }
 
         //TODO: void GetAllSensors() : will set service name similarly to GetAllDrones
@@ -256,8 +257,10 @@
                 waypointMsgs[count] = msg;
                 count++;
             }
+            string outputArgs = string.Join(",", waypointMsgs.Select(x => x.ToString()).ToArray());
+            Debug.Log(outputArgs);
             //TODO: might not work bc array.toString is diff than navsatfixmsg.toString
-            rosServerConnection.CallService(uploadMissionCallback, service_name, string.Format("{0} {1}", ID, service_name), args: string.Format("[{0}]", waypointMsgs.ToString()));
+            rosServerConnection.CallService(uploadMissionCallback, service_name, ID, args: string.Format("[\"id\" : {0}, \"waypoints\" : {1}]", ID, outputArgs));
 
         }
 
@@ -296,13 +299,13 @@
             msg.setCommand(command);
             msg.setID(int.Parse(ID));
             //hopefully this works!
-
-            rosServerConnection.CallService(controlDroneCallback, service_name, string.Format("{0} {1}", ID, service_name), args: string.Format("[{0}]", msg.ToString()));
+            Debug.Log(msg.ToString());
+            rosServerConnection.CallService(controlDroneCallback, service_name, "bye", args: string.Format("[\"id\" : {0}, \"control_task\" : {1}]", ID, msg.ToString()));
         }
 
-        //TODO
         public static void controlDroneCallback(JSONNode response)
         {
+            Debug.Log("response gotten");
             DroneCommandMsg result = new DroneCommandMsg(response);
             int drone_id = result.getID();
             string command = result.getCommand();
@@ -312,32 +315,50 @@
             {
                 Debug.Log("Wrong drone callback/Failure to complete!");
             }
-            switch (command)
+            else
             {
-                case "start_mission":
-                    drone.onStartMission();
-                    break;
+                switch (command)
+                {
+                    case "start_mission":
+                        drone.onStartMission();
+                        break;
 
-                case "pause_mission":
-                    drone.onPauseMission();
-                    break;
+                    case "pause_mission":
+                        drone.onPauseMission();
+                        break;
 
-                case "resume_mission":
-                    drone.onResumeMission();
-                    break;
+                    case "resume_mission":
+                        drone.onResumeMission();
+                        break;
 
-                case "land_drone":
-                    drone.onLandDrone();
-                    break;
+                    case "land_drone":
+                        drone.onLandDrone();
+                        break;
 
-                case "fly_home":
-                    drone.onFlyHome();
-                    break;
+                    case "fly_home":
+                        drone.onFlyHome();
+                        break;
 
-                default:
-                    Debug.Log("Wrong drone callback!");
-                    break;
+                    default:
+                        Debug.Log("Wrong drone callback!");
+                        break;
+                }
             }
+
+        }
+
+        public static void setSpeed(Drone_v2 drone, string ID, int speed)
+        {
+
+            string service_name = "/isaacs_server/set_speed";
+            rosServerConnection.CallService(setSpeedCallback, service_name, ID, args: string.Format("[{0}]", speed.ToString()));
+
+        }
+
+        public static void setSpeedCallback(JSONNode response)
+        {
+            SetSpeedMsg msg = new SetSpeedMsg(response);
+            //TODO: What do??
 
         }
     }

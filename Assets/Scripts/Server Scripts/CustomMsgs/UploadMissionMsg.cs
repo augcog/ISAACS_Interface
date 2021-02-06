@@ -18,8 +18,8 @@ namespace ROSBridgeLib
 		public UploadMissionMsg(JSONNode msg)
         {
             msg = msg["values"];
-            _drone_id = int.Parse(msg["id"]);
-			_success = Convert.ToBoolean(msg["success"]);
+            _drone_id = msg["id"].AsInt;
+			_success = msg["success"].AsBool;
 			_meta_data = msg["message"].ToString();
 		}
 

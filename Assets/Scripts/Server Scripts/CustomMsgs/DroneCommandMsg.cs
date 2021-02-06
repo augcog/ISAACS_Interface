@@ -31,7 +31,7 @@ namespace ROSBridgeLib
 
 		public static string getMessageType()
 		{
-			return "/server/drone_command";
+			return "/isaacs_server/drone_command";
 		}
 
 		public string getCommand()
@@ -60,9 +60,9 @@ namespace ROSBridgeLib
 			_id = id;
         }
 
-		public string toString()
+		public string ToString()
         {
-			return string.Format("Latitude: {0}", _command);
+			return string.Format("{0}", _command);
 
 		}
 	}
