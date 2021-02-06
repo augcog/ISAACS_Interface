@@ -1,35 +1,20 @@
 # Immersive Semi-Autonomous Aerial Command System
-## Virtual Reality Interface for the DJI Matrice 210 (Version 2.0) 
+## Virtual Reality Interface for the DJI Matrice 210 (Version 2.0)
 
 [![Overview Video](http://img.youtube.com/vi/msqf3BXUMIg/0.jpg)](http://www.youtube.com/watch?v=msqf3BXUMIg "ISAACS Overview - PCARI Presentation")
 
 <br>
-
-**TODO: Logo**
-<br>
+ISAACS is an undergraduate-led research group within the [Center for Augmented Cognition](https://ptolemy.berkeley.edu/projects/augcog/) of the [VHL Vive Center for Enhanced Reality](https://vivecenter.berkeley.edu/research1/isaacs/) at the University of California, Berkeley. Our research is in human-UAV interaction, with a focus on teleoperation, telesensing, and multi-agent interaction. We are also part of the student group [Extended Reality at Berkeley](https://xr.berkeley.edu/), and collaborate with the Lawrence Berkeley National Laboratory to perform 3D reconstruction of the environment via state-of-the-art methods in radiation detection. Our vision is to create a scalable open source platform for Beyond Line of Sight Flight compatible with any UAV or sensor suite.
 <br>
 
-ISAACS is an undergraduate research group within the [Center for Augmented Cognition](https://ptolemy.berkeley.edu/projects/augcog/) of the [VHL Vive Center for Enhanced Reality](https://vivecenter.berkeley.edu/research1/isaacs/) at the University of California, Berkeley. Our research is in human-UAV interaction, with a focus on teleoperation, telesensing, multi-agent interaction, and the intuitive visualization of localization data. We are also part of the student group [Extended Reality at Berkeley](https://xr.berkeley.edu/), and have recently began a collaboration with the [Lawrence Berkeley National Laboratory](https://www.lbl.gov/) to perform 3D reconstruction of the environment via state-of-the-art methods in radiation detection. This repository contains the system interface. If you are looking for the RadViz system, you want to visit [this page](TODO).
-<br>
-
-Led by a small team of passionate students, the project began in 2015 thanks to a [Microsoft Hololens Academic Research Grant](https://blogs.windows.com/devices/2015/11/11/meet-the-award-recipients-of-the-first-microsoft-hololens-academic-research-grants/). The prototype display, aimed at the Bitcraze Crazyflie 1.0 was a success, and eventually evolved into a system that allowed the manipulation of two such UAVs. A year later, the display was ported over to the DJI Matrice 100, and is now available in its second working version, for the Matrice 210, and soon for the Matrice 600. Our decision to use the Matrice 210 and Matrice 600 quadrotors stems from their ability to support a greater range of sensors and mission-critical tasks, which the previously tested UAVs did not.
-The current interface enables direct manipulation of the Matrice 210 using natural hand motion, and provides accurate localization and visualization of the UAV's position and environment (including nearby buildings), using GPS. Over the next few months, we will be integrating Radiation, Depth Camera and LIDAR sensors to support, among other things, 3D reconstruction and real-time mapping of the UAV's environment.
-<br>
-<br>
-
-**TODO: Video and/or Picture**
-<br>
-<br>
 
 ## Table of Contents
-1. [ Hardware Dependencies and Setup ](#hardware)
-2. [ Software Dependencies and Setup ](#software)
+1. [ Hardware Setup ](#hardware)
+2. [ Software Setup ](#software)
 3. [ Installation and Deployment ](#installation)
-4. [ Usage ](#usage)
-5. [ Understanding the System ](#understanding)
-6. [ Meet the Team ](#team)
-7. [ Acknowledgments ](#acknowledgments)
-8. [ Licensing ](#licensing)
+4. [ Meet the Team ](#team)
+5. [ Acknowledgments ](#acknowledgments)
+6. [ Licensing ](#licensing)
 <br>
 <br>
 
@@ -124,14 +109,14 @@ Make sure that you red and went through the Hardware Dependencies and Software D
 <br> `$` `roslaunch rosbridge_server rosbridge_websocket.launch`
 10. Connect the Oculus headset with the VR-Ready laptop. If you have not done so already, follow through the [Oculus Rift setup](https://www.oculus.com/setup/).
 11. Connect the Manifold to a computer with the DJI Assistant 2 for Matrice using a USB 3.0 to USB 3.0 cable, and launch the Flight Simulator.
-12. Launch our application via Unity. Find the script named `ROSDroneConnection.cs` _**TODO: Is this the correct script?**_ and replace the IP address of the server with the actual IP address of the Manifold. To find the IP address of the Manifold, use the following command:
+12. Launch our application via Unity. Find the script named `ROSDroneConnection.cs` _**NOTE: deprecated, use the GUI instead.**_ and replace the IP address of the server with the actual IP address of the Manifold. To find the IP address of the Manifold, use the following command:
 <br> `$` `hostname -I`
 13. Save and close the script, and launch our application by clicking on the play (small triangle) button inside Unity. If all went well, you should see printed information that a client connected to the Rosbridge Server, inside the terminal from which the Rosbridge server was launched.
 14. Congratulations, you are ready to fly your UAV in VR!
 <br>
 
 ### Installation (with UAV flight)
-Follow the steps 1-11 as above, skipping step 12. Then, setup the RTK GPS Station (_**TODO**_).
+Follow the steps 1-11 as above, skipping step 12. Then, setup the RTK GPS Station.
 Finally, continue with steps 13-15.
 <br>
 
@@ -146,48 +131,33 @@ Each time that you want to run our system, you will have to first disable the RT
 <br> `$` `roslaunch rosbridge_server rosbridge_websocket.launch`
 6. Open our system in Unity and click the play button
 
-Moreover, each time your internet connection changes, you will have to change the IP address that the Unity client subscribes to. 
-<br>
-<br>
-
-<a name="usage"></a>
-## 4. Usage
-_**TODO: add video guide**_
-(how to manipulate the drone when wearing the VR headset, how to scroll, zoom, rotate...)
-<br>
-<br>
-
-<a name="understanding"></a>
-## 5. Understanding the System
-_**TODO and also add a picture that shows our architecture**_
-
-(Upstream development happens on the Alpha branch. Once most bugs have been eliminated, changes are pushed on the Beta branch for testing. The Master branch gets updated only when the interface is demo-ready.)
+Moreover, each time your internet connection changes, you will have to change the IP address that the Unity client subscribes to.
 <br>
 <br>
 
 <a name="team"></a>
 ## 6. Meet the Team
-_**TODO: Add pictures**_ <br>
+
 ### Spring 2020
-[Peru Dayani](https://perudayani.github.io/perudayani/), Research Lead <br>
-[Nitzan Orr](https://www.linkedin.com/in/nitzanorr/), Product Manager <br>
-[Apollo](https://apollo.vision), Interaction Designer <br>
-[Eric Wang](https://www.linkedin.com/in/erwang01), Data Visualization Engineer <br>
-Varun Saran, Network and Streaming Data Engineer <br>
-[Shreyas Krishnaswamy](https://www.linkedin.com/in/shreyas-krishnaswamy), Localization Engineer <br>
-[Newman Hu](https://www.linkedin.com/in/newmanhu/), Controls Engineer <br>
-Rithvik Chuppala, System Administrator <br>
-Arya Anand, 3D Artist <br>
+[Eric Wang](https://www.linkedin.com/in/erwang01)<br>
+Jasmine Bae<br>
+Varun Saran<br>
+[Shreyas Krishnaswamy](https://www.linkedin.com/in/shreyas-krishnaswamy)<br>
+
+
 ### Alumni
 [Jesse Patterson](http://www.jessepaterson.com/) <br>
 [Jessica Lee](https://www.linkedin.com/in/jess-l/) <br>
+[Peru Dayani](https://perudayani.github.io/perudayani/)<br>
+[Nitzan Orr](https://www.linkedin.com/in/nitzanorr/)<br>
+[Apollo](https://apollo.vision)<br>
 Ji Han <br>
 Paxtan Laker <br>
 Rishi Upadhyay <br>
 Brian Wu <br>
 Eric Zhang <br>
-Xin Chen
-<br>
+Xin Chen <br>
+[Newman Hu](https://www.linkedin.com/in/newmanhu/)<br>
 <br>
 
 <a name="acknowledgments"></a>
