@@ -4,7 +4,7 @@
 [![Overview Video](http://img.youtube.com/vi/msqf3BXUMIg/0.jpg)](http://www.youtube.com/watch?v=msqf3BXUMIg "ISAACS Overview - PCARI Presentation")
 
 <br>
-ISAACS is an undergraduate-led research group within the [Center for Augmented Cognition](https://ptolemy.berkeley.edu/projects/augcog/) of the [VHL Vive Center for Enhanced Reality](https://vivecenter.berkeley.edu/research1/isaacs/) at the University of California, Berkeley. Our research is in human-UAV interaction, with a focus on teleoperation, telesensing, and multi-agent interaction. We are also part of the student group [Extended Reality at Berkeley](https://xr.berkeley.edu/), and collaborate with the Lawrence Berkeley National Laboratory to perform 3D reconstruction of the environment via state-of-the-art methods in radiation detection. Our vision is to create a scalable open source platform for Beyond Line of Sight Flight compatible with any UAV or sensor suite.
+ISAACS is an undergraduate-led research group within the [Center for Augmented Cognition](https://ptolemy.berkeley.edu/projects/augcog/) of the [VHL Vive Center for Enhanced Reality](https://vivecenter.berkeley.edu/research1/isaacs/) at the University of California, Berkeley. Our research is in human-UAV interaction, with a focus on teleoperation, telesensing, and multi-agent interaction. We are also part of the student group [Extended Reality at Berkeley](https://xr.berkeley.edu), and collaborate with the Lawrence Berkeley National Laboratory to perform 3D reconstruction of the environment via state-of-the-art methods in radiation detection. Our vision is to create a scalable open source platform for Beyond Line of Sight Flight compatible with any UAV or sensor suite.
 <br>
 
 
@@ -109,7 +109,7 @@ Make sure that you red and went through the Hardware Dependencies and Software D
 <br> `$` `roslaunch rosbridge_server rosbridge_websocket.launch`
 10. Connect the Oculus headset with the VR-Ready laptop. If you have not done so already, follow through the [Oculus Rift setup](https://www.oculus.com/setup/).
 11. Connect the Manifold to a computer with the DJI Assistant 2 for Matrice using a USB 3.0 to USB 3.0 cable, and launch the Flight Simulator.
-12. Launch our application via Unity. Find the script named `ROSDroneConnection.cs` _**NOTE: deprecated, use the GUI instead.**_ and replace the IP address of the server with the actual IP address of the Manifold. To find the IP address of the Manifold, use the following command:
+12. Launch our application via Unity. Find the script named `ROSDroneConnection.cs` _**NOTE: deprecated, use the Unity GUI instead.**_ and replace the IP address of the server with the actual IP address of the Manifold. To find the IP address of the Manifold, use the following command:
 <br> `$` `hostname -I`
 13. Save and close the script, and launch our application by clicking on the play (small triangle) button inside Unity. If all went well, you should see printed information that a client connected to the Rosbridge Server, inside the terminal from which the Rosbridge server was launched.
 14. Congratulations, you are ready to fly your UAV in VR!
