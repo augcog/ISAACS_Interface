@@ -4,7 +4,9 @@
 [![Overview Video](http://img.youtube.com/vi/msqf3BXUMIg/0.jpg)](http://www.youtube.com/watch?v=msqf3BXUMIg "ISAACS Overview - PCARI Presentation")
 
 <br>
-ISAACS is an undergraduate-led research group within the [Center for Augmented Cognition](https://ptolemy.berkeley.edu/projects/augcog/) of the [VHL Vive Center for Enhanced Reality](https://vivecenter.berkeley.edu/research1/isaacs/) at the University of California, Berkeley. Our research is in human-UAV interaction, with a focus on teleoperation, telesensing, and multi-agent interaction. We are also part of the student group [Extended Reality at Berkeley](https://xr.berkeley.edu), and collaborate with the Lawrence Berkeley National Laboratory to perform 3D reconstruction of the environment via state-of-the-art methods in radiation detection. Our vision is to create a scalable open source platform for Beyond Line of Sight Flight compatible with any UAV or sensor suite.
+
+ISAACS is an undergraduate-led research group within the [Center for Augmented Cognition](https://ptolemy.berkeley.edu/projects/augcog/) of the [VHL Vive Center for Enhanced Reality](https://vivecenter.berkeley.edu/research1/isaacs/) at the University of California, Berkeley. Our research is in human-UAV interaction, with a focus on teleoperation, telesensing, and multi-agent interaction. We are also part of the student group [Extended Reality at Berkeley](https://xr.berkeley.edu/), and collaborate with the Lawrence Berkeley National Laboratory to perform 3D reconstruction of the environment via state-of-the-art methods in radiation detection. Our vision is to create a scalable open source platform for Beyond Line of Sight Flight compatible with any UAV or sensor suite.
+
 <br>
 
 
@@ -152,11 +154,11 @@ Varun Saran<br>
 [Peru Dayani](https://perudayani.github.io/perudayani/)<br>
 [Apollo](https://apollo.vision)<br>
 Ji Han <br>
+Xin Chen <br>
 Paxtan Laker <br>
 Rishi Upadhyay <br>
 Brian Wu <br>
 Eric Zhang <br>
-Xin Chen <br>
 [Newman Hu](https://www.linkedin.com/in/newmanhu/)<br>
 <br>
 
