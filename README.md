@@ -1,5 +1,5 @@
 # Immersive Semi-Autonomous Aerial Command System
-## Virtual Reality Interface for the DJI Matrice 210 (Version 2.0)
+## Virtual Reality Interface for Multi-UAV Teleoperation, Version 2
 
 [![Overview Video](http://img.youtube.com/vi/msqf3BXUMIg/0.jpg)](http://www.youtube.com/watch?v=msqf3BXUMIg "ISAACS Overview - PCARI Presentation")
 
@@ -113,7 +113,7 @@ Make sure that you red and went through the Hardware Dependencies and Software D
 <br> `$` `hostname -I`
 13. Save and close the script, and launch our application by clicking on the play (small triangle) button inside Unity. If all went well, you should see printed information that a client connected to the Rosbridge Server, inside the terminal from which the Rosbridge server was launched.
 14. Congratulations, you are ready to fly your UAV in VR!
-<br>
+
 
 ### Installation (with UAV flight)
 Follow the steps 1-11 as above, skipping step 12. Then, setup the RTK GPS Station.
@@ -138,10 +138,11 @@ Moreover, each time your internet connection changes, you will have to change th
 <a name="team"></a>
 ## 6. Meet the Team
 
-### Spring 2020
+### Current
 [Eric Wang](https://www.linkedin.com/in/erwang01)<br>
 Jasmine Bae<br>
 Varun Saran<br>
+[Nitzan Orr](https://www.linkedin.com/in/nitzanorr/)<br>
 [Shreyas Krishnaswamy](https://www.linkedin.com/in/shreyas-krishnaswamy)<br>
 
 
@@ -149,7 +150,6 @@ Varun Saran<br>
 [Jesse Patterson](http://www.jessepaterson.com/) <br>
 [Jessica Lee](https://www.linkedin.com/in/jess-l/) <br>
 [Peru Dayani](https://perudayani.github.io/perudayani/)<br>
-[Nitzan Orr](https://www.linkedin.com/in/nitzanorr/)<br>
 [Apollo](https://apollo.vision)<br>
 Ji Han <br>
 Paxtan Laker <br>
