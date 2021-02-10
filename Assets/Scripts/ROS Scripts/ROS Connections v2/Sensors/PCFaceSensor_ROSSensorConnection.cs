@@ -56,7 +56,7 @@ public class PCFaceSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
         // Hardcode Parent transform
         //SetLocalPosition(new Vector3(1.98f, 0f, -6.65f));
         //SetLocalOrientation(Quaternion.Euler(0f, 124.654f ,0f));
-        //SetLocalScale(new Vector3(0.505388f, 0.505388f, 0.505388f));
+        SetLocalScale(new Vector3(1.0f, 1.0f, 1.0f));
 
     }
     // Update is called once per frame in Unity
@@ -132,7 +132,7 @@ public class PCFaceSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
         bool parsePCFaceMesh = false;
 
         /// Color of the mesh
-        Color color = Color.white;
+        Color color = Color.blue;
 
 
         // Writing all code in here for now. May need to move out to separate handler functions when it gets too unwieldy.
@@ -144,12 +144,12 @@ public class PCFaceSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
                 if (WorldProperties.radiationDataType == WorldProperties.RadiationDataType.gamma)
                 {
                     Debug.Log("Gamma");
-                    color = new Color(255.0f, 204.0f, 204.0f, alpha/ 6.0f);
+                    color = new Color32(254, 229, 217, 255);
                 }
                 else
                 {
                     Debug.Log("Neutron");
-                    color = new Color(229.0f, 204.0f, 255.0f, alpha / 6.0f);
+                    color = new Color(229, 204, 255, alpha / 6.0f);
                 }
                 break;
             case "/colorized_points_faced_4":
@@ -158,12 +158,12 @@ public class PCFaceSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
                 if (WorldProperties.radiationDataType == WorldProperties.RadiationDataType.gamma)
                 {
                     Debug.Log("Gamma");
-                    color = new Color(255.0f, 153.0f, 153.0f, alpha / 5.0f);
+                    color = new Color32(252, 187, 161, 255);
                 }
                 else
                 {
                     Debug.Log("Neutron");
-                    color = new Color(204.0f, 153.0f, 255.0f, alpha / 5.0f);
+                    color = new Color(204, 153, 255, alpha / 5.0f);
                 }
                 break;
             case "/colorized_points_faced_3":
@@ -172,12 +172,12 @@ public class PCFaceSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
                 if (WorldProperties.radiationDataType == WorldProperties.RadiationDataType.gamma)
                 {
                     Debug.Log("Gamma");
-                    color = new Color(255.0f, 102.0f, 102.0f, alpha / 4.0f);
+                    color = new Color32(252, 146, 114, 255);
                 }
                 else
                 {
                     Debug.Log("Neutron");
-                    color = new Color(178.0f, 102.0f, 255.0f, alpha / 4.0f);
+                    color = new Color(178, 102, 255, alpha / 4.0f);
                 }
                 break;
             case "/colorized_points_faced_2":
@@ -186,11 +186,12 @@ public class PCFaceSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
                 if (WorldProperties.radiationDataType == WorldProperties.RadiationDataType.gamma)
                 {
                     Debug.Log("Gamma");
-                    color = new Color(255.0f, 51.0f, 51.0f, alpha / 3.0f);
+                    color = new Color32(251, 106, 74, 255);
                 }
                 else
                 {
-                    color = new Color(153.0f, 51.0f, 255.0f, alpha / 3.0f);
+                    Debug.Log("Neutron");
+                    color = new Color(153, 51, 255, alpha / 3.0f);
                 }
                 break;
             case "/colorized_points_faced_1":
@@ -198,11 +199,13 @@ public class PCFaceSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
                 parsePCFaceMesh = true;
                 if (WorldProperties.radiationDataType == WorldProperties.RadiationDataType.gamma)
                 {
-                    color = new Color(255.0f, 0, 0, alpha / 2.0f);
+                    Debug.Log("Gamma");
+                    color = new Color32(222, 45, 38, 255);
                 }
                 else
                 {
-                    color = new Color(127.0f, 0, 255.0f, alpha / 2.0f);
+                    Debug.Log("Neutron");
+                    color = new Color(127, 0, 255, alpha / 2.0f);
                 }
                 break;
             case "/colorized_points_faced_0":
@@ -210,11 +213,13 @@ public class PCFaceSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
                 parsePCFaceMesh = true;
                 if (WorldProperties.radiationDataType == WorldProperties.RadiationDataType.gamma)
                 {
-                    color = new Color(204.0f, 0, 0, alpha);
+                    Debug.Log("Gamma");
+                    color = new Color32(165, 15, 21, 255);
                 }
                 else
                 {
-                    color = new Color(102.0f, 0, 204.0f, alpha);
+                    Debug.Log("Neutron");
+                    color = new Color(102, 0, 204, alpha);
                 }
                 break;
             default:
@@ -229,7 +234,9 @@ public class PCFaceSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
             // Obtain visualizer for this topic and update mesh & color
             PCFaceVisualizer visualizer = pcFaceVisualizers[topic];
             visualizer.SetMesh(meshMsg);
+            Debug.LogWarning(color);
             visualizer.SetColor(color);
+            
         }
 
         return result;

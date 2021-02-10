@@ -661,6 +661,8 @@ MonoBehaviour:
   cycleSensor: k
   unsubscribe: z
   stopMission: l
+  selectGamma: z
+  selectNeutron: x
   rosDroneConnection: {fileID: 0}
 --- !u!114 &146794967
 MonoBehaviour:
@@ -700,20 +702,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DronesList:
   - droneName: Perry Pepe the Platipus
-    ipAddress: 10.42.0.1
+    ipAddress: 192.168.1.78
     port: 9090
     droneType: 1
     droneSubscribers: 060000000100000000000000
     simFlight: 0
     attachedSensors:
     - sensorName: LIDAR
-      ipAddress: 10.42.0.1
+      ipAddress: 192.168.1.78
       port: 9090
       sensorType: 1
       sensorSubscribers: 01000000
       videoPlayers: 0
     - sensorName: LabrLAMP
-      ipAddress: 10.42.0.1
+      ipAddress: 192.168.1.78
       port: 9090
       sensorType: 3
       sensorSubscribers: 08000000090000000a0000000b0000000c0000000d000000
@@ -4075,6 +4077,87 @@ GameObject:
   m_PrefabParentObject: {fileID: 1125901207556238, guid: 4d3381740d602f043bb130adb276352f,
     type: 2}
   m_PrefabInternal: {fileID: 639558751}
+--- !u!1 &1463059043
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1463059047}
+  - component: {fileID: 1463059046}
+  - component: {fileID: 1463059045}
+  - component: {fileID: 1463059044}
+  m_Layer: 0
+  m_Name: Camera
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!81 &1463059044
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1463059043}
+  m_Enabled: 1
+--- !u!124 &1463059045
+Behaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1463059043}
+  m_Enabled: 1
+--- !u!20 &1463059046
+Camera:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1463059043}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_ClearFlags: 1
+  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_NormalizedViewPortRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  near clip plane: 0.3
+  far clip plane: 1000
+  field of view: 60
+  orthographic: 0
+  orthographic size: 5
+  m_Depth: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RenderingPath: -1
+  m_TargetTexture: {fileID: 0}
+  m_TargetDisplay: 0
+  m_TargetEye: 3
+  m_HDR: 1
+  m_AllowMSAA: 1
+  m_AllowDynamicResolution: 0
+  m_ForceIntoRT: 0
+  m_OcclusionCulling: 1
+  m_StereoConvergence: 10
+  m_StereoSeparation: 0.022
+--- !u!4 &1463059047
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1463059043}
+  m_LocalRotation: {x: 0.726567, y: -0, z: -0, w: 0.68709564}
+  m_LocalPosition: {x: 0.95969886, y: 10.935, z: 1.027}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 93.199005, y: -0.000015258789, z: -0.000015258789}
 --- !u!1 &1480599130
 GameObject:
   m_ObjectHideFlags: 0
