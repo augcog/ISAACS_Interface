@@ -192,12 +192,18 @@
             {
                 droneSubscribers.Add(x.getName());
             }
-            
+
             //TODO: init dronemenu without ros connection
 
-            //DroneMenu droneMenu = droneGameObject.GetComponent<DroneMenu>();
-            //droneMenu.InitDroneMenu(droneInformation, droneSubscribers);
-            //droneGameObject.GetComponent<DroneProperties>().droneMenu = droneMenu;
+            DroneMenu droneMenu = droneGameObject.GetComponent<DroneMenu>();
+            droneMenu.InitDroneMenu(droneSubscribers);
+            droneGameObject.GetComponent<DroneProperties>().droneMenu = droneMenu;
+
+            // Initilize drone sim manager script on the drone
+            DroneSimulationManager droneSim = droneGameObject.GetComponent<DroneSimulationManager>();
+            droneSim.InitDroneSim();
+            droneProperties.droneSimulationManager = droneSim;
+
 
 
             /*
@@ -209,16 +215,6 @@
                 ROSSensorConnectionInterface sensor = InstantiateSensor(rosSensorInput);
                 droneInstance.AddSensor(sensor);
             }
-
-            // Initilize drone sim manager script on the drone
-            DroneSimulationManager droneSim = droneGameObject.GetComponent<DroneSimulationManager>();
-            droneSim.InitDroneSim();
-            droneProperties.droneSimulationManager = droneSim;
-
-            // Get DroneMenu and instansiate.
-            DroneMenu droneMenu = droneGameObject.GetComponent<DroneMenu>();
-            droneMenu.InitDroneMenu(droneInformation, droneSubscribers);
-            droneGameObject.GetComponent<DroneProperties>().droneMenu = droneMenu;
             
             */
         }

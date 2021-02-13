@@ -174,9 +174,9 @@ public class ROSManager : MonoBehaviour
         droneProperties.droneSimulationManager = droneSim;
  
         // Get DroneMenu and instansiate.
-        DroneMenu droneMenu = droneGameObject.GetComponent<DroneMenu>();
-        droneMenu.InitDroneMenu(rosDroneConnection, droneSubscribers);
-        droneGameObject.GetComponent<DroneProperties>().droneMenu = droneMenu;
+        //DroneMenu droneMenu = droneGameObject.GetComponent<DroneMenu>();
+        //droneMenu.InitDroneMenu(rosDroneConnection, droneSubscribers);
+        //droneGameObject.GetComponent<DroneProperties>().droneMenu = droneMenu;
 
         uniqueID++;
     }
