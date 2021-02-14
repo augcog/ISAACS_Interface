@@ -130,7 +130,7 @@ public class DroneMenu : MonoBehaviour {
 
     /// <summary>
     /// Updates data of each text box
-    /// </summary>e
+    /// </summary>
     void Update() {
         if (initialized)
         {
@@ -138,7 +138,7 @@ public class DroneMenu : MonoBehaviour {
             {
                 //TODO: What does this display??
                 //item.Key.text = connection.GetValueByTopic(item.Value);
-                item.Key.text = "tester";
+                item.Key.text = "";
             }
 
             Vector3 dronePosition = this.gameObject.transform.localPosition;
