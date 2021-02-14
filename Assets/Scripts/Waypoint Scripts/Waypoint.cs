@@ -7,7 +7,7 @@
 
     public class Waypoint
     {
-        public Drone referenceDrone; // The drone whose path this waypoint belongs to
+        public Drone_v2 referenceDrone; // The drone whose path this waypoint belongs to
         public GameObject gameObjectPointer; // This is the related game object
 
         // The PathPoints are used by the line renderer to connect the full path.
@@ -24,12 +24,21 @@
         public Waypoint(Drone myDrone, Vector3 position, bool takeoffWaypoint=false)
         {
             // Linking this waypoint to its drone
-            referenceDrone = myDrone;
+            // Temporary cast - https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/operators/type-testing-and-cast
+            // Might lose information on instantiation of new Waypoint
+            referenceDrone = (myDrone as Drone_v2);
+            if (referenceDrone == null)
+            {
+                Debug.Log("Couldn't convert Drone to Drone_v2 in Waypoint.cs");
+            }
 
             // Setting up all the related gameObject parameters
             GameObject baseObject = (GameObject)WorldProperties.worldObject.GetComponent<WorldProperties>().waypointBaseObject;
             gameObjectPointer = Object.Instantiate(baseObject, position, Quaternion.identity);
-            gameObjectPointer.GetComponent<VRTK_InteractableObject>().ignoredColliders[0] = GameObject.Find("controller_right").GetComponent<SphereCollider>(); //Ignoring Collider from Controller so that WayPoint Zone is used
+
+            // @Apollo: Why is VRTK being referenced here?
+            //gameObjectPointer.GetComponent<VRTK_InteractableObject>().ignoredColliders[0] = GameObject.Find("controller_right").GetComponent<SphereCollider>(); //Ignoring Collider from Controller so that WayPoint Zone is used
+
             waypointProperties = gameObjectPointer.GetComponent<WaypointProperties>();
             waypointProperties.classPointer = this; // Connect the gameObject back to the classObject
             gameObjectPointer.tag = "waypoint";
@@ -38,6 +47,6 @@
             gameObjectPointer.transform.parent = WorldProperties.worldObject.transform;
             WorldProperties.AddClipShader(gameObjectPointer.transform);
         }
-        
+
     }
 }

@@ -20,7 +20,7 @@
         public bool selected;
 
         // All waypoints held by the drone
-        private List<Waypoint> waypoints;
+        List<Waypoint> waypoints;
 
         // All waypoints that were deleted, in case the player wants to redo them.
         private List<Waypoint> deletedWaypoints;
@@ -43,11 +43,13 @@
         /// <param name="drone_obj"> We pass in a Gameobject for the drone -- this will be phased out and the new drone_obj gameObject will be instantiated in this method </param>
         public Drone(Vector3 position, int uniqueID)
         {
+            Debug.Log("Drone V1 Constructor: " + uniqueID.ToString());
+
             // Create gameObject at position
             GameObject baseObject = (GameObject)WorldProperties.worldObject.GetComponent<WorldProperties>().droneBaseObject;
             gameObjectPointer = Object.Instantiate(baseObject, position, Quaternion.identity);
 
-            Debug.Log("Position init: " + position.ToString());
+            //Debug.Log("Position init: " + position.ToString());
             droneProperties = gameObjectPointer.GetComponent<DroneProperties>();
             droneProperties.enabled = true;
             droneProperties.droneClassPointer = this; // Connect the gameObject back to the classObject
@@ -69,19 +71,17 @@
 
             // Updating the world properties to reflect a new drone being added
             id = uniqueID;
-            WorldProperties.AddDrone(this);
-            Debug.Log("Created new drone with id: " + id);
+
+            //WorldProperties.AddDrone(this);
+            //Debug.Log("Created new drone with id: " + id);
 
             // Initilize the sensor list
-            // @Jasmine: this is populated by ROS Manager when initilzing the drone and can be used for the UI
-            // @Jasmine: feel free to add/remove functionality as needed, it's a very rough structure right now
             attachedSensors = new List<ROSSensorConnectionInterface>();
 
             // Init as unselected
             gameObjectPointer.transform.Find("group3/Outline").GetComponent<MeshRenderer>().material = droneProperties.deselectedMaterial;
             selected = false;
 
-            Debug.Log("Created new drone with id: " + id);
         }
         
         /// <summary>
@@ -103,6 +103,7 @@
         /// </summary>
         /// <param name="coordinates">The coordinates of the waypoint which is to be added to the end of path.</param>        
         /// <returns>The waypoint which is to be added to the end of path.</returns>        
+
         public Waypoint AddWaypoint(Vector3 coordinates)
         {
             Debug.Log("Adding waypoint at: " + coordinates.ToString());
@@ -269,10 +270,11 @@
         /// To be called by any future waypoint that is edited.
         /// Relays the information to the ROSConnection.
         /// </summary>
-        public void DronePathUpdated()
+        /*public void DronePathUpdated()
         {
-            droneProperties.droneROSConnection.UpdateMission();
-        }
+            //should never be called - overrode in Drone_v2
+            ServerConnections.updateMission();
+        }*/
         
         /******************************/
         //       HELPER METHODS       //

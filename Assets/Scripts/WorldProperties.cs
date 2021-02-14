@@ -3,6 +3,7 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Collections.Specialized;
     using System.IO;
     using UnityEditor;
     using UnityEngine;
@@ -26,8 +27,9 @@
         public SensorManager sensorManagerBaseObject;
 
         [Header("Drone variables")]
-        private static Drone selectedDrone;
-        private static Queue<Drone> dronesQueue;
+        private static Drone_v2 selectedDrone;
+        private static Dictionary<int, Drone_v2> droneDict;
+        private static Queue<Drone_v2> dronesQueue;
 
         [Header("Sensor variables")]
         public static GameObject selectedSensor;
@@ -83,7 +85,8 @@
         {
             selectedDrone = null;
 
-            dronesQueue = new Queue<Drone>();
+            dronesQueue = new Queue<Drone_v2>();
+            droneDict = new Dictionary<int, Drone_v2>();
 
             selectedSensor = null;
             sensorDict = new Dictionary<int, GameObject>();
@@ -105,90 +108,7 @@
             MeshEarthPrefab.transform.localPosition = GPSCoordToUnityCoord(new GPSCoordinate(MeshLatitude, MeshLongitude, MeshAltitude));
             MeshEarthPrefab.transform.localRotation = Quaternion.Euler(MeshRotation);
             MeshEarthPrefab.transform.localScale = MeshScale;
-            /*
-            // close wall & road & field intersection.
-            GameObject meshScale1 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            meshScale1.name = "meshScale2";
-            meshScale1.transform.parent = this.transform;
-            meshScale1.transform.localPosition = WorldProperties.GPSCoordToUnityCoord(new GPSCoordinate(37.915317, -122.337779, 5.226));
-            meshScale1.transform.localScale = Vector3.one * (0.5f);
-
-            GameObject aircraft2 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            aircraft2.name = "aircraft 2";
-            aircraft2.transform.parent = this.transform;
-            aircraft2.transform.localPosition = WorldProperties.GPSCoordToUnityCoord(new GPSCoordinate(37.915070, -122.337683, 5.488));
-            aircraft2.transform.localScale = Vector3.one * (0.05f);
-
-            // Tree branch parkinglot corner.
-            GameObject meshScale2 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            meshScale2.name = "meshScale1";
-            meshScale2.transform.parent = this.transform;
-            meshScale2.transform.localPosition = WorldProperties.GPSCoordToUnityCoord(new GPSCoordinate(37.915008, -122.337913, 4.338));
-            meshScale2.transform.localScale = Vector3.one * (0.5f);
-
-            GameObject aircraft = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            aircraft.name = "aircraft 1";
-            aircraft.transform.parent = this.transform;
-            aircraft.transform.localPosition = WorldProperties.GPSCoordToUnityCoord(new GPSCoordinate(37.915028, -122.337692, 4.668));
-            aircraft.transform.localScale = Vector3.one * (0.05f);
-            // Far wall & road & field instersection.
-            GameObject meshScale3 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            meshScale3.name = "meshScale3";
-            meshScale3.transform.parent = this.transform;
-            meshScale3.transform.localPosition = WorldProperties.GPSCoordToUnityCoord(new GPSCoordinate(37.915683, -122.337788, 4.022));
-            meshScale3.transform.localScale = Vector3.one * (0.5f);
-
-            GameObject aircraft3 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            aircraft3.name = "aircraft 3";
-            aircraft3.transform.parent = this.transform;
-            aircraft3.transform.localPosition = WorldProperties.GPSCoordToUnityCoord(new GPSCoordinate(37.915051, -122.337695, 3.997));
-            aircraft3.transform.localScale = Vector3.one * (0.05f);
-            // Far tree
-            GameObject meshScale4 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            meshScale4.name = "meshScale4";
-            meshScale4.transform.parent = this.transform;
-            meshScale4.transform.localPosition = WorldProperties.GPSCoordToUnityCoord(new GPSCoordinate(37.915880, -122.338171, 6.902));
-            meshScale4.transform.localScale = Vector3.one * (0.5f);
-
-            // Stump near the tree closest to the house.
-            GameObject meshScale5 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            meshScale5.name = "meshScale5";
-            meshScale5.transform.parent = this.transform;
-            meshScale5.transform.localPosition = WorldProperties.GPSCoordToUnityCoord(new GPSCoordinate(37.915376, -122.338201, 1.459));
-            meshScale5.transform.localScale = Vector3.one * (0.5f);
-
-            GameObject aircraft5 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            aircraft5.name = "aircraft 5";
-            aircraft5.transform.parent = this.transform;
-            aircraft5.transform.localPosition = WorldProperties.GPSCoordToUnityCoord(new GPSCoordinate(37.915028, -122.337711, 1.858));
-            aircraft5.transform.localScale = Vector3.one * (0.05f);
-
-            // Power pole near the fork in the road.
-            GameObject meshScale7 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            meshScale7.name = "meshScale7";
-            meshScale7.transform.parent = this.transform;
-            meshScale7.transform.localPosition = WorldProperties.GPSCoordToUnityCoord(new GPSCoordinate(37.914904, -122.337333, 2.237));
-            meshScale7.transform.localScale = Vector3.one * (0.5f);
-
-            GameObject aircraft7 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            aircraft7.name = "aircraft 7";
-            aircraft7.transform.parent = this.transform;
-            aircraft7.transform.localPosition = WorldProperties.GPSCoordToUnityCoord(new GPSCoordinate(37.915058, -122.337716, 2.631));
-            aircraft7.transform.localScale = Vector3.one * (0.05f);
-
-            // Stump at the entrance to the parking lot.
-            GameObject meshScale6 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            meshScale6.name = "meshScale6";
-            meshScale6.transform.parent = this.transform;
-            meshScale6.transform.localPosition = WorldProperties.GPSCoordToUnityCoord(new GPSCoordinate(37.915007, -122.337491, 2.522));
-            meshScale6.transform.localScale = Vector3.one * (0.5f);
-
-            GameObject aircraft6 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            aircraft6.name = "aircraft 6";
-            aircraft6.transform.parent = this.transform;
-            aircraft6.transform.localPosition = WorldProperties.GPSCoordToUnityCoord(new GPSCoordinate(37.915048, -122.337703, 2.948));
-            aircraft6.transform.localScale = Vector3.one * (0.05f);
-            */
+           
             //AddClipShader(this.transform);
             
         }
@@ -196,9 +116,12 @@
         /// <summary>
         /// Cycle through the connected drones
         /// </summary>
-        public static Drone SelectNextDrone()
+        public static Drone_v2 SelectNextDrone()
         {
-            if(selectedDrone != null)
+            //Debug.Log("Dictionary right now: " + droneDict.Count);
+
+
+            if (selectedDrone != null)
             {
                 Debug.Log("Enquing selected drone");
                 selectedDrone.gameObjectPointer.GetComponent<DroneProperties>().DeselectDrone();
@@ -207,7 +130,7 @@
 
             if (dronesQueue.Count > 0)
             {
-                Drone nextDrone = dronesQueue.Dequeue();
+                Drone_v2 nextDrone = dronesQueue.Dequeue();
                 nextDrone.droneProperties.SelectDrone();
 
 
@@ -232,7 +155,7 @@
         /// <summary>
         /// Get the selected drone
         /// </summary>
-        public static Drone GetSelectedDrone()
+        public static Drone_v2 GetSelectedDrone()
         {
             return selectedDrone;
         }
@@ -241,10 +164,13 @@
         /// Add a drone to the drones dictionary
         /// </summary>
         /// <param name="drone"></param>
-        public static void AddDrone(Drone drone)
+        public static void AddDrone(Drone_v2 drone)
         {
-            Debug.Log("Added drone " + drone);
+
+            Debug.Log("ADDING DRONE " + drone.gameObjectPointer.name + ", ID:" + drone.id.ToString());
             dronesQueue.Enqueue(drone);
+            //Debug.Log("Print Drone.ID added to dict is: " + drone.id);
+            droneDict.Add(drone.id, drone);
         }
 
         /// <summary>
@@ -272,6 +198,15 @@
         {
             return sensorDict;
         }
+
+        /// <summary>
+        /// Get list of all drones
+        /// </summary>
+        public static Dictionary<int, Drone_v2> GetDroneDict()
+        {
+            return droneDict;
+        }
+
 
         /// <summary>
         /// Recursively adds the clipShader to the parent and all its children

@@ -111,7 +111,11 @@
         public void StopCheckingFlightProgress()
         {
             StopCoroutine(CheckTargetWaypoint());
-            droneROSConnection.UploadedMissionCompleted();
+
+            //SERVERSIDE should keep state of the drone
+
+            //droneROSConnection.UploadedMissionCompleted();
+
             Debug.Log("Mission Completed!");
         }
         
