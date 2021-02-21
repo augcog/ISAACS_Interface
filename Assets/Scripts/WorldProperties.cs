@@ -10,8 +10,6 @@
     using ROSBridgeLib;
     using ROSBridgeLib.std_msgs;
     using ROSBridgeLib.interface_msgs;
-    using Mapbox.Unity.Map;
-    using Mapbox.Utils;
     using ROSBridgeLib.sensor_msgs;
     using JetBrains.Annotations;
 
