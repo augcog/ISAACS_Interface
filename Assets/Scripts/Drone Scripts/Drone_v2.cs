@@ -61,6 +61,10 @@
             ServerConnections.controlDrone(this, _id, "stop_mission");
         }
 
+        public void setSpeed(int speed)
+        {
+            ServerConnections.setSpeed(this, _id, speed);
+        }
         /******************************/
         //    Callback Functions      //
         /******************************/
