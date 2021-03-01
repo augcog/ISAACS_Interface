@@ -1,4 +1,4 @@
-﻿Shader "Unlit/ZedMesh"
+﻿Shader "Custom/ZedMesh"
 {
 	Properties
 	{

@@ -229,4 +229,8 @@ public class MeshSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
         this.transform.localScale = scale;
     }
 
+    public void UpdateVisualizer(Shader shader)
+    {
+        visualizer.SetShader(shader);
+    }
 }
