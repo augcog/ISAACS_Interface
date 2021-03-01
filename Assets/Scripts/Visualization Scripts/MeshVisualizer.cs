@@ -48,13 +48,13 @@ public class MeshVisualizer : MonoBehaviour
     /// <summary>
     /// Shader to use to render meshes.
     /// </summary>
-    public Shader shader;
+    [SerializeField] private Shader shader;
     /// <summary>
     /// Color to render the meshes.
     /// </summary>
     public Color color = new Color32(255, 255, 255, 100);
 
-    void Start()
+    void Awake()
     {
         shader = Shader.Find("Mobile/Particles/Alpha Blended");
         material = new Material(shader);
@@ -202,6 +202,7 @@ public class MeshVisualizer : MonoBehaviour
     /// <param name="shader"></param>
     public void SetShader(Shader shader)
     {
+        this.shader = shader;
         material.shader = shader;
     }
 
