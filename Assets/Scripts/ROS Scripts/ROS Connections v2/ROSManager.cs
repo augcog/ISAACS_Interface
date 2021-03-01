@@ -26,7 +26,7 @@ public class ROSManager : MonoBehaviour
     /// <summary>
     /// Sensor types supported by ISAACS System
     /// </summary>
-    public enum SensorType { PointCloud, Mesh, LAMP, PCFace, Image, ZedMesh};
+    public enum SensorType { PointCloud, Mesh, LAMP, PCFace, Image, Zed};
 
     /// <summary>
     /// Sensor subscribers supported by ISAACS System
@@ -265,8 +265,8 @@ public class ROSManager : MonoBehaviour
                 rosSensorConnection = camera_rosSensorConnection;
                 break;
 
-            case SensorType.ZedMesh:
-                Debug.Log("Zed Sensor(Mesh) created");
+            case SensorType.Zed:
+                Debug.Log("Zed Sensor created");
                 MeshSensor_ROSSensorConnection zedSensor_rosSensorConnection = sensor.AddComponent<MeshSensor_ROSSensorConnection>();
                 zedSensor_rosSensorConnection.InitilizeSensor(uniqueID, sensorIP, sensorPort, sensorSubscribers);
                 ROSSensorConnections.Add(uniqueID, zedSensor_rosSensorConnection);
