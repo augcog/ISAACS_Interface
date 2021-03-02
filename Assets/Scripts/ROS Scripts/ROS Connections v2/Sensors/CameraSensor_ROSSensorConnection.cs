@@ -20,11 +20,11 @@ public class CameraSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
     private Dictionary<string, ImageVisualizer> imageVisualizers = new Dictionary<string, ImageVisualizer>();
 
     // Initialize the sensor
-    public void InitilizeSensor(int uniqueID, string sensorIP, int sensorPort, List<string> sensorSubscribers)
+    public void InitilizeSensor(int uniqueID, string sensorURL, int sensorPort, List<string> sensorSubscribers)
     {
-        Debug.Log("Init Camera Connection at IP " + sensorIP + " Port " + sensorPort.ToString());
+        Debug.Log("Init Camera Connection at " + sensorURL + ":" + sensorPort.ToString());
 
-        ros = new ROSBridgeWebSocketConnection("ws://" + sensorIP, sensorPort);
+        ros = new ROSBridgeWebSocketConnection(sensorURL, sensorPort);
         client_id = uniqueID.ToString();
         foreach (string subscriber in sensorSubscribers)
         {
