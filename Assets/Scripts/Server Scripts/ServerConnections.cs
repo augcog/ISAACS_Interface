@@ -5,7 +5,7 @@
     using UnityEngine;
     using ROSBridgeLib;
     using ROSBridgeLib.sensor_msgs;
-    using RosSharp.RosBridgeClient.Protocols;
+    //using RosSharp.RosBridgeClient.Protocols;
     using WebSocketSharp;
     using UnityEditor;
     using System.IO;

@@ -1,3 +1,6 @@
 [submodule "ROSBridgeLib"]
 	path = Assets/ROSBridgeLib
 	url = http://github.com/immersive-command-system/ROSBridgeLibFork.git
+[submodule "ROSBridgeLibFork"]
+	path = ROSBridgeLibFork
+	url = https://github.com/immersive-command-system/ROSBridgeLibFork.git
