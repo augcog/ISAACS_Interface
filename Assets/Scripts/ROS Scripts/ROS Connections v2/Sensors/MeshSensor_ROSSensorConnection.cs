@@ -53,16 +53,16 @@ public class MeshSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
             // Check if any json msgs have been recieved
             if (jsonMsgs.Count > 0)
             {
-                Debug.Log("JSON Message Count: " + jsonMsgs.Count);
+                //Debug.Log("JSON Message Count: " + jsonMsgs.Count);
                 // Parse json msg to mesh msg
                 DateTime startTime = DateTime.Now;
                 JSONNode rawMsg = jsonMsgs.Dequeue();
                 MeshMsg meshMsg = new MeshMsg(rawMsg);
 //                meshMsgs.Enqueue(meshMsg);
-                Debug.Log("Message Generation: " + DateTime.Now.Subtract(startTime).TotalMilliseconds.ToString() + "ms");
+                //Debug.Log("Message Generation: " + DateTime.Now.Subtract(startTime).TotalMilliseconds.ToString() + "ms");
                 startTime = DateTime.Now;
                 meshDicts.Enqueue(visualizer.generateMesh(meshMsg));
-                Debug.Log("Generate MeshArray: " + DateTime.Now.Subtract(startTime).TotalMilliseconds.ToString() + "ms");
+                //Debug.Log("Generate MeshArray: " + DateTime.Now.Subtract(startTime).TotalMilliseconds.ToString() + "ms");
 
             }
         }
@@ -110,9 +110,8 @@ public class MeshSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
         CreateThread();
 
         // Hardcode Parent transform
-        SetLocalPosition(new Vector3(1.98f, 0f, -6.65f));
-        SetLocalOrientation(Quaternion.Euler(0f, 124.654f ,0f));
-        SetLocalScale(new Vector3(0.505388f, 0.505388f, 0.505388f));
+        //SetLocalPosition(new Vector3(1.98f, 0f, -6.65f));
+        //SetLocalOrientation(Quaternion.Euler(0f, 124.654f ,0f));
     }
 
     // Update is called once per frame in Unity
@@ -217,7 +216,8 @@ public class MeshSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
 
     public void SetLocalOrientation(Quaternion quaternion)
     {
-        this.transform.localRotation = quaternion; 
+        this.transform.localRotation = quaternion;
+        // Hardcoded transform depreciated: this.transform.Rotate(Vector3.up, -60.0f);
     }
     public void SetLocalPosition(Vector3 position)
     {

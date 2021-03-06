@@ -54,9 +54,9 @@ public class PCFaceSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
         ros.Connect();
 
         // Hardcode Parent transform
-        SetLocalPosition(new Vector3(1.98f, 0f, -6.65f));
-        SetLocalOrientation(Quaternion.Euler(0f, 124.654f ,0f));
-        SetLocalScale(new Vector3(0.505388f, 0.505388f, 0.505388f));
+        //SetLocalPosition(new Vector3(1.98f, 0f, -6.65f));
+        //SetLocalOrientation(Quaternion.Euler(0f, 124.654f ,0f));
+        //SetLocalScale(new Vector3(0.505388f, 0.505388f, 0.505388f));
 
     }
     // Update is called once per frame in Unity
@@ -138,35 +138,84 @@ public class PCFaceSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscribe
         // Writing all code in here for now. May need to move out to separate handler functions when it gets too unwieldy.
         switch (topic)
         {
-            case "/colorized_points_faced_0":
+            case "/colorized_points_faced_5":
                 Debug.Log("PC Face Mesh Visualizer Callback: " + topic);
                 parsePCFaceMesh = true;
-                color = new Color(0, 0, 0.5f, alpha);
-                break;
-            case "/colorized_points_faced_1":
-                Debug.Log("PC Face Mesh Visualizer Callback: " + topic);
-                parsePCFaceMesh = true;
-                color = new Color(0, 0, 1, alpha);
-                break;
-            case "/colorized_points_faced_2":
-                Debug.Log("PC Face Mesh Visualizer Callback: " + topic);
-                parsePCFaceMesh = true;
-                color = new Color(0, 1, 1, alpha);
-                break;
-            case "/colorized_points_faced_3":
-                Debug.Log("PC Face Mesh Visualizer Callback: " + topic);
-                parsePCFaceMesh = true;
-                color = new Color(0, 1, 0, alpha);
+                if (WorldProperties.radiationDataType == WorldProperties.RadiationDataType.gamma)
+                {
+                    Debug.Log("Gamma");
+                    color = new Color(255.0f, 204.0f, 204.0f, alpha/ 6.0f);
+                }
+                else
+                {
+                    Debug.Log("Neutron");
+                    color = new Color(229.0f, 204.0f, 255.0f, alpha / 6.0f);
+                }
                 break;
             case "/colorized_points_faced_4":
                 Debug.Log("PC Face Mesh Visualizer Callback: " + topic);
                 parsePCFaceMesh = true;
-                color = new Color(1, 1, 0, alpha);
+                if (WorldProperties.radiationDataType == WorldProperties.RadiationDataType.gamma)
+                {
+                    Debug.Log("Gamma");
+                    color = new Color(255.0f, 153.0f, 153.0f, alpha / 5.0f);
+                }
+                else
+                {
+                    Debug.Log("Neutron");
+                    color = new Color(204.0f, 153.0f, 255.0f, alpha / 5.0f);
+                }
                 break;
-            case "/colorized_points_faced_5":
+            case "/colorized_points_faced_3":
                 Debug.Log("PC Face Mesh Visualizer Callback: " + topic);
                 parsePCFaceMesh = true;
-                color = new Color(1, 0, 0, alpha);
+                if (WorldProperties.radiationDataType == WorldProperties.RadiationDataType.gamma)
+                {
+                    Debug.Log("Gamma");
+                    color = new Color(255.0f, 102.0f, 102.0f, alpha / 4.0f);
+                }
+                else
+                {
+                    Debug.Log("Neutron");
+                    color = new Color(178.0f, 102.0f, 255.0f, alpha / 4.0f);
+                }
+                break;
+            case "/colorized_points_faced_2":
+                Debug.Log("PC Face Mesh Visualizer Callback: " + topic);
+                parsePCFaceMesh = true;
+                if (WorldProperties.radiationDataType == WorldProperties.RadiationDataType.gamma)
+                {
+                    Debug.Log("Gamma");
+                    color = new Color(255.0f, 51.0f, 51.0f, alpha / 3.0f);
+                }
+                else
+                {
+                    color = new Color(153.0f, 51.0f, 255.0f, alpha / 3.0f);
+                }
+                break;
+            case "/colorized_points_faced_1":
+                Debug.Log("PC Face Mesh Visualizer Callback: " + topic);
+                parsePCFaceMesh = true;
+                if (WorldProperties.radiationDataType == WorldProperties.RadiationDataType.gamma)
+                {
+                    color = new Color(255.0f, 0, 0, alpha / 2.0f);
+                }
+                else
+                {
+                    color = new Color(127.0f, 0, 255.0f, alpha / 2.0f);
+                }
+                break;
+            case "/colorized_points_faced_0":
+                Debug.Log("PC Face Mesh Visualizer Callback: " + topic);
+                parsePCFaceMesh = true;
+                if (WorldProperties.radiationDataType == WorldProperties.RadiationDataType.gamma)
+                {
+                    color = new Color(204.0f, 0, 0, alpha);
+                }
+                else
+                {
+                    color = new Color(102.0f, 0, 204.0f, alpha);
+                }
                 break;
             default:
                 Debug.LogError("Topic not implemented: " + topic);

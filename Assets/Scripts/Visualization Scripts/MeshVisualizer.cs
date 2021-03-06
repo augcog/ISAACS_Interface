@@ -31,7 +31,7 @@ public class MeshVisualizer : MonoBehaviour
     /// <summary>
     /// Alpha value for individual vertex colorings.
     /// </summary>
-    public byte alpha = 60;
+    public byte alpha = 150;
 
     private Material material;
 

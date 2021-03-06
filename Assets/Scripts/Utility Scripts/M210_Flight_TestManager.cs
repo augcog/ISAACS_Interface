@@ -61,6 +61,10 @@ public class M210_Flight_TestManager : MonoBehaviour
     // TODO: Ensure waypoint array removes past waypoints.
     public string stopMission = "l";
 
+    [Header("LAMP radiation type")]
+    public string selectGamma = "z";
+    public string selectNeutron = "x";
+
     [Header("Drone Variable")]
     public Matrice_ROSDroneConnection rosDroneConnection;
 
@@ -250,5 +254,16 @@ public class M210_Flight_TestManager : MonoBehaviour
                 sensor.Unsubscribe(topic);
             }
         }
+
+        if (Input.GetKeyDown(selectGamma))
+        {
+            WorldProperties.radiationDataType = WorldProperties.RadiationDataType.gamma;
+        }
+
+        if (Input.GetKeyDown(selectNeutron))
+        {
+            WorldProperties.radiationDataType = WorldProperties.RadiationDataType.neutron;
+        }
+
     }
 }
