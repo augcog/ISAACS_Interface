@@ -676,6 +676,7 @@ GameObject:
   - component: {fileID: 146794964}
   - component: {fileID: 146794965}
   - component: {fileID: 146794966}
+  - component: {fileID: 146794969}
   m_Layer: 0
   m_Name: World
   m_TagString: World
@@ -743,7 +744,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 146794962}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 40e7d7093c2734491a88a14d7b9f412d, type: 3}
   m_Name: 
@@ -834,6 +835,22 @@ MonoBehaviour:
       videoPlayers: 0
   success: 0
   uniqueID: 0
+--- !u!114 &146794969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 146794962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff98778ae051cfd40a6e4effdf851ebd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SecondsTimeout: 10
+  Serializer: 1
+  protocol: 0
+  RosBridgeServerUrl: ws://54.161.15.175:9090
 --- !u!4 &167235401 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400172, guid: 804ac96ebacbb37488605e7a96725e34,
