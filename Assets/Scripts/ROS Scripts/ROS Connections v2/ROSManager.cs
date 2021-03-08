@@ -45,7 +45,7 @@ public class ROSManager : MonoBehaviour
     public class ROSDroneConnectionInput
     {
         public string droneName;
-        public string ipAddress; // is this int32?
+        public string url;
         public int port;
         public DroneType droneType;
         public List<DroneSubscribers> droneSubscribers;
@@ -60,7 +60,7 @@ public class ROSManager : MonoBehaviour
     public class ROSSensorConnectionInput
     {
         public string sensorName;
-        public string ipAddress;
+        public string url;
         public int port;
         public SensorType sensorType;
         public List<SensorSubscribers> sensorSubscribers;
@@ -102,7 +102,7 @@ public class ROSManager : MonoBehaviour
     {
         // All the variables required to create the drone
         DroneType droneType = rosDroneConnectionInput.droneType;
-        string droneIP = rosDroneConnectionInput.ipAddress;
+        string droneIP = rosDroneConnectionInput.url;
         int dronePort = rosDroneConnectionInput.port;
         bool simFlight = rosDroneConnectionInput.simFlight;
         List<string> droneSubscribers = new List<string>();
@@ -188,7 +188,7 @@ public class ROSManager : MonoBehaviour
     private ROSSensorConnectionInterface InstantiateSensor(ROSSensorConnectionInput rosSensorConnectionInput)
     {
         SensorType sensorType = rosSensorConnectionInput.sensorType;
-        string sensorIP = rosSensorConnectionInput.ipAddress;
+        string sensorIP = rosSensorConnectionInput.url;
         int sensorPort = rosSensorConnectionInput.port;
         List<string> sensorSubscribers = new List<string>();
         ROSSensorConnectionInterface rosSensorConnection = null;
