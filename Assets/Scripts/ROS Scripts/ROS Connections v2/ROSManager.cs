@@ -33,7 +33,7 @@ public class ROSManager : MonoBehaviour
     /// </summary>
     public enum SensorSubscribers
     {
-        surface_pointcloud, mesh,
+        surface_pointcloud, mesh, mesh2,
         colorized_points_0, colorized_points_1, colorized_points_2, colorized_points_3, colorized_points_4, colorized_points_5,
         colorized_points_faced_0, colorized_points_faced_1, colorized_points_faced_2, colorized_points_faced_3, colorized_points_faced_4, colorized_points_faced_5, fpv_camera_images
     };
@@ -222,6 +222,7 @@ public class ROSManager : MonoBehaviour
                 rosSensorConnection = meshSensor_rosSensorConnection;
                 break;
 
+            // We don't use this sensor type anymore, as it's point-cloud based rather than PCFace-based.
             case SensorType.LAMP:
                 Debug.Log("LAMP Sensor created");
                 LampSensor_ROSSensorConnection lamp_rosSensorConnection = sensor.AddComponent<LampSensor_ROSSensorConnection>();
@@ -267,6 +268,8 @@ public class ROSManager : MonoBehaviour
 
             case SensorType.Zed:
                 Debug.Log("Zed Sensor created");
+                sensorSubscribers.Clear();
+                sensorSubscribers.Add("mesh2");
                 MeshSensor_ROSSensorConnection zedSensor_rosSensorConnection = sensor.AddComponent<MeshSensor_ROSSensorConnection>();
                 zedSensor_rosSensorConnection.InitilizeSensor(uniqueID, sensorIP, sensorPort, sensorSubscribers);
                 ROSSensorConnections.Add(uniqueID, zedSensor_rosSensorConnection);

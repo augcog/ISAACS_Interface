@@ -90,6 +90,9 @@ public class MeshSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
                 case "mesh":
                     subscriberTopic = "/voxblox_node/" + subscriber;
                     break;
+                case "mesh2":
+                    subscriberTopic = "/voxblox_node/" + subscriber;
+                    break;
                 default:
                     Debug.Log("Subscriber not defined: " + subscriber);
                     break;
@@ -193,6 +196,10 @@ public class MeshSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
         switch (topic)
         {
             case "/voxblox_node/mesh":
+                // Add raw_msg to the jsonMsgs to be parsed on the thread
+                jsonMsgs.Enqueue(raw_msg);
+                break;
+            case "/voxblox_node/mesh2":
                 // Add raw_msg to the jsonMsgs to be parsed on the thread
                 jsonMsgs.Enqueue(raw_msg);
                 break;
