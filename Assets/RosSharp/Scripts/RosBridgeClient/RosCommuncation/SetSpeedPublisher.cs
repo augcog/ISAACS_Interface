@@ -4,13 +4,13 @@ using UnityEngine;
 
 namespace RosSharp.RosBridgeClient
 {
-    public class SetSpeedPublisher : UnityPublisher<MessageTypes.isaacs_server.set_speed>
+    public class SetSpeedPublisher //: UnityPublisher<MessageTypes.isaacs_server.set_speed>
     {
         public int id;
         public bool success;
         public string msg;
 
-        private MessageTypes.isaacs_server.set_speed message;
+        //private MessageTypes.isaacs_server.set_speed message;
 
 
         /*namespace RosSharp.RosBridgeClient
