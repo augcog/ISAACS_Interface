@@ -1,4 +1,4 @@
-﻿namespace ISAACS
+namespace ISAACS
 {
     using ROSBridgeLib.interface_msgs;
     using System.Collections;
@@ -220,11 +220,12 @@
         /// <summary>
         /// Removes all waypoints from this drone (including the first one).
         /// </summary>
-        // TODO: Fix @apollo do we still need to fix this?
         public void DeleteAllWaypoints()
         {
             if (!isEmptyWaypointList(waypoints))
             {
+                //TODO: Test if this works (Changed 3/20/2021, Jasmine)
+                Debug.Log(waypoints.Count);
                 foreach (Waypoint waypoint in waypoints)
                 {
                     deletedWaypoints.Add(waypoint);
@@ -233,6 +234,18 @@
                     Object.Destroy(waypoint.gameObjectPointer);
                 }
                 waypoints.Clear();
+                waypoints.TrimExcess();
+                Debug.Log(waypoints.Count);
+                Debug.Log(waypoints.Capacity);
+                //OLD ONE(Prior to March 2021)
+                //foreach (Waypoint waypoint in waypoints)
+                //{
+                //    deletedWaypoints.Add(waypoint);
+                //    WaypointProperties tempProperties = waypoint.gameObjectPointer.GetComponent<WaypointProperties>();
+                //    tempProperties.DeleteLineCollider();
+                //    Object.Destroy(waypoint.gameObjectPointer);
+                //}
+                //waypoints.Clear();
             }
         }
 
