@@ -167,6 +167,7 @@ public class M210_Flight_TestManager : MonoBehaviour
             MissionWaypointTaskMsg test_Task = new MissionWaypointTaskMsg(15.0f, 15.0f, MissionWaypointTaskMsg.ActionOnFinish.NO_ACTION, 1, MissionWaypointTaskMsg.YawMode.AUTO, MissionWaypointTaskMsg.TraceMode.COORDINATED, MissionWaypointTaskMsg.ActionOnRCLost.FREE, MissionWaypointTaskMsg.GimbalPitchMode.FREE, test_waypoint_array);
 
             rosDroneConnection.UploadWaypointsTask(test_Task);
+
         }
 
         if (Input.GetKeyUp(missionInfo))

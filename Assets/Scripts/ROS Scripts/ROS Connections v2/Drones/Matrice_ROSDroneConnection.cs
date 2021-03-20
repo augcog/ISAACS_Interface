@@ -249,6 +249,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
     {
         // Integrate dynamic waypoint system
         Debug.Log("Starting drone mission");
+        Debug.Log(flight_status);
 
         if (simDrone)
         {
@@ -309,12 +310,14 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
                 else
                 {
                     UpdateMissionHelper(UpdateMissionAction.CONTINUE_MISSION);
+                    Debug.Log("continue mission");
                 }
 
                 break;
 
             case FlightStatus.IN_AIR_STANDBY:
                 UpdateMissionHelper(UpdateMissionAction.CONTINUE_MISSION);
+                Debug.Log("continue mission1");
                 break;
 
             case FlightStatus.PAUSED_IN_AIR:
@@ -323,6 +326,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
 
             case FlightStatus.FLYING:
                 UpdateMissionHelper(UpdateMissionAction.UPDATE_CURRENT_MISSION);
+                Debug.Log("update current mission");
                 break;
 
             case FlightStatus.LANDING:
