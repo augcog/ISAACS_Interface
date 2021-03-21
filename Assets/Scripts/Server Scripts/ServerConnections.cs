@@ -248,27 +248,27 @@ namespace ISAACS
             NavSatFixMsg[] waypointMsgs = new NavSatFixMsg[waypoints.Count];
             //change each waypoint to navsatros messages
             int count = 0;
-            foreach (Waypoint x in waypoints)
-            {
-                Vector3 unityCoord = x.gameObjectPointer.transform.localPosition;
-                GPSCoordinate rosCoord = WorldProperties.UnityCoordToGPSCoord(unityCoord);
-                NavSatFixMsg msg = new NavSatFixMsg(rosCoord.Lat, rosCoord.Lng, rosCoord.Alt);
-                waypointMsgs[count] = msg;
-                count++;
-            }
-            string outputArgs = "";
-            foreach (NavSatFixMsg y in waypointMsgs)
-            {
-                outputArgs += "{";
-                outputArgs += y.ToString();
-                outputArgs += "}";
+            //foreach (Waypoint x in waypoints)
+            //{
+                //Vector3 unityCoord = x.gameObjectPointer.transform.localPosition;
+                //GPSCoordinate rosCoord = WorldProperties.UnityCoordToGPSCoord(unityCoord);
+            //    NavSatFixMsg msg = new NavSatFixMsg(rosCoord.Lat, rosCoord.Lng, rosCoord.Alt);
+            //    waypointMsgs[count] = msg;
+            //    count++;
+            //}
+            //string outputArgs = "";
+            //foreach (NavSatFixMsg y in waypointMsgs)
+            //{
+            //    outputArgs += "{";
+            //    outputArgs += y.ToString();
+            //    outputArgs += "}";
 
-            }
+            //}
                 
             //string outputArgs = string.Join(",", waypointMsgs.Select(x => x.ToString()).ToArray());
-            Debug.Log(outputArgs);
+            //Debug.Log(outputArgs);
             //TODO: might not work bc array.toString is diff than navsatfixmsg.toString
-            rosServerConnection.CallService(uploadMissionCallback, service_name, ID, args: string.Format("[\'drone_id\' : {0}, \'waypoints\' : {1}]", ID, outputArgs));
+            //rosServerConnection.CallService(uploadMissionCallback, service_name, ID, args: string.Format("[\'drone_id\' : {0}, \'waypoints\' : {1}]", ID, outputArgs));
 
         }
 

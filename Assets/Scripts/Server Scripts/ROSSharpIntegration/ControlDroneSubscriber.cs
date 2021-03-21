@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ROSSharp_ServerConnection : MonoBehaviour
+public class ControlDroneSubscriber : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()
