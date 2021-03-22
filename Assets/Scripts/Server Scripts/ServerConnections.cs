@@ -10,6 +10,8 @@ using ISAACS;
 using SimpleJSON;
 using System;
 using System.Linq;
+using RosSharp.RosBridgeClient;
+using RosSharp.RosBridgeClient.MessageTypes.IsaacsServer;
 
 namespace ISAACS
 {
@@ -122,11 +124,13 @@ namespace ISAACS
         {
             string service_name = "/isaacs_server/all_drones_available";
             rosServerConnection.CallService(GetAllDronesCallback, service_name, "hi", "[]");
+
             Debug.Log("called service");
         }
 
         public static void GetAllDronesCallback(JSONNode response)
         {
+        
             Debug.Log("response gotten");
             //Debug.Log(response);
 
