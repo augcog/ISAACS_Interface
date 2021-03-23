@@ -203,9 +203,9 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
     /// <param name="dronePort"> Drone Port value for ROS connection</param>
     /// <param name="droneSubscribers"> List of subscibers to connect to and display in the informative UI</param>
     /// <param name="simFlight"> Boolean value to active or deactive DroneFlightSim</param>
-    public void InitilizeDrone(int uniqueID, string droneIP, int dronePort, List<string> droneSubscribers, bool simFlight, DroneProperties droneProp)
+    public void InitilizeDrone(int uniqueID, string droneURL, int dronePort, List<string> droneSubscribers, bool simFlight, DroneProperties droneProp)
     {
-        ros = new ROSBridgeWebSocketConnection("ws://" + droneIP, dronePort);
+        ros = new ROSBridgeWebSocketConnection(droneURL, dronePort);
         client_id = uniqueID.ToString();
         simDrone = simFlight;
         droneProperties = droneProp;
@@ -249,6 +249,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
     {
         // Integrate dynamic waypoint system
         Debug.Log("Starting drone mission");
+        Debug.Log(flight_status);
 
         if (simDrone)
         {
@@ -309,12 +310,14 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
                 else
                 {
                     UpdateMissionHelper(UpdateMissionAction.CONTINUE_MISSION);
+                    Debug.Log("continue mission");
                 }
 
                 break;
 
             case FlightStatus.IN_AIR_STANDBY:
                 UpdateMissionHelper(UpdateMissionAction.CONTINUE_MISSION);
+                Debug.Log("continue mission1");
                 break;
 
             case FlightStatus.PAUSED_IN_AIR:
@@ -323,6 +326,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
 
             case FlightStatus.FLYING:
                 UpdateMissionHelper(UpdateMissionAction.UPDATE_CURRENT_MISSION);
+                Debug.Log("update current mission");
                 break;
 
             case FlightStatus.LANDING:
