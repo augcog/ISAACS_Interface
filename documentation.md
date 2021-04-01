@@ -20,6 +20,7 @@
     - cd build
     - cmake ../cmake-modules
     - make
+        - If there are any errors regarding LIBUSB, try installing it with `sudo apt-get install libusb-1.0-0-dev` 
     - cd ~/catkin_ws
     - catkin_make
 
