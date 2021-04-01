@@ -23,6 +23,7 @@
         - If there are any errors regarding LIBUSB, try installing it with `sudo apt-get install libusb-1.0-0-dev` 
     - cd ~/catkin_ws
     - catkin_make
+        - You may also need to install nmea_msgs into the catkin_ws/src via `git clone git@github.com:ros-drivers/nmea_msgs.git`
 
 - Enabling Advanced Sensing:
     - On line 19 of Onboard-SDK-ROS/cmake-modules/External_djiosdkcore.cmake, either turn `-DADVANCED_SENSING=ON`(default) or `OFF`
