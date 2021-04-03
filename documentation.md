@@ -7,7 +7,7 @@
 - On boot, a new Manifold requires a lot of updates (this happens automatically and will block apt-get along with get really hot for 15 or so minutes).
 - ROS Kinetic should come pre-installed but feel free to follow the instructions on ROS's wiki.
 - sudo apt install ros-kinetic-rosbridge-server
-- Install Onboard-SDK-ROS
+- Install [Onboard-SDK-ROS](https://github.com/dji-sdk/Onboard-SDK-ROS)
     - We are using Onboard-SDK-ROS commit f424a07, the commit to the master branch right before version 4.0.0 removed support for the M210 RTK v1.4
     - Create a Catkin workspace
         - mkdir catkin_ws
