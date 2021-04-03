@@ -89,7 +89,8 @@
             selectedSensor = null;
             sensorDict = new Dictionary<int, GameObject>();
 
-            worldObject = gameObject;
+            //worldObject = gameObject;
+            worldObject = this.gameObject;
             sensorManager = sensorManagerBaseObject;
 
             placementPlane = GameObject.FindWithTag("Ground");

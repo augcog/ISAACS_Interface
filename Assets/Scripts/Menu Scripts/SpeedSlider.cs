@@ -20,7 +20,7 @@ public class SpeedSlider : MonoBehaviour
     public void ValueChangeCheck()
     {
         Debug.Log(mySlider.value);
-        WorldProperties.GetSelectedDrone().setSpeed((int) mySlider.value);
+        WorldProperties.GetSelectedDrone().setSpeed(mySlider.value);
     }
 
 }

@@ -27,6 +27,7 @@ public class Fall2020_Testing : MonoBehaviour {
     public string resumeMission = "i";
     public string stopMission = "s";
     public string flyHome = "o";
+    public string setSlider = "r";
 
     [Header("Upload Missions (Hardcoded)")]
     public string uploadTestMission = "p";
@@ -115,7 +116,13 @@ public class Fall2020_Testing : MonoBehaviour {
             drone.startMission();
         }
 
+        if (Input.GetKeyDown(setSlider))
+        {
+            Debug.Log("button pressed");
+            drone.setSpeed(4.3f);
+        }
 
 
-    }
+
+        }
 }

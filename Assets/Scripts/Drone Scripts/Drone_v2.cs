@@ -5,6 +5,8 @@
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
+    using RosSharp.RosBridgeClient;
+
 
     public class Drone_v2 : Drone
     {
@@ -61,9 +63,11 @@
             ServerConnections.controlDrone(this, _id, "stop_mission");
         }
 
-        public void setSpeed(int speed)
+        public void setSpeed(float speed)
         {
-            ServerConnections.setSpeed(this, _id, speed);
+            //ServerConnections.setSpeed(this, _id, speed);
+            Debug.Log("passing it through");
+            ServerConnections2.setSpeed(this, id, speed);
         }
         /******************************/
         //    Callback Functions      //
