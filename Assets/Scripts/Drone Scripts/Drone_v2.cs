@@ -25,12 +25,12 @@
 
         public void uploadMission()
         {
-            ServerConnections.uploadMission(this, _id, this.AllWaypoints());
+            ServerConnections2.uploadMission(this, id, this.AllWaypoints());
         }
 
         public void DronePathUpdated()
         {
-            ServerConnections.uploadMission(this, _id, this.AllWaypoints());
+            ServerConnections2.uploadMission(this, id, this.AllWaypoints());
         }
 
         public void startMission()

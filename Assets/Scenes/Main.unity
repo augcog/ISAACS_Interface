@@ -678,6 +678,7 @@ GameObject:
   - component: {fileID: 146794966}
   - component: {fileID: 146794969}
   - component: {fileID: 146794974}
+  - component: {fileID: 146794970}
   m_Layer: 0
   m_Name: World
   m_TagString: World
@@ -853,6 +854,22 @@ MonoBehaviour:
   Serializer: 1
   protocol: 0
   RosBridgeServerUrl: ws://54.161.15.175:9090
+--- !u!114 &146794970
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 146794962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c43be02362f6479fb638c27574bcf02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  actionName: upload_mission
+  status: 
+  feedback: 
+  result: 
 --- !u!114 &146794974
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -866,6 +883,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   uri: ws://54.161.15.175:9090
+  uploadAction: {fileID: 146794970}
 --- !u!4 &167235401 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400172, guid: 804ac96ebacbb37488605e7a96725e34,
