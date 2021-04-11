@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using ISAACS;
+using RosSharp.RosBridgeClient.Actionlib;
 
 namespace RosSharp.RosBridgeClient
 {
@@ -12,6 +13,8 @@ namespace RosSharp.RosBridgeClient
         public string uri = "";
         public static RosSocket rosSocket;
         //public GameObject thing;
+
+        //public static UnityControlDroneActionClient unityControlDroneActionClient;
 
         // Start is called before the first frame update
         void Start()
@@ -162,6 +165,20 @@ namespace RosSharp.RosBridgeClient
             Debug.Log("SetSpeed Response Gotten");
             //TODO: What do??
 
+        }
+
+
+        // CONTROL DRONE
+        public static void controlDrone(Drone_v2 drone, int ID, string command)
+        {
+            Debug.Log("sent control drone service");
+            /*
+             * MessageTypes.IsaacsServer.ControlDroneRequest request = new MessageTypes.IsaacsServer.ControlDroneRequest((uint) ID, command);
+             * rosSocket.CallService<MessageTypes.IsaacsServer.ControlDroneRequest, MessageTypes.IsaacsServer.ControlDroneResponse>("/isaacs_server/control_drone", ControlDroneServiceCallHandler, request);
+             */
+
+            //unityControlDroneActionClient.RegisterGoal();
+            //unityControlDroneActionClient.controlDroneActionClient.SendGoal();
         }
     }
 }
