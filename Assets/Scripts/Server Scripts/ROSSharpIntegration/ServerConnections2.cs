@@ -147,11 +147,14 @@ namespace RosSharp.RosBridgeClient
                 count++;
             }
 
-            MessageTypes.IsaacsServer.UploadMissionGoal goal = new MessageTypes.IsaacsServer.UploadMissionGoal((uint)ID, waypointsList);
-            MessageTypes.IsaacsServer.UploadMissionActionGoal action_goal = uploadActionClient.uploadMissionActionClient.action.action_goal;
-            action_goal.goal = goal;
+            //MessageTypes.IsaacsServer.UploadMissionGoal goal = new MessageTypes.IsaacsServer.UploadMissionGoal((uint)ID, waypointsList);
+            //MessageTypes.IsaacsServer.UploadMissionActionGoal action_goal = uploadActionClient.uploadMissionActionClient.action.action_goal;
+            //action_goal.goal = goal;
+            uploadActionClient.id = ID;
+            uploadActionClient.waypoints = waypointsList;
             uploadActionClient.RegisterGoal();
-            uploadActionClient.uploadMissionActionClient.SendGoal(action_goal);
+            uploadActionClient.uploadMissionActionClient.SendGoal();
+            //uploadActionClient.uploadMissionActionClient.SendGoal(action_goal);
 
             //rosSocket.CallService<MessageTypes.IsaacsServer.UploadMissionRequest, MessageTypes.IsaacsServer.UploadMissionResponse>("/isaacs_server/upload_mission", UploadMissionServiceCallHandler, request);
         }

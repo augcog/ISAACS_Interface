@@ -14,6 +14,7 @@ namespace RosSharp.RosBridgeClient.Actionlib
         public string status = "";
         public string feedback = "";
         public string result = "";
+        public int id;
 
         public UploadMissionActionClient(string actionName, RosSocket rosSocket)
         {
@@ -25,6 +26,8 @@ namespace RosSharp.RosBridgeClient.Actionlib
 
         protected override MessageTypes.IsaacsServer.UploadMissionActionGoal GetActionGoal()
         {
+            action.action_goal.goal.id = (uint)id;
+            action.action_goal.goal.waypoints = waypoints;
             return action.action_goal;
         }
 
@@ -52,11 +55,10 @@ namespace RosSharp.RosBridgeClient.Actionlib
 
         protected override void OnResultReceived()
         {
-            //TODO: Something but honestly idk what
             Debug.Log("UploadMission Result Received");
-
             int drone_id = (int)action.action_result.result.id;
             string command = action.action_result.result.message;
+            Debug.Log(command);
             bool success = action.action_result.result.success;
             Drone_v2 drone = WorldProperties.GetDroneDict()[drone_id];
 
