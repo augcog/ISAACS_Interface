@@ -5,13 +5,14 @@ using UnityEngine;
 namespace RosSharp.RosBridgeClient.Actionlib
 {
     [RequireComponent(typeof(RosConnector))]
-    public class UnityControlDroneActionClient : MonoBehaviour
+    public class UnitySetSpeedActionClient : MonoBehaviour
     {
         private RosConnector rosConnector;
-        public ControlDroneActionClient controlDroneActionClient;
+        public SetSpeedActionClient setSpeedActionClient;
 
         public string actionName;
-        public string command;
+        public float speed;
+        public int id;
         public string status = "";
         public string feedback = "";
         public string result = "";
@@ -19,20 +20,21 @@ namespace RosSharp.RosBridgeClient.Actionlib
         private void Start()
         {
             rosConnector = GetComponent<RosConnector>();
-            controlDroneActionClient = new ControlDroneActionClient(actionName, rosConnector.RosSocket);
-            controlDroneActionClient.Initialize();
+            setSpeedActionClient = new SetSpeedActionClient(actionName, rosConnector.RosSocket);
+            setSpeedActionClient.Initialize();
         }
 
         private void Update()
         {
-            status = controlDroneActionClient.GetStatusString();
-            feedback = controlDroneActionClient.GetFeedbackString();
-            result = controlDroneActionClient.GetResultString();
+            status = setSpeedActionClient.GetStatusString();
+            feedback = setSpeedActionClient.GetFeedbackString();
+            result = setSpeedActionClient.GetResultString();
         }
 
         public void RegisterGoal()
         {
-            controlDroneActionClient.command = command;
+            setSpeedActionClient.speed = speed;
+            setSpeedActionClient.id = id;
         }
 
     }

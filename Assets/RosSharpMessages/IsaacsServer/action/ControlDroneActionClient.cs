@@ -17,6 +17,7 @@ namespace RosSharp.RosBridgeClient.Actionlib
                                                          MessageTypes.IsaacsServer.ControlDroneFeedback>
     {
         public string command;
+        public int id;
         public string status = "";
         public string feedback = "";
         public string result = "";
@@ -32,6 +33,7 @@ namespace RosSharp.RosBridgeClient.Actionlib
         protected override ControlDroneActionGoal GetActionGoal()
         {
             action.action_goal.goal.control_task = command;
+            action.action_goal.goal.id = (uint) id;
             return action.action_goal;
         }
 
@@ -43,37 +45,47 @@ namespace RosSharp.RosBridgeClient.Actionlib
         protected override void OnResultReceived()
         {
             Debug.Log("ControlDrone Result Received");
-
+            Debug.Log(action.action_result.result.message);
             int drone_id = (int) action.action_result.result.id;
+            bool success = action.action_result.result.success;
+
+            //TODO: Check this!!
             string command = action.action_result.result.message;
             Drone_v2 drone = WorldProperties.GetDroneDict()[drone_id];
 
-            switch (command)
+            if (success)
             {
-                case "start_mission":
-                    drone.onStartMission();
-                    break;
+                switch (command)
+                {
+                    case "start_mission":
+                        drone.onStartMission();
+                        break;
 
-                case "pause_mission":
-                    drone.onPauseMission();
-                    break;
+                    case "pause_mission":
+                        drone.onPauseMission();
+                        break;
 
-                case "resume_mission":
-                    drone.onResumeMission();
-                    break;
+                    case "resume_mission":
+                        drone.onResumeMission();
+                        break;
 
-                case "land_drone":
-                    drone.onLandDrone();
-                    break;
+                    case "land_drone":
+                        drone.onLandDrone();
+                        break;
 
-                case "fly_home":
-                    drone.onFlyHome();
-                    break;
+                    case "fly_home":
+                        drone.onFlyHome();
+                        break;
 
-                default:
-                    Debug.Log("Wrong drone callback!");
-                    break;
+                    default:
+                        Debug.Log("Wrong drone callback!");
+                        break;
+                }
+            } else
+            {
+                Debug.Log("Not successful command.");
             }
+      
         }
 
         protected override void OnStatusUpdated()

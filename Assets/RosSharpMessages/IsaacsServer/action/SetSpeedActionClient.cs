@@ -16,7 +16,8 @@ namespace RosSharp.RosBridgeClient.Actionlib
                                                      MessageTypes.IsaacsServer.SetSpeedResult,
                                                      MessageTypes.IsaacsServer.SetSpeedFeedback>
     {
-        public int speed;
+        public float speed;
+        public int id;
         public string status = "";
         public string feedback = "";
         public string result = "";
@@ -32,6 +33,7 @@ namespace RosSharp.RosBridgeClient.Actionlib
         protected override SetSpeedActionGoal GetActionGoal()
         {
             action.action_goal.goal.speed = speed;
+            action.action_goal.goal.id = (uint) id;
             return action.action_goal;
         }
 

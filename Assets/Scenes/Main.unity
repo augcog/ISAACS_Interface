@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.1730249, g: 0.21624446, b: 0.2982357, a: 1}
+  m_IndirectSpecularColor: {r: 0.17302455, g: 0.2162439, b: 0.2982352, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -678,6 +678,7 @@ GameObject:
   - component: {fileID: 146794966}
   - component: {fileID: 146794969}
   - component: {fileID: 146794974}
+  - component: {fileID: 146794971}
   - component: {fileID: 146794970}
   m_Layer: 0
   m_Name: World
@@ -853,8 +854,24 @@ MonoBehaviour:
   SecondsTimeout: 10
   Serializer: 1
   protocol: 0
-  RosBridgeServerUrl: ws://128.32.137.243:9090
+  RosBridgeServerUrl: ws://54.161.15.175:9090
 --- !u!114 &146794970
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 146794962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c43be02362f6479fb638c27574bcf02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  actionName: /isaacs_server/upload_mission
+  status: 
+  feedback: 
+  result: 
+--- !u!114 &146794971
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -866,12 +883,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33eea7a1b7d0d416bad3256a465f8941, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  actionName: isaacs_server/control_drone
-  command: start_mission
-  m_Script: {fileID: 11500000, guid: 8c43be02362f6479fb638c27574bcf02, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  actionName: upload_mission
+  actionName: /isaacs_server/control_drone
+  command: 
   status: 
   feedback: 
   result: 
@@ -887,8 +900,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0609a13ed6330479b9461675b22d3ce7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uri: ws://128.32.137.243:9090
-  uploadAction: {fileID: 146794970}
+  uri: ws://54.161.15.175:9090
 --- !u!4 &167235401 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400172, guid: 804ac96ebacbb37488605e7a96725e34,

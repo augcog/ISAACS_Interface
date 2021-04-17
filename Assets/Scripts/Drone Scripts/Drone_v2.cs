@@ -35,32 +35,32 @@
 
         public void startMission()
         {
-            ServerConnections.controlDrone(this, _id, "start_mission");
+            ServerConnections2.controlDrone(this, id, "start_mission");
         }
 
         public void pauseMission()
         {
-            ServerConnections.controlDrone(this, _id, "pause_mission");
+            ServerConnections2.controlDrone(this, id, "pause_mission");
         }
 
         public void resumeMission()
         {
-            ServerConnections.controlDrone(this, _id, "resume_mission");
+            ServerConnections2.controlDrone(this, id, "resume_mission");
         }
 
         public void landDrone()
         {
-            ServerConnections.controlDrone(this, _id, "land_drone");
+            ServerConnections2.controlDrone(this, id, "land_drone");
         }
 
         public void flyHome()
         {
-            ServerConnections.controlDrone(this, _id, "fly_home");
+            ServerConnections2.controlDrone(this, id, "fly_home");
         }
 
         public void stopMission()
         {
-            ServerConnections.controlDrone(this, _id, "stop_mission");
+            ServerConnections2.controlDrone(this, id, "stop_mission");
         }
 
         public void setSpeed(float speed)
