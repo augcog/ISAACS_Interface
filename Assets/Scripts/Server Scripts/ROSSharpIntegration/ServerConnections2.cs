@@ -18,7 +18,8 @@ namespace RosSharp.RosBridgeClient
         private List<DroneInformation> droneList = new List<DroneInformation>();
 
         public static UnityUploadMissionActionClient uploadAction;
-        //public static UnityControlDroneActionClient unityControlDroneActionClient;
+        public static UnityControlDroneActionClient unityControlDrone;
+        public static UnitySetSpeedActionClient unitySetSpeed;
 
         // Start is called before the first frame update
         void Start()
@@ -113,15 +114,12 @@ namespace RosSharp.RosBridgeClient
         public static void setSpeed(Drone_v2 drone, int ID, float speed)
         {
             Debug.Log("sent set speed service");
-            MessageTypes.IsaacsServer.SetSpeedRequest request = new MessageTypes.IsaacsServer.SetSpeedRequest((uint) ID, speed);
-            rosSocket.CallService<MessageTypes.IsaacsServer.SetSpeedRequest, MessageTypes.IsaacsServer.SetSpeedResponse>("/isaacs_server/set_speed", SetSpeedServiceCallHandler, request);
-        }
+            //MessageTypes.IsaacsServer.SetSpeedRequest request = new MessageTypes.IsaacsServer.SetSpeedRequest((uint) ID, speed);
+            //rosSocket.CallService<MessageTypes.IsaacsServer.SetSpeedRequest, MessageTypes.IsaacsServer.SetSpeedResponse>("/isaacs_server/set_speed", SetSpeedServiceCallHandler, request);
 
-        private static void SetSpeedServiceCallHandler(MessageTypes.IsaacsServer.SetSpeedResponse message)
-        {
-            Debug.Log("SetSpeed Response Gotten");
-            //TODO: What do??
-
+            // Remove comments below when ready to get rid of Send Goal in Inspector menu
+            //unitySetSpeed.RegisterGoal();
+            //unitySetSpeed.setSpeedActionClient.SendGoal();
         }
 
 
@@ -186,13 +184,12 @@ namespace RosSharp.RosBridgeClient
         public static void controlDrone(Drone_v2 drone, int ID, string command)
         {
             Debug.Log("sent control drone service");
-            /*
-             * MessageTypes.IsaacsServer.ControlDroneRequest request = new MessageTypes.IsaacsServer.ControlDroneRequest((uint) ID, command);
-             * rosSocket.CallService<MessageTypes.IsaacsServer.ControlDroneRequest, MessageTypes.IsaacsServer.ControlDroneResponse>("/isaacs_server/control_drone", ControlDroneServiceCallHandler, request);
-             */
+            //MessageTypes.IsaacsServer.ControlDroneRequest request = new MessageTypes.IsaacsServer.ControlDroneRequest((uint)ID, command);
+            //rosSocket.CallService<MessageTypes.IsaacsServer.ControlDroneRequest, MessageTypes.IsaacsServer.ControlDroneResponse>("/isaacs_server/control_drone", ControlDroneServiceCallHandler, request);
 
-            //unityControlDroneActionClient.RegisterGoal();
-            //unityControlDroneActionClient.controlDroneActionClient.SendGoal();
+            // Remove comments below when ready to get rid of Send Goal in Inspector menu
+            //unityControlDrone.RegisterGoal();
+            //unityControlDrone.controlDroneActionClient.SendGoal();
         }
     }
 }
