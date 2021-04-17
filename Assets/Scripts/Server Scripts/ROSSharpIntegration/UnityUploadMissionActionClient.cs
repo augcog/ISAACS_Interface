@@ -15,6 +15,7 @@ namespace RosSharp.RosBridgeClient.Actionlib
 
         public string actionName;
         public int id;
+        public MessageTypes.Sensor.NavSatFix[] waypoints;
         public string status = "";
         public string feedback = "";
         public string result = "";
@@ -36,11 +37,14 @@ namespace RosSharp.RosBridgeClient.Actionlib
         public void RegisterGoal(UploadMissionGoal goal)
         {
             uploadMissionActionClient.action.action_goal.goal = goal;
+
         }
 
         public void RegisterGoal()
         {
             Debug.Log("registered Goal");
+            uploadMissionActionClient.id = id;
+            uploadMissionActionClient.waypoints = waypoints;
         }
 
         public void sendGoal(UploadMissionGoal goal)

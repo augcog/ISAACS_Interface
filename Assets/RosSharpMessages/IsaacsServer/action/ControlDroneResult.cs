@@ -19,19 +19,22 @@ namespace RosSharp.RosBridgeClient.MessageTypes.IsaacsServer
         public bool success { get; set; }
         public string message { get; set; }
         public uint id { get; set; }
+        public string control_task { get; set; }
 
         public ControlDroneResult()
         {
             this.success = false;
             this.message = "";
             this.id = 0;
+            this.control_task = "";
         }
 
-        public ControlDroneResult(bool success, string message, uint id)
+        public ControlDroneResult(bool success, string message, uint id, string control_task)
         {
             this.success = success;
             this.message = message;
             this.id = id;
+            this.control_task = control_task;
         }
     }
 }

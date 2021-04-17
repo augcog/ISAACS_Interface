@@ -50,7 +50,7 @@ namespace RosSharp.RosBridgeClient.Actionlib
             bool success = action.action_result.result.success;
 
             //TODO: Check this!!
-            string command = action.action_result.result.message;
+            string command = action.action_result.result.control_task;
             Drone_v2 drone = WorldProperties.GetDroneDict()[drone_id];
 
             if (success)
