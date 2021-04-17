@@ -14,6 +14,7 @@ namespace RosSharp.RosBridgeClient.Actionlib
         public UploadMissionActionClient uploadMissionActionClient;
 
         public string actionName;
+        public int id;
         public string status = "";
         public string feedback = "";
         public string result = "";
@@ -32,9 +33,19 @@ namespace RosSharp.RosBridgeClient.Actionlib
             result = uploadMissionActionClient.GetResultString();
         }
 
-        public void sendGoal(UploadMissionGoal goal)
+        public void RegisterGoal(UploadMissionGoal goal)
         {
             uploadMissionActionClient.action.action_goal.goal = goal;
+        }
+
+        public void RegisterGoal()
+        {
+            Debug.Log("registered Goal");
+        }
+
+        public void sendGoal(UploadMissionGoal goal)
+        {
+            
             uploadMissionActionClient.SendGoal();
         }
     }

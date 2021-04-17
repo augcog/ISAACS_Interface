@@ -12,6 +12,7 @@ namespace RosSharp.RosBridgeClient.Actionlib
 
         public string actionName;
         public string command;
+        public int id;
         public string status = "";
         public string feedback = "";
         public string result = "";
@@ -33,6 +34,7 @@ namespace RosSharp.RosBridgeClient.Actionlib
         public void RegisterGoal()
         {
             controlDroneActionClient.command = command;
+            controlDroneActionClient.id = id;
         }
 
     }

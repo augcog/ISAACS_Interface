@@ -17,12 +17,14 @@ namespace RosSharp.RosBridgeClient
         //public GameObject thing;
         private List<DroneInformation> droneList = new List<DroneInformation>();
 
-        public static UnityUploadMissionActionClient uploadAction;
-        //public static UnityControlDroneActionClient unityControlDroneActionClient;
+        public static UnityUploadMissionActionClient uploadActionClient;
+        public static UnityControlDroneActionClient unityControlDroneActionClient;
 
         // Start is called before the first frame update
         void Start()
         {
+            uploadActionClient = gameObject.GetComponent<UnityUploadMissionActionClient>();
+            unityControlDroneActionClient = gameObject.GetComponent<UnityControlDroneActionClient>();
             rosSocket = new RosSocket(new RosBridgeClient.Protocols.WebSocketNetProtocol(uri));
             MessageTypes.IsaacsServer.AllDronesAvailableRequest request = new MessageTypes.IsaacsServer.AllDronesAvailableRequest();
             rosSocket.CallService<MessageTypes.IsaacsServer.AllDronesAvailableRequest, MessageTypes.IsaacsServer.AllDronesAvailableResponse>("/isaacs_server/all_drones_available", AllDronesServiceCallHandler, request);
@@ -147,38 +149,39 @@ namespace RosSharp.RosBridgeClient
             }
 
             MessageTypes.IsaacsServer.UploadMissionGoal goal = new MessageTypes.IsaacsServer.UploadMissionGoal((uint)ID, waypointsList);
-            uploadAction.sendGoal(goal);
-            
+            MessageTypes.IsaacsServer.UploadMissionActionGoal action_goal = uploadActionClient.uploadMissionActionClient.action.action_goal;
+            action_goal.goal = goal;
+            uploadActionClient.RegisterGoal();
+            uploadActionClient.uploadMissionActionClient.SendGoal(action_goal);
+
             //rosSocket.CallService<MessageTypes.IsaacsServer.UploadMissionRequest, MessageTypes.IsaacsServer.UploadMissionResponse>("/isaacs_server/upload_mission", UploadMissionServiceCallHandler, request);
         }
 
-        public static void UploadMissionServiceCallHandler(MessageTypes.IsaacsServer.UploadMissionResponse message)
-        {
-            Debug.Log("UploadMission Response Gotten");
-            int drone_id = (int) message.id;
-            bool success = message.success;
-            string meta_data = message.message;
-            if (success)
-            {
-                Drone_v2 drone = WorldProperties.GetDroneDict()[drone_id];
-                int continueFromWaypointID = drone.droneProperties.CurrentWaypointTargetID() + 1;
-                List<Waypoint> ways = drone.AllWaypoints();
-                foreach (Waypoint way in ways)
-                {
-                    Vector3 waypoint_coord = way.gameObjectPointer.transform.localPosition;
-                    float distance = Vector3.Distance(way.gameObjectPointer.transform.localPosition, waypoint_coord);
+        //public static void UploadMissionServiceCallHandler(MessageTypes.IsaacsServer.UploadMissionResponse message)
+        //{
+        //    Debug.Log("UploadMission Response Gotten");
+        //    int drone_id = (int) message.id;
+        //    bool success = message.success;
+        //    string meta_data = message.message;
+        //    if (success)
+        //    {
+        //        Drone_v2 drone = WorldProperties.GetDroneDict()[drone_id];
+        //        int continueFromWaypointID = drone.droneProperties.CurrentWaypointTargetID() + 1;
+        //        List<Waypoint> ways = drone.AllWaypoints();
+        //        foreach (Waypoint way in ways)
+        //        {
+        //            Vector3 waypoint_coord = way.gameObjectPointer.transform.localPosition;
+        //            float distance = Vector3.Distance(way.gameObjectPointer.transform.localPosition, waypoint_coord);
 
-                    if (distance < 0.2f)
-                    {
-                        way.waypointProperties.WaypointUploaded();
-                    }
-                }
-                drone.droneProperties.StartCheckingFlightProgress(continueFromWaypointID, ways.Count);
+        //            if (distance < 0.2f)
+        //            {
+        //                way.waypointProperties.WaypointUploaded();
+        //            }
+        //        }
+        //        drone.droneProperties.StartCheckingFlightProgress(continueFromWaypointID, ways.Count);
 
-            }
-        }
-
-
+        //    }
+        //}
 
 
         //CONTROL DRONE: Akhil
@@ -186,13 +189,12 @@ namespace RosSharp.RosBridgeClient
         public static void controlDrone(Drone_v2 drone, int ID, string command)
         {
             Debug.Log("sent control drone service");
-            /*
-             * MessageTypes.IsaacsServer.ControlDroneRequest request = new MessageTypes.IsaacsServer.ControlDroneRequest((uint) ID, command);
-             * rosSocket.CallService<MessageTypes.IsaacsServer.ControlDroneRequest, MessageTypes.IsaacsServer.ControlDroneResponse>("/isaacs_server/control_drone", ControlDroneServiceCallHandler, request);
-             */
-
-            //unityControlDroneActionClient.RegisterGoal();
-            //unityControlDroneActionClient.controlDroneActionClient.SendGoal();
+            //MessageTypes.IsaacsServer.ControlDroneRequest request = new MessageTypes.IsaacsServer.ControlDroneRequest((uint) ID, command);
+            //rosSocket.CallService<MessageTypes.IsaacsServer.ControlDroneRequest, MessageTypes.IsaacsServer.ControlDroneResponse>("/isaacs_server/control_drone", ControlDroneServiceCallHandler, request);
+            unityControlDroneActionClient.id = ID;
+            unityControlDroneActionClient.command = command;
+            unityControlDroneActionClient.RegisterGoal();
+            unityControlDroneActionClient.controlDroneActionClient.SendGoal();
         }
     }
 }
