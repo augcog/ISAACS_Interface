@@ -56,7 +56,7 @@ public class MeshVisualizer : MonoBehaviour
 
     void Start()
     {
-        shader = Shader.Find("Mobile/Particles/Alpha Blended");
+        shader = Shader.Find("Mobile/Particles/Standard Unlit");
         material = new Material(shader);
     }
 
