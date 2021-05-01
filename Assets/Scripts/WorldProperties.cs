@@ -64,6 +64,11 @@
         // Relative to the surface of the WGS 84 Ellipsoid
         public double MCAltitude;
 
+        // Enum for radiation data types supported
+        public enum RadiationDataType { gamma, neutron };
+        [Header("Hardcoded logic for neuton/gamma rays")]
+        public static RadiationDataType radiationDataType = RadiationDataType.gamma;
+
         private static double Lat0;
         private static double Lng0;
         private static double Alt0;

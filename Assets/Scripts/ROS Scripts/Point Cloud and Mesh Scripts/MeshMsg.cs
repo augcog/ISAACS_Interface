@@ -31,8 +31,8 @@ namespace ROSBridgeLib
                 {
                     _mesh_blocks[i] = new voxblox_msgs.MeshBlockMsg(temp[i]);
                 }
-                Debug.Log("Mesh Block Generation Total: " + DateTime.Now.Subtract(stageTime).TotalMilliseconds.ToString() + "ms");
-                Debug.Log("Mesh Block Generation Average: " + (DateTime.Now.Subtract(stageTime).TotalMilliseconds / _mesh_blocks.Length).ToString() + "ms");
+                //Debug.Log("Mesh Block Generation Total: " + DateTime.Now.Subtract(stageTime).TotalMilliseconds.ToString() + "ms");
+                //Debug.Log("Mesh Block Generation Average: " + (DateTime.Now.Subtract(stageTime).TotalMilliseconds / _mesh_blocks.Length).ToString() + "ms");
             }
 
             public static string getMessageType()
