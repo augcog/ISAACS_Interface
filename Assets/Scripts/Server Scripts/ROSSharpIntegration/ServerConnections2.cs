@@ -18,14 +18,14 @@ namespace RosSharp.RosBridgeClient
         private List<DroneInformation> droneList = new List<DroneInformation>();
 
         public static UnityUploadMissionActionClient uploadActionClient;
-        public static UnityControlDroneActionClient unityControlDroneActionClient;
-        public static UnitySetSpeedActionClient unitySetSpeedActionClient;
+        public static UnityControlDroneActionClient controlDroneActionClient;
+        public static UnitySetSpeedActionClient setSpeedActionClient;
 
         // Start is called before the first frame update
         void Start()
         {
             uploadActionClient = gameObject.GetComponent<UnityUploadMissionActionClient>();
-            unityControlDroneActionClient = gameObject.GetComponent<UnityControlDroneActionClient>();
+            controlDroneActionClient = gameObject.GetComponent<UnityControlDroneActionClient>();
             rosSocket = new RosSocket(new RosBridgeClient.Protocols.WebSocketNetProtocol(uri));
             MessageTypes.IsaacsServer.AllDronesAvailableRequest request = new MessageTypes.IsaacsServer.AllDronesAvailableRequest();
             rosSocket.CallService<MessageTypes.IsaacsServer.AllDronesAvailableRequest, MessageTypes.IsaacsServer.AllDronesAvailableResponse>("/isaacs_server/all_drones_available", AllDronesServiceCallHandler, request);
@@ -119,10 +119,10 @@ namespace RosSharp.RosBridgeClient
             //MessageTypes.IsaacsServer.SetSpeedRequest request = new MessageTypes.IsaacsServer.SetSpeedRequest((uint) ID, speed);
             //rosSocket.CallService<MessageTypes.IsaacsServer.SetSpeedRequest, MessageTypes.IsaacsServer.SetSpeedResponse>("/isaacs_server/set_speed", SetSpeedServiceCallHandler, request);
 
-            unitySetSpeedActionClient.id = ID;
-            unitySetSpeedActionClient.speed = speed;
-            unitySetSpeedActionClient.RegisterGoal();
-            unitySetSpeedActionClient.setSpeedActionClient.SendGoal();
+            setSpeedActionClient.id = ID;
+            setSpeedActionClient.speed = speed;
+            setSpeedActionClient.RegisterGoal();
+            setSpeedActionClient.setSpeedActionClient.SendGoal();
         }
 
 
@@ -194,10 +194,10 @@ namespace RosSharp.RosBridgeClient
             //MessageTypes.IsaacsServer.ControlDroneRequest request = new MessageTypes.IsaacsServer.ControlDroneRequest((uint) ID, command);
             //rosSocket.CallService<MessageTypes.IsaacsServer.ControlDroneRequest, MessageTypes.IsaacsServer.ControlDroneResponse>("/isaacs_server/control_drone", ControlDroneServiceCallHandler, request);
 
-            unityControlDroneActionClient.id = ID;
-            unityControlDroneActionClient.command = command;
-            unityControlDroneActionClient.RegisterGoal();
-            unityControlDroneActionClient.controlDroneActionClient.SendGoal();
+            controlDroneActionClient.id = ID;
+            controlDroneActionClient.command = command;
+            controlDroneActionClient.RegisterGoal();
+            controlDroneActionClient.controlDroneActionClient.SendGoal();
         }
     }
 }
