@@ -11,12 +11,13 @@ namespace RosSharp.RosBridgeClient.Actionlib
         public ControlDroneActionClient controlDroneActionClient;
 
         public string actionName;
-        public string command;
+        public string command;    // Drone mission call
         public int id;
         public string status = "";
         public string feedback = "";
         public string result = "";
 
+        // Instantiating ControlDroneActionClient using Unity editor
         private void Start()
         {
             rosConnector = GetComponent<RosConnector>();
@@ -24,6 +25,7 @@ namespace RosSharp.RosBridgeClient.Actionlib
             controlDroneActionClient.Initialize();
         }
 
+        // Update fields on the inspector
         private void Update()
         {
             status = controlDroneActionClient.GetStatusString();
@@ -31,6 +33,7 @@ namespace RosSharp.RosBridgeClient.Actionlib
             result = controlDroneActionClient.GetResultString();
         }
 
+        // Binds drone command & id from the inspector to ControlDroneActionClient object
         public void RegisterGoal()
         {
             controlDroneActionClient.command = command;

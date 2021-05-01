@@ -10,13 +10,14 @@ namespace RosSharp.RosBridgeClient.Actionlib
         private RosConnector rosConnector;
         public SetSpeedActionClient setSpeedActionClient;
 
-        public string actionName;
+        public string actionName;    // Drone speed
         public float speed;
         public int id;
         public string status = "";
         public string feedback = "";
         public string result = "";
 
+        // Instantiating SetSpeedActionClient using Unity editor
         private void Start()
         {
             rosConnector = GetComponent<RosConnector>();
@@ -24,6 +25,7 @@ namespace RosSharp.RosBridgeClient.Actionlib
             setSpeedActionClient.Initialize();
         }
 
+        // Update fields on the inspector
         private void Update()
         {
             status = setSpeedActionClient.GetStatusString();
@@ -31,6 +33,7 @@ namespace RosSharp.RosBridgeClient.Actionlib
             result = setSpeedActionClient.GetResultString();
         }
 
+        // Binds drone speed & id from the inspector to SetSpeedActionClient object
         public void RegisterGoal()
         {
             setSpeedActionClient.speed = speed;

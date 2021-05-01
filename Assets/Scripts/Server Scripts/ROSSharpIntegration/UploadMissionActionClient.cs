@@ -8,14 +8,21 @@ using System;
 namespace RosSharp.RosBridgeClient.Actionlib
 {
 
-    public class UploadMissionActionClient : ActionClient<MessageTypes.IsaacsServer.UploadMissionAction, MessageTypes.IsaacsServer.UploadMissionActionGoal, MessageTypes.IsaacsServer.UploadMissionActionResult, MessageTypes.IsaacsServer.UploadMissionActionFeedback, MessageTypes.IsaacsServer.UploadMissionGoal, MessageTypes.IsaacsServer.UploadMissionResult, MessageTypes.IsaacsServer.UploadMissionFeedback>
+    public class UploadMissionActionClient : ActionClient<MessageTypes.IsaacsServer.UploadMissionAction,
+                                                          MessageTypes.IsaacsServer.UploadMissionActionGoal,
+                                                          MessageTypes.IsaacsServer.UploadMissionActionResult,
+                                                          MessageTypes.IsaacsServer.UploadMissionActionFeedback,
+                                                          MessageTypes.IsaacsServer.UploadMissionGoal,
+                                                          MessageTypes.IsaacsServer.UploadMissionResult,
+                                                          MessageTypes.IsaacsServer.UploadMissionFeedback>
     {
-        public NavSatFix[] waypoints;
+        public NavSatFix[] waypoints;    // Drone waypoints
         public string status = "";
         public string feedback = "";
         public string result = "";
         public int id;
 
+        // Initializes the UploadMission action, status & rosSocket
         public UploadMissionActionClient(string actionName, RosSocket rosSocket)
         {
             this.actionName = actionName;
@@ -31,7 +38,7 @@ namespace RosSharp.RosBridgeClient.Actionlib
             return action.action_goal;
         }
 
-
+        // Sends UploadMissionActionGoal using calls to ActionClient
         public void SendGoal(MessageTypes.IsaacsServer.UploadMissionActionGoal goal)
         {
             action.action_goal = goal;
@@ -53,6 +60,7 @@ namespace RosSharp.RosBridgeClient.Actionlib
             Debug.Log("Feedback Received");
         }
 
+        // Attaches waypoints upon receiving result from the action server
         protected override void OnResultReceived()
         {
             Debug.Log("UploadMission Result Received");

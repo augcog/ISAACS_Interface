@@ -15,11 +15,12 @@ namespace RosSharp.RosBridgeClient.Actionlib
 
         public string actionName;
         public int id;
-        public MessageTypes.Sensor.NavSatFix[] waypoints;
+        public MessageTypes.Sensor.NavSatFix[] waypoints;    // Drone waypoints
         public string status = "";
         public string feedback = "";
         public string result = "";
 
+        // Instantiating UploadMissionActionClient using Unity editor
         private void Start()
         {
             rosConnector = GetComponent<RosConnector>();
@@ -27,6 +28,7 @@ namespace RosSharp.RosBridgeClient.Actionlib
             uploadMissionActionClient.Initialize();
         }
 
+        // Update fields on the inspector
         private void Update()
         {
             status = uploadMissionActionClient.GetStatusString();
@@ -40,6 +42,7 @@ namespace RosSharp.RosBridgeClient.Actionlib
 
         }
 
+        // Binds drone waypoints & id from the inspector to UploadMissionActionClient object
         public void RegisterGoal()
         {
             Debug.Log("registered Goal");

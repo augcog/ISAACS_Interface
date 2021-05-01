@@ -16,12 +16,13 @@ namespace RosSharp.RosBridgeClient.Actionlib
                                                          MessageTypes.IsaacsServer.ControlDroneResult,
                                                          MessageTypes.IsaacsServer.ControlDroneFeedback>
     {
-        public string command;
+        public string command;    // Drone mission call
         public int id;
         public string status = "";
         public string feedback = "";
         public string result = "";
 
+        // Initializes the ControlDrone action, status & rosSocket
         public ControlDroneActionClient(string actionName, RosSocket rosSocket)
         {
             this.actionName = actionName;
@@ -42,6 +43,7 @@ namespace RosSharp.RosBridgeClient.Actionlib
             throw new System.NotImplementedException();
         }
 
+        // Runs drone mission upon receiving result from the action server
         protected override void OnResultReceived()
         {
             Debug.Log("ControlDrone Result Received");

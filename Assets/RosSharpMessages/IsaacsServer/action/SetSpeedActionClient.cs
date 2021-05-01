@@ -16,12 +16,13 @@ namespace RosSharp.RosBridgeClient.Actionlib
                                                      MessageTypes.IsaacsServer.SetSpeedResult,
                                                      MessageTypes.IsaacsServer.SetSpeedFeedback>
     {
-        public float speed;
+        public float speed;    // Drone speed
         public int id;
         public string status = "";
         public string feedback = "";
         public string result = "";
 
+        // Initializes the SetSpeed action, status & rosSocket
         public SetSpeedActionClient(string actionName, RosSocket rosSocket)
         {
             this.actionName = actionName;
