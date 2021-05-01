@@ -17,7 +17,9 @@ namespace RosSharp.RosBridgeClient.Actionlib
         public string feedback = "";
         public string result = "";
 
-        // Instantiating ControlDroneActionClient using Unity editor
+        /// <summary>
+        /// Instantiating ControlDroneActionClient using Unity editor
+        /// </summary>
         private void Start()
         {
             rosConnector = GetComponent<RosConnector>();
@@ -25,7 +27,9 @@ namespace RosSharp.RosBridgeClient.Actionlib
             controlDroneActionClient.Initialize();
         }
 
-        // Update fields on the inspector
+        /// <summary>
+        /// Update fields on the inspector through ControlDroneActionClient getter calls
+        /// </summary>
         private void Update()
         {
             status = controlDroneActionClient.GetStatusString();
@@ -33,7 +37,9 @@ namespace RosSharp.RosBridgeClient.Actionlib
             result = controlDroneActionClient.GetResultString();
         }
 
-        // Binds drone command & id from the inspector to ControlDroneActionClient object
+        /// <summary>
+        /// Binds drone command & id from the inspector to ControlDroneActionClient object
+        /// </summary>
         public void RegisterGoal()
         {
             controlDroneActionClient.command = command;

@@ -1,27 +1,55 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
 using ISAACS;
-using System;
-using System.Threading;
 using RosSharp.RosBridgeClient.Actionlib;
 
 namespace RosSharp.RosBridgeClient
 {
+    ///<author> Jasmine, Akhil</author>
+    
+    /// <summary>
+    /// Class for any interactions with the server, component of World GameObject
+    /// Unity Inspector: requires URI (IP address/port) and action clients as components
+    /// </summary>
     public class ServerConnections2 : MonoBehaviour
     {
-
+        //Unity Inspector variables
         public string uri = "";
         public static RosSocket rosSocket;
-        //public GameObject thing;
-        private List<DroneInformation> droneList = new List<DroneInformation>();
-
         public static UnityUploadMissionActionClient uploadActionClient;
         public static UnityControlDroneActionClient controlDroneActionClient;
         public static UnitySetSpeedActionClient setSpeedActionClient;
 
-        // Start is called before the first frame update
+
+        /// <summary>
+        /// List that is updated every time a drone is added, should remain empty after update
+        ///     function sets up the drone, its menu, its subscribers, etc.
+        /// </summary>
+        private List<DroneInformation> droneList = new List<DroneInformation>();
+
+        /// <summary>
+        /// Class to simplify drone state variables for the droneList
+        /// </summary>
+        public class DroneInformation
+        {
+
+            public string drone_name;
+            public int id;
+            public List<string> subscribers;
+
+
+            public DroneInformation(string _name, int _id, List<string> _subscribers)
+            {
+                drone_name = _name;
+                id = _id;
+                subscribers = _subscribers;
+            }
+        }
+
+        /// <summary>
+        /// Retrieves action clients attached to the gameObject, starts rosWebSocket connection with server
+        /// Calls: All Drones Available service
+        /// </summary>
         void Start()
         {
             uploadActionClient = gameObject.GetComponent<UnityUploadMissionActionClient>();
@@ -31,10 +59,14 @@ namespace RosSharp.RosBridgeClient
             rosSocket.CallService<MessageTypes.IsaacsServer.AllDronesAvailableRequest, MessageTypes.IsaacsServer.AllDronesAvailableResponse>("/isaacs_server/all_drones_available", AllDronesServiceCallHandler, request);
         }
 
-        // Update is called once per frame
+        /// <summary>
+        /// Once droneList is updated (once a drone is recieved), creates Drone_v2 with its properties, name, id, and subscribers
+        ///     as well as its UI menu
+        /// Subscribes to: Global Position  (Mavros only) - that keeps track of the position of the drone
+        /// </summary>
         void Update()
         {
-            //Some reasoning for the madness here: this is the only way we could get this to work, might be thread issue
+            //Some reasoning for the madness here: this is the only way we could get this to work due to a thread issue
             while (droneList.Count > 0)
             {
                 string drone_name = droneList[0].drone_name;
@@ -43,6 +75,8 @@ namespace RosSharp.RosBridgeClient
                 //Debug.Log(WorldProperties.worldObject);
                 Drone_v2 droneInstance = new Drone_v2(WorldProperties.worldObject.transform.position, drone_id);
                 Debug.Log("Drone Created: " + droneInstance.gameObjectPointer.name);
+
+
 
                 DroneProperties droneProperties = droneInstance.droneProperties;
                 GameObject droneGameObject = droneInstance.gameObjectPointer;
@@ -60,35 +94,23 @@ namespace RosSharp.RosBridgeClient
                 DroneSimulationManager droneSim = droneGameObject.GetComponent<DroneSimulationManager>();
                 droneSim.InitDroneSim();
                 droneProperties.droneSimulationManager = droneSim;
+
+                string subscription_id = rosSocket.Subscribe<MessageTypes.Sensor.NavSatFix>("/drone_" + drone_id + "/mavros/global_position/global", droneInstance.subscriptionHandler);
+
+                //after adding the drone, remove it from the list
                 droneList.RemoveAt(0);
             }
 
         }
 
-        public class DroneInformation
-        {
 
-            public string drone_name;
-            public int id;
-            public List<string> subscribers;
 
-            //public List<DroneSubscribers> droneSubscribers;
-            //public bool simFlight;
-            //public List<SensorInformation> attachedSensors;
-
-            public DroneInformation(string _name, int _id, List<string> _subscribers)
-            {
-                drone_name = _name;
-                id = _id;
-                subscribers = _subscribers;
-            }
-        }
-
-            //Handler
+        /// <summary>
+        /// Handler once an alldronesavailable response is recieved
+        /// </summary>
         public void AllDronesServiceCallHandler(MessageTypes.IsaacsServer.AllDronesAvailableResponse message)
         {
             Debug.Log("AllDronesAvailableResponse Gotten");
-            //Debug.Log(response);
 
             if (message.success)
             {
@@ -99,37 +121,34 @@ namespace RosSharp.RosBridgeClient
 
                     MessageTypes.IsaacsServer.TopicTypes[] lste = drone1.topics;
                     List<string> droneSubscribers = new List<string>();
-                    //TODO: Is the topic types + their names the list of drone subscribers???
+                    //TODO: Check if the topic types + their names are the list of drone subscribers
                     foreach (MessageTypes.IsaacsServer.TopicTypes x in lste)
                     {
                         droneSubscribers.Add(x.name);
                     }
-
                     DroneInformation droneInfo = new DroneInformation(drone1.name, (int)drone1.id, droneSubscribers);
                     droneList.Add(droneInfo);
                 }
             }
         }
 
-        //SET SPEED
-        //TODO: Change to ACTION
+        /// <summary>
+        /// Prepares the action calls to change drone speed
+        /// Calls: Registers set speed action goal, sends goal
+        /// </summary>
         public static void setSpeed(Drone_v2 drone, int ID, float speed)
         {
-            Debug.Log("sent set speed service");
-            //MessageTypes.IsaacsServer.SetSpeedRequest request = new MessageTypes.IsaacsServer.SetSpeedRequest((uint) ID, speed);
-            //rosSocket.CallService<MessageTypes.IsaacsServer.SetSpeedRequest, MessageTypes.IsaacsServer.SetSpeedResponse>("/isaacs_server/set_speed", SetSpeedServiceCallHandler, request);
-
+            Debug.Log("sent set speed action");
             setSpeedActionClient.id = ID;
             setSpeedActionClient.speed = speed;
             setSpeedActionClient.RegisterGoal();
             setSpeedActionClient.setSpeedActionClient.SendGoal();
         }
 
-
-
-
-        //UPLOAD MISSION: Jasmine
-
+        /// <summary>
+        /// Prepares the action calls to update and upload a waypoint mission
+        /// Calls: Registers list of natsavfix messages (waypoint gps coords) and sends goal
+        /// </summary>
         public static void uploadMission(Drone_v2 drone, int ID, List<Waypoint> waypoints)
         {
             Debug.Log("sent current mission for drone " + ID);
@@ -147,22 +166,18 @@ namespace RosSharp.RosBridgeClient
                 count++;
             }
 
-            //MessageTypes.IsaacsServer.UploadMissionGoal goal = new MessageTypes.IsaacsServer.UploadMissionGoal((uint)ID, waypointsList);
-            //MessageTypes.IsaacsServer.UploadMissionActionGoal action_goal = uploadActionClient.uploadMissionActionClient.action.action_goal;
-            //action_goal.goal = goal;
             uploadActionClient.id = ID;
             uploadActionClient.waypoints = waypointsList;
             uploadActionClient.RegisterGoal();
             uploadActionClient.uploadMissionActionClient.SendGoal();
-            //uploadActionClient.uploadMissionActionClient.SendGoal(action_goal);
-
-            //rosSocket.CallService<MessageTypes.IsaacsServer.UploadMissionRequest, MessageTypes.IsaacsServer.UploadMissionResponse>("/isaacs_server/upload_mission", UploadMissionServiceCallHandler, request);
         }
+
+        //TODO: Update this so it handles response from the ACTION, not the previous service call
 
         //public static void UploadMissionServiceCallHandler(MessageTypes.IsaacsServer.UploadMissionResponse message)
         //{
         //    Debug.Log("UploadMission Response Gotten");
-        //    int drone_id = (int) message.id;
+        //    int drone_id = (int)message.id;
         //    bool success = message.success;
         //    string meta_data = message.message;
         //    if (success)
@@ -186,14 +201,13 @@ namespace RosSharp.RosBridgeClient
         //}
 
 
-        //CONTROL DRONE: Akhil
-
+        /// <summary>
+        /// Prepares the action calls to start/stop/pause/resume mission + fly home + land drone
+        /// Calls: Registers control_drone action goal, sends goal
+        /// </summary>
         public static void controlDrone(Drone_v2 drone, int ID, string command)
         {
             Debug.Log("sent control drone service");
-            //MessageTypes.IsaacsServer.ControlDroneRequest request = new MessageTypes.IsaacsServer.ControlDroneRequest((uint) ID, command);
-            //rosSocket.CallService<MessageTypes.IsaacsServer.ControlDroneRequest, MessageTypes.IsaacsServer.ControlDroneResponse>("/isaacs_server/control_drone", ControlDroneServiceCallHandler, request);
-
             controlDroneActionClient.id = ID;
             controlDroneActionClient.command = command;
             controlDroneActionClient.RegisterGoal();

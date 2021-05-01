@@ -20,7 +20,9 @@ namespace RosSharp.RosBridgeClient.Actionlib
         public string feedback = "";
         public string result = "";
 
-        // Instantiating UploadMissionActionClient using Unity editor
+        /// <summary>
+        /// Instantiating UploadMissionActionClient using Unity editor
+        /// </summary>
         private void Start()
         {
             rosConnector = GetComponent<RosConnector>();
@@ -28,7 +30,9 @@ namespace RosSharp.RosBridgeClient.Actionlib
             uploadMissionActionClient.Initialize();
         }
 
-        // Update fields on the inspector
+        /// <summary>
+        /// Update fields on the inspector through UploadMissionActionClient getter calls
+        /// </summary>
         private void Update()
         {
             status = uploadMissionActionClient.GetStatusString();
@@ -42,7 +46,9 @@ namespace RosSharp.RosBridgeClient.Actionlib
 
         }
 
-        // Binds drone waypoints & id from the inspector to UploadMissionActionClient object
+        /// <summary>
+        /// Binds drone waypoints & id from the inspector to UploadMissionActionClient object
+        /// </summary>
         public void RegisterGoal()
         {
             Debug.Log("registered Goal");
@@ -50,6 +56,9 @@ namespace RosSharp.RosBridgeClient.Actionlib
             uploadMissionActionClient.waypoints = waypoints;
         }
 
+        /// <summary>
+        /// Sends goal through call from UploadMissionActionClient
+        /// </summary>
         public void sendGoal(UploadMissionGoal goal)
         {
             

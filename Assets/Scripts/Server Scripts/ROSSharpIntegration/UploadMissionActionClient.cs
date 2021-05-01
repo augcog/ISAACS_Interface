@@ -22,7 +22,9 @@ namespace RosSharp.RosBridgeClient.Actionlib
         public string result = "";
         public int id;
 
-        // Initializes the UploadMission action, status & rosSocket
+        /// <summary>
+        /// Initializes the UploadMission action, status & rosSocket
+        /// </summary>
         public UploadMissionActionClient(string actionName, RosSocket rosSocket)
         {
             this.actionName = actionName;
@@ -31,6 +33,9 @@ namespace RosSharp.RosBridgeClient.Actionlib
             goalStatus = new MessageTypes.Actionlib.GoalStatus();
         }
 
+        /// <summary>
+        /// Sets and gets uploadMission's actionGoal
+        /// </summary>
         protected override MessageTypes.IsaacsServer.UploadMissionActionGoal GetActionGoal()
         {
             action.action_goal.goal.id = (uint)id;
@@ -38,7 +43,9 @@ namespace RosSharp.RosBridgeClient.Actionlib
             return action.action_goal;
         }
 
-        // Sends UploadMissionActionGoal using calls to ActionClient
+        /// <summary>
+        /// Sends UploadMissionActionGoal using calls to ActionClient
+        /// </summary>
         public void SendGoal(MessageTypes.IsaacsServer.UploadMissionActionGoal goal)
         {
             action.action_goal = goal;
@@ -60,7 +67,9 @@ namespace RosSharp.RosBridgeClient.Actionlib
             Debug.Log("Feedback Received");
         }
 
-        // Attaches waypoints upon receiving result from the action server
+        /// <summary>
+        /// Attaches waypoints upon receiving result from the action server
+        /// </summary>
         protected override void OnResultReceived()
         {
             Debug.Log("UploadMission Result Received");
@@ -89,6 +98,9 @@ namespace RosSharp.RosBridgeClient.Actionlib
             }
         }
 
+        /// <summary>
+        /// Gets status
+        /// </summary>
         public string GetStatusString()
         {
             if (goalStatus != null)
@@ -98,6 +110,9 @@ namespace RosSharp.RosBridgeClient.Actionlib
             return "";
         }
 
+        /// <summary>
+        /// Gets feedback (not implemented for this application)
+        /// </summary>
         public string GetFeedbackString()
         {
             if (action != null)
@@ -105,6 +120,9 @@ namespace RosSharp.RosBridgeClient.Actionlib
             return "";
         }
 
+        /// <summary>
+        /// Gets result
+        /// </summary>
         public string GetResultString()
         {
             if (action != null)

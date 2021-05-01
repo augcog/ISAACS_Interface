@@ -17,7 +17,9 @@ namespace RosSharp.RosBridgeClient.Actionlib
         public string feedback = "";
         public string result = "";
 
-        // Instantiating SetSpeedActionClient using Unity editor
+        /// <summary>
+        /// Instantiating SetSpeedActionClient using Unity editor
+        /// </summary>
         private void Start()
         {
             rosConnector = GetComponent<RosConnector>();
@@ -25,15 +27,19 @@ namespace RosSharp.RosBridgeClient.Actionlib
             setSpeedActionClient.Initialize();
         }
 
-        // Update fields on the inspector
+        /// <summary>
+        /// Update fields on the inspector through SetSpeedActionClient getter calls
+        /// </summary>
         private void Update()
         {
             status = setSpeedActionClient.GetStatusString();
             feedback = setSpeedActionClient.GetFeedbackString();
             result = setSpeedActionClient.GetResultString();
         }
-
-        // Binds drone speed & id from the inspector to SetSpeedActionClient object
+        
+        /// <summary>
+        /// Binds drone speed & id from the inspector to SetSpeedActionClient object
+        /// </summary>
         public void RegisterGoal()
         {
             setSpeedActionClient.speed = speed;
