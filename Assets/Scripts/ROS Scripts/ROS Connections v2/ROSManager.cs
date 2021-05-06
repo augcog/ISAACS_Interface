@@ -33,7 +33,7 @@ public class ROSManager : MonoBehaviour
     /// </summary>
     public enum SensorSubscribers
     {
-        surface_pointcloud, mesh, mesh2,
+        surface_pointcloud, mesh, mesh2, zed_marker_transform,
         colorized_points_0, colorized_points_1, colorized_points_2, colorized_points_3, colorized_points_4, colorized_points_5,
         colorized_points_faced_0, colorized_points_faced_1, colorized_points_faced_2, colorized_points_faced_3, colorized_points_faced_4, colorized_points_faced_5, fpv_camera_images
     };
@@ -72,8 +72,6 @@ public class ROSManager : MonoBehaviour
     public enum VideoPlayers { None, LeftVideo, RightVideo, BackVideo, FrontVideo };
 
     public List<ROSDroneConnectionInput> DronesList;
-    //public List<ROSSensorConnectionInput> SensorsList;
-
     private Dictionary<int, ROSDroneConnectionInterface> ROSDroneConnections = new Dictionary<int, ROSDroneConnectionInterface>();
     private Dictionary<int, ROSSensorConnectionInterface> ROSSensorConnections = new Dictionary<int, ROSSensorConnectionInterface>();
 
@@ -82,6 +80,7 @@ public class ROSManager : MonoBehaviour
 
     /// <summary>
     /// Initialize all drones and sensors
+    /// Reads from DroneList as it was populated in the Unity Inspector for GameObject World -> ROS Manager Script
     /// </summary>
     void Start()
     {
@@ -161,19 +160,19 @@ public class ROSManager : MonoBehaviour
                 return;
         }
 
-        // Create attached sensors
+        // Create sensors attached to this drone
         foreach (ROSSensorConnectionInput rosSensorInput in rosDroneConnectionInput.attachedSensors)
         {
             ROSSensorConnectionInterface sensor = InstantiateSensor(rosSensorInput);
             droneInstance.AddSensor(sensor);
         }
 
-        // Initilize drone sim manager script on the drone
+        // Initialize drone sim manager script on the drone
         DroneSimulationManager droneSim = droneGameObject.GetComponent<DroneSimulationManager>();
         droneSim.InitDroneSim();
         droneProperties.droneSimulationManager = droneSim;
  
-        // Get DroneMenu and instansiate.
+        // Get DroneMenu and instantiate.
         DroneMenu droneMenu = droneGameObject.GetComponent<DroneMenu>();
         droneMenu.InitDroneMenu(rosDroneConnection, droneSubscribers);
         droneGameObject.GetComponent<DroneProperties>().droneMenu = droneMenu;
@@ -199,7 +198,26 @@ public class ROSManager : MonoBehaviour
         }
 
         GameObject sensor = new GameObject(rosSensorConnectionInput.sensorName);
-        sensor.transform.parent = this.transform;
+       // GameObject aruco_marker = null;
+
+        // set parent of sensor gameobject
+        // if zed camera, set parent to be aruco_marker so that mesh will be aligned to it.
+        // We use an aruco marker at a known GPS location to align the mesh and the map in unity
+        if (sensorType == SensorType.Zed)
+        {
+            GameObject aruco_marker = new GameObject("aruco_marker");
+            aruco_marker.transform.parent = this.transform;
+            sensor.transform.parent = aruco_marker.transform;
+        }
+        else
+        {
+            sensor.transform.parent = this.transform; // make sensor child of World
+        }
+
+        
+
+        
+
         //sensor.transform.localPosition = new Vector3(7.33f, 3.387f, 15.27f);
         //sensor.transform.localRotation = Quaternion.Euler(new Vector3(-5.811f,-208.85f,1.375f));
         //sensor.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
@@ -268,8 +286,6 @@ public class ROSManager : MonoBehaviour
 
             case SensorType.Zed:
                 Debug.Log("Zed Sensor created");
-                sensorSubscribers.Clear();
-                sensorSubscribers.Add("mesh2");
                 MeshSensor_ROSSensorConnection zedSensor_rosSensorConnection = sensor.AddComponent<MeshSensor_ROSSensorConnection>();
                 zedSensor_rosSensorConnection.InitilizeSensor(uniqueID, sensorIP, sensorPort, sensorSubscribers);
                 ROSSensorConnections.Add(uniqueID, zedSensor_rosSensorConnection);

@@ -93,6 +93,9 @@ public class MeshSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
                 case "mesh2":
                     subscriberTopic = "/voxblox_node/" + subscriber;
                     break;
+                case "zed_marker_transform":
+                    subscriberTopic = "/zed2marker_transform";
+                    break;
                 default:
                     Debug.Log("Subscriber not defined: " + subscriber);
                     break;
@@ -105,7 +108,7 @@ public class MeshSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
         Debug.Log("Mesh Connection Established");
         ros.Connect();
 
-        // Initilize visualizer
+        // Initialize visualizer
         visualizer = this.gameObject.AddComponent<MeshVisualizer>();
         visualizer.CreateMeshVisualizer();
         
@@ -196,12 +199,27 @@ public class MeshSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
         switch (topic)
         {
             case "/voxblox_node/mesh":
+                Debug.Log("received mesh message!");
+
                 // Add raw_msg to the jsonMsgs to be parsed on the thread
                 jsonMsgs.Enqueue(raw_msg);
                 break;
             case "/voxblox_node/mesh2":
                 // Add raw_msg to the jsonMsgs to be parsed on the thread
                 jsonMsgs.Enqueue(raw_msg);
+                break;
+            case "/zed2marker_transform":
+                Debug.Log("received zed2marker_transform message!");
+                // set ZED's mesh transform to zed-->aruco marker transform
+                TransformMsg zed2marker = (parsed == null) ? new TransformMsg(raw_msg) : (TransformMsg)parsed;
+                Vector3Msg translation = zed2marker.GetTranslation();
+                QuaternionMsg rotation = zed2marker.GetRotation();
+                
+                // set ZED2 sensor's position and rotation relative to aruco_marker
+
+                this.transform.localPosition = new Vector3((float)translation.GetX(), (float)translation.GetY(), (float)translation.GetZ());
+                this.transform.localRotation = new Quaternion(rotation.GetX(), rotation.GetZ(), rotation.GetY(), rotation.GetW());
+                this.transform.localScale = new Vector3(1f, 1f, 1f);
                 break;
             default:
                 Debug.LogError("Topic not implemented: " + topic);
@@ -212,8 +230,18 @@ public class MeshSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
 
     public string GetMessageType(string topic)
     {
-        Debug.Log("Mesh message type is returned as voxblox_msgs/Mesh by default");
-        return "voxblox_msgs/Mesh";
+        switch (topic)
+        {
+            case "/zed2marker_transform":
+                return "geometry_msgs/Transform";
+            case "/voxblox_node/mesh":
+            case "/voxblox_node/mesh2":
+                return "voxblox_msgs/Mesh";
+            default:
+                Debug.Log("Type of unknown message requested. Unknown: " + topic);
+                return null;
+
+        }        
     }
 
     public void DisconnectROSConnection()

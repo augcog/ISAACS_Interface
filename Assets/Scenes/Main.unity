@@ -702,23 +702,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DronesList:
   - droneName: Perry Pepe the Platipus
-    url: ws://192.168.1.118
+    url: ws://192.168.1.134
     port: 9090
     droneType: 1
     droneSubscribers: 060000000100000000000000
     simFlight: 0
     attachedSensors:
     - sensorName: ZED A
-      url: ws://192.168.1.118
+      url: ws://192.168.1.134
       port: 9090
-      sensorType: 1
+      sensorType: 5
       sensorSubscribers: 01000000
       videoPlayers: 0
     - sensorName: ZED B
-      url: ws://192.168.1.118
+      url: ws://192.168.1.134
       port: 9090
-      sensorType: 1
-      sensorSubscribers: 01000000
+      sensorType: 5
+      sensorSubscribers: 0200000003000000
       videoPlayers: 0
   success: 0
   uniqueID: 0
