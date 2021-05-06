@@ -653,6 +653,7 @@ MonoBehaviour:
   uploadTestMission: p
   missionInfo: a
   executeUploadedMission: s
+  takeoffMission: 6
   viewSafeWaypointMission: d
   uploadUserMission: f
   pauseMission: g
@@ -681,8 +682,8 @@ MonoBehaviour:
     type: 2}
   sensorManagerBaseObject: {fileID: 130481553}
   MeshLatitude: 37.915209
-  MeshLongitude: -122.33797
-  MeshAltitude: 20
+  MeshLongitude: -122.338
+  MeshAltitude: 19
   MeshRotation: {x: 0, y: 270, z: 0}
   MeshScale: {x: 39, y: 39, z: 39}
   MeshEarthPrefab: {fileID: 1460938711}
@@ -702,20 +703,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DronesList:
   - droneName: Perry Pepe the Platipus
-    url: ws://10.42.0.1
+    url: ws://192.168.1.101
     port: 9090
     droneType: 1
     droneSubscribers: 000000000600000000000000
     simFlight: 0
     attachedSensors:
     - sensorName: LIDAR
-      url: ws://10.42.0.1
+      url: ws://192.168.1.101
       port: 9090
       sensorType: 1
       sensorSubscribers: 01000000
       videoPlayers: 0
     - sensorName: LabrLAMP
-      url: ws://10.42.0.1
+      url: ws://192.168.1.101
       port: 9090
       sensorType: 3
       sensorSubscribers: 08000000090000000a0000000b0000000c0000000d000000

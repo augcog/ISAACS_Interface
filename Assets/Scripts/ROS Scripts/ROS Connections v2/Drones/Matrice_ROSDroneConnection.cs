@@ -14,6 +14,11 @@ using ISAACS;
 
 public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROSDroneConnectionInterface
 {
+
+    public void takeoffMission()
+    {
+        SendWaypointAction(WaypointMissionAction.START);
+    }
     /// <para>
     /// Drone state variables and helper enums
     /// </para>    
@@ -1156,6 +1161,12 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
         Debug.LogFormat("ROS Call: {0} {1}  Arguments: {2}", client_id, service_name, task);
         ros.CallService(HandleUploadWaypointsTaskResponse, service_name, string.Format("{0} {1}", client_id, service_name), args: string.Format("[{0}]", task.ToYAMLString()));
     }
+
+    IEnumerator Coroutine()
+    {
+        yield return new WaitForSeconds(30);
+    }
+
     /// <summary>
     /// Parse waypoint mission taks upload response
     /// </summary>
@@ -1169,7 +1180,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
         if (response["result"].AsBool == true)
         {
             Debug.Log("Mission successfully uploaded");
-
+           
             FetchCurrentWaypointMission();
 
         }
@@ -1222,9 +1233,10 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
 
         // Inform the Drone.cs that the following waypoints have been successfully uploaded.
         droneProperties.droneClassPointer.WaypointsUploaded(waypoint_task.GetMissionWaypoints());
-
-        Debug.Log("starting mission");
-        SendWaypointAction(WaypointMissionAction.START);
+        
+        Debug.Log("Wait over. Taking off at: " + Time.time);
+        
+       // SendWaypointAction(WaypointMissionAction.START);
     }
 
     /// <summary>

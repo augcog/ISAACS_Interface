@@ -43,6 +43,7 @@ public class M210_Flight_TestManager : MonoBehaviour
     public string uploadTestMission = "p";
     public string missionInfo = "a";
     public string executeUploadedMission = "s";
+    public string takeoffMission = "6";
 
     [Header("Safe Mission Test (User Set)")]
     public string viewSafeWaypointMission = "d";
@@ -263,6 +264,11 @@ public class M210_Flight_TestManager : MonoBehaviour
         if (Input.GetKeyDown(selectNeutron))
         {
             WorldProperties.radiationDataType = WorldProperties.RadiationDataType.neutron;
+        }
+
+        if (Input.GetKeyDown(takeoffMission))
+        {
+            rosDroneConnection.takeoffMission();
         }
 
     }
