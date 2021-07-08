@@ -35,6 +35,7 @@ public class DroneMenu : MonoBehaviour {
     private Dictionary<Text, string> infoTextsDict; // Holds all Text boxes and their topic names
     private bool initialized;
     private Transform headsetTransform;
+    private bool connection_status;
 
     /// <summary>
     /// Creates text box for each subscriber and properly displays them above the drone.
@@ -118,6 +119,9 @@ public class DroneMenu : MonoBehaviour {
                 // canvas LookAt code is funky. Credit: https://answers.unity.com/questions/132592/lookat-in-opposite-direction.html
                 menuCanvas.transform.LookAt(2 * menuCanvas.transform.position - targetPosition);
             }
+
+            connection_status = connection.CheckConnectionStatus();
+            //TODO: change drone info UI to indicate connection status!
         }
     }
 

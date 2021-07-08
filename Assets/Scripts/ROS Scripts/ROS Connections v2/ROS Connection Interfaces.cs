@@ -118,8 +118,15 @@ public interface ROSDroneConnectionInterface
     /// </summary>
     void DisconnectROSConnection();
 
+    /// <summary>
+    /// Checks whether new GPS messages are bring receivied i.e. connection status is good
+    /// </summary>
+    bool CheckConnectionStatus();
+
     // Optional in the future
     // void DoTask()
+
+
 
 }
 
