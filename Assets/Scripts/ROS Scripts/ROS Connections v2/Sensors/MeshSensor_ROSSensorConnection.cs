@@ -218,7 +218,7 @@ public class MeshSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
                 // set ZED2 sensor's position and rotation relative to aruco_marker
 
                 this.transform.localPosition = new Vector3((float)translation.GetX(), (float)translation.GetY(), (float)translation.GetZ());
-                this.transform.localRotation = new Quaternion(rotation.GetX(), rotation.GetZ(), rotation.GetY(), rotation.GetW());
+                this.transform.localRotation = new Quaternion(rotation.GetX(), rotation.GetY(), rotation.GetZ(), rotation.GetW());
                 this.transform.localScale = new Vector3(1f, 1f, 1f);
                 break;
             default:

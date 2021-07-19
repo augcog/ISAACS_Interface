@@ -40,13 +40,16 @@ public class M210_Flight_TestManager : MonoBehaviour
     public string landDrone = "o";
 
     [Header("Safe Mission Test (Hardcoded)")]
+    public string viewSafeWaypointMission = "d";
     public string uploadTestMission = "p";
     public string missionInfo = "a";
-    public string executeUploadedMission = "s";
+    
+    [Header("RFS B100 Mapping Test (Hardcoded)")]
+    public string uploadRFS_B100MappingMission = "m";
 
     [Header("Safe Mission Test (User Set)")]
-    public string viewSafeWaypointMission = "d";
     public string uploadUserMission = "f";
+    public string executeUploadedMission = "s";
 
     [Header("Pause/Resume Mission Tests")]
     public string pauseMission = "g";
@@ -75,6 +78,20 @@ public class M210_Flight_TestManager : MonoBehaviour
     public void UpdateDrone(ROSDroneConnectionInterface new_ROSDroneConnection)
     {
         rosDroneConnection = (Matrice_ROSDroneConnection)new_ROSDroneConnection;
+    }
+
+    public void ViewHardcodedWaypoints(MissionWaypointTaskMsg taskMsg)
+    {
+        int wpNum = 1;
+        foreach (MissionWaypointMsg wp in taskMsg.GetMissionWaypoints()){
+
+            GameObject waypoint = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            waypoint.name = "Waypoint " + wpNum;
+            waypoint.transform.parent = this.transform;
+            waypoint.transform.localPosition = WorldProperties.GPSCoordToUnityCoord(new GPSCoordinate(wp.GetLatitude(), wp.GetLongitude(), wp.GetAltitude()));
+            waypoint.transform.localScale = Vector3.one * (0.2f);
+            wpNum++;
+        }
     }
 
     // Update is called once per frame
@@ -159,14 +176,64 @@ public class M210_Flight_TestManager : MonoBehaviour
             MissionWaypointMsg test_waypoint_1 = new MissionWaypointMsg(37.915701652f, -122.337967237f, 20.0f, 3.0f, 0, 0, MissionWaypointMsg.TurnMode.CLOCKWISE, 0, 30, new MissionWaypointActionMsg(0, command_list, command_params));
             MissionWaypointMsg test_waypoint_2 = new MissionWaypointMsg(37.915585270f, -122.338122805f, 20.0f, 3.0f, 0, 0, MissionWaypointMsg.TurnMode.CLOCKWISE, 0, 30, new MissionWaypointActionMsg(0, command_list, command_params));
             MissionWaypointMsg test_waypoint_3 = new MissionWaypointMsg(37.915457249f, -122.338015517f, 20.0f, 3.0f, 0, 0, MissionWaypointMsg.TurnMode.CLOCKWISE, 0, 30, new MissionWaypointActionMsg(0, command_list, command_params));
-
             Debug.Log("Check float accuracy here" + test_waypoint_1.ToYAMLString());
 
             MissionWaypointMsg[] test_waypoint_array = new MissionWaypointMsg[] { test_waypoint_1, test_waypoint_2, test_waypoint_3 };
 
             MissionWaypointTaskMsg test_Task = new MissionWaypointTaskMsg(15.0f, 15.0f, MissionWaypointTaskMsg.ActionOnFinish.NO_ACTION, 1, MissionWaypointTaskMsg.YawMode.AUTO, MissionWaypointTaskMsg.TraceMode.COORDINATED, MissionWaypointTaskMsg.ActionOnRCLost.FREE, MissionWaypointTaskMsg.GimbalPitchMode.FREE, test_waypoint_array);
-
+            
             rosDroneConnection.UploadWaypointsTask(test_Task);
+        }
+
+        // 3D Mapping hardcoded WPs here
+        if (Input.GetKeyUp(uploadRFS_B100MappingMission))
+        {
+            uint[] command_list = new uint[16];
+            uint[] command_params = new uint[16];
+            for (int i = 0; i < 16; i++)
+            {
+                command_list[i] = 0;
+                command_params[i] = 0;
+            }
+
+            // Yaw angle (degrees) is probably NED (North East Down)
+            // If so, 0 deg = North, 90 deg = East
+            //         N 0
+            //     315     45
+            // W 270         E 90
+            //     225     135
+            //        S 180
+            // 
+
+            // flight path clockwise around B100 defined below:
+            // Start out in the field
+            MissionWaypointMsg mappingWP1 = new MissionWaypointMsg(37.915373f, -122.337945f, 20.0f, 3.0f, 0, 0, MissionWaypointMsg.TurnMode.CLOCKWISE, 0, 30, new MissionWaypointActionMsg(0, command_list, command_params));
+
+            //NE Corner of B100 
+            MissionWaypointMsg mappingWP2 = new MissionWaypointMsg(37.915279f, -122.337941f, 20.0f, 3.0f, 225, 0, MissionWaypointMsg.TurnMode.CLOCKWISE, 0, 30, new MissionWaypointActionMsg(0, command_list, command_params));
+
+            //SE Corner of B100 
+            MissionWaypointMsg mappingWP3 = new MissionWaypointMsg(37.915152f, -122.337943f, 20.0f, 3.0f, 315, 0, MissionWaypointMsg.TurnMode.CLOCKWISE, 0, 30, new MissionWaypointActionMsg(0, command_list, command_params));
+
+            //SW Corner of B100
+            MissionWaypointMsg mappingWP4 = new MissionWaypointMsg(37.915153f, -122.338110f, 20.0f, 3.0f, 45, 0, MissionWaypointMsg.TurnMode.CLOCKWISE, 0, 30, new MissionWaypointActionMsg(0, command_list, command_params));
+
+            //NW Corner of B100
+            MissionWaypointMsg mappingWP5 = new MissionWaypointMsg(37.915291f, -122.338112f, 20.0f, 3.0f, 135, 0, MissionWaypointMsg.TurnMode.CLOCKWISE, 0, 30, new MissionWaypointActionMsg(0, command_list, command_params));
+
+            //NE Corner of B100 
+            MissionWaypointMsg mappingWP6 = new MissionWaypointMsg(37.915279f, -122.337941f, 20.0f, 3.0f, 225, 0, MissionWaypointMsg.TurnMode.CLOCKWISE, 0, 30, new MissionWaypointActionMsg(0, command_list, command_params));
+
+            // Back to out in the field
+            MissionWaypointMsg mappingWP7 = new MissionWaypointMsg(37.915373f, -122.337945f, 20.0f, 3.0f, 0, 0, MissionWaypointMsg.TurnMode.CLOCKWISE, 0, 30, new MissionWaypointActionMsg(0, command_list, command_params));
+
+            MissionWaypointMsg[] mappingWPs = new MissionWaypointMsg[] { mappingWP1, mappingWP2, mappingWP3, mappingWP4, mappingWP5, mappingWP6, mappingWP7};
+            MissionWaypointTaskMsg mapB100Task = new MissionWaypointTaskMsg(8.0f, 4.0f, MissionWaypointTaskMsg.ActionOnFinish.NO_ACTION, 1, MissionWaypointTaskMsg.YawMode.WAYPOINT, MissionWaypointTaskMsg.TraceMode.COORDINATED, MissionWaypointTaskMsg.ActionOnRCLost.FREE, MissionWaypointTaskMsg.GimbalPitchMode.FREE, mappingWPs);
+            ViewHardcodedWaypoints(mapB100Task);
+            // Replace with below line for point-to-point transition between WPs instead of smooth (idk what it does)
+            // MissionWaypointTaskMsg test_Task = new MissionWaypointTaskMsg(8.0f, 4.0f, MissionWaypointTaskMsg.ActionOnFinish.NO_ACTION, 1, MissionWaypointTaskMsg.YawMode.WAYPOINT, MissionWaypointTaskMsg.TraceMode.POINT, MissionWaypointTaskMsg.ActionOnRCLost.FREE, MissionWaypointTaskMsg.GimbalPitchMode.FREE, mappingWPs);
+
+            rosDroneConnection.UploadWaypointsTask(mapB100Task);
         }
 
         if (Input.GetKeyUp(missionInfo))
@@ -197,7 +264,7 @@ public class M210_Flight_TestManager : MonoBehaviour
             waypoint1.name = "Waypoint 1";
             waypoint1.transform.parent = this.transform;
             waypoint1.transform.localPosition = WorldProperties.GPSCoordToUnityCoord(new GPSCoordinate(37.915701652, -122.337967237, 20));
-            waypoint1.transform.localScale = Vector3.one * (0.05f);
+            waypoint1.transform.localScale = Vector3.one * (0.1f);
 
             Debug.Log("SANITY CHECK GPS: " + WorldProperties.UnityCoordToGPSCoord( WorldProperties.GPSCoordToUnityCoord(new GPSCoordinate(37.915701652, -122.337967237, 20))).Lat);
             Debug.Log("SANITY CHECK GPS: " + WorldProperties.UnityCoordToGPSCoord(WorldProperties.GPSCoordToUnityCoord(new GPSCoordinate(37.915701652, -122.337967237, 20))).Lng);
@@ -205,13 +272,13 @@ public class M210_Flight_TestManager : MonoBehaviour
             waypoint2.name = "Waypoint 2";
             waypoint2.transform.parent = this.transform;
             waypoint2.transform.localPosition = WorldProperties.GPSCoordToUnityCoord(new GPSCoordinate(37.915585270, -122.338122805, 20));
-            waypoint2.transform.localScale = Vector3.one * (0.05f);
+            waypoint2.transform.localScale = Vector3.one * (0.1f);
 
             GameObject waypoint3 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             waypoint3.name = "Waypoint 3";
             waypoint3.transform.parent = this.transform;
             waypoint3.transform.localPosition = WorldProperties.GPSCoordToUnityCoord(new GPSCoordinate(37.915457249, -122.338015517, 20));
-            waypoint3.transform.localScale = Vector3.one * (0.05f);
+            waypoint3.transform.localScale = Vector3.one * (0.1f);
         }
 
         if (Input.GetKeyUp(uploadUserMission))
