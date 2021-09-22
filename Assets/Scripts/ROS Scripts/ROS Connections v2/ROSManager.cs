@@ -286,7 +286,7 @@ public class ROSManager : MonoBehaviour
 
             case SensorType.Zed:
                 Debug.Log("Zed Sensor created");
-                MeshSensor_ROSSensorConnection zedSensor_rosSensorConnection = sensor.AddComponent<MeshSensor_ROSSensorConnection>();
+                ZedSensor_ROSSensorConnection zedSensor_rosSensorConnection = sensor.AddComponent<ZedSensor_ROSSensorConnection>();
                 zedSensor_rosSensorConnection.InitilizeSensor(uniqueID, sensorIP, sensorPort, sensorSubscribers);
                 ROSSensorConnections.Add(uniqueID, zedSensor_rosSensorConnection);
                 rosSensorConnection = zedSensor_rosSensorConnection;
