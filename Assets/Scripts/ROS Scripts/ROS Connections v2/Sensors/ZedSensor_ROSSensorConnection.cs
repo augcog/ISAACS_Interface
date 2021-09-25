@@ -213,17 +213,17 @@ public class ZedSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber, 
                 jsonMsgs.Enqueue(raw_msg);
                 break;
             case "/zed2marker_transform":
-                Debug.Log("received zed2marker_transform message!");
+                Debug.Log("received /zed2marker_transform message!");
                 // set ZED's mesh transform to zed-->aruco marker transform
-                // TransformMsg zed2marker = (parsed == null) ? new TransformMsg(raw_msg) : (TransformMsg)parsed;
                 Matrix4x4 marker2unity = new Matrix4x4(new Vector4(0, 0, 1, 0), 
                                             new Vector4(0, -1, 0, 0), 
                                             new Vector4(-1, 0,  0, 0), 
                                             new Vector4(0, 0, 0, 1)); 
-                Matrix4x4 zed2marker = new Matrix4x4(new Vector4(-0.37757539f, 0.18522106f, -0.90726511f, 0), 
-                                            new Vector4(0.92576807f, 0.05460396f, -0.37412817f, 0), 
-                                            new Vector4(-0.01975615f, -0.98117866f,  -0.19208885f, 0), 
-                                            new Vector4(0.40621304f, -0.01753105f, 0.6378631f, 1)); //me, no flip
+                Matrix4x4Msg zed2markerMSG = (parsed == null) ? new Matrix4x4Msg(raw_msg) : (Matrix4x4Msg)parsed;
+                Matrix4x4 zed2marker = new Matrix4x4(zed2markerMSG.GetColumn(0), 
+                                            zed2markerMSG.GetColumn(1), 
+                                            zed2markerMSG.GetColumn(2), 
+                                            zed2markerMSG.GetColumn(3)); 
                 Matrix4x4 conversionMatrix = marker2unity * zed2marker;
                 visualizer.EnableTransformationWithsMatrix(conversionMatrix);
                 initialized = true;
@@ -240,7 +240,7 @@ public class ZedSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber, 
         switch (topic)
         {
             case "/zed2marker_transform":
-                return "geometry_msgs/Transform";
+                return "isaacs_mapping/Matrix4x4";
             case "/voxblox_node/mesh":
             case "/voxblox_node/mesh2":
                 return "voxblox_msgs/Mesh";
