@@ -9,6 +9,15 @@ public class MeshVisualizer : MonoBehaviour
     public bool flipYZ = true;
 
     /// <summary>
+    /// Whether to transform all the points with a custome Matrix
+    /// </summary>
+    private bool transformPoints = false;
+    /// <summary>
+    /// Custome Matrix used to transform all points in mesh
+    /// </summary>
+    private Matrix4x4 conversionMatrix = Matrix4x4.identity;
+
+    /// <summary>
     /// Object that holds all the individual mesh blocks.
     /// </summary>
     private GameObject meshParent;
@@ -48,13 +57,13 @@ public class MeshVisualizer : MonoBehaviour
     /// <summary>
     /// Shader to use to render meshes.
     /// </summary>
-    public Shader shader;
+    [SerializeField] private Shader shader;
     /// <summary>
     /// Color to render the meshes.
     /// </summary>
     public Color color = new Color32(255, 255, 255, 100);
 
-    void Start()
+    void Awake()
     {
         shader = Shader.Find("Mobile/Particles/Alpha Blended");
         material = new Material(shader);
@@ -117,6 +126,7 @@ public class MeshVisualizer : MonoBehaviour
         /// List of all the mesh blocks.
         MeshBlockMsg[] mesh_blocks = meshMsg.GetMeshBlocks();
         /// Iterate through each mesh block generating and updating meshes for each.
+        
         for (int i = 0; i < mesh_blocks.Length; i++)
         {
             /// index of the mesh block.
@@ -136,7 +146,12 @@ public class MeshVisualizer : MonoBehaviour
                 float zv = ((float)z[j] / 32768.0f + index[2]) * scale_factor;
                 float xv = ((float)x[j] / 32768.0f + index[0]) * scale_factor;
                 float yv = ((float)y[j] / 32768.0f + index[1]) * scale_factor;
-                if (flipYZ)
+                if(transformPoints)
+                {
+                    Vector3 newPoint = conversionMatrix.MultiplyPoint(new Vector3(xv, yv, zv));
+                    newVertices.Add(newPoint);
+                }
+                else if (flipYZ)
                 {
                     newVertices.Add(new Vector3(xv, zv, yv));
                 }
@@ -171,6 +186,15 @@ public class MeshVisualizer : MonoBehaviour
         return generated_mesh_dict;
     }
 
+    /// <summary>
+    /// Start tranforming new points with a custom matrix
+    /// </summary>
+    public void EnableTransformationWithsMatrix(Matrix4x4 conversionMatrix)
+    {
+        transformPoints = true;
+        this.conversionMatrix = conversionMatrix;
+    }
+
     public void SetMesh(Dictionary<long[], MeshArray> mesh_dict)
     {
         foreach(KeyValuePair<long[], MeshArray> entry in mesh_dict)
@@ -202,6 +226,7 @@ public class MeshVisualizer : MonoBehaviour
     /// <param name="shader"></param>
     public void SetShader(Shader shader)
     {
+        this.shader = shader;
         material.shader = shader;
     }
 
