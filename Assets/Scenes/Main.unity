@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.17302455, g: 0.2162439, b: 0.2982352, a: 1}
+  m_IndirectSpecularColor: {r: 0.17302507, g: 0.21624431, b: 0.298236, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -72,7 +72,7 @@ LightmapSettings:
     m_FinalGatherRayCount: 256
     m_ReflectionCompression: 2
     m_MixedBakeMode: 1
-    m_BakeBackend: 0
+    m_BakeBackend: 1
     m_PVRSampling: 1
     m_PVRDirectSampleCount: 32
     m_PVRSampleCount: 500
@@ -728,17 +728,20 @@ MonoBehaviour:
   stopMotors: u
   takeoffDrone: i
   landDrone: o
+  viewSafeWaypointMission: d
   uploadTestMission: p
   missionInfo: a
-  executeUploadedMission: s
-  viewSafeWaypointMission: d
+  uploadRFS_B100MappingMission: m
   uploadUserMission: f
+  executeUploadedMission: s
   pauseMission: g
   resumeMission: h
   cycleDrone: j
   cycleSensor: k
   unsubscribe: z
   stopMission: l
+  selectGamma: z
+  selectNeutron: x
   rosDroneConnection: {fileID: 0}
 --- !u!114 &146794965
 MonoBehaviour:
@@ -811,21 +814,21 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 146794962}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dac87ae293d0bd348a6bcb090e69c517, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   DronesList:
   - droneName: Perry Pepe the Platipus
-    url: ws://192.168.2.11
+    url: ws://192.168.0.9
     port: 9090
     droneType: 1
     droneSubscribers: 0600000001000000
     simFlight: 1
     attachedSensors:
     - sensorName: ZED A
-      url: ws://192.168.2.11
+      url: ws://192.168.0.9
       port: 9090
       sensorType: 5
       sensorSubscribers: 0100000003000000
@@ -861,6 +864,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   actionName: /isaacs_server/upload_mission
+  id: 0
   status: 
   feedback: 
   result: 
@@ -878,6 +882,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actionName: /isaacs_server/control_drone
   command: 
+  id: 0
   status: 
   feedback: 
   result: 
@@ -893,7 +898,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0609a13ed6330479b9461675b22d3ce7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uri: ws://54.161.15.175:9090
 --- !u!4 &167235401 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400172, guid: 804ac96ebacbb37488605e7a96725e34,
@@ -3345,12 +3349,14 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1050719667}
+  m_CullTransparentMesh: 0
 --- !u!1 &1063422799
 GameObject:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
   m_Component:
   - component: {fileID: 1063422801}
   - component: {fileID: 1063422800}
@@ -3364,16 +3370,19 @@ GameObject:
 --- !u!108 &1063422800
 Light:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1063422799}
   m_Enabled: 1
-  serializedVersion: 8
+  serializedVersion: 10
   m_Type: 1
+  m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
+  m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
     m_Type: 0
@@ -3383,6 +3392,24 @@ Light:
     m_Bias: 0.05
     m_NormalBias: 0.4
     m_NearPlane: 0.2
+    m_CullingMatrixOverride:
+      e00: 1
+      e01: 0
+      e02: 0
+      e03: 0
+      e10: 0
+      e11: 1
+      e12: 0
+      e13: 0
+      e20: 0
+      e21: 0
+      e22: 1
+      e23: 0
+      e30: 0
+      e31: 0
+      e32: 0
+      e33: 1
+    m_UseCullingMatrixOverride: 0
   m_Cookie: {fileID: 0}
   m_DrawHalo: 0
   m_Flare: {fileID: 0}
@@ -3390,18 +3417,23 @@ Light:
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+  m_RenderingLayerMask: 1
   m_Lightmapping: 4
+  m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
+  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
 --- !u!4 &1063422801
 Transform:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1063422799}
   m_LocalRotation: {x: 0.18359286, y: 0.5469417, z: 0.09176987, w: 0.8116199}
   m_LocalPosition: {x: -3.032, y: 1.146, z: -0.96}
@@ -4854,15 +4886,17 @@ MeshFilter:
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1460938711 stripped
 GameObject:
-  m_PrefabParentObject: {fileID: 1125901207556238, guid: 4d3381740d602f043bb130adb276352f,
-    type: 2}
-  m_PrefabInternal: {fileID: 639558751}
+  m_CorrespondingSourceObject: {fileID: 1125901207556238, guid: 4d3381740d602f043bb130adb276352f,
+    type: 3}
+  m_PrefabInstance: {fileID: 639558751}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1463059043
 GameObject:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
   m_Component:
   - component: {fileID: 1463059047}
   - component: {fileID: 1463059046}
@@ -4878,27 +4912,36 @@ GameObject:
 --- !u!81 &1463059044
 AudioListener:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1463059043}
   m_Enabled: 1
 --- !u!124 &1463059045
 Behaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1463059043}
   m_Enabled: 1
 --- !u!20 &1463059046
 Camera:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1463059043}
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_projectionMatrixMode: 1
+  m_GateFitMode: 2
+  m_FOVAxisMode: 0
+  m_SensorSize: {x: 36, y: 24}
+  m_LensShift: {x: 0, y: 0}
+  m_FocalLength: 50
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
@@ -4928,8 +4971,9 @@ Camera:
 --- !u!4 &1463059047
 Transform:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1463059043}
   m_LocalRotation: {x: 0.726567, y: -0, z: -0, w: 0.68709564}
   m_LocalPosition: {x: 0.36, y: 5.08, z: -0.08}
