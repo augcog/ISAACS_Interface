@@ -245,6 +245,7 @@ public class DroneSimulationManager : MonoBehaviour {
                 {
                     nextWaypointID = 0;
 
+                    Debug.Log(drone.AllWaypoints());
                     foreach(Waypoint waypoint in drone.AllWaypoints())
                     {
                         waypoint.waypointProperties.WaypointUploaded();

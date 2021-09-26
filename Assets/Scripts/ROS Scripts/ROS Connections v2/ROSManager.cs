@@ -112,7 +112,7 @@ public class ROSManager : MonoBehaviour
         }
 
         // Create a new drone
-        Drone droneInstance = new Drone(WorldProperties.worldObject.transform.position, uniqueID);
+        Drone_v2 droneInstance = new Drone_v2(WorldProperties.worldObject.transform.position, uniqueID);
         Debug.Log("Drone that was just made " + droneInstance.gameObjectPointer.name);
         DroneProperties droneProperties = droneInstance.droneProperties;
         GameObject droneGameObject = droneInstance.gameObjectPointer;
@@ -172,10 +172,10 @@ public class ROSManager : MonoBehaviour
         droneSim.InitDroneSim();
         droneProperties.droneSimulationManager = droneSim;
  
-        // Get DroneMenu and instantiate.
-        DroneMenu droneMenu = droneGameObject.GetComponent<DroneMenu>();
-        droneMenu.InitDroneMenu(rosDroneConnection, droneSubscribers);
-        droneGameObject.GetComponent<DroneProperties>().droneMenu = droneMenu;
+        // Get DroneMenu and instansiate.
+        //DroneMenu droneMenu = droneGameObject.GetComponent<DroneMenu>();
+        //droneMenu.InitDroneMenu(rosDroneConnection, droneSubscribers);
+        //droneGameObject.GetComponent<DroneProperties>().droneMenu = droneMenu;
 
         uniqueID++;
     }
@@ -286,7 +286,7 @@ public class ROSManager : MonoBehaviour
 
             case SensorType.Zed:
                 Debug.Log("Zed Sensor created");
-                MeshSensor_ROSSensorConnection zedSensor_rosSensorConnection = sensor.AddComponent<MeshSensor_ROSSensorConnection>();
+                ZedSensor_ROSSensorConnection zedSensor_rosSensorConnection = sensor.AddComponent<ZedSensor_ROSSensorConnection>();
                 zedSensor_rosSensorConnection.InitilizeSensor(uniqueID, sensorIP, sensorPort, sensorSubscribers);
                 ROSSensorConnections.Add(uniqueID, zedSensor_rosSensorConnection);
                 rosSensorConnection = zedSensor_rosSensorConnection;
