@@ -26,14 +26,14 @@ public class ROSManager : MonoBehaviour
     /// <summary>
     /// Sensor types supported by ISAACS System
     /// </summary>
-    public enum SensorType { PointCloud, Mesh, LAMP, PCFace, Image };
+    public enum SensorType { PointCloud, Mesh, LAMP, PCFace, Image, Zed};
 
     /// <summary>
     /// Sensor subscribers supported by ISAACS System
     /// </summary>
     public enum SensorSubscribers
     {
-        surface_pointcloud, mesh,
+        surface_pointcloud, mesh, mesh2, zed_marker_transform,
         colorized_points_0, colorized_points_1, colorized_points_2, colorized_points_3, colorized_points_4, colorized_points_5,
         colorized_points_faced_0, colorized_points_faced_1, colorized_points_faced_2, colorized_points_faced_3, colorized_points_faced_4, colorized_points_faced_5, fpv_camera_images
     };
@@ -72,8 +72,6 @@ public class ROSManager : MonoBehaviour
     public enum VideoPlayers { None, LeftVideo, RightVideo, BackVideo, FrontVideo };
 
     public List<ROSDroneConnectionInput> DronesList;
-    //public List<ROSSensorConnectionInput> SensorsList;
-
     private Dictionary<int, ROSDroneConnectionInterface> ROSDroneConnections = new Dictionary<int, ROSDroneConnectionInterface>();
     private Dictionary<int, ROSSensorConnectionInterface> ROSSensorConnections = new Dictionary<int, ROSSensorConnectionInterface>();
 
@@ -82,6 +80,7 @@ public class ROSManager : MonoBehaviour
 
     /// <summary>
     /// Initialize all drones and sensors
+    /// Reads from DroneList as it was populated in the Unity Inspector for GameObject World -> ROS Manager Script
     /// </summary>
     void Start()
     {
@@ -113,7 +112,7 @@ public class ROSManager : MonoBehaviour
         }
 
         // Create a new drone
-        Drone droneInstance = new Drone(WorldProperties.worldObject.transform.position, uniqueID);
+        Drone_v2 droneInstance = new Drone_v2(WorldProperties.worldObject.transform.position, uniqueID);
         Debug.Log("Drone that was just made " + droneInstance.gameObjectPointer.name);
         DroneProperties droneProperties = droneInstance.droneProperties;
         GameObject droneGameObject = droneInstance.gameObjectPointer;
@@ -161,22 +160,22 @@ public class ROSManager : MonoBehaviour
                 return;
         }
 
-        // Create attached sensors
+        // Create sensors attached to this drone
         foreach (ROSSensorConnectionInput rosSensorInput in rosDroneConnectionInput.attachedSensors)
         {
             ROSSensorConnectionInterface sensor = InstantiateSensor(rosSensorInput);
             droneInstance.AddSensor(sensor);
         }
 
-        // Initilize drone sim manager script on the drone
+        // Initialize drone sim manager script on the drone
         DroneSimulationManager droneSim = droneGameObject.GetComponent<DroneSimulationManager>();
         droneSim.InitDroneSim();
         droneProperties.droneSimulationManager = droneSim;
  
         // Get DroneMenu and instansiate.
-        DroneMenu droneMenu = droneGameObject.GetComponent<DroneMenu>();
-        droneMenu.InitDroneMenu(rosDroneConnection, droneSubscribers);
-        droneGameObject.GetComponent<DroneProperties>().droneMenu = droneMenu;
+        //DroneMenu droneMenu = droneGameObject.GetComponent<DroneMenu>();
+        //droneMenu.InitDroneMenu(rosDroneConnection, droneSubscribers);
+        //droneGameObject.GetComponent<DroneProperties>().droneMenu = droneMenu;
 
         uniqueID++;
     }
@@ -199,7 +198,26 @@ public class ROSManager : MonoBehaviour
         }
 
         GameObject sensor = new GameObject(rosSensorConnectionInput.sensorName);
-        sensor.transform.parent = this.transform;
+       // GameObject aruco_marker = null;
+
+        // set parent of sensor gameobject
+        // if zed camera, set parent to be aruco_marker so that mesh will be aligned to it.
+        // We use an aruco marker at a known GPS location to align the mesh and the map in unity
+        if (sensorType == SensorType.Zed)
+        {
+            GameObject aruco_marker = new GameObject("aruco_marker");
+            aruco_marker.transform.parent = this.transform;
+            sensor.transform.parent = aruco_marker.transform;
+        }
+        else
+        {
+            sensor.transform.parent = this.transform; // make sensor child of World
+        }
+
+        
+
+        
+
         //sensor.transform.localPosition = new Vector3(7.33f, 3.387f, 15.27f);
         //sensor.transform.localRotation = Quaternion.Euler(new Vector3(-5.811f,-208.85f,1.375f));
         //sensor.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
@@ -222,6 +240,7 @@ public class ROSManager : MonoBehaviour
                 rosSensorConnection = meshSensor_rosSensorConnection;
                 break;
 
+            // We don't use this sensor type anymore, as it's point-cloud based rather than PCFace-based.
             case SensorType.LAMP:
                 Debug.Log("LAMP Sensor created");
                 LampSensor_ROSSensorConnection lamp_rosSensorConnection = sensor.AddComponent<LampSensor_ROSSensorConnection>();
@@ -263,6 +282,17 @@ public class ROSManager : MonoBehaviour
                 camera_rosSensorConnection.InitilizeSensor(uniqueID, sensorIP, sensorPort, sensorSubscribers);
                 ROSSensorConnections.Add(uniqueID, camera_rosSensorConnection);
                 rosSensorConnection = camera_rosSensorConnection;
+                break;
+
+            case SensorType.Zed:
+                Debug.Log("Zed Sensor created");
+                ZedSensor_ROSSensorConnection zedSensor_rosSensorConnection = sensor.AddComponent<ZedSensor_ROSSensorConnection>();
+                zedSensor_rosSensorConnection.InitilizeSensor(uniqueID, sensorIP, sensorPort, sensorSubscribers);
+                ROSSensorConnections.Add(uniqueID, zedSensor_rosSensorConnection);
+                rosSensorConnection = zedSensor_rosSensorConnection;
+
+                Shader shader = Shader.Find("Custom/ZedMesh");
+                zedSensor_rosSensorConnection.UpdateVisualizer(shader);
                 break;
 
             default:

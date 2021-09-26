@@ -34,7 +34,7 @@ public class PCFaceVisualizer : MonoBehaviour
         meshParent = new GameObject("PCFace Mesh");
         MeshFilter meshFilter = meshParent.AddComponent<MeshFilter>();
         MeshRenderer meshRenderer = meshParent.AddComponent<MeshRenderer>();
-        meshRenderer.sharedMaterial = new Material(Shader.Find("Oculus/Unlit Transparent Color"));
+        meshRenderer.sharedMaterial = new Material(Shader.Find("Unlit/Color"));
         meshParent.transform.parent = parent;
     }
 
@@ -45,7 +45,7 @@ public class PCFaceVisualizer : MonoBehaviour
     public void SetColor(Color color)
     {
         MeshRenderer meshRenderer = meshParent.GetComponent<MeshRenderer>();
-        meshRenderer.sharedMaterial = new Material(Shader.Find("Oculus/Unlit Transparent Color"));
+        meshRenderer.sharedMaterial = new Material(Shader.Find("Unlit/Color"));
         meshRenderer.sharedMaterial.color = color;
     }
 
@@ -84,7 +84,7 @@ public class PCFaceVisualizer : MonoBehaviour
                 newVertices.Add(new Vector3(x[j], y[j], z[j]));
             }
             //newColors.Add(new Color(r[j], g[j], b[j], a[j]));
-            newColors.Add(Color.red);
+            newColors.Add(Color.blue);
         }        
         Vector3[] vertices = newVertices.ToArray();
         Color[] colors = newColors.ToArray();

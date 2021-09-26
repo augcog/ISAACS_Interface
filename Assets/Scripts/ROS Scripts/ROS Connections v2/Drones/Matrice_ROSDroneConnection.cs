@@ -145,7 +145,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
     /// <summary>
     /// Offset used to convert drone attitude to Unity axis.
     /// </summary>
-    Quaternion offset = Quaternion.Euler(0,0,0);//Quaternion.Euler(0, 122, 0);
+    Quaternion offset = Quaternion.Euler(90, 180, 0);
 
     /// <summary>
     /// IMU data including raw gyro reading in FLU body frame, raw accelerometer reading in FLU body frame, and attitude estimation, 
@@ -249,7 +249,6 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
     {
         // Integrate dynamic waypoint system
         Debug.Log("Starting drone mission");
-        Debug.Log(flight_status);
 
         if (simDrone)
         {
@@ -278,7 +277,6 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
                     }
 
                     //If the following leads to a null pointer reference, then use instead: Drone currentlySelectedDrone = this.GetComponent<DroneProperties>().droneClassPointer;
-
                     // Start from 1 instead of 0, as takeoff is automatic.
                     for (int i = 1; i < droneProperties.droneClassPointer.WaypointsCount(); i++)
                     {
@@ -291,11 +289,11 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
                         missionMsgList.Add(new_waypoint);
                     }
 
-                    MissionWaypointTaskMsg Task = new MissionWaypointTaskMsg(2.0f, 2.0f, MissionWaypointTaskMsg.ActionOnFinish.NO_ACTION, 1, MissionWaypointTaskMsg.YawMode.AUTO, MissionWaypointTaskMsg.TraceMode.POINT, MissionWaypointTaskMsg.ActionOnRCLost.FREE, MissionWaypointTaskMsg.GimbalPitchMode.FREE, missionMsgList.ToArray());
+                    MissionWaypointTaskMsg Task = new MissionWaypointTaskMsg(5.0f, 5.0f, MissionWaypointTaskMsg.ActionOnFinish.NO_ACTION, 1, MissionWaypointTaskMsg.YawMode.AUTO, MissionWaypointTaskMsg.TraceMode.POINT, MissionWaypointTaskMsg.ActionOnRCLost.FREE, MissionWaypointTaskMsg.GimbalPitchMode.FREE, missionMsgList.ToArray());
                     Debug.Log("Uploading waypoint mission");
                     UploadWaypointsTask(Task);
                     
-                    // This might work
+                   // This might work
                     string service_name = "/dji_sdk/mission_waypoint_setSpeed";
                     float task = 5.0f;
                     Debug.LogFormat("ROS Call: {0} {1}  Arguments: {2}", client_id, service_name, task);
@@ -310,14 +308,12 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
                 else
                 {
                     UpdateMissionHelper(UpdateMissionAction.CONTINUE_MISSION);
-                    Debug.Log("continue mission");
                 }
 
                 break;
 
             case FlightStatus.IN_AIR_STANDBY:
                 UpdateMissionHelper(UpdateMissionAction.CONTINUE_MISSION);
-                Debug.Log("continue mission1");
                 break;
 
             case FlightStatus.PAUSED_IN_AIR:
@@ -326,7 +322,6 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
 
             case FlightStatus.FLYING:
                 UpdateMissionHelper(UpdateMissionAction.UPDATE_CURRENT_MISSION);
-                Debug.Log("update current mission");
                 break;
 
             case FlightStatus.LANDING:
@@ -488,7 +483,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
                     missionMsgList.Add(new_waypoint);
                 }
 
-                MissionWaypointTaskMsg Task = new MissionWaypointTaskMsg(2.0f, 2.0f, MissionWaypointTaskMsg.ActionOnFinish.NO_ACTION, 1, MissionWaypointTaskMsg.YawMode.AUTO, MissionWaypointTaskMsg.TraceMode.POINT, MissionWaypointTaskMsg.ActionOnRCLost.FREE, MissionWaypointTaskMsg.GimbalPitchMode.FREE, missionMsgList.ToArray());
+                MissionWaypointTaskMsg Task = new MissionWaypointTaskMsg(5.0f, 5.0f, MissionWaypointTaskMsg.ActionOnFinish.NO_ACTION, 1, MissionWaypointTaskMsg.YawMode.AUTO, MissionWaypointTaskMsg.TraceMode.POINT, MissionWaypointTaskMsg.ActionOnRCLost.FREE, MissionWaypointTaskMsg.GimbalPitchMode.FREE, missionMsgList.ToArray());
                 Debug.Log("Uploading continuing waypoint mission");
                 UploadWaypointsTask(Task);
 
@@ -496,7 +491,6 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
                 flight_status = FlightStatus.FLYING;
 
                 droneProperties.StartCheckingFlightProgress(continueFromWaypointID, missionMsgList.Count);
-                
                 break;
 
             case UpdateMissionAction.END_AND_HOVER:
@@ -517,7 +511,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
                 for (int i = continueFromWaypointID; i < droneProperties.droneClassPointer.WaypointsCount(); i++)
                 {
                     Waypoint waypoint = droneProperties.droneClassPointer.GetWaypoint(i);
-                    Vector3 unityCoord = waypoint.gameObjectPointer.transform.localPosition; //- new Vector3(0, (float)3.5 , 0);
+                    Vector3 unityCoord = waypoint.gameObjectPointer.transform.localPosition;
                     GPSCoordinate rosCoord = WorldProperties.UnityCoordToGPSCoord(unityCoord);
 
                     MissionWaypointMsg new_waypoint = new MissionWaypointMsg(rosCoord.Lat, rosCoord.Lng, (float)(rosCoord.Alt - home_position.GetAltitude()), 3.0f, 0, 0, MissionWaypointMsg.TurnMode.CLOCKWISE, 0, 30, new MissionWaypointActionMsg(0, command_list, command_params));
@@ -525,7 +519,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
                     missionMsgList.Add(new_waypoint);
                 }
 
-                MissionWaypointTaskMsg Task_Update = new MissionWaypointTaskMsg(2.0f, 2.0f, MissionWaypointTaskMsg.ActionOnFinish.NO_ACTION, 1, MissionWaypointTaskMsg.YawMode.AUTO, MissionWaypointTaskMsg.TraceMode.POINT, MissionWaypointTaskMsg.ActionOnRCLost.FREE, MissionWaypointTaskMsg.GimbalPitchMode.FREE, missionMsgList.ToArray());
+                MissionWaypointTaskMsg Task_Update = new MissionWaypointTaskMsg(15.0f, 15.0f, MissionWaypointTaskMsg.ActionOnFinish.NO_ACTION, 1, MissionWaypointTaskMsg.YawMode.AUTO, MissionWaypointTaskMsg.TraceMode.POINT, MissionWaypointTaskMsg.ActionOnRCLost.FREE, MissionWaypointTaskMsg.GimbalPitchMode.FREE, missionMsgList.ToArray());
                 Debug.Log("Uploading updated waypoint mission");
                 UploadWaypointsTask(Task_Update);
 
@@ -533,7 +527,6 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
                 flight_status = FlightStatus.FLYING;
 
                 droneProperties.StartCheckingFlightProgress(continueFromWaypointID, missionMsgList.Count);
-                
                 break;
 
             default:
@@ -579,7 +572,6 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
 
                 prev_flight_status = flight_status;
                 flight_status = FlightStatus.FLYING_HOME;
-
                 break;
 
             case FlightStatus.FLYING:
@@ -815,12 +807,7 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
         {
             case "/dji_sdk/attitude":
                 QuaternionMsg attitudeMsg = (parsed == null) ? new QuaternionMsg(raw_msg["quaternion"]) : (QuaternionMsg)parsed;
-                attitude =  (new Quaternion(attitudeMsg.GetX(), attitudeMsg.GetZ(), attitudeMsg.GetY(), attitudeMsg.GetW())) * offset;
-                //attitude = (new Quaternion(attitudeMsg.GetX(), attitudeMsg.GetY(), -1*attitudeMsg.GetZ(), -1*attitudeMsg.GetW())) * offset;
-                //attitude = (new Quaternion(attitudeMsg.GetX(), attitudeMsg.GetY(), attitudeMsg.GetZ(), attitudeMsg.GetW())) * offset;
-       
-                //quaternion has X,Y,Z, but attitudeMsg uses ROS Coords, and we want Unity coords, so we flip Y and Z
-                //Check to see if this is the same XYZ axes?
+                attitude = offset * (new Quaternion(attitudeMsg.GetX(), attitudeMsg.GetY(), attitudeMsg.GetZ(), attitudeMsg.GetW()));
 
                 // Update drone transform to new quaternion
                 this.transform.rotation = attitude;
@@ -830,12 +817,11 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
                 {
                     home_attitude = attitude;
                     home_attitude_set = true;
-                    Debug.Log("attitude just set");
+
                     // Localize sensors when both orientation and gps position is set
                     if (home_position_set)
                     {
-                        Debug.Log("Attitude just set, (Home position already) , localizing sensors");
-                        LocalizeSensors(); // called once when home orientation is set (other time is when home gps is set)
+                        LocalizeSensors();
                     }
                 }
 
@@ -892,16 +878,13 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
                 {
                     home_position = gps_position;
                     home_position_set = true;
-                    Debug.Log("home pos just set");
-                    LocalizeSensors(); // called once when home position is set (other time is when home orientation is set)
-
                 }
 
                 // TODO: Complete function in World properties.
                 if (home_position_set)
                 {
-                    // subtracting home altitude to take into account non-zero initial altitude (maybe bc RTK basestation is higher than drone)
-                    this.transform.localPosition = WorldProperties.ROSCoordToUnityCoord(gps_position); // - new Vector3(0, WorldProperties.ROSCoordToUnityCoord(home_position).y - (float)3.5,0);
+                    this.transform.localPosition = WorldProperties.ROSCoordToUnityCoord(gps_position);
+
                     if (WorldProperties.DJI_SIM)
                     {
                         this.transform.localPosition += new Vector3(0, -100.0f, 0);
@@ -967,15 +950,10 @@ public class Matrice_ROSDroneConnection : MonoBehaviour, ROSTopicSubscriber, ROS
     /// </summary>
     public void LocalizeSensors()
     {
-        Debug.Log("localize sensors CALLED");
         if (home_attitude_set == false || home_position_set == false)
         {
             return;
         }
-        Debug.Log("localize sensors RUN SUCCESSS");
-
-        Debug.Log("DRONE HOME ATTITUDE:");
-        Debug.Log(home_attitude);
 
         Quaternion orientation = home_attitude; 
         Vector3 position = WorldProperties.ROSCoordToUnityCoord(home_position);
