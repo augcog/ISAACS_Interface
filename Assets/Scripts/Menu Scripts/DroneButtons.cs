@@ -25,23 +25,26 @@ public class DroneButtons : MonoBehaviour {
 
     void OnClickEvent()
     {
-        Drone selectedDrone = WorldProperties.GetSelectedDrone();
-        ROSDroneConnectionInterface droneROSConnection = selectedDrone.droneProperties.droneROSConnection;
+        Drone_v2 selectedDrone = WorldProperties.GetSelectedDrone();
+        //ROSDroneConnectionInterface droneROSConnection = selectedDrone.droneProperties.droneROSConnection;
 
         if (startMission)
         {
             Debug.Log("Start mission button clicked");
-            droneROSConnection.StartMission();
+            //droneROSConnection.StartMission();
+            selectedDrone.startMission();
         }
 
         if (pauseMission)
         {
-            droneROSConnection.PauseMission();
+            //droneROSConnection.PauseMission();
+            selectedDrone.pauseMission();
         }
 
         if (resumeMission)
         {
-            droneROSConnection.ResumeMission();
+            //droneROSConnection.ResumeMission();
+            selectedDrone.resumeMission();
         }
 
 
@@ -53,13 +56,15 @@ public class DroneButtons : MonoBehaviour {
 
         if (landDrone)
         {
-            droneROSConnection.LandDrone();
+            //droneROSConnection.LandDrone();
+            selectedDrone.landDrone();
         }
 
 
         if (homeDrone)
         {
-            droneROSConnection.FlyHome();        
+            //droneROSConnection.FlyHome();
+            selectedDrone.flyHome();
         }
 
 
