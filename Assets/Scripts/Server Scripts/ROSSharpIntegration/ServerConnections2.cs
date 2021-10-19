@@ -95,7 +95,7 @@ namespace RosSharp.RosBridgeClient
                 droneSim.InitDroneSim();
                 droneProperties.droneSimulationManager = droneSim;
 
-                string subscription_id = rosSocket.Subscribe<MessageTypes.Sensor.NavSatFix>("/drone_" + drone_id + "/mavros/global_position/global", droneInstance.subscriptionHandler);
+                //string subscription_id = rosSocket.Subscribe<MessageTypes.Sensor.NavSatFix>("/drone_" + drone_id + "/mavros/global_position/global", droneInstance.subscriptionHandler);
 
                 //after adding the drone, remove it from the list
                 droneList.RemoveAt(0);

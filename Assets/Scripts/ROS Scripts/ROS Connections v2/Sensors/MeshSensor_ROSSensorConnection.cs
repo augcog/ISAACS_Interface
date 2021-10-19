@@ -208,19 +208,6 @@ public class MeshSensor_ROSSensorConnection : MonoBehaviour, ROSTopicSubscriber,
                 // Add raw_msg to the jsonMsgs to be parsed on the thread
                 jsonMsgs.Enqueue(raw_msg);
                 break;
-            case "/zed2marker_transform":
-                Debug.Log("received zed2marker_transform message!");
-                // set ZED's mesh transform to zed-->aruco marker transform
-                TransformMsg zed2marker = (parsed == null) ? new TransformMsg(raw_msg) : (TransformMsg)parsed;
-                Vector3Msg translation = zed2marker.GetTranslation();
-                QuaternionMsg rotation = zed2marker.GetRotation();
-                
-                // set ZED2 sensor's position and rotation relative to aruco_marker
-
-                this.transform.localPosition = new Vector3((float)translation.GetX(), (float)translation.GetY(), (float)translation.GetZ());
-                this.transform.localRotation = new Quaternion(rotation.GetX(), rotation.GetY(), rotation.GetZ(), rotation.GetW());
-                this.transform.localScale = new Vector3(1f, 1f, 1f);
-                break;
             default:
                 Debug.LogError("Topic not implemented: " + topic);
                 break;
