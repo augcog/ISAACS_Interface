@@ -56,6 +56,7 @@ public class MeshVisualizer : MonoBehaviour
 
     void Start()
     {
+        // shader = Shader.Find("Mobile/Particles/Standard Unlit");
         shader = Shader.Find("Mobile/Particles/Alpha Blended");
         material = new Material(shader);
     }
@@ -188,7 +189,8 @@ public class MeshVisualizer : MonoBehaviour
                 meshObject.transform.localScale = new Vector3(1, 1, 1);
                 MeshFilter meshFilter = meshObject.AddComponent<MeshFilter>();
                 MeshRenderer meshRenderer = meshObject.AddComponent<MeshRenderer>();
-                //meshRenderer.sharedMaterial = new Material(Shader.Find("Particles/Standard Unlit"));
+                meshRenderer.sharedMaterial = new Material(Shader.Find("Mobile/Particles/Alpha Blended"));
+                //Shader.Find("Mobile/Particles/Standard Unlit")
                 meshRenderer.sharedMaterial = material;
                 gameobject_dict.Add(index, meshObject);
             }
