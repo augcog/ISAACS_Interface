@@ -1,0 +1,4 @@
+{
+    "displayName": "Remoting",
+    "description": "Basic sample showing how to setup and connect an application to a remote instance running on HoloLens v2 device."
+}
